@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion, useInView } from "framer-motion";
 import StickyCardWrapper from "@/components/sticky-card-wrapper";
@@ -30,10 +30,14 @@ export default function Bento() {
   const [startVisible, setStartVisible] = useState(false);
   const isInView = useInView(headerRef, { once: true });
 
-  useLayoutEffect(() => {
-    if (!headerRef.current) return;
-    const { top, bottom } = headerRef.current.getBoundingClientRect();
-    if (top < window.innerHeight && bottom > 0) setStartVisible(true);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      if (!headerRef.current) return;
+      const { top } = headerRef.current.getBoundingClientRect();
+      // in view OR already scrolled past (above viewport)
+      if (top < window.innerHeight) setStartVisible(true);
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   useEffect(() => {

@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Ever Sun",
   description: "Ever Sun — jouw zonnebank specialist",
   themeColor: "#faf4ec",
+  other: {
+    "google": "notranslate",
+  },
 };
 
 export default function RootLayout({
@@ -27,6 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
+      translate="no"
       className={`${figtree.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
