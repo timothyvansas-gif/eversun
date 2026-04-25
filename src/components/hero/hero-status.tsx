@@ -6,7 +6,7 @@ import clock from "@/images/icon-clock.svg";
 
 export default function HeroStatus() {
   return (
-    <button className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-[14px] cursor-pointer group">
+    <button className="flex flex-col items-start gap-5 md:flex-row md:items-center md:gap-[14px] cursor-pointer group">
       <span className="flex items-center gap-[14px]">
         <span className="relative flex items-center justify-center w-4 h-4 shrink-0">
           <span className="absolute inline-flex w-[22px] h-[22px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
