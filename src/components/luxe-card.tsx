@@ -5,7 +5,7 @@ import ovalsErgo from "@/images/ovals-ergo.svg";
 
 export default function LuxeCard() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+  const isInView = useInView(containerRef, { once: true, amount: 0.6 });
 
   return (
     <div ref={containerRef} className="relative w-full lg:w-[302px] h-[362px] bg-white rounded-lg pt-6 px-6 pb-13 lg:p-10 flex flex-col lg:shrink-0 overflow-hidden lg:overflow-visible">
@@ -32,9 +32,9 @@ export default function LuxeCard() {
             initial={{ pathLength: 0, fillOpacity: 0 }}
             animate={isInView ? { pathLength: 1, fillOpacity: 1, strokeWidth: 0 } : undefined}
             transition={{
-              pathLength: { duration: 2.2, ease: "easeInOut", delay: 0.5 },
-              fillOpacity: { duration: 1.8, ease: "easeInOut", delay: 1.2 },
-              strokeWidth: { duration: 1.8, ease: "easeInOut", delay: 1.2 },
+              pathLength: { duration: 2.2, ease: "easeInOut", delay: 0.3 },
+              fillOpacity: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
+              strokeWidth: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
             }}
           />
         </svg>

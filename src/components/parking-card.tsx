@@ -29,7 +29,7 @@ const itemVariants = {
       type: "spring" as const,
       stiffness: 260,
       damping: 22,
-      delay: 0.8 + i * 0.08, // Increased base delay to 0.8s
+      delay: 0.3 + i * 0.08,
     },
   }),
 };

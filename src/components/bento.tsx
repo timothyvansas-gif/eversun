@@ -39,15 +39,16 @@ export default function Bento() {
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-      className="w-full max-w-[1280px] mx-auto px-4 pt-8 pb-16 lg:py-16"
+      viewport={{ once: true, amount: 0.01 }}
+      className="w-full max-w-[1280px] mx-auto pt-8 pb-16 lg:py-16 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >
       <motion.div
         ref={headerRef}
         variants={cardVariants}
         custom={-1}
-        className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-0 max-lg:pt-0 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page max-lg:-mx-4 max-lg:px-4 max-lg:w-[calc(100%+32px)]"
+        // Header now aligns naturally with the container padding
+        className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-0 max-lg:pt-0 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page"
       >
         <h2 className="text-[28px] lg:text-[48px] font-semibold leading-none tracking-[-0.015em] text-zinc-900 font-display">
           Waarom Ever Sun
@@ -60,56 +61,66 @@ export default function Bento() {
 
       <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
         {/* Row 1: Photo & Parking */}
-        <div className="max-md:contents flex flex-col lg:flex-row gap-4 md:contents lg:flex">
-          <motion.div
-            custom={0}
-            variants={cardVariants}
-            className="max-md:contents flex flex-col md:col-span-2 lg:flex-1"
-          >
-            <StickyCardWrapper index={0} total={5} offsetTop={headerHeight}>
+        <div className="flex flex-col lg:flex-row gap-4 md:contents max-lg:contents lg:flex">
+          <div className="flex flex-col md:col-span-2 lg:flex-1 max-lg:contents">
+            <StickyCardWrapper 
+              index={0} 
+              total={5} 
+              offsetTop={headerHeight}
+              variants={cardVariants}
+              custom={0}
+            >
               <PhotoCard />
             </StickyCardWrapper>
-          </motion.div>
-          <motion.div
-            custom={1}
-            variants={cardVariants}
-            className="max-md:contents flex flex-col md:col-span-1 lg:flex-1"
-          >
-            <StickyCardWrapper index={1} total={5} offsetTop={headerHeight}>
+          </div>
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+            <StickyCardWrapper 
+              index={1} 
+              total={5} 
+              offsetTop={headerHeight}
+              variants={cardVariants}
+              custom={1}
+            >
               <ParkingCard />
             </StickyCardWrapper>
-          </motion.div>
+          </div>
         </div>
 
         {/* Row 2: Merken, Advies & Luxe */}
-        <div className="max-md:contents flex flex-col lg:flex-row gap-4 md:contents lg:flex">
-          <motion.div
-            custom={2}
-            variants={cardVariants}
-            className="max-md:contents flex flex-col md:col-span-1 lg:flex-1"
-          >
-            <StickyCardWrapper index={2} total={5} offsetTop={headerHeight}>
+        <div className="flex flex-col lg:flex-row gap-4 md:contents max-lg:contents lg:flex">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+            <StickyCardWrapper 
+              index={2} 
+              total={5} 
+              offsetTop={headerHeight}
+              variants={cardVariants}
+              custom={2}
+            >
               <MerkenCard />
             </StickyCardWrapper>
-          </motion.div>
-          <motion.div
-            custom={3}
-            variants={cardVariants}
-            className="max-md:contents flex flex-col md:col-span-1 lg:flex-1"
-          >
-            <StickyCardWrapper index={3} total={5} offsetTop={headerHeight}>
+          </div>
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+            <StickyCardWrapper 
+              index={3} 
+              total={5} 
+              offsetTop={headerHeight}
+              variants={cardVariants}
+              custom={3}
+            >
               <AdviesCard />
             </StickyCardWrapper>
-          </motion.div>
-          <motion.div
-            custom={4}
-            variants={cardVariants}
-            className="max-md:contents flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0"
-          >
-            <StickyCardWrapper index={4} total={5} offsetTop={headerHeight}>
+          </div>
+          <div className="flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-lg:contents">
+            <StickyCardWrapper 
+              index={4} 
+              total={5} 
+              offsetTop={headerHeight}
+              variants={cardVariants}
+              custom={4}
+            >
               <LuxeCard />
             </StickyCardWrapper>
-          </motion.div>
+          </div>
         </div>
       </div>
     </motion.section>
