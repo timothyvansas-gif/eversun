@@ -1,12 +1,15 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import AdviesCard from "@/components/advies-card";
-import PhotoCard from "@/components/photo-card";
-import ParkingCard from "@/components/parking-card";
-import MerkenCard from "@/components/merken-card";
-import LuxeCard from "@/components/luxe-card";
-import StickyCardWrapper from "@/components/sticky-card-wrapper";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+import StickyCardWrapper from "@/components/sticky-card-wrapper";
+
+// Lazy load card components for better performance
+const PhotoCard = dynamic(() => import("@/components/photo-card"), { ssr: true });
+const ParkingCard = dynamic(() => import("@/components/parking-card"), { ssr: true });
+const MerkenCard = dynamic(() => import("@/components/merken-card"), { ssr: true });
+const AdviesCard = dynamic(() => import("@/components/advies-card"), { ssr: true });
+const LuxeCard = dynamic(() => import("@/components/luxe-card"), { ssr: true });
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -28,7 +31,6 @@ export default function Bento() {
   useEffect(() => {
     if (!headerRef.current) return;
     const observer = new ResizeObserver((entries) => {
-      // Get exact rendered height
       setHeaderHeight(entries[0].borderBoxSize[0].blockSize);
     });
     observer.observe(headerRef.current);
@@ -47,7 +49,6 @@ export default function Bento() {
         ref={headerRef}
         variants={cardVariants}
         custom={-1}
-        // Header now aligns naturally with the container padding
         className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-0 max-lg:pt-0 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page"
       >
         <h2 className="text-[28px] lg:text-[48px] font-semibold leading-none tracking-[-0.015em] text-zinc-900 font-display">

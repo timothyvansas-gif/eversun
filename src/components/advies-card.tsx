@@ -34,18 +34,33 @@ export default function AdviesCard() {
   const dashOffset = useTransform(progress, [0, 1], [CIRC, 0]);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+  // Senior approach: responsive threshold and delay based on viewport
+  const [isMobile, setIsMobile] = useState(false);
   const [started, setStarted] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const isInView = useInView(containerRef, {
+    once: false,
+    amount: isMobile ? 0.2 : 0.01, // Immediate on desktop (0.01 threshold)
+  });
 
   useEffect(() => {
-    if (!isInView) return;
-    
-    const timeout = setTimeout(() => {
-      setStarted(true);
-    }, 300); // Shorter delay before starting
-    
-    return () => clearTimeout(timeout);
-  }, [isInView]);
+    if (isInView) {
+      const delay = isMobile ? 300 : 0; // Immediate on desktop (0 delay)
+      const timer = setTimeout(() => {
+        setStarted(true);
+      }, delay);
+      return () => clearTimeout(timer);
+    } else {
+      setStarted(false);
+    }
+  }, [isInView, isMobile]);
 
   useEffect(() => {
     if (!started) return;
@@ -141,7 +156,7 @@ export default function AdviesCard() {
           >
             <img
               src={slide.image.src}
-              alt=""
+              alt={`Foto ${active + 1} van Ever Sun klanten`}
               className="w-full h-full object-cover object-center"
             />
           </motion.div>

@@ -20,7 +20,7 @@ export default function LuxeCard() {
         src={ovalsErgo.src}
         width={221}
         height={221}
-        alt=""
+        alt="Abstracte Ergoline merk-vormen"
         className="absolute bottom-[40px] left-[61px] lg:left-1/2 lg:-translate-x-1/2 lg:bottom-[32px] pointer-events-none"
       />
 

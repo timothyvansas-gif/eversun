@@ -54,7 +54,7 @@ export default function ParkingCard() {
             src="/p-bord-sm.svg"
             width={24}
             height={24}
-            alt=""
+            alt="Parkeerbord icoon"
             className="absolute"
             style={{ top: s.top, left: s.left, rotate: s.rotate }}
             custom={i}
@@ -65,7 +65,7 @@ export default function ParkingCard() {
         ))}
         <motion.img
           src="/p-bord-l.svg"
-          alt=""
+          alt="Groot parkeerbord icoon"
           className="absolute"
           style={{ top: 231, left: 313 }}
           custom={P_BORD_SM.length}
