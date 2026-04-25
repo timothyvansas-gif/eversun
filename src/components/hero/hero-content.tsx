@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
+import HeroStatus from "./hero-status";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -19,7 +20,8 @@ const fadeUp = {
 
 export default function HeroContent() {
   return (
-    <div className="absolute inset-0 flex flex-col justify-center p-6 lg:pl-[128px] lg:py-12 lg:pr-12">
+    <div className="absolute inset-0 flex flex-col px-[40px] py-6 lg:pl-[128px] lg:py-12 lg:pr-12">
+      <div className="flex-1 flex flex-col justify-center">
       <div>
         <motion.h1
           className="font-display font-medium text-[#FAF4EC]"
@@ -44,8 +46,8 @@ export default function HeroContent() {
           animate="visible"
           custom={0.5}
           style={{
-            fontSize: "clamp(20px, 3.44vw, 44px)",
-            lineHeight: "clamp(26px, 4.06vw, 52px)",
+            fontSize: "clamp(22px, 3.44vw, 44px)",
+            lineHeight: "clamp(28px, 4.06vw, 52px)",
             letterSpacing: "-1.5px",
           }}
         >
@@ -65,7 +67,19 @@ export default function HeroContent() {
         >
           <HeroButtons />
         </motion.div>
+
       </div>
+      </div>
+
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        custom={0.9}
+        className="mb-[32px] lg:mb-[48px]"
+      >
+        <HeroStatus />
+      </motion.div>
     </div>
   );
 }
