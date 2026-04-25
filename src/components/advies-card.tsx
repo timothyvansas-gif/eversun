@@ -54,7 +54,7 @@ export default function AdviesCard() {
     const ctrl = animate(progress, 1, {
       duration: DURATION,
       ease: "linear",
-      onComplete: () => setActive((p) => (p + 2) % SLIDES.length),
+      onComplete: () => setActive((p) => (p + 1) % SLIDES.length),
     });
     return () => ctrl.stop();
   }, [active, progress, started]);

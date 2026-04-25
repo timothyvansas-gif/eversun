@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -15,7 +15,7 @@ interface Props {
   index: number;
   total: number;
   offsetTop?: number;
-  variants?: any;
+  variants?: Variants;
   custom?: number;
 }
 
@@ -34,7 +34,7 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
   // Sync mounting state to prevent hydration mismatches with window-dependent logic
   useEffect(() => {
     setIsMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     

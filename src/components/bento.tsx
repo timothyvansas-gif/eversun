@@ -61,8 +61,8 @@ export default function Bento() {
 
       <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
         {/* Row 1: Photo & Parking */}
-        <div className="flex flex-col lg:flex-row gap-4 md:contents max-lg:contents lg:flex">
-          <div className="flex flex-col md:col-span-2 lg:flex-1 max-lg:contents">
+        <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
+          <div className="flex flex-col md:col-span-2 lg:flex-1 max-md:contents">
             <StickyCardWrapper 
               index={0} 
               total={5} 
@@ -73,7 +73,7 @@ export default function Bento() {
               <PhotoCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
             <StickyCardWrapper 
               index={1} 
               total={5} 
@@ -87,8 +87,8 @@ export default function Bento() {
         </div>
 
         {/* Row 2: Merken, Advies & Luxe */}
-        <div className="flex flex-col lg:flex-row gap-4 md:contents max-lg:contents lg:flex">
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+        <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
             <StickyCardWrapper 
               index={2} 
               total={5} 
@@ -99,7 +99,7 @@ export default function Bento() {
               <MerkenCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-lg:contents">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
             <StickyCardWrapper 
               index={3} 
               total={5} 
@@ -110,7 +110,7 @@ export default function Bento() {
               <AdviesCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-lg:contents">
+          <div className="flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-md:contents">
             <StickyCardWrapper 
               index={4} 
               total={5} 
