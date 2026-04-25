@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import StickyCardWrapper from "@/components/sticky-card-wrapper";
 
 // Lazy load card components for better performance
@@ -27,6 +27,14 @@ const cardVariants = {
 export default function Bento() {
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(132);
+  const [startVisible, setStartVisible] = useState(false);
+  const isInView = useInView(headerRef, { once: true });
+
+  useLayoutEffect(() => {
+    if (!headerRef.current) return;
+    const { top, bottom } = headerRef.current.getBoundingClientRect();
+    if (top < window.innerHeight && bottom > 0) setStartVisible(true);
+  }, []);
 
   useEffect(() => {
     if (!headerRef.current) return;
@@ -39,9 +47,8 @@ export default function Bento() {
 
   return (
     <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.01 }}
+      initial={startVisible ? "visible" : "hidden"}
+      animate={isInView || startVisible ? "visible" : "hidden"}
       className="w-full max-w-[1280px] mx-auto pt-8 pb-16 lg:py-16 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >

@@ -16,6 +16,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Ever Sun",
   description: "Ever Sun — jouw zonnebank specialist",
+  themeColor: "#faf4ec",
 };
 
 export default function RootLayout({

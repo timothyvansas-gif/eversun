@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  background-color: var(--color-surface-page);
+}
+
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
