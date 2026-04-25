@@ -24,15 +24,14 @@ export default function HeroContent() {
       <div className="flex-1 flex flex-col justify-center">
       <div>
         <motion.h1
-          className="font-display font-medium text-[#FAF4EC]"
+          className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
           custom={0.3}
           style={{
-            fontSize: "clamp(52px, 7.5vw, 96px)",
-            lineHeight: "clamp(54px, 7.8vw, 100px)",
-            letterSpacing: "-3px",
+            fontSize: "clamp(48px, 7.5vw, 96px)",
+            lineHeight: "clamp(50px, 7.8vw, 100px)",
             marginLeft: "-3px",
           }}
         >
