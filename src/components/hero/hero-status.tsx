@@ -23,7 +23,8 @@ export default function HeroStatus() {
       <span className="flex items-center gap-2">
         <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
         <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none">
-          Openingstijden
+          <span className="md:hidden">Openingstijden</span>
+          <span className="hidden md:inline">Alle openingstijden</span>
         </span>
       </span>
     </button>

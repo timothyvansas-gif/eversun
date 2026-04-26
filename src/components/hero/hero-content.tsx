@@ -22,7 +22,7 @@ export default function HeroContent() {
   return (
     <div className="absolute inset-0 flex flex-col">
       <div className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-end px-6 pb-8 lg:px-0 lg:py-12 lg:justify-start">
-        <div className="mb-14 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
+        <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
           <div>
             <motion.h1
               className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
@@ -74,7 +74,7 @@ export default function HeroContent() {
           initial="hidden"
           animate="visible"
           custom={0.9}
-          className="lg:mb-[48px]"
+          className="mb-2 lg:mb-[48px]"
         >
           <HeroStatus />
         </motion.div>
