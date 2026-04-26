@@ -20,7 +20,7 @@ const fadeUp = {
 
 export default function HeroContent() {
   return (
-    <div className="absolute inset-0 flex flex-col px-[40px] py-6 lg:pl-[128px] lg:py-12 lg:pr-12">
+    <div className="absolute inset-0 flex flex-col px-[32px] py-6 lg:pl-[128px] lg:py-12 lg:pr-12">
       <div className="flex-1 flex flex-col justify-center">
       <div>
         <motion.h1
@@ -58,7 +58,7 @@ export default function HeroContent() {
         </motion.p>
 
         <motion.div
-          className="mt-8 lg:mt-14 flex flex-col md:flex-row gap-3 md:gap-6"
+          className="mt-8 lg:mt-14 flex flex-col md:flex-row gap-4 md:gap-6"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
