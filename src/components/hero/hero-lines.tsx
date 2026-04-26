@@ -18,7 +18,7 @@ export default function HeroLines() {
         stroke="#E15E1D"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[stroke-width:2] md:[stroke-width:1.25]"
+        className="[stroke-width:3] md:[stroke-width:1.25]"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.6, delay: 1.3, ease }}
@@ -28,7 +28,7 @@ export default function HeroLines() {
         stroke="#E15E1D"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[stroke-width:2] md:[stroke-width:1.25] translate-y-[3px] md:translate-y-0"
+        className="[stroke-width:3] md:[stroke-width:1.25] translate-y-[5px] md:translate-y-0"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.5, delay: 1.75, ease }}

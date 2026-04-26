@@ -20,65 +20,65 @@ const fadeUp = {
 
 export default function HeroContent() {
   return (
-    <div className="absolute inset-0 flex flex-col px-[32px] py-6 lg:pl-[128px] lg:py-12 lg:pr-12">
-      <div className="flex-1 flex flex-col justify-center">
-      <div>
-        <motion.h1
-          className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.3}
-          style={{
-            fontSize: "clamp(48px, 7.5vw, 96px)",
-            lineHeight: "clamp(50px, 7.8vw, 100px)",
-            marginLeft: "-3px",
-          }}
-        >
-          De perfecte gouden gloed
-        </motion.h1>
+    <div className="absolute inset-0 flex flex-col">
+      <div className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-end px-6 pb-8 lg:px-0 lg:py-12 lg:justify-start">
+        <div className="mb-14 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
+          <div>
+            <motion.h1
+              className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0.3}
+              style={{
+                fontSize: "clamp(52px, 7.5vw, 96px)",
+                lineHeight: "clamp(54px, 7.8vw, 100px)",
+                marginLeft: "-3px",
+              }}
+            >
+              De perfecte gouden gloed
+            </motion.h1>
 
-        <motion.p
-          className="mt-3 font-display font-normal text-[#FAF4EC]"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.5}
-          style={{
-            fontSize: "clamp(22px, 3.44vw, 44px)",
-            lineHeight: "clamp(28px, 4.06vw, 52px)",
-            letterSpacing: "-1.5px",
-          }}
-        >
-          begint bij zonnestudio{" "}
-          <span className="relative inline-block">
-            Ever Sun
-            <HeroLines />
-          </span>
-        </motion.p>
+            <motion.p
+              className="mt-3 font-display font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0.5}
+              style={{
+                fontSize: "clamp(20px, 3.44vw, 44px)",
+                lineHeight: "clamp(26px, 4.06vw, 52px)",
+              }}
+            >
+              begint bij zonnestudio{" "}
+              <span className="relative inline-block">
+                Ever Sun
+                <HeroLines />
+              </span>
+            </motion.p>
+
+            <motion.div
+              className="mt-8 lg:mt-11 flex flex-col md:flex-row gap-4 md:gap-6"
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0.7}
+            >
+              <HeroButtons />
+            </motion.div>
+          </div>
+        </div>
 
         <motion.div
-          className="mt-8 lg:mt-14 flex flex-col md:flex-row gap-4 md:gap-6"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
-          custom={0.7}
+          custom={0.9}
+          className="lg:mb-[48px]"
         >
-          <HeroButtons />
+          <HeroStatus />
         </motion.div>
-
       </div>
-      </div>
-
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-        custom={0.9}
-        className="mb-[32px] lg:mb-[48px]"
-      >
-        <HeroStatus />
-      </motion.div>
     </div>
   );
 }

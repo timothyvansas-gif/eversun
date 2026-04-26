@@ -29,7 +29,9 @@ export default function HeroButtons() {
     <>
       <button
         className="font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer"
-        onMouseEnter={() => setPrimaryHovered(true)}
+        onMouseEnter={() => {
+          if (window.matchMedia("(hover: hover)").matches) setPrimaryHovered(true);
+        }}
         onMouseLeave={() => setPrimaryHovered(false)}
         style={{
           ...baseStyle,
@@ -42,7 +44,9 @@ export default function HeroButtons() {
       </button>
       <button
         className="font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer"
-        onMouseEnter={() => setSecondaryHovered(true)}
+        onMouseEnter={() => {
+          if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
+        }}
         onMouseLeave={() => setSecondaryHovered(false)}
         style={{
           ...baseStyle,
