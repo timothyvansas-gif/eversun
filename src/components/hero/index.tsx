@@ -6,7 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-backgournd.webp";
 import HeroContent from "./hero-content";
 
-export default function HeroSection() {
+export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -53,7 +53,7 @@ export default function HeroSection() {
       {/* Bottom gradient */}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
 
-      <HeroContent />
+      <HeroContent onOpenMenu={onOpenMenu} />
     </section>
   );
 }

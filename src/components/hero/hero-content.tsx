@@ -21,7 +21,7 @@ const fadeUp = {
   }),
 };
 
-export default function HeroContent() {
+export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) {
   return (
     <div className="absolute inset-0 flex flex-col z-20">
       <div
@@ -36,7 +36,10 @@ export default function HeroContent() {
           className="md:hidden flex items-center justify-between"
         >
           <Logo className="h-[42px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
-          <button className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200">
+          <button 
+            onClick={onOpenMenu}
+            className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200"
+          >
             <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
             <span className="w-4 h-[1.5px] bg-[#FAF4EC] rounded-full" />
             <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
