@@ -64,11 +64,11 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       </nav>
 
       {/* Footer Info */}
-      <div className="mt-auto pt-8 pb-8 flex flex-col gap-1">
+      <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
         <p className="text-[#FAF4EC]/40 text-sm font-medium">
           Ever Sun Zonnestudio
         </p>
-        <p className="text-[#FAF4EC]/40 text-sm font-medium">
+        <p className="text-[#FAF4EC]/40 text-sm font-medium mb-2">
           Kloekhorststraat 4a Assen
         </p>
         <a 
