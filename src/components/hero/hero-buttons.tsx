@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLenis } from "lenis/react";
 
 const EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
 
@@ -23,6 +24,7 @@ const baseStyle: React.CSSProperties = {
 export default function HeroButtons() {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [secondaryHovered, setSecondaryHovered] = useState(false);
+  const lenis = useLenis();
 
   return (
     <>
@@ -47,6 +49,9 @@ export default function HeroButtons() {
           if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
         }}
         onMouseLeave={() => setSecondaryHovered(false)}
+        onClick={() => {
+          lenis?.scrollTo("#waarom", { offset: -20, duration: 1.5 });
+        }}
         style={{
           ...baseStyle,
           transition: `border-color ${EASE}, transform 0.2s ease`,

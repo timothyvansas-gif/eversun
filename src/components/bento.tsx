@@ -55,6 +55,7 @@ export default function Bento() {
 
   return (
     <motion.section
+      id="waarom"
       initial="hidden"
       animate={(mounted && (isInView || startVisible)) ? "visible" : "hidden"}
       className="w-full max-w-[1280px] mx-auto pt-8 pb-16 lg:py-16 min-h-[500px]"

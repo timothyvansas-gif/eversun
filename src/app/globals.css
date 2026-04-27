@@ -16,7 +16,7 @@ body {
 
 @theme inline {
   --font-sans: var(--font-inter);
-  --font-display: var(--font-figtree);
+  --font-display: var(--font-alice);
   --font-alice: var(--font-alice);
 }
 
@@ -38,7 +38,7 @@ body {
 
 @layer components {
   .card-title {
-    @apply text-[20px] lg:text-2xl font-semibold leading-none tracking-[-0.015em] font-display;
+    @apply text-[22px] lg:text-2xl font-normal leading-none tracking-[-0.015em] font-display;
   }
 
   .card-body {
