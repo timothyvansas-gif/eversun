@@ -26,9 +26,14 @@ const cardVariants = {
 
 export default function Bento() {
   const headerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(132);
   const [startVisible, setStartVisible] = useState(false);
   const isInView = useInView(headerRef, { once: true });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -51,8 +56,8 @@ export default function Bento() {
 
   return (
     <motion.section
-      initial={startVisible ? "visible" : "hidden"}
-      animate={isInView || startVisible ? "visible" : "hidden"}
+      initial="hidden"
+      animate={(mounted && (isInView || startVisible)) ? "visible" : "hidden"}
       className="w-full max-w-[1280px] mx-auto pt-8 pb-16 lg:py-16 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >

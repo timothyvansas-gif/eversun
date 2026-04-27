@@ -50,33 +50,29 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
   }, []);
 
   useGSAP(() => {
-    // Only animate on mobile and for non-last cards
     if (!isMounted || !isMobile || index === total - 1) return;
 
-    // Create a localized timeline for this card's exit animation
+    // The scaling animation triggers when the card is in its sticky position
+    // and continues as the next cards scroll over it.
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
-        // Trigger based on the bottom of the sticky card reaching the header zone
-        start: `bottom ${offsetTop + 250}px`,
-        end: `bottom ${offsetTop}px`,
+        // Start scaling as soon as the card hits its sticky top position
+        start: `top ${offsetTop}px`,
+        // Continue scaling until the card is eventually pushed out by its container
+        end: "bottom top", 
         scrub: true,
         invalidateOnRefresh: true,
       }
     });
 
-    tl.fromTo(scalingRef.current, 
-      { scale: 1, opacity: 1 },
-      {
-        scale: 0.9,
-        opacity: 1,
-        ease: "power1.inOut",
-      }
-    );
+    tl.to(scalingRef.current, {
+      scale: 0.9,
+      ease: "power1.inOut"
+    });
 
     return () => {
       tl.kill();
-      ScrollTrigger.refresh();
     };
   }, { dependencies: [isMounted, isMobile, offsetTop], scope: containerRef });
 
@@ -84,16 +80,15 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
     <div
       ref={containerRef}
       style={{
+        position: isMobile ? "sticky" : "relative",
+        top: isMobile ? `${offsetTop}px` : "auto",
         zIndex: 10 + index,
-        // CSS-driven sticky position using the dynamic header height variable
-        ...(isMounted && isMobile ? { top: "var(--header-height, 132px)" } : {})
-      }}
-      className={`origin-top w-full relative ${isMounted && isMobile ? 'sticky' : ''}`}
+      } as React.CSSProperties}
+      className="w-full origin-top"
     >
       <div 
         ref={scalingRef} 
         className="origin-top w-full will-change-transform" 
-        style={{ opacity: 1 }}
       >
         <motion.div
           variants={variants}

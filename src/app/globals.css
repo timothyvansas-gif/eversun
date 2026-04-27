@@ -17,6 +17,7 @@ body {
 @theme inline {
   --font-sans: var(--font-inter);
   --font-display: var(--font-figtree);
+  --font-alice: var(--font-alice);
 }
 
 
@@ -42,5 +43,13 @@ body {
 
   .card-body {
     @apply text-[15px] font-normal leading-6 tracking-[-0.01em];
+  }
+
+  /* Hydration-safe sticky positioning for cards */
+  .sticky-card {
+    @media (max-width: 1023px) {
+      position: sticky;
+      top: var(--header-height, 132px);
+    }
   }
 }

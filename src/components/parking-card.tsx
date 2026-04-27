@@ -1,5 +1,5 @@
 "use client";
-
+import { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useContainerScale } from "@/hooks/use-container-scale";
 import PinMarker from "@/components/pin-marker";
@@ -35,8 +35,15 @@ const itemVariants = {
 };
 
 export default function ParkingCard() {
+  const [mounted, setMounted] = useState(false);
   const { containerRef, contentRef } = useContainerScale(411);
   const parkingInView = useInView(containerRef, { once: true, amount: 0.5 });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const shouldAnimate = mounted && parkingInView;
 
   return (
     <div
@@ -45,9 +52,14 @@ export default function ParkingCard() {
     >
       <div
         ref={contentRef}
-        className="absolute top-0 left-0 origin-top-left bg-brand bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px]"
+        className="absolute top-0 left-0 origin-top-left bg-brand"
         style={{ width: 411, height: 431 }}
       >
+        {/* Background SVG - Softened significantly on mobile for a premium feel */}
+        <div 
+          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-15 lg:opacity-100" 
+        />
+
         {P_BORD_SM.map((s, i) => (
           <motion.img
             key={i}
@@ -59,7 +71,7 @@ export default function ParkingCard() {
             style={{ top: s.top, left: s.left, rotate: s.rotate }}
             custom={i}
             initial="hidden"
-            animate={parkingInView ? "visible" : "hidden"}
+            animate={shouldAnimate ? "visible" : "hidden"}
             variants={itemVariants}
           />
         ))}
@@ -70,15 +82,15 @@ export default function ParkingCard() {
           style={{ top: 231, left: 313 }}
           custom={P_BORD_SM.length}
           initial="hidden"
-          animate={parkingInView ? "visible" : "hidden"}
+          animate={shouldAnimate ? "visible" : "hidden"}
           variants={itemVariants}
         />
 
         <PinMarker />
       </div>
 
-      {/* Unscaled text overlay for mobile consistency */}
-      <div className="absolute bottom-13 left-6 lg:bottom-10 lg:left-10 z-10 pointer-events-none">
+      {/* Unscaled text overlay for mobile consistency - adjusted margin to match PhotoCard */}
+      <div className="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 z-10 pointer-events-none">
         <h3 className="card-title text-zinc-900">Parkeren? Geen punt</h3>
         <p className="card-body text-zinc-800 mt-1">
           Direct voor de deur of garage Citadel

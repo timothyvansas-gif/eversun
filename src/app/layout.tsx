@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Inter } from "next/font/google";
+import { Figtree, Inter, Alice } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
 
@@ -10,6 +10,12 @@ const figtree = Figtree({
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const alice = Alice({
+  weight: "400",
+  variable: "--font-alice",
   subsets: ["latin"],
 });
 
@@ -42,7 +48,7 @@ export default function RootLayout({
     <html
       lang="nl"
       translate="no"
-      className={`${figtree.variable} ${inter.variable} h-full antialiased`}
+      className={`${figtree.variable} ${inter.variable} ${alice.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans relative">

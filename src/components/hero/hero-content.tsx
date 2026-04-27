@@ -34,7 +34,7 @@ export default function HeroContent() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="md:hidden flex items-center justify-between"
         >
-          <Logo className="h-12 w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
+          <Logo className="h-[42px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
           <button className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200">
             <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
             <span className="w-4 h-[1.5px] bg-[#FAF4EC] rounded-full" />
@@ -46,7 +46,7 @@ export default function HeroContent() {
           <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
             <div>
               <motion.h1
-                className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
+                className="font-alice font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -61,7 +61,7 @@ export default function HeroContent() {
               </motion.h1>
 
               <motion.p
-                className="mt-4 lg:mt-3 font-display font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
+                className="mt-4 lg:mt-3 font-alice font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
