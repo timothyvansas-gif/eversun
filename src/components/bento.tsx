@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { motion, useInView } from "framer-motion";
 import StickyCardWrapper from "@/components/sticky-card-wrapper";
 
-// Lazy load card components for better performance
-const PhotoCard = dynamic(() => import("@/components/photo-card"), { ssr: true });
-const ParkingCard = dynamic(() => import("@/components/parking-card"), { ssr: true });
-const MerkenCard = dynamic(() => import("@/components/merken-card"), { ssr: true });
-const AdviesCard = dynamic(() => import("@/components/advies-card"), { ssr: true });
-const LuxeCard = dynamic(() => import("@/components/luxe-card"), { ssr: true });
+// Direct imports for maximum stability
+import PhotoCard from "@/components/photo-card";
+import ParkingCard from "@/components/parking-card";
+import MerkenCard from "@/components/merken-card";
+import AdviesCard from "@/components/advies-card";
+import LuxeCard from "@/components/luxe-card";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -76,10 +75,10 @@ export default function Bento() {
         </p>
       </motion.div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4">
+      <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4 md:gap-4">
         {/* Row 1: Photo & Parking */}
         <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
-          <div className="flex flex-col md:col-span-2 lg:flex-1 max-md:contents">
+          <div className="flex flex-col md:col-span-2 lg:flex-1 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={0} 
               total={5} 
@@ -90,7 +89,7 @@ export default function Bento() {
               <PhotoCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={1} 
               total={5} 
@@ -105,7 +104,7 @@ export default function Bento() {
 
         {/* Row 2: Merken, Advies & Luxe */}
         <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={2} 
               total={5} 
@@ -116,7 +115,7 @@ export default function Bento() {
               <MerkenCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents">
+          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={3} 
               total={5} 
@@ -127,7 +126,7 @@ export default function Bento() {
               <AdviesCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-md:contents">
+          <div className="flex flex-col md:col-span-1 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={4} 
               total={5} 

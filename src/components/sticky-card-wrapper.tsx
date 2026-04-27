@@ -80,8 +80,8 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
     <div
       ref={containerRef}
       style={{
-        position: isMobile ? "sticky" : "relative",
-        top: isMobile ? `${offsetTop}px` : "auto",
+        position: isMounted && isMobile ? "sticky" : "relative",
+        top: isMounted && isMobile ? `${offsetTop}px` : "auto",
         zIndex: 10 + index,
       } as React.CSSProperties}
       className="w-full origin-top"
