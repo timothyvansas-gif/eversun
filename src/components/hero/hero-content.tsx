@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
+import HeroReviews from "./hero-reviews";
 import Logo from "@/components/logo";
 
 const fadeUp = {
@@ -95,9 +96,10 @@ export default function HeroContent() {
             initial="hidden"
             animate="visible"
             custom={0.9}
-            className="mb-10 lg:mb-[48px]"
+            className="mb-10 lg:mb-[48px] flex items-center justify-between"
           >
             <HeroStatus />
+            <HeroReviews />
           </motion.div>
         </div>
       </div>
