@@ -13,7 +13,7 @@ export default function Home() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const pushTransition = { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] };
+  const pushTransition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] };
   const pushAnimation = { marginLeft: isMenuOpen ? "-95%" : "0%" };
 
   return (

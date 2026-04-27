@@ -16,7 +16,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     <motion.div
       initial={{ x: "100%" }}
       animate={{ x: isOpen ? "0%" : "100%" }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 right-0 w-[95%] h-full bg-black z-[200] p-8 flex flex-col md:hidden"
     >
       {/* Close Button */}

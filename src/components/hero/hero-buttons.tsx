@@ -34,6 +34,11 @@ export default function HeroButtons() {
           if (window.matchMedia("(hover: hover)").matches) setPrimaryHovered(true);
         }}
         onMouseLeave={() => setPrimaryHovered(false)}
+        onClick={() => {
+          if (window.innerWidth < 768) {
+            window.open("https://wa.me/31625306491", "_blank");
+          }
+        }}
         style={{
           ...baseStyle,
           transition: `background ${EASE}, box-shadow ${EASE}, transform 0.2s ease`,
