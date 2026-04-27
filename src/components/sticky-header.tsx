@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { useLenis } from "lenis/react";
 import Logo from "@/components/logo";
 
 export default function StickyHeader({ 
@@ -15,6 +16,7 @@ export default function StickyHeader({
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const { scrollY } = useScroll();
+  const lenis = useLenis();
 
   useEffect(() => {
     if (window.scrollY > 500) {
@@ -45,11 +47,16 @@ export default function StickyHeader({
         >
           <div className="w-full flex items-center justify-between px-6">
             {/* Smaller logo with specific colors */}
-            <Logo 
-              className="h-8 w-auto" 
-              textColor="#FAF4EC" 
-              iconColor="#FAF4EC" 
-            />
+            <button 
+              onClick={() => lenis?.scrollTo(0)}
+              className="cursor-pointer active:scale-95 transition-transform duration-200"
+            >
+              <Logo 
+                className="h-8 w-auto" 
+                textColor="#FAF4EC" 
+                iconColor="#FAF4EC" 
+              />
+            </button>
 
             <button 
               onClick={onOpenMenu}

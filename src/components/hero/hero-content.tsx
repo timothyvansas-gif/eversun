@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useLenis } from "lenis/react";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
@@ -22,6 +23,8 @@ const fadeUp = {
 };
 
 export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) {
+  const lenis = useLenis();
+
   return (
     <div className="absolute inset-0 flex flex-col z-20">
       <div
@@ -35,7 +38,12 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
           transition={{ duration: 0.8, delay: 0.2 }}
           className="md:hidden flex items-center justify-between"
         >
-          <Logo className="h-[42px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
+          <button 
+            onClick={() => lenis?.scrollTo(0)}
+            className="cursor-pointer active:scale-95 transition-transform duration-200"
+          >
+            <Logo className="h-[42px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
+          </button>
           <button 
             onClick={onOpenMenu}
             className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200"
