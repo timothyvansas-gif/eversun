@@ -7,11 +7,11 @@ import clock from "@/images/icon-clock.svg";
 export default function HeroStatus() {
   return (
     <button className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
-      <span className="flex items-center gap-3 md:gap-[18px]">
-        <span className="relative flex items-center justify-center w-4 h-4 shrink-0">
+      <span className="flex items-center gap-4 md:gap-[18px]">
+        <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
           <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
-          <Image src={statusOpen} alt="" width={16} height={16} className="block" />
+          <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
         </span>
         <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none">
           Geopend tot 21:00u
