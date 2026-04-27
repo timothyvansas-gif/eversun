@@ -52,4 +52,20 @@ body {
       top: var(--header-height, 132px);
     }
   }
+
+  .nav-link {
+    @apply relative py-2 px-2 font-sans font-semibold text-[15px] text-[#383838] flex items-center gap-2;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-1 left-2 right-2 h-[2px] bg-[#383838] transition-transform duration-300 ease-out;
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
