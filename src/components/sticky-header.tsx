@@ -17,13 +17,13 @@ export default function StickyHeader({
   const { scrollY } = useScroll();
 
   useEffect(() => {
-    if (window.scrollY > 700) {
+    if (window.scrollY > 500) {
       setIsVisible(true);
     }
   }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 700) {
+    if (latest > 500) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -39,7 +39,7 @@ export default function StickyHeader({
           exit={{ y: -100 }}
           transition={{
             y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-            x: transition
+            marginLeft: transition
           }}
           className="fixed top-0 left-0 right-0 z-50 bg-black h-14 flex items-center md:hidden"
         >

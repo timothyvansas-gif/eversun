@@ -14,10 +14,10 @@ export default function Home() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const pushTransition = { duration: 0.6, ease: [0.16, 1, 0.3, 1] };
-  const pushAnimation = { x: isMenuOpen ? "-95%" : "0%" };
+  const pushAnimation = { marginLeft: isMenuOpen ? "-95%" : "0%" };
 
   return (
-    <div className="relative overflow-hidden bg-black min-h-screen">
+    <div className="relative bg-black min-h-screen">
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       
       <StickyHeader 
@@ -30,6 +30,7 @@ export default function Home() {
         animate={pushAnimation}
         transition={pushTransition}
         className="min-h-screen bg-surface-page flex flex-col items-center relative z-10"
+        style={{ width: "100%" }}
       >
         <NavBar />
         <div className="w-full px-0 md:px-4 min-[1538px]:px-0">

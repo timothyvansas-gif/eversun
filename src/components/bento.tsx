@@ -65,7 +65,7 @@ export default function Bento() {
         ref={headerRef}
         variants={cardVariants}
         custom={-1}
-        className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-0 max-lg:pt-0 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page"
+        className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-[56px] max-lg:pt-6 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page"
       >
         <h2 className="text-[28px] lg:text-[48px] font-extrabold leading-none tracking-[-0.01em] lg:tracking-[-0.015em] text-zinc-900 font-display">
           Waarom Ever Sun
@@ -83,7 +83,7 @@ export default function Bento() {
             <StickyCardWrapper 
               index={0} 
               total={5} 
-              offsetTop={headerHeight}
+              offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={0}
             >
@@ -94,7 +94,7 @@ export default function Bento() {
             <StickyCardWrapper 
               index={1} 
               total={5} 
-              offsetTop={headerHeight}
+              offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={1}
             >
@@ -109,7 +109,7 @@ export default function Bento() {
             <StickyCardWrapper 
               index={2} 
               total={5} 
-              offsetTop={headerHeight}
+              offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={2}
             >
@@ -120,7 +120,7 @@ export default function Bento() {
             <StickyCardWrapper 
               index={3} 
               total={5} 
-              offsetTop={headerHeight}
+              offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={3}
             >
@@ -131,7 +131,7 @@ export default function Bento() {
             <StickyCardWrapper 
               index={4} 
               total={5} 
-              offsetTop={headerHeight}
+              offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={4}
             >
