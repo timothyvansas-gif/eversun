@@ -18,7 +18,6 @@ const baseStyle: React.CSSProperties = {
   alignItems: "center",
   gap: "8px",
   borderRadius: "16px",
-  width: "220px",
 };
 
 export default function HeroButtons() {
@@ -28,14 +27,14 @@ export default function HeroButtons() {
   return (
     <>
       <button
-        className="font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer"
+        className="w-[80%] md:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setPrimaryHovered(true);
         }}
         onMouseLeave={() => setPrimaryHovered(false)}
         style={{
           ...baseStyle,
-          transition: `background ${EASE}, box-shadow ${EASE}`,
+          transition: `background ${EASE}, box-shadow ${EASE}, transform 0.2s ease`,
           background: primaryHovered ? "#111" : "#E15E1D",
           boxShadow: primaryHovered ? shadowHover : shadowDefault,
         }}
@@ -43,14 +42,14 @@ export default function HeroButtons() {
         Maak een afspraak
       </button>
       <button
-        className="font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer"
+        className="w-[80%] md:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
         }}
         onMouseLeave={() => setSecondaryHovered(false)}
         style={{
           ...baseStyle,
-          transition: `border-color ${EASE}`,
+          transition: `border-color ${EASE}, transform 0.2s ease`,
           border: `1px solid ${secondaryHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.40)"}`,
         }}
       >

@@ -16,13 +16,21 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Ever Sun",
   description: "Ever Sun — jouw zonnebank specialist",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Ever Sun",
+  },
   other: {
     "google": "notranslate",
   },
 };
 
 export const viewport = {
-  themeColor: "#faf4ec",
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#000000",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -35,8 +43,21 @@ export default function RootLayout({
       lang="nl"
       translate="no"
       className={`${figtree.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans relative">
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "env(safe-area-inset-top)",
+            background: "#000000",
+            zIndex: 9999,
+          }}
+        />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

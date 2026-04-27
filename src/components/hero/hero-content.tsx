@@ -22,20 +22,28 @@ const fadeUp = {
 
 export default function HeroContent() {
   return (
-    <div className="absolute inset-0 flex flex-col">
-      <div className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-between px-6 pt-8 pb-8 lg:px-0 lg:py-12 lg:justify-start">
-        {/* Mobile Logo */}
+    <div className="absolute inset-0 flex flex-col z-20">
+      <div
+        className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-between px-6 pb-8 lg:px-0 lg:py-12 lg:justify-start"
+        style={{ paddingTop: "max(2rem, env(safe-area-inset-top))" }}
+      >
+        {/* Mobile Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="md:hidden"
+          className="md:hidden flex items-center justify-between"
         >
-          <Logo className="h-8 w-auto text-[#FAF4EC]" />
+          <Logo className="h-12 w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
+          <button className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200">
+            <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
+            <span className="w-4 h-[1.5px] bg-[#FAF4EC] rounded-full" />
+            <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
+          </button>
         </motion.div>
 
         <div className="flex-1 flex flex-col justify-end">
-          <div className="mb-14 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
+          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
             <div>
               <motion.h1
                 className="font-display font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
@@ -53,7 +61,7 @@ export default function HeroContent() {
               </motion.h1>
 
               <motion.p
-                className="mt-3 font-display font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
+                className="mt-4 lg:mt-3 font-display font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -71,7 +79,7 @@ export default function HeroContent() {
               </motion.p>
 
               <motion.div
-                className="mt-8 lg:mt-11 flex flex-col md:flex-row gap-4 md:gap-6"
+                className="mt-10 lg:mt-11 flex flex-col md:flex-row gap-4 md:gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -87,7 +95,7 @@ export default function HeroContent() {
             initial="hidden"
             animate="visible"
             custom={0.9}
-            className="mb-2 lg:mb-[48px]"
+            className="mb-10 lg:mb-[48px]"
           >
             <HeroStatus />
           </motion.div>

@@ -88,7 +88,7 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
         // CSS-driven sticky position using the dynamic header height variable
         ...(isMounted && isMobile ? { top: "var(--header-height, 132px)" } : {})
       }}
-      className={`origin-top w-full ${isMounted && isMobile ? 'sticky' : ''}`}
+      className={`origin-top w-full relative ${isMounted && isMobile ? 'sticky' : ''}`}
     >
       <div 
         ref={scalingRef} 

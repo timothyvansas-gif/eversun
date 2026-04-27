@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-backgournd.webp";
 import HeroContent from "./hero-content";
 
 export default function HeroSection() {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -19,23 +20,38 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[98vh] md:h-[85vh] md:max-h-[750px] overflow-hidden max-w-[1538px] mx-auto rounded-none md:rounded-[8px] bg-[#684F37]"
+      className="relative w-full h-[98vh] md:h-[85vh] md:max-h-[750px] overflow-hidden max-w-[1538px] mx-auto rounded-none md:rounded-[8px] bg-black"
     >
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 overflow-hidden"
         style={{ y, scale }}
-        initial={{ scale: 1.12, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.8, ease: [0.25, 0.1, 0.25, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
           src={heroImage}
           alt="EverSun"
           fill
           priority
-          className="object-cover"
+          placeholder="blur"
+          className={`object-cover transition-all duration-[1500ms] ease-out ${
+            isImageLoaded ? "scale-100 blur-0" : "scale-110 blur-xl"
+          }`}
+          onLoad={() => setIsImageLoaded(true)}
+        />
+        {/* Subtle overlay to soften the transition from bg color */}
+        <div
+          className={`absolute inset-0 bg-[#684F37]/20 transition-opacity duration-1000 ${
+            isImageLoaded ? "opacity-0" : "opacity-100"
+          }`}
         />
       </motion.div>
+
+      {/* Top gradient — always visible, not affected by image fade-in animation */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-10" />
+      {/* Bottom gradient */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
 
       <HeroContent />
     </section>
