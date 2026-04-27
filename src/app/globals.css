@@ -55,7 +55,7 @@ body {
   }
 
   .nav-link {
-    @apply relative py-2 px-2 font-sans font-semibold text-[15px] text-[#383838] flex items-center gap-2;
+    @apply relative py-2 px-[11px] font-sans font-semibold text-[15px] text-[#383838] flex items-center gap-2;
   }
 
   .nav-link::after {
