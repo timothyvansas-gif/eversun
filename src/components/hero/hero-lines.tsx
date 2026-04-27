@@ -19,8 +19,8 @@ export default function HeroLines() {
         strokeLinecap="round"
         strokeLinejoin="round"
         className="[stroke-width:3] md:[stroke-width:1.25]"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.3, ease }}
       />
       <motion.path
@@ -29,8 +29,8 @@ export default function HeroLines() {
         strokeLinecap="round"
         strokeLinejoin="round"
         className="[stroke-width:3] md:[stroke-width:1.25] translate-y-[5px] md:translate-y-0"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.75, ease }}
       />
     </motion.svg>
