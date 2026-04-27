@@ -38,7 +38,7 @@ export default function StickyHeader({
           animate={{ y: 0, ...animate }}
           exit={{ y: -100 }}
           transition={{
-            y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+            y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
             marginLeft: transition
           }}
           className="fixed top-0 left-0 right-0 z-50 bg-black h-14 flex items-center md:hidden"
