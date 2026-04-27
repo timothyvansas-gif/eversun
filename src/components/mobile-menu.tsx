@@ -68,6 +68,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <p className="text-[#FAF4EC]/40 text-sm font-medium">
           Ever Sun Zonnestudio
         </p>
+        <p className="text-[#FAF4EC]/40 text-sm font-medium">
+          Kloekhorststraat 4a Assen
+        </p>
         <a 
           href="tel:0625306491" 
           className="text-[#FAF4EC]/40 text-sm font-medium active:text-[#FAF4EC]"
