@@ -53,8 +53,8 @@ export default function HeroContent() {
                 animate="visible"
                 custom={0.3}
                 style={{
-                  fontSize: "clamp(52px, 7.5vw, 96px)",
-                  lineHeight: "clamp(54px, 7.8vw, 100px)",
+                  fontSize: "clamp(56px, 7.5vw, 96px)",
+                  lineHeight: "clamp(58px, 7.8vw, 100px)",
                   marginLeft: "-3px",
                 }}
               >
@@ -68,8 +68,8 @@ export default function HeroContent() {
                 animate="visible"
                 custom={0.5}
                 style={{
-                  fontSize: "clamp(20px, 3.44vw, 44px)",
-                  lineHeight: "clamp(26px, 4.06vw, 52px)",
+                  fontSize: "clamp(21px, 3.44vw, 44px)",
+                  lineHeight: "clamp(27px, 4.06vw, 52px)",
                 }}
               >
                 begint bij zonnestudio{" "}

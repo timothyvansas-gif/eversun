@@ -17,7 +17,7 @@ export default function HeroReviews() {
           <div
             key={i}
             className="w-[48px] h-[48px] rounded-full border border-[#D4C4B1] overflow-hidden relative"
-            style={{ zIndex: reviewers.length - i }}
+            style={{ zIndex: i }}
           >
             <Image
               src={img}
@@ -35,7 +35,7 @@ export default function HeroReviews() {
         className="h-[48px] px-5 flex items-center bg-[rgba(64,43,26,0.40)] backdrop-blur-[2px] rounded-full"
       >
         <span className="font-sans text-[15px] text-[#FAF4EC] leading-none whitespace-nowrap">
-          <span className="font-bold">4.9</span>/5 — 176 reviews
+          <span className="font-bold">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
         </span>
       </div>
     </div>
