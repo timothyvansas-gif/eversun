@@ -57,7 +57,7 @@ export default function ParkingCard() {
       >
         {/* Background SVG - Softened significantly on mobile for a premium feel */}
         <div 
-          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-15 lg:opacity-100" 
+          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-100" 
         />
 
         {P_BORD_SM.map((s, i) => (
