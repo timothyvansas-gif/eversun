@@ -19,28 +19,31 @@ function ScrollTriggerConfig() {
     // 1. Register the plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    // 2. Synchronize GSAP ticker with Lenis raf
-    // This is the "Gold Standard" for GSAP + Lenis integration
-    const update = (time: number) => {
-      lenis?.raf(time * 1000);
-    };
-    
-    gsap.ticker.add(update);
-    
-    // Disable lag smoothing for perfect sync
-    gsap.ticker.lagSmoothing(0);
+    // 2. Prevent browser from jumping to scroll positions automatically
+    if (typeof window !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
 
     // 3. Link Lenis scroll to ScrollTrigger update
-    lenis?.on("scroll", () => {
-      ScrollTrigger.update();
-    });
+    // This ensures GSAP animations stay in sync with the smooth scroll
+    lenis?.on("scroll", ScrollTrigger.update);
 
-    // 4. Initial refresh to catch starting positions
+    // 4. Handle visibility change (mobile "wake up")
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        lenis?.start();
+        ScrollTrigger.refresh();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // 5. Initial refresh
     ScrollTrigger.refresh();
 
     return () => {
-      gsap.ticker.remove(update);
       lenis?.off("scroll", ScrollTrigger.update);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [lenis]);
 
@@ -53,7 +56,15 @@ export default function SmoothScroll({
   children: React.ReactNode;
 }) {
   return (
-    <ReactLenis root options={{ lerp: 0.08, duration: 1.5, smoothWheel: true }}>
+    <ReactLenis 
+      root 
+      options={{ 
+        lerp: 0.08, 
+        duration: 1.5, 
+        smoothWheel: true,
+        syncTouch: true,
+      }}
+    >
       <ScrollTriggerConfig />
       {children}
     </ReactLenis>
