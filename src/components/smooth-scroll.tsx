@@ -59,10 +59,10 @@ export default function SmoothScroll({
     <ReactLenis 
       root 
       options={{ 
-        lerp: 0.15, 
-        duration: 1.0, 
+        lerp: 0.12, 
+        duration: 1.2, 
         smoothWheel: true,
-        syncTouch: true,
+        // syncTouch verwijderd: we gebruiken native scroll op mobiel voor het beste gevoel
       }}
     >
       <ScrollTriggerConfig />
