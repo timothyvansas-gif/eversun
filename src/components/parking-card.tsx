@@ -47,12 +47,12 @@ export default function ParkingCard() {
     >
       <div
         ref={contentRef}
-        className="absolute left-0 origin-top-left bg-brand -top-8 xl:top-0"
+        className="absolute top-0 left-0 origin-top-left bg-brand"
         style={{ width: 411, height: 431 }}
       >
         {/* Background SVG - Softened significantly on mobile for a premium feel */}
         <div 
-          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-100" 
+          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-100 max-xl:[mask-image:radial-gradient(ellipse_100%_28%_at_50%_40%,black_30%,transparent_100%)] max-xl:[-webkit-mask-image:radial-gradient(ellipse_100%_28%_at_50%_40%,black_30%,transparent_100%)]" 
         />
 
         {P_BORD_SM.map((s, i) => (

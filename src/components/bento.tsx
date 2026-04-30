@@ -71,7 +71,7 @@ export default function Bento() {
         </p>
       </motion.div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-col gap-2 md:gap-4">
+      <div className="flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-col gap-3 md:gap-4">
         {/* Row 1: Photo & Parking */}
         <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
           <div className="flex flex-col md:col-span-2 xl:[flex:849] max-md:contents max-md:mb-4">
