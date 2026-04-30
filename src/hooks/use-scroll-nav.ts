@@ -1,6 +1,6 @@
 import { useLenis } from "lenis/react";
 
-const SCROLL_OPTIONS = { offset: -20, duration: 1.5 } as const;
+const SCROLL_OPTIONS = { offset: -56, duration: 1.5 } as const;
 
 const SECTION_MAP: Record<string, string> = {
   Studio: "#waarom",
