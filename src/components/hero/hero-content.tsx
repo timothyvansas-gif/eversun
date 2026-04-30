@@ -3,11 +3,13 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLenis } from "lenis/react";
+import { useScrollNav } from "@/hooks/use-scroll-nav";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
 import Logo from "@/components/logo";
+import HamburgerIcon from "@/components/hamburger-icon";
 import whatsappIcon from "@/images/whatsapp.svg";
 
 const fadeUp = {
@@ -25,6 +27,7 @@ const fadeUp = {
 
 export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) {
   const lenis = useLenis();
+  const { scrollToNav } = useScrollNav();
 
   return (
     <div className="absolute inset-0 flex flex-col z-20">
@@ -60,7 +63,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
                 onClick={(e) => {
                   if (item === "Studio") {
                     e.preventDefault();
-                    lenis?.scrollTo("#waarom", { offset: -20, duration: 1.5 });
+                    scrollToNav("Studio");
                   }
                 }}
               >
@@ -99,13 +102,11 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
           >
             <Logo className="h-[42px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
           </button>
-          <button 
+          <button
             onClick={onOpenMenu}
             className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200"
           >
-            <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
-            <span className="w-4 h-[1.5px] bg-[#FAF4EC] rounded-full" />
-            <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
+            <HamburgerIcon />
           </button>
         </motion.div>
 

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useLenis } from "lenis/react";
+import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
 
 interface MobileMenuProps {
@@ -11,22 +11,13 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const lenis = useLenis();
+  const { scrollToNav } = useScrollNav();
   const navItems = ["Studio", "Banken", "Producten", "Over ons", "Contact"];
 
   const handleNavClick = (e: React.MouseEvent, item: string) => {
     e.preventDefault();
-    
-    // Map Studio to waarom to match NavBar logic
-    const targetId = item === "Studio" ? "#waarom" : `#${item.toLowerCase().replace(" ", "-")}`;
-    
-    // 1. Close the menu immediately
     onClose();
-    
-    // 2. Wait for the menu animation (800ms) to be mostly done before scrolling
-    setTimeout(() => {
-      lenis?.scrollTo(targetId, { offset: -20, duration: 1.5 });
-    }, 600);
+    scrollToNav(item, 600);
   };
 
   return (

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, type Transition, type TargetAndTransition } from "framer-motion";
 import { useLenis } from "lenis/react";
 import Logo from "@/components/logo";
+import HamburgerIcon from "@/components/hamburger-icon";
 
 export default function StickyHeader({ 
   onOpenMenu, 
@@ -58,13 +59,11 @@ export default function StickyHeader({
               />
             </button>
 
-            <button 
+            <button
               onClick={onOpenMenu}
               className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
             >
-              <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
-              <span className="w-4 h-[1.5px] bg-[#FAF4EC] rounded-full" />
-              <span className="w-6 h-[1.5px] bg-[#FAF4EC] rounded-full" />
+              <HamburgerIcon />
             </button>
           </div>
         </motion.header>

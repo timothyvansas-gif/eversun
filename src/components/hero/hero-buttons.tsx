@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLenis } from "lenis/react";
+import { useScrollNav } from "@/hooks/use-scroll-nav";
 
 const EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
 
@@ -24,7 +24,7 @@ const baseStyle: React.CSSProperties = {
 export default function HeroButtons() {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [secondaryHovered, setSecondaryHovered] = useState(false);
-  const lenis = useLenis();
+  const { scrollToNav } = useScrollNav();
 
   return (
     <>
@@ -55,7 +55,7 @@ export default function HeroButtons() {
         }}
         onMouseLeave={() => setSecondaryHovered(false)}
         onClick={() => {
-          lenis?.scrollTo("#waarom", { offset: -20, duration: 1.5 });
+          scrollToNav("Studio");
         }}
         style={{
           ...baseStyle,

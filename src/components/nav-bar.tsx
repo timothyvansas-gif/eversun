@@ -2,17 +2,17 @@
 
 import Logo from "@/components/logo";
 import Image from "next/image";
-import { useLenis } from "lenis/react";
+import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
 
 export default function NavBar() {
-  const lenis = useLenis();
+  const { scrollToNav } = useScrollNav();
   const navItems = ["Studio", "Banken", "Producten", "Over ons", "Contact"];
 
   const handleScroll = (e: React.MouseEvent, item: string) => {
     if (item === "Studio") {
       e.preventDefault();
-      lenis?.scrollTo("#waarom", { offset: -20, duration: 1.5 });
+      scrollToNav("Studio");
     }
   };
 
