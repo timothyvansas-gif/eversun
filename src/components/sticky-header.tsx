@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, type Transition, type TargetAndTransition } from "framer-motion";
 import { useLenis } from "lenis/react";
 import Logo from "@/components/logo";
 
@@ -11,8 +11,8 @@ export default function StickyHeader({
   transition 
 }: { 
   onOpenMenu: () => void;
-  animate: any;
-  transition: any;
+  animate: TargetAndTransition;
+  transition: Transition;
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const { scrollY } = useScroll();

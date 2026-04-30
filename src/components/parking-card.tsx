@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useContainerScale } from "@/hooks/use-container-scale";
 import PinMarker from "@/components/pin-marker";
+import pBordSm from "@/images/p-bord-sm.svg";
+import pBordL from "@/images/p-bord-l.svg";
 
 const P_BORD_SM = [
   // Diagonal column (upper center, following diagonal road)
@@ -35,15 +36,9 @@ const itemVariants = {
 };
 
 export default function ParkingCard() {
-  const [mounted, setMounted] = useState(false);
   const { containerRef, contentRef } = useContainerScale(411);
   const parkingInView = useInView(containerRef, { once: true, amount: 0.5 });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const shouldAnimate = mounted && parkingInView;
+  const shouldAnimate = parkingInView;
 
   return (
     <div
@@ -63,7 +58,7 @@ export default function ParkingCard() {
         {P_BORD_SM.map((s, i) => (
           <motion.img
             key={i}
-            src="/p-bord-sm.svg"
+            src={pBordSm.src}
             width={24}
             height={24}
             alt="Parkeerbord icoon"
@@ -76,7 +71,7 @@ export default function ParkingCard() {
           />
         ))}
         <motion.img
-          src="/p-bord-l.svg"
+          src={pBordL.src}
           alt="Groot parkeerbord icoon"
           className="absolute"
           style={{ top: 231, left: 313 }}
@@ -90,7 +85,7 @@ export default function ParkingCard() {
       </div>
 
       {/* Unscaled text overlay for mobile consistency - adjusted margin to match PhotoCard */}
-      <div className="absolute bottom-6 left-6 lg:bottom-10 lg:left-10 z-10 pointer-events-none">
+      <div className="absolute bottom-6 left-6 xl:bottom-10 xl:left-10 z-10 pointer-events-none">
         <h3 className="card-title text-zinc-900">Parkeren? Geen punt</h3>
         <p className="card-body text-zinc-800 mt-1">
           Direct voor de deur of garage Citadel

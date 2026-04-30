@@ -1,17 +1,12 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useInView } from "framer-motion";
 import ovalsErgo from "@/images/ovals-ergo.svg";
 import ErgolineSignature from "@/components/ergoline-signature";
 
 export default function LuxeCard() {
-  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.6 });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div ref={containerRef} className="relative w-full xl:w-[302px] h-[362px] bg-white rounded-lg pt-6 px-6 pb-13 xl:p-10 flex flex-col xl:shrink-0 overflow-hidden xl:overflow-visible">
@@ -28,7 +23,7 @@ export default function LuxeCard() {
         className="absolute bottom-[40px] left-[61px] md:left-1/2 md:-translate-x-1/2 xl:bottom-[32px] pointer-events-none"
       />
 
-      <ErgolineSignature isInView={mounted && isInView} />
+      <ErgolineSignature isInView={isInView} />
     </div>
   );
 }
