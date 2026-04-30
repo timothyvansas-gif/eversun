@@ -58,31 +58,31 @@ export default function Bento() {
       id="waarom"
       initial="hidden"
       animate={(mounted && (isInView || startVisible)) ? "visible" : "hidden"}
-      className="w-full max-w-[1280px] mx-auto pt-8 pb-16 lg:py-16 min-h-[500px]"
+      className="w-full max-w-[1280px] mx-auto pt-4 pb-16 md:pt-8 xl:pt-10 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >
       <motion.div
         ref={headerRef}
         variants={cardVariants}
         custom={-1}
-        className="mb-6 lg:mb-10 w-full lg:w-bento-primary relative z-[40] max-lg:sticky max-lg:top-[56px] max-lg:pt-6 max-lg:pb-6 max-lg:mb-0 max-lg:bg-surface-page"
+        className="mb-6 xl:mb-10 w-full xl:w-bento-primary relative z-[40] max-md:sticky max-md:top-[56px] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page"
       >
-        <h2 className="text-[28px] lg:text-[48px] font-extrabold leading-none tracking-[-0.01em] lg:tracking-[-0.015em] text-zinc-900 font-display">
+        <h2 className="text-[clamp(28px,3.75vw,48px)] font-extrabold leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
           Waarom Ever Sun
         </h2>
-        <p className="mt-2 text-[15px] lg:text-[20px] font-normal lg:font-medium leading-[24px] lg:leading-8 tracking-[-0.02em] text-zinc-600">
+        <p className="mt-2 text-[15px] xl:text-[20px] font-normal xl:font-medium leading-[24px] xl:leading-8 tracking-[-0.02em] text-zinc-600">
           Je pakt je moment onder de beste banken, krijgt advies dat bij jou
           past en loopt twintig minuten later weer als herboren naar buiten.
         </p>
       </motion.div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col gap-4 md:gap-4">
+      <div className="flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-col gap-4 md:gap-4">
         {/* Row 1: Photo & Parking */}
-        <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
-          <div className="flex flex-col md:col-span-2 lg:flex-1 max-md:contents max-md:mb-4">
-            <StickyCardWrapper 
-              index={0} 
-              total={5} 
+        <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
+          <div className="flex flex-col md:col-span-2 xl:flex-1 max-md:contents max-md:mb-4">
+            <StickyCardWrapper
+              index={0}
+              total={5}
               offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={0}
@@ -90,9 +90,9 @@ export default function Bento() {
               <PhotoCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-2 lg:flex-1 max-md:contents max-md:mb-4">
-            <StickyCardWrapper 
-              index={1} 
+          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+            <StickyCardWrapper
+              index={1}
               total={5} 
               offsetTop={headerHeight + 56}
               variants={cardVariants}
@@ -104,11 +104,11 @@ export default function Bento() {
         </div>
 
         {/* Row 2: Merken, Advies & Luxe */}
-        <div className="flex flex-col lg:flex-row gap-4 md:contents max-md:contents lg:flex">
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents max-md:mb-4">
-            <StickyCardWrapper 
-              index={2} 
-              total={5} 
+        <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
+          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+            <StickyCardWrapper
+              index={2}
+              total={5}
               offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={2}
@@ -116,10 +116,10 @@ export default function Bento() {
               <MerkenCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 lg:flex-1 max-md:contents max-md:mb-4">
-            <StickyCardWrapper 
-              index={3} 
-              total={5} 
+          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+            <StickyCardWrapper
+              index={3}
+              total={5}
               offsetTop={headerHeight + 56}
               variants={cardVariants}
               custom={3}
@@ -127,7 +127,7 @@ export default function Bento() {
               <AdviesCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-2 lg:col-span-1 lg:w-[302px] lg:shrink-0 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:col-span-1 xl:w-[302px] xl:shrink-0 max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={4} 
               total={5} 

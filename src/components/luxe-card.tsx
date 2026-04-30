@@ -14,10 +14,10 @@ export default function LuxeCard() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full lg:w-[302px] h-[362px] bg-white rounded-lg pt-6 px-6 pb-13 lg:p-10 flex flex-col lg:shrink-0 overflow-hidden lg:overflow-visible">
+    <div ref={containerRef} className="relative w-full xl:w-[302px] h-[362px] bg-white rounded-lg pt-6 px-6 pb-13 xl:p-10 flex flex-col xl:shrink-0 overflow-hidden xl:overflow-visible">
       <h3 className="card-title text-zinc-900">Ultieme luxe</h3>
       <p className="card-body text-zinc-500 mt-1">
-        Onder de nummer één <span className="lg:hidden">zonne</span>banken
+        Onder de nummer één <span className="xl:hidden">zonne</span>banken
       </p>
 
       <img
@@ -25,7 +25,7 @@ export default function LuxeCard() {
         width={221}
         height={221}
         alt="Abstracte Ergoline merk-vormen"
-        className="absolute bottom-[40px] left-[61px] lg:left-1/2 lg:-translate-x-1/2 lg:bottom-[32px] pointer-events-none"
+        className="absolute bottom-[40px] left-[61px] md:left-1/2 md:-translate-x-1/2 xl:bottom-[32px] pointer-events-none"
       />
 
       <ErgolineSignature isInView={mounted && isInView} />

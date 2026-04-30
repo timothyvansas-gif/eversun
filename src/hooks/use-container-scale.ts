@@ -10,7 +10,7 @@ export function useContainerScale(designWidth: number) {
     if (!container || !content) return;
 
     const applyScale = (width: number) => {
-      content.style.transform = `scale(${width / designWidth})`;
+      content.style.transform = `scale(${Math.min(1, width / designWidth)})`;
     };
 
     const observer = new ResizeObserver(([entry]) => {

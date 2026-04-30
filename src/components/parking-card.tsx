@@ -48,7 +48,7 @@ export default function ParkingCard() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full lg:w-[411px] h-[362px] lg:h-[431px] bg-brand rounded-lg overflow-hidden lg:shrink-0"
+      className="relative w-full xl:w-[411px] h-[362px] xl:h-[431px] bg-brand rounded-lg overflow-hidden xl:shrink-0"
     >
       <div
         ref={contentRef}

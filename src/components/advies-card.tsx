@@ -39,7 +39,7 @@ export default function AdviesCard() {
   const [started, setStarted] = useState(false);
   
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1280);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -90,7 +90,7 @@ export default function AdviesCard() {
   };
 
   return (
-    <div ref={containerRef} className="w-full lg:w-[535px] h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative lg:shrink-0">
+    <div ref={containerRef} className="w-full xl:w-[535px] h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative xl:shrink-0">
       <AnimatePresence initial={false}>
         <motion.div
           key={active}
@@ -105,13 +105,13 @@ export default function AdviesCard() {
         />
       </AnimatePresence>
 
-      <div className="absolute top-13 left-6 lg:top-10 lg:left-10 z-10">
+      <div className="absolute top-13 left-6 xl:top-10 xl:left-10 z-10">
         <h3 className="card-title text-white">Persoonlijk advies</h3>
         <p className="card-body text-white/90 mt-1">Afgestemd op jouw unieke huid</p>
       </div>
 
       <div
-        className="absolute bottom-13 left-6 lg:bottom-10 lg:left-10 z-10"
+        className="absolute bottom-13 left-6 xl:bottom-10 xl:left-10 z-10"
         style={{ width: CONTAINER_W, height: THUMB }}
       >
         {/* Ring — static at active slot */}
