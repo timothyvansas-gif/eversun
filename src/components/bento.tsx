@@ -60,7 +60,7 @@ export default function Bento() {
         ref={headerRef}
         variants={cardVariants}
         custom={-1}
-        className="mb-6 xl:mb-10 w-full xl:w-bento-primary relative z-[40] max-md:sticky max-md:top-[56px] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page"
+        className="mb-6 xl:mb-10 w-full xl:max-w-[849px] relative z-[40] max-md:sticky max-md:top-[56px] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page"
       >
         <h2 className="text-[clamp(28px,3.75vw,48px)] font-extrabold leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
           Waarom Ever Sun
@@ -71,10 +71,10 @@ export default function Bento() {
         </p>
       </motion.div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-col gap-4 md:gap-4">
+      <div className="flex flex-col md:grid md:grid-cols-2 xl:flex xl:flex-col gap-2 md:gap-4">
         {/* Row 1: Photo & Parking */}
         <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
-          <div className="flex flex-col md:col-span-2 xl:flex-1 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-2 xl:[flex:849] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={0}
               total={5}
@@ -85,7 +85,7 @@ export default function Bento() {
               <PhotoCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={1}
               total={5} 
@@ -100,7 +100,7 @@ export default function Bento() {
 
         {/* Row 2: Merken, Advies & Luxe */}
         <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
-          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={2}
               total={5}
@@ -111,7 +111,7 @@ export default function Bento() {
               <MerkenCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 xl:flex-1 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:535] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={3}
               total={5}
@@ -122,7 +122,7 @@ export default function Bento() {
               <AdviesCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 xl:col-span-1 xl:w-[302px] xl:shrink-0 max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:302] max-md:contents max-md:mb-4">
             <StickyCardWrapper 
               index={4} 
               total={5} 

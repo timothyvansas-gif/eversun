@@ -43,11 +43,11 @@ export default function ParkingCard() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full xl:w-[411px] h-[362px] xl:h-[431px] bg-brand rounded-lg overflow-hidden xl:shrink-0"
+      className="relative w-full h-[362px] xl:h-[431px] bg-brand rounded-lg overflow-hidden"
     >
       <div
         ref={contentRef}
-        className="absolute top-0 left-0 origin-top-left bg-brand"
+        className="absolute left-0 origin-top-left bg-brand -top-8 xl:top-0"
         style={{ width: 411, height: 431 }}
       >
         {/* Background SVG - Softened significantly on mobile for a premium feel */}

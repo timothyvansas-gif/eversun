@@ -35,7 +35,7 @@ export default function Home() {
         <div className="w-full md:p-[clamp(0px,1.5vw,1.5rem)]">
           <HeroSection onOpenMenu={toggleMenu} />
         </div>
-        <div className="w-full flex flex-col items-center px-[24px] md:px-10 xl:px-0">
+        <div className="w-full flex flex-col items-center px-[24px] md:px-10">
           <Bento />
         </div>
       </motion.main>

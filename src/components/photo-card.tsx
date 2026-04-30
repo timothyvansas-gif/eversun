@@ -4,7 +4,7 @@ import moreIcon from "@/images/more-icon.svg";
 
 export default function PhotoCard() {
   return (
-    <div className="w-full xl:w-bento-primary h-[362px] xl:h-[431px] bg-white rounded-lg p-6 xl:p-10 flex flex-col justify-between xl:shrink-0">
+    <div className="w-full h-[362px] xl:h-[431px] bg-white rounded-lg flex flex-col justify-between" style={{ padding: 'clamp(24px, 4vw, 40px)' }}>
       <div className="grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] xl:gap-[2px] mb-4 h-[220px] xl:h-[270px] rounded overflow-hidden">
         <div className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536]">
           <img

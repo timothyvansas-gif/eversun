@@ -90,7 +90,7 @@ export default function AdviesCard() {
   };
 
   return (
-    <div ref={containerRef} className="w-full xl:w-[535px] h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative xl:shrink-0">
+    <div ref={containerRef} className="w-full h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative">
       <AnimatePresence initial={false}>
         <motion.div
           key={active}
@@ -105,14 +105,14 @@ export default function AdviesCard() {
         />
       </AnimatePresence>
 
-      <div className="absolute top-13 left-6 xl:top-10 xl:left-10 z-10">
+      <div className="absolute top-[52px] xl:top-[40px] z-10" style={{ left: 'clamp(24px, 4vw, 40px)' }}>
         <h3 className="card-title text-white">Persoonlijk advies</h3>
         <p className="card-body text-white/90 mt-1">Afgestemd op jouw unieke huid</p>
       </div>
 
       <div
-        className="absolute bottom-13 left-6 xl:bottom-10 xl:left-10 z-10"
-        style={{ width: CONTAINER_W, height: THUMB }}
+        className="absolute bottom-[52px] xl:bottom-[40px] z-10"
+        style={{ left: 'clamp(24px, 4vw, 40px)', width: CONTAINER_W, height: THUMB }}
       >
         {/* Ring — static at active slot */}
         <div

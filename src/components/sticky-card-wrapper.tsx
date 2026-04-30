@@ -34,7 +34,7 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
   // Sync mounting state to prevent hydration mismatches with window-dependent logic
   useEffect(() => {
     setIsMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.matchMedia("(max-width: 767px)").matches);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     
@@ -70,10 +70,6 @@ export default function StickyCardWrapper({ children, index, total, offsetTop = 
       scale: 0.9,
       ease: "power1.inOut"
     });
-
-    return () => {
-      tl.kill();
-    };
   }, { dependencies: [isMounted, isMobile, offsetTop], scope: containerRef });
 
   return (
