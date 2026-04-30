@@ -29,7 +29,7 @@ export default function HeroButtons() {
   return (
     <>
       <button
-        className="w-[70%] md:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setPrimaryHovered(true);
         }}
@@ -49,7 +49,7 @@ export default function HeroButtons() {
         Maak een afspraak
       </button>
       <button
-        className="w-[70%] md:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
         }}

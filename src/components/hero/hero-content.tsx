@@ -147,7 +147,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
               </motion.p>
 
               <motion.div
-                className="mt-10 lg:mt-11 flex flex-col lg:flex-row gap-4 md:gap-6"
+                className="mt-10 lg:mt-11 flex flex-col sm:flex-row gap-4 md:gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
