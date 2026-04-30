@@ -32,7 +32,7 @@ export default function Home() {
         style={{ width: "100%" }}
       >
 
-        <div className="w-full px-0 md:px-4 md:py-4 min-[1538px]:px-0">
+        <div className="w-full" style={{ padding: "clamp(0px, 1.5vw, 1.5rem)" }}>
           <HeroSection onOpenMenu={toggleMenu} />
         </div>
         <div className="w-full flex flex-col items-center px-[24px] md:px-10 lg:px-0">

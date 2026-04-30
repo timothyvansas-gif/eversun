@@ -29,15 +29,20 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
   return (
     <div className="absolute inset-0 flex flex-col z-20">
       <div
-        className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-between px-6 pb-8 lg:px-0 lg:py-12 lg:justify-start"
-        style={{ paddingTop: "max(2rem, env(safe-area-inset-top))" }}
+        className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col justify-between lg:justify-start"
+        style={{ 
+          paddingTop: "calc(clamp(1.5rem, 4vw, 3.5rem) + env(safe-area-inset-top))",
+          paddingBottom: "clamp(1.5rem, 4vw, 3.5rem)",
+          paddingLeft: "clamp(1.5rem, 4vw, 5rem)",
+          paddingRight: "clamp(1.5rem, 4vw, 5rem)"
+        }}
       >
         {/* Desktop Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="hidden md:flex items-center justify-between"
+          className="hidden lg:flex items-center justify-between"
         >
           <button 
             onClick={() => lenis?.scrollTo(0)}
@@ -86,7 +91,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="md:hidden flex items-center justify-between"
+          className="lg:hidden flex items-center justify-between"
         >
           <button 
             onClick={() => lenis?.scrollTo(0)}
@@ -141,7 +146,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
               </motion.p>
 
               <motion.div
-                className="mt-10 lg:mt-11 flex flex-col md:flex-row gap-4 md:gap-6"
+                className="mt-10 lg:mt-11 flex flex-col lg:flex-row gap-4 md:gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"

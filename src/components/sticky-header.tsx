@@ -43,7 +43,7 @@ export default function StickyHeader({
             y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
             marginLeft: transition
           }}
-          className="fixed top-0 left-0 right-0 z-50 bg-black h-14 flex items-center md:hidden"
+          className="fixed top-0 left-0 right-0 z-50 bg-black h-14 flex items-center lg:hidden"
         >
           <div className="w-full flex items-center justify-between px-6">
             {/* Smaller logo with specific colors */}
