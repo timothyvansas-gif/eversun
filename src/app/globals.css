@@ -55,7 +55,7 @@ body {
   }
 
   .nav-link {
-    @apply relative py-2 px-[11px] font-sans font-semibold text-[15px] text-[#383838] flex items-center gap-2;
+    @apply relative py-2 px-[11px] font-sans font-semibold text-[15px] text-[#383838] flex items-center gap-2 transition-colors duration-300;
   }
 
   .nav-link::after {
@@ -66,6 +66,24 @@ body {
   }
 
   .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .nav-link.light {
+    @apply text-[#FAF4EC];
+  }
+
+  .nav-link.light::after {
+    @apply bg-[#FAF4EC];
+  }
+
+  .nav-link.light:hover {
+    color: #ffffff;
+  }
+
+  .nav-link.light:hover::after {
+    background-color: #ffffff;
     transform: scaleX(1);
     transform-origin: left;
   }

@@ -8,6 +8,7 @@ import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
 import Logo from "@/components/logo";
+import whatsappIcon from "@/images/whatsapp.svg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -31,6 +32,55 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
         className="w-full max-w-[1280px] mx-auto flex-1 flex flex-col justify-between px-6 pb-8 lg:px-0 lg:py-12 lg:justify-start"
         style={{ paddingTop: "max(2rem, env(safe-area-inset-top))" }}
       >
+        {/* Desktop Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="hidden md:flex items-center justify-between"
+        >
+          <button 
+            onClick={() => lenis?.scrollTo(0)}
+            className="cursor-pointer active:scale-95 transition-transform duration-200"
+          >
+            <Logo className="h-[52px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" />
+          </button>
+          
+          <nav className="flex items-center gap-1">
+            {["Studio", "Banken", "Producten", "Over ons", "Contact"].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase().replace(" ", "-")}`} 
+                className="nav-link light"
+                onClick={(e) => {
+                  if (item === "Studio") {
+                    e.preventDefault();
+                    lenis?.scrollTo("#waarom", { offset: -20, duration: 1.5 });
+                  }
+                }}
+              >
+                {item}
+              </a>
+            ))}
+            
+            <div className="w-[1px] h-6 bg-[#FAF4EC]/20 mx-2" />
+            
+            <a 
+              href="#" 
+              className="nav-link light"
+            >
+              WhatsApp
+              <Image 
+                src={whatsappIcon} 
+                alt="WhatsApp" 
+                width={18} 
+                height={18} 
+                className="w-[18px] h-[18px] brightness-0 invert" 
+              />
+            </a>
+          </nav>
+        </motion.div>
+
         {/* Mobile Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -54,7 +104,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
           </button>
         </motion.div>
 
-        <div className="flex-1 flex flex-col justify-end">
+        <div className="flex-1 flex flex-col justify-end lg:translate-y-8">
           <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
             <div>
               <motion.h1

@@ -46,7 +46,7 @@ export default function RootLayout({
       className={`${inter.variable} ${alice.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans relative">
+      <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
         <div
           aria-hidden="true"
           style={{
