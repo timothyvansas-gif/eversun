@@ -20,7 +20,7 @@ export default function LuxeCard() {
         width={221}
         height={221}
         alt="Abstracte Ergoline merk-vormen"
-        className="absolute bottom-[40px] left-[61px] md:left-1/2 md:-translate-x-1/2 xl:bottom-[32px] pointer-events-none"
+        className="absolute bottom-[40px] left-[61px] sm:left-1/2 sm:-translate-x-1/2 xl:bottom-[32px] pointer-events-none"
       />
 
       <ErgolineSignature isInView={isInView} />
