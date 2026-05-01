@@ -29,10 +29,14 @@ function ScrollTriggerConfig() {
     lenis?.on("scroll", ScrollTrigger.update);
 
     // 4. Handle visibility change (mobile "wake up")
+    // Stop Lenis when hidden so it doesn't run in the background.
+    // Delay refresh on return so browser layout is stable before GSAP recalculates.
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "hidden") {
+        lenis?.stop();
+      } else {
         lenis?.start();
-        ScrollTrigger.refresh();
+        setTimeout(() => ScrollTrigger.refresh(), 150);
       }
     };
 
