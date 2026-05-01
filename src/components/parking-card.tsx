@@ -36,7 +36,7 @@ const itemVariants = {
 };
 
 export default function ParkingCard() {
-  const { containerRef, contentRef } = useContainerScale(411);
+  const { containerRef, contentRef, bgRef } = useContainerScale(411);
   const parkingInView = useInView(containerRef, { once: true, amount: 0.5 });
   const shouldAnimate = parkingInView;
 
@@ -45,15 +45,20 @@ export default function ParkingCard() {
       ref={containerRef}
       className="relative w-full h-[362px] xl:h-[431px] bg-brand rounded-lg overflow-hidden"
     >
+      {/* Background canvas — same transform as contentRef, below overlay */}
       <div
-        ref={contentRef}
-        className="absolute top-0 left-0 origin-top-left bg-brand"
+        ref={bgRef}
+        className="absolute top-0 left-0 origin-top-left"
         style={{ width: 411, height: 431 }}
       >
-        {/* Background SVG - Softened significantly on mobile for a premium feel */}
-        <div 
-          className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px] opacity-100 max-xl:[mask-image:radial-gradient(ellipse_100%_28%_at_50%_40%,black_30%,transparent_100%)] max-xl:[-webkit-mask-image:radial-gradient(ellipse_100%_28%_at_50%_40%,black_30%,transparent_100%)]" 
-        />
+        <div className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px]" />
+      </div>
+
+      <div
+        ref={contentRef}
+        className="absolute top-0 left-0 origin-top-left z-[2]"
+        style={{ width: 411, height: 431 }}
+      >
 
         {P_BORD_SM.map((s, i) => (
           <motion.img
@@ -83,6 +88,9 @@ export default function ParkingCard() {
 
         <PinMarker />
       </div>
+
+      {/* Gradient fade overlay in container space — independent of canvas scale */}
+      <div className="max-xl:block hidden absolute inset-0 pointer-events-none z-[1] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,transparent_30%,black_100%)] [-webkit-mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,transparent_30%,black_100%)] bg-brand" />
 
       {/* Unscaled text overlay for mobile consistency - adjusted margin to match PhotoCard */}
       <div className="absolute bottom-6 left-6 xl:bottom-10 xl:left-10 z-10 pointer-events-none">
