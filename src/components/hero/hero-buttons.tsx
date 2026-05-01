@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 
 const EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
@@ -21,17 +22,24 @@ const baseStyle: React.CSSProperties = {
   borderRadius: "16px",
 };
 
+// Large enough to cover the button from any cursor entry point
+const BLOB_SIZE = 460;
+
 export default function HeroButtons() {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [secondaryHovered, setSecondaryHovered] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
   const { scrollToNav } = useScrollNav();
 
   return (
     <>
       <button
-        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
-        onMouseEnter={() => {
-          if (window.matchMedia("(hover: hover)").matches) setPrimaryHovered(true);
+        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        onMouseEnter={(e) => {
+          if (!window.matchMedia("(hover: hover)").matches) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+          setPrimaryHovered(true);
         }}
         onMouseLeave={() => setPrimaryHovered(false)}
         onClick={() => {
@@ -41,12 +49,25 @@ export default function HeroButtons() {
         }}
         style={{
           ...baseStyle,
-          transition: `background ${EASE}, box-shadow ${EASE}, transform 0.2s ease`,
-          background: primaryHovered ? "#111" : "#E15E1D",
+          transition: `box-shadow ${EASE}, transform 0.2s ease`,
+          background: "#E15E1D",
           boxShadow: primaryHovered ? shadowHover : shadowDefault,
         }}
       >
-        Maak een afspraak
+        <motion.span
+          aria-hidden
+          className="absolute rounded-full bg-[#111] pointer-events-none"
+          style={{
+            width: BLOB_SIZE,
+            height: BLOB_SIZE,
+            left: origin.x - BLOB_SIZE / 2,
+            top: origin.y - BLOB_SIZE / 2,
+          }}
+          initial={false}
+          animate={{ scale: primaryHovered ? 1 : 0 }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <span className="relative z-10">Maak een afspraak</span>
       </button>
       <button
         className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
