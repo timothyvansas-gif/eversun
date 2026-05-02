@@ -44,7 +44,7 @@ export default function HeroButtons() {
         onMouseLeave={() => setPrimaryHovered(false)}
         onClick={() => {
           if (window.innerWidth < 768) {
-            window.open("https://wa.me/31625306491", "_blank");
+            window.open("https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken", "_blank");
           }
         }}
         style={{

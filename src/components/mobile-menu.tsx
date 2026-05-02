@@ -54,7 +54,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <div className="h-[1px] bg-[#FAF4EC]/10 w-full my-2" />
         
         <a 
-          href="https://wa.me/31625306491" 
+          href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
