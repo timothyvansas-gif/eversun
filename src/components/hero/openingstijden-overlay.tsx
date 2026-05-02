@@ -6,6 +6,56 @@ import { useLenis } from "lenis/react";
 import { getStudioStatus } from "@/components/hero/hero-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 
+const SHADOW_DEFAULT =
+  "0 -2px 0 0 #D45110 inset, 0 0 0 1px rgba(255, 255, 255, 0.16) inset, 0 0 0 1px #B53B02, -93px 101px 38px 0 rgba(46, 14, 0, 0.00), -59px 64px 35px 0 rgba(46, 14, 0, 0.04), -33px 36px 30px 0 rgba(46, 14, 0, 0.12), -15px 16px 22px 0 rgba(46, 14, 0, 0.21), -4px 4px 12px 0 rgba(46, 14, 0, 0.24)";
+const SHADOW_HOVER =
+  "0 -3px 0 0 rgba(0, 0, 0, 0.40) inset, 0 1px 0 1px rgba(255, 255, 255, 0.11) inset, 0 0 0 1px #000, -93px 101px 38px 0 rgba(46, 14, 0, 0.00), -59px 64px 35px 0 rgba(46, 14, 0, 0.04), -33px 36px 30px 0 rgba(46, 14, 0, 0.12), -15px 16px 22px 0 rgba(46, 14, 0, 0.21), -4px 4px 12px 0 rgba(46, 14, 0, 0.24)";
+const SHADOW_EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
+const BLOB_SIZE = 460;
+
+function AppointmentButton() {
+  const [hovered, setHovered] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+
+  return (
+    <a
+      href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-[#FAF4EC] active:scale-[0.98] relative overflow-hidden"
+      style={{
+        minHeight: "48px",
+        borderRadius: "16px",
+        background: "#E15E1D",
+        transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
+        boxShadow: hovered ? SHADOW_HOVER : SHADOW_DEFAULT,
+      }}
+      onMouseEnter={(e) => {
+        if (!window.matchMedia("(hover: hover)").matches) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        setHovered(true);
+      }}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <motion.span
+        aria-hidden
+        className="absolute rounded-full bg-[#111] pointer-events-none"
+        style={{
+          width: BLOB_SIZE,
+          height: BLOB_SIZE,
+          left: origin.x - BLOB_SIZE / 2,
+          top: origin.y - BLOB_SIZE / 2,
+        }}
+        initial={false}
+        animate={{ scale: hovered ? 1 : 0 }}
+        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <span className="relative z-10">Maak een afspraak</span>
+    </a>
+  );
+}
+
 function CloseIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -79,7 +129,7 @@ function RouteButton() {
       rel="noopener noreferrer"
       className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
       onMouseLeave={() => setHovered(false)}
     >
       Route naar Ever Sun
@@ -151,15 +201,7 @@ export default function OpeningstijdenOverlay({
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
               </div>
-              <a
-                href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-7 flex w-full items-center justify-center py-3 font-sans font-medium text-[15px] text-[#FAF4EC] rounded-2xl active:scale-[0.98] transition-transform duration-200"
-                style={{ minHeight: "48px", background: "#E15E1D" }}
-              >
-                Maak een afspraak
-              </a>
+              <AppointmentButton />
               <RouteButton />
             </div>
           </motion.div>
