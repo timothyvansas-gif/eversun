@@ -97,7 +97,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
+      className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -171,16 +171,16 @@ export default function OpeningstijdenOverlay({
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
               </div>
-              <RouteButton />
               <a
                 href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 flex w-full items-center justify-center py-3 font-sans font-medium text-[15px] text-[#FAF4EC] rounded-2xl active:scale-[0.98] transition-transform duration-200"
+                className="mt-7 flex w-full items-center justify-center py-3 font-sans font-medium text-[15px] text-[#FAF4EC] rounded-2xl active:scale-[0.98] transition-transform duration-200"
                 style={{ minHeight: "48px", background: "#E15E1D" }}
               >
                 Maak een afspraak
               </a>
+              <RouteButton />
             </div>
           </motion.div>
 
