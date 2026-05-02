@@ -61,7 +61,7 @@ function HoursTable() {
             className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#f6ecde]" : ""}`}
           >
             <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <p className="font-sans font-medium text-[15px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
               {isToday && (
                 <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
