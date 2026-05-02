@@ -25,7 +25,7 @@ const fadeUp = {
   }),
 };
 
-export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) {
+export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   const lenis = useLenis();
   const { scrollToNav } = useScrollNav();
   return (
@@ -158,7 +158,7 @@ export default function HeroContent({ onOpenMenu }: { onOpenMenu: () => void }) 
             custom={0.9}
             className="mb-10 lg:mb-[48px] flex items-center justify-between"
           >
-            <HeroStatus />
+            <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
             <HeroReviews />
           </motion.div>
         </div>

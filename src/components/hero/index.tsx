@@ -5,10 +5,13 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-backgournd.webp";
 import HeroContent from "./hero-content";
+import OpeningstijdenOverlay from "./openingstijden-overlay";
 
 export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const statusButtonRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -53,7 +56,15 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       {/* Bottom gradient */}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
 
-      <HeroContent onOpenMenu={onOpenMenu} />
+      <HeroContent
+        onOpenMenu={onOpenMenu}
+        onOpenOpeningstijden={() => setIsOpeningstijdenOpen(true)}
+        statusButtonRef={statusButtonRef}
+      />
+      <OpeningstijdenOverlay
+        isOpen={isOpeningstijdenOpen}
+        onClose={() => setIsOpeningstijdenOpen(false)}
+      />
     </section>
   );
 }

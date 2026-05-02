@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
@@ -41,11 +42,11 @@ function getStudioStatus(): { isOpen: boolean; label: string } {
   return { isOpen: false, label: "Dinsdag open om 10:00u" };
 }
 
-export default function HeroStatus() {
+const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
   const { isOpen, label } = getStudioStatus();
 
   return (
-    <button className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
+    <button ref={ref} onClick={onOpen} className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
       <span className="flex items-center gap-4 md:gap-[18px]">
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
@@ -74,4 +75,6 @@ export default function HeroStatus() {
       </span>
     </button>
   );
-}
+});
+
+export default HeroStatus;
