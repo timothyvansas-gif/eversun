@@ -47,15 +47,8 @@ function AddressInfo() {
 }
 
 function HoursTable() {
-  const [routeHovered, setRouteHovered] = useState(false);
   const todayIndex = getCurrentDayIndex();
   const { isOpen } = getStudioStatus();
-
-  useEffect(() => {
-    const reset = () => setRouteHovered(false);
-    window.addEventListener("blur", reset);
-    return () => window.removeEventListener("blur", reset);
-  }, []);
 
   return (
     <div>
@@ -64,7 +57,7 @@ function HoursTable() {
         return (
           <div
             key={day}
-            className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#f6ecde]" : ""}`}
+            className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#FAF4EC]" : ""}`}
           >
             <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
             <div className="flex items-center gap-4">
@@ -86,18 +79,31 @@ function HoursTable() {
           </div>
         );
       })}
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
-        style={{ minHeight: "48px", borderColor: routeHovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
-        onMouseEnter={() => setRouteHovered(true)}
-        onMouseLeave={() => setRouteHovered(false)}
-      >
-        Route naar Ever Sun
-      </a>
     </div>
+  );
+}
+
+function RouteButton() {
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const reset = () => setHovered(false);
+    window.addEventListener("blur", reset);
+    return () => window.removeEventListener("blur", reset);
+  }, []);
+
+  return (
+    <a
+      href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-4 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
+      style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      Route naar Ever Sun
+    </a>
   );
 }
 
@@ -152,7 +158,7 @@ export default function OpeningstijdenOverlay({
               lenis?.start();
               if (info.offset.y > 80 || info.velocity.y > 400) onClose();
             }}
-            style={{ paddingBottom: "max(2rem, env(safe-area-inset-bottom))" }}
+            style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
           >
             <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
               <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
@@ -162,7 +168,10 @@ export default function OpeningstijdenOverlay({
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
                 <AddressInfo />
               </div>
-              <HoursTable />
+              <div className="bg-white rounded-2xl px-6 py-4">
+                <HoursTable />
+              </div>
+              <RouteButton />
               <a
                 href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
                 target="_blank"
@@ -177,7 +186,7 @@ export default function OpeningstijdenOverlay({
 
           {/* Desktop: Modal */}
           <motion.div
-            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[384px]"
+            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[400px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
@@ -194,7 +203,10 @@ export default function OpeningstijdenOverlay({
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
                 <AddressInfo />
               </div>
-              <HoursTable />
+              <div className="bg-white rounded-2xl px-6 py-4">
+                <HoursTable />
+              </div>
+              <RouteButton />
             </div>
           </motion.div>
         </>
