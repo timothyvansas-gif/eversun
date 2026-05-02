@@ -57,7 +57,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
   }, []);
 
   return (
-    <button ref={ref} onClick={onOpen} className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
+    <button ref={ref} onClick={onOpen} className="relative flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
       <span className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
@@ -84,6 +84,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
           <span className="hidden md:inline">Alle openingstijden</span>
         </span>
       </span>
+      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-[#FAF4EC] transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
     </button>
   );
 });
