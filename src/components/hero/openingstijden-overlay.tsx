@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLenis } from "lenis/react";
 
 const HOURS = [
   { day: "Maandag", hours: "Gesloten", note: "Morgen open om 10:00" },
@@ -23,9 +24,9 @@ function CloseIcon() {
 
 function AddressInfo() {
   return (
-    <p className="font-sans text-[14px] text-[#1a1a1a]/50 leading-[1.4] mt-2.5 whitespace-nowrap">
-      Kloekhorststraat 4a, Assen, 9401 BD{" "}
-      <span className="text-[10px]">·</span>{" "}
+    <p className="font-sans text-[15px] text-[#1a1a1a]/50 leading-[24px] mt-2.5">
+      Kloekhorststraat 4a, Assen, 9401 BD
+      <br />
       <a href="tel:+31625306491" className="text-[#1a1a1a]/50">
         06 25306491
       </a>
@@ -43,9 +44,9 @@ function HoursTable() {
           key={day}
           className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#f6ecde]" : ""}`}
         >
-          <span className="font-sans font-normal text-[14px] text-[#1a1a1a] leading-[1.4]">{day}</span>
+          <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
           <div>
-            <p className="font-sans font-medium text-[14px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
+            <p className="font-sans font-medium text-[15px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
           </div>
         </div>
       ))}
@@ -53,7 +54,7 @@ function HoursTable() {
         href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[14px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
+        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
         style={{ minHeight: "48px", borderColor: routeHovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
         onMouseEnter={() => setRouteHovered(true)}
         onMouseLeave={() => setRouteHovered(false)}
@@ -71,6 +72,8 @@ export default function OpeningstijdenOverlay({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const lenis = useLenis();
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -100,12 +103,14 @@ export default function OpeningstijdenOverlay({
             className="md:hidden absolute bottom-0 inset-x-0 bg-[#FAF4EC] rounded-t-[20px] z-40"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
+            transition={{ type: "spring", damping: 40, stiffness: 300 }}
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.5 }}
+            onDragStart={() => lenis?.stop()}
             onDragEnd={(_, info) => {
+              lenis?.start();
               if (info.offset.y > 80 || info.velocity.y > 400) onClose();
             }}
             style={{ paddingBottom: "max(2rem, env(safe-area-inset-bottom))" }}
@@ -133,7 +138,7 @@ export default function OpeningstijdenOverlay({
 
           {/* Desktop: Modal */}
           <motion.div
-            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[416px]"
+            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[384px]"
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
