@@ -175,7 +175,7 @@ export default function OpeningstijdenOverlay({
             <div className="relative p-8">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full text-[#1a1a1a]/80 md:hover:text-[#1a1a1a] transition-colors cursor-pointer"
+                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] transition-colors cursor-pointer"
               >
                 <CloseIcon />
               </button>
