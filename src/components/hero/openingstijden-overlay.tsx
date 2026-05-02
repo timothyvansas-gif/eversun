@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const HOURS = [
@@ -23,7 +23,7 @@ function CloseIcon() {
 
 function AddressInfo() {
   return (
-    <p className="font-sans text-[14px] text-[#1a1a1a]/50 leading-[1.4] mt-1.5 whitespace-nowrap">
+    <p className="font-sans text-[14px] text-[#1a1a1a]/50 leading-[1.4] mt-2.5 whitespace-nowrap">
       Kloekhorststraat 4a, Assen, 9401 BD{" "}
       <span className="text-[10px]">·</span>{" "}
       <a href="tel:+31625306491" className="text-[#1a1a1a]/50">
@@ -34,6 +34,8 @@ function AddressInfo() {
 }
 
 function HoursTable() {
+  const [routeHovered, setRouteHovered] = useState(false);
+
   return (
     <div>
       {HOURS.map(({ day, hours }, i) => (
@@ -51,8 +53,10 @@ function HoursTable() {
         href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[14px] text-[#1a1a1a] rounded-2xl border border-[#1a1a1a]/20 px-8 active:scale-[0.98] transition-transform duration-200"
-        style={{ minHeight: "48px" }}
+        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[14px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
+        style={{ minHeight: "48px", borderColor: routeHovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
+        onMouseEnter={() => setRouteHovered(true)}
+        onMouseLeave={() => setRouteHovered(false)}
       >
         Route naar Ever Sun
       </a>
@@ -129,7 +133,7 @@ export default function OpeningstijdenOverlay({
 
           {/* Desktop: Modal */}
           <motion.div
-            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[400px]"
+            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[416px]"
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
