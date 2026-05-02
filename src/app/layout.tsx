@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   },
   other: {
     "google": "notranslate",
+    "format-detection": "telephone=no, date=no, address=no, email=no",
   },
 };
 
