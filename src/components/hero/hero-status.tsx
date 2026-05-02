@@ -4,17 +4,62 @@ import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
 
+function getStudioStatus(): { isOpen: boolean; label: string } {
+  const now = new Date();
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Amsterdam",
+    weekday: "short",
+    hour: "numeric",
+    hour12: false,
+  }).formatToParts(now);
+
+  const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayStr = parts.find((p) => p.type === "weekday")?.value ?? "Mon";
+  const day = WEEKDAYS.indexOf(dayStr);
+  const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0") % 24;
+
+  if (day === 1) {
+    return { isOpen: false, label: "Morgen open om 10:00u" };
+  }
+
+  if (day >= 2 && day <= 5) {
+    if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+    if (hour < 21) return { isOpen: true, label: "Geopend tot 21:00u" };
+    return { isOpen: false, label: "Morgen open om 10:00u" };
+  }
+
+  if (day === 6) {
+    if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+    if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
+    return { isOpen: false, label: "Morgen open om 10:00u" };
+  }
+
+  // Sunday
+  if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+  if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
+  return { isOpen: false, label: "Dinsdag open om 10:00u" };
+}
+
 export default function HeroStatus() {
+  const { isOpen, label } = getStudioStatus();
+
   return (
     <button className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
       <span className="flex items-center gap-4 md:gap-[18px]">
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
-          <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
-          <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
-          <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
+          {isOpen ? (
+            <>
+              <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
+              <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
+              <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
+            </>
+          ) : (
+            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#E15E1D]" />
+          )}
         </span>
-        <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none">
-          Geopend tot 21:00u
+        <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none" suppressHydrationWarning>
+          {label}
         </span>
       </span>
 
