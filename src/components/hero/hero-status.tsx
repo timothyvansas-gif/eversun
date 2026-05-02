@@ -5,7 +5,7 @@ import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
 
-function getStudioStatus(): { isOpen: boolean; label: string } {
+export function getStudioStatus(): { isOpen: boolean; label: string } {
   const now = new Date();
 
   const parts = new Intl.DateTimeFormat("en-US", {

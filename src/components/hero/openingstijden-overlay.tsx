@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLenis } from "lenis/react";
+import { getStudioStatus } from "@/components/hero/hero-status";
 
 const HOURS = [
   { day: "Maandag", hours: "Gesloten", note: "Morgen open om 10:00" },
@@ -13,6 +14,17 @@ const HOURS = [
   { day: "Zaterdag", hours: "10:00 – 16:00", note: "na 16:00: Morgen open om 10:00" },
   { day: "Zondag", hours: "10:00 – 16:00", note: "na 16:00: Dinsdag open om 10:00" },
 ];
+
+function getCurrentDayIndex(): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Amsterdam",
+    weekday: "short",
+  }).formatToParts(new Date());
+  const dayStr = parts.find((p) => p.type === "weekday")?.value ?? "Mon";
+  const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const day = WEEKDAYS.indexOf(dayStr);
+  return day === 0 ? 6 : day - 1;
+}
 
 function CloseIcon() {
   return (
@@ -36,20 +48,38 @@ function AddressInfo() {
 
 function HoursTable() {
   const [routeHovered, setRouteHovered] = useState(false);
+  const todayIndex = getCurrentDayIndex();
+  const { isOpen } = getStudioStatus();
 
   return (
     <div>
-      {HOURS.map(({ day, hours }, i) => (
-        <div
-          key={day}
-          className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#f6ecde]" : ""}`}
-        >
-          <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
-          <div>
-            <p className="font-sans font-medium text-[15px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
+      {HOURS.map(({ day, hours }, i) => {
+        const isToday = i === todayIndex;
+        return (
+          <div
+            key={day}
+            className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#f6ecde]" : ""}`}
+          >
+            <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
+            <div className="flex items-center justify-between">
+              <p className="font-sans font-medium text-[15px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
+              {isToday && (
+                <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
+                  {isOpen ? (
+                    <>
+                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
+                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
+                      <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#4FA800]" />
+                    </>
+                  ) : (
+                    <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#E15E1D]" />
+                  )}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       <a
         href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
         target="_blank"
