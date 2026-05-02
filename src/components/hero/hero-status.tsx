@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
@@ -45,9 +45,20 @@ function getStudioStatus(): { isOpen: boolean; label: string } {
 const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
   const { isOpen, label } = getStudioStatus();
 
+  const labelRef = useRef(label);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const { label: newLabel } = getStudioStatus();
+      if (newLabel !== labelRef.current) {
+        window.location.reload();
+      }
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <button ref={ref} onClick={onOpen} className="flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
-      <span className="flex items-center gap-4 md:gap-[18px]">
+      <span className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
             <>
@@ -56,7 +67,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
               <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
             </>
           ) : (
-            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#E15E1D]" />
+            <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-[#E15E1D]" />
           )}
         </span>
         <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none" suppressHydrationWarning>
