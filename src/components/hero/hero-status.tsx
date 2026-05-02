@@ -84,7 +84,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
           <span className="hidden md:inline">Alle openingstijden</span>
         </span>
       </span>
-      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-[#FAF4EC] transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
+      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-[#FAF4EC]/50 transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
     </button>
   );
 });

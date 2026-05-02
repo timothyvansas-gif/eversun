@@ -63,6 +63,7 @@ body {
     @apply absolute bottom-1 left-2 right-2 h-[1px] bg-[#383838] transition-transform duration-300 ease-out;
     transform: scaleX(0);
     transform-origin: right;
+    opacity: 0.5 !important;
   }
 
   @media (hover: hover) and (pointer: fine) {
