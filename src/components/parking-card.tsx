@@ -22,7 +22,7 @@ const P_BORD_SM = [
 ];
 
 const itemVariants = {
-  hidden: { y: -180, opacity: 0 },
+  hidden: { y: -180, opacity: 0, transition: { duration: 0 } },
   visible: (i: number) => ({
     y: 0,
     opacity: 1,
@@ -37,7 +37,7 @@ const itemVariants = {
 
 export default function ParkingCard() {
   const { containerRef, contentRef, bgRef } = useContainerScale(411);
-  const parkingInView = useInView(containerRef, { once: true, amount: 0.5 });
+  const parkingInView = useInView(containerRef, { once: false, amount: 0.5 });
   const shouldAnimate = parkingInView;
 
   return (

@@ -26,13 +26,21 @@ export default function ErgolineSignature({ isInView }: Props) {
           fill="#E92F8A"
           stroke="#E92F8A"
           strokeWidth={0.5}
-          initial={{ pathLength: 0, fillOpacity: 0 }}
-          animate={isInView ? { pathLength: 1, fillOpacity: 1, strokeWidth: 0 } : undefined}
-          transition={{
-            pathLength: { duration: 2.2, ease: "easeInOut", delay: 0.3 },
-            fillOpacity: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
-            strokeWidth: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
-          }}
+          initial={{ pathLength: 0, fillOpacity: 0, strokeWidth: 0.5 }}
+          animate={
+            isInView
+              ? { pathLength: 1, fillOpacity: 1, strokeWidth: 0 }
+              : { pathLength: 0, fillOpacity: 0, strokeWidth: 0.5 }
+          }
+          transition={
+            isInView
+              ? {
+                  pathLength: { duration: 2.2, ease: "easeInOut", delay: 0.3 },
+                  fillOpacity: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
+                  strokeWidth: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
+                }
+              : { duration: 0 }
+          }
         />
       </svg>
     </div>
