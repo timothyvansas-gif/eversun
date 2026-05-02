@@ -49,7 +49,7 @@ export default function StickyHeader({
           <div className="w-full flex items-center justify-between px-6">
             {/* Smaller logo with specific colors */}
             <button 
-              onClick={() => lenis?.scrollTo(0)}
+              onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
               className="cursor-pointer active:scale-95 transition-transform duration-200"
             >
               <Logo 

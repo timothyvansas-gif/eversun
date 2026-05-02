@@ -51,6 +51,12 @@ function HoursTable() {
   const todayIndex = getCurrentDayIndex();
   const { isOpen } = getStudioStatus();
 
+  useEffect(() => {
+    const reset = () => setRouteHovered(false);
+    window.addEventListener("blur", reset);
+    return () => window.removeEventListener("blur", reset);
+  }, []);
+
   return (
     <div>
       {HOURS.map(({ day, hours }, i) => {
@@ -84,7 +90,7 @@ function HoursTable() {
         href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
+        className="mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
         style={{ minHeight: "48px", borderColor: routeHovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
         onMouseEnter={() => setRouteHovered(true)}
         onMouseLeave={() => setRouteHovered(false)}
@@ -180,7 +186,7 @@ export default function OpeningstijdenOverlay({
             <div className="relative p-8">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full text-[#1a1a1a]/80 hover:text-[#1a1a1a] transition-colors cursor-pointer"
+                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full text-[#1a1a1a]/80 md:hover:text-[#1a1a1a] transition-colors cursor-pointer"
               >
                 <CloseIcon />
               </button>

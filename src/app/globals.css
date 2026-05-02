@@ -65,9 +65,21 @@ body {
     transform-origin: right;
   }
 
-  .nav-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
+  @media (hover: hover) and (pointer: fine) {
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-link.light:hover {
+      color: #ffffff;
+    }
+
+    .nav-link.light:hover::after {
+      background-color: #ffffff;
+      transform: scaleX(1);
+      transform-origin: left;
+    }
   }
 
   .nav-link.light {
@@ -76,15 +88,5 @@ body {
 
   .nav-link.light::after {
     @apply bg-[#FAF4EC];
-  }
-
-  .nav-link.light:hover {
-    color: #ffffff;
-  }
-
-  .nav-link.light:hover::after {
-    background-color: #ffffff;
-    transform: scaleX(1);
-    transform-origin: left;
   }
 }
