@@ -14,16 +14,55 @@ const alice = Alice({
   subsets: ["latin"],
 });
 
+const BASE_URL = "https://www.eversun-assen.nl";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  name: "Ever Sun",
+  url: BASE_URL,
+  telephone: "+31625306491",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Kloekhorststraat 4a",
+    addressLocality: "Assen",
+    postalCode: "9401 BD",
+    addressCountry: "NL",
+  },
+  openingHours: ["Tu-Fr 10:00-21:00", "Sa-Su 10:00-16:00"],
+  priceRange: "€€",
+};
+
 export const metadata: Metadata = {
-  title: "Ever Sun",
-  description: "Ever Sun — jouw zonnebank specialist",
+  title: "Ever Sun | Zonnestudio Assen",
+  description:
+    "Zonnestudio Ever Sun in Assen — professionele zonnebanken Ergoline en top producten voor de perfecte bruining zoals Black Velvet. Kloekhorststraat 4a, open di t/m zo.",
+  metadataBase: new URL(BASE_URL),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Ever Sun | Zonnestudio Assen",
+    description:
+      "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
+    url: BASE_URL,
+    siteName: "Ever Sun",
+    locale: "nl_NL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Ever Sun | Zonnestudio Assen",
+    description:
+      "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Ever Sun",
   },
   other: {
-    "google": "notranslate",
+    google: "notranslate",
     "format-detection": "telephone=no, date=no, address=no, email=no",
   },
 };
@@ -47,6 +86,12 @@ export default function RootLayout({
       className={`${inter.variable} ${alice.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
         <div
           aria-hidden="true"

@@ -28,9 +28,6 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       <motion.div
         className="absolute inset-0 overflow-hidden"
         style={{ y, scale }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
           src={heroImage}
