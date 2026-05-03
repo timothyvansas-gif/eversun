@@ -25,19 +25,19 @@ export function getStudioStatus(): { isOpen: boolean; label: string } {
   }
 
   if (day >= 2 && day <= 5) {
-    if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+    if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
     if (hour < 21) return { isOpen: true, label: "Geopend tot 21:00u" };
     return { isOpen: false, label: "Morgen open om 10:00u" };
   }
 
   if (day === 6) {
-    if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+    if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
     if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
     return { isOpen: false, label: "Morgen open om 10:00u" };
   }
 
   // Sunday
-  if (hour < 10) return { isOpen: false, label: "Vandaag open om 10:00u" };
+  if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
   if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
   return { isOpen: false, label: "Dinsdag open om 10:00u" };
 }
