@@ -47,13 +47,19 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
 
   const labelRef = useRef(label);
   useEffect(() => {
-    const interval = setInterval(() => {
+    const check = () => {
       const { label: newLabel } = getStudioStatus();
       if (newLabel !== labelRef.current) {
         window.location.reload();
       }
-    }, 60_000);
-    return () => clearInterval(interval);
+    };
+
+    const interval = setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", check);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", check);
+    };
   }, []);
 
   return (
