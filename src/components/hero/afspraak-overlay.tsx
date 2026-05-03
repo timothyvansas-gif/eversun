@@ -1,0 +1,94 @@
+"use client";
+
+import { useEffect } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import qrCode from "@/images/qr-code-ever-sun.svg";
+
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path d="M14 4L4 14M4 4l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export default function AfspraakOverlay({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        (document.activeElement as HTMLElement)?.blur();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            className="absolute inset-0 z-30"
+            style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={onClose}
+          />
+
+          <motion.div
+            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[364px]"
+            initial={{ opacity: 0, scale: 0.88, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
+            transition={{ type: "spring", damping: 14, stiffness: 260 }}
+          >
+            <div className="relative px-8 pb-8 pt-14">
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] transition-colors cursor-pointer"
+              >
+                <CloseIcon />
+              </button>
+
+              <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto">
+                <Image
+                  src={qrCode}
+                  alt="QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
+                  width={300}
+                  height={300}
+                  className="w-full h-auto rounded-[8px]"
+                />
+              </div>
+
+              <h2 className="card-title text-zinc-900 mt-8 text-center">Plan je zonsessie</h2>
+              <p className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-2 text-center">
+                Scan de QR-code om direct via<br />WhatsApp een afspraak te maken.
+              </p>
+
+              <div className="mt-5 pt-5 border-t border-[#f6ecde] text-center">
+                <p className="card-title text-zinc-900">Liever bellen?</p>
+                <a
+                  href="tel:+31625306491"
+                  className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-1 block"
+                >
+                  06 25306491
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}

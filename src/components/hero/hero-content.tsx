@@ -25,7 +25,7 @@ const fadeUp = {
   }),
 };
 
-export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
+export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   const lenis = useLenis();
   const { scrollToNav } = useScrollNav();
   return (
@@ -146,7 +146,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, statusBu
                 animate="visible"
                 custom={0.7}
               >
-                <HeroButtons />
+                <HeroButtons onOpenAfspraak={onOpenAfspraak} />
               </motion.div>
             </div>
           </div>

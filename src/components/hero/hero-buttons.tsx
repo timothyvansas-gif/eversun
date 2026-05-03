@@ -25,7 +25,7 @@ const baseStyle: React.CSSProperties = {
 // Large enough to cover the button from any cursor entry point
 const BLOB_SIZE = 460;
 
-export default function HeroButtons() {
+export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => void }) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [secondaryHovered, setSecondaryHovered] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
@@ -45,6 +45,8 @@ export default function HeroButtons() {
         onClick={() => {
           if (window.innerWidth < 768) {
             window.open("https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken", "_blank");
+          } else {
+            onOpenAfspraak();
           }
         }}
         style={{

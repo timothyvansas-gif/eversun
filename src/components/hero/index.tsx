@@ -6,10 +6,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-backgournd.webp";
 import HeroContent from "./hero-content";
 import OpeningstijdenOverlay from "./openingstijden-overlay";
+import AfspraakOverlay from "./afspraak-overlay";
 
 export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
+  const [isAfspraakOpen, setIsAfspraakOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const statusButtonRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll({
@@ -56,11 +58,16 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       <HeroContent
         onOpenMenu={onOpenMenu}
         onOpenOpeningstijden={() => setIsOpeningstijdenOpen(true)}
+        onOpenAfspraak={() => setIsAfspraakOpen(true)}
         statusButtonRef={statusButtonRef}
       />
       <OpeningstijdenOverlay
         isOpen={isOpeningstijdenOpen}
         onClose={() => setIsOpeningstijdenOpen(false)}
+      />
+      <AfspraakOverlay
+        isOpen={isAfspraakOpen}
+        onClose={() => setIsAfspraakOpen(false)}
       />
     </section>
   );
