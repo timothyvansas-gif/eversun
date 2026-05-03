@@ -72,9 +72,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
 
             <div className="w-[1px] h-6 bg-[#FAF4EC]/20 mx-2" />
 
-            <a
-              href="#"
-              className="nav-link light"
+            <button
+              onClick={onOpenAfspraak}
+              className="nav-link light cursor-pointer"
             >
               WhatsApp
               <Image
@@ -84,7 +84,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 height={18}
                 className="w-[18px] h-[18px] brightness-0 invert"
               />
-            </a>
+            </button>
           </nav>
         </motion.div>
 
