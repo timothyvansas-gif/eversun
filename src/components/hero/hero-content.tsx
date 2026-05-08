@@ -53,7 +53,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
-            <Logo className="h-[52px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48 / 52} />
+            <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48 / 52} />
           </button>
 
           <nav className="flex items-center gap-1">
@@ -103,7 +103,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
-            <Logo className="h-[38px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" iconOpacity={0.8} />
+            <Logo className="h-[38px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} />
           </button>
           <button
             onClick={onOpenMenu}

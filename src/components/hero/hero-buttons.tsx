@@ -66,8 +66,8 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
             top: origin.y - BLOB_SIZE / 2,
           }}
           initial={false}
-          animate={{ scale: primaryHovered ? 1 : 0 }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
+          transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
         />
         <span className="relative z-10">Maak een afspraak</span>
       </button>

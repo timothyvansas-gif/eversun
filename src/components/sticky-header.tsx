@@ -54,7 +54,7 @@ export default function StickyHeader({
             >
               <Logo
                 className="h-8 w-auto"
-                textColor="#FAF4EC"
+                textColor="#FFFFFF"
                 iconColor="#FAF4EC"
               />
             </button>
