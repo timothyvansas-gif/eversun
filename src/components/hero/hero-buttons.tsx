@@ -72,7 +72,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         <span className="relative z-10">Maak een afspraak</span>
       </button>
       <button
-        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="w-[70%] sm:w-[220px] font-sans font-medium text-[15px] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
         }}
@@ -84,6 +84,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
           ...baseStyle,
           transition: `border-color ${EASE}, transform 0.2s ease`,
           border: `1px solid ${secondaryHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.40)"}`,
+          color: "rgba(255, 255, 255, 0.8)",
         }}
       >
         Ontdek de studio

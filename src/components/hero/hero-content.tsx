@@ -59,6 +59,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 key={item}
                 href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="nav-link light"
+                style={{ color: "rgba(255, 255, 255, 0.96)" }}
                 onClick={(e) => {
                   if (item === "Studio") {
                     e.preventDefault();
@@ -114,15 +115,15 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             <div className="lg:translate-y-10">
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
-                  className="font-alice font-medium text-[#FAF4EC] tracking-[-0.02em] lg:tracking-[-3px]"
-                  style={{ fontSize: "clamp(56px, 7.5vw, 96px)", lineHeight: "clamp(58px, 7.8vw, 100px)", marginLeft: "-3px" }}
+                  className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px]"
+                  style={{ fontSize: "clamp(56px, 7.5vw, 96px)", lineHeight: "clamp(58px, 7.8vw, 100px)", marginLeft: "-3px", color: "rgba(255, 255, 255, 0.96)" }}
                 >
                   De perfecte gouden gloed
                 </h1>
               </motion.div>
 
               <motion.p
-                className="mt-4 lg:mt-3 font-alice font-normal text-[#FAF4EC] tracking-[-0.5px] lg:tracking-[-1.5px]"
+                className="mt-4 lg:mt-3 font-alice font-normal tracking-[-0.5px] lg:tracking-[-1.5px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -130,6 +131,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 style={{
                   fontSize: "clamp(21px, 3.44vw, 44px)",
                   lineHeight: "clamp(27px, 4.06vw, 52px)",
+                  color: "rgba(255, 255, 255, 0.8)",
                 }}
               >
                 begint bij zonnestudio{" "}
