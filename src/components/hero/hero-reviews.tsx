@@ -35,8 +35,11 @@ export default function HeroReviews() {
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <motion.div
-              className="w-[40px] h-[40px] rounded-full border border-[#111111] overflow-hidden"
-              animate={{ y: hoveredIndex === i ? -4 : 0 }}
+              className="w-[40px] h-[40px] rounded-full overflow-hidden border border-[#111111]"
+              animate={{
+                y: hoveredIndex === i ? -4 : 0,
+                opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.35,
+              }}
               transition={{ type: "spring", stiffness: 320, damping: 24 }}
             >
               <Image
