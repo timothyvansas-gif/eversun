@@ -16,14 +16,14 @@ export default function HeroReviews() {
         {reviewers.map((img, i) => (
           <div
             key={i}
-            className="w-[48px] h-[48px] rounded-full border border-[#D4C4B1] overflow-hidden relative"
+            className="w-[40px] h-[40px] rounded-full border border-[#111111] overflow-hidden relative"
             style={{ zIndex: i }}
           >
             <Image
               src={img}
               alt={`Reviewer ${i + 1}`}
-              width={48}
-              height={48}
+              width={40}
+              height={40}
               className="object-cover"
             />
           </div>
@@ -32,7 +32,7 @@ export default function HeroReviews() {
 
       {/* Text Container */}
       <div 
-        className="h-[48px] px-5 flex items-center bg-[rgba(64,43,26,0.40)] backdrop-blur-[2px] rounded-full"
+        className="h-[40px] px-5 flex items-center bg-[#111111]/40 backdrop-blur-[2px] rounded-full"
       >
         <span className="font-sans text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
           <span className="font-bold">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
