@@ -66,10 +66,10 @@ function CloseIcon() {
 
 function AddressInfo() {
   return (
-    <p className="font-sans text-[15px] text-[#1a1a1a]/80 leading-[24px] pt-3 border-t border-[#FAF4EC]">
+    <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-[6px]">
       Kloekhorststraat 4a, Assen, 9401 BD
       <br />
-      <a href="tel:+31625306491" className="text-[#1a1a1a]/80">
+      <a href="tel:+31625306491" className="text-[#1a1a1a]/60">
         06 25306491
       </a>
     </p>
@@ -194,12 +194,12 @@ export default function OpeningstijdenOverlay({
               <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
             </div>
             <div className="px-6 pt-5">
-              <div className="mb-6">
+              <div className="mb-[22px]">
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
+                <AddressInfo />
               </div>
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
-                <AddressInfo />
               </div>
               <AppointmentButton />
               <RouteButton />
@@ -221,12 +221,12 @@ export default function OpeningstijdenOverlay({
               >
                 <CloseIcon />
               </button>
-              <div className="mb-6">
+              <div className="mb-[22px]">
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
+                <AddressInfo />
               </div>
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
-                <AddressInfo />
               </div>
               <RouteButton />
             </div>
