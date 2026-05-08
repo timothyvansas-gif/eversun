@@ -62,7 +62,7 @@ export default function Bento() {
         custom={-1}
         className="mb-6 xl:mb-10 w-full xl:max-w-[849px] relative z-[40] max-md:sticky max-md:top-[56px] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page"
       >
-        <h2 className="text-[clamp(28px,3.75vw,48px)] font-extrabold leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
+        <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
           Waarom Ever Sun
         </h2>
         <p className="mt-2 text-[15px] xl:text-[20px] font-normal xl:font-medium leading-[24px] xl:leading-8 tracking-[-0.02em] text-zinc-600">

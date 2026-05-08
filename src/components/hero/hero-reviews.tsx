@@ -87,7 +87,7 @@ export default function HeroReviews() {
                           <Image key={s} src={iconStar} alt="" width={16} height={16} />
                         ))}
                       </div>
-                      <span className="font-sans text-[15px] leading-snug text-white/90">
+                      <span className="font-sans text-[15px] leading-[25px] text-white/90">
                         {tooltips[i].quote}
                       </span>
                       <span className="font-sans text-[13px] text-white/50">
@@ -104,7 +104,7 @@ export default function HeroReviews() {
 
       {/* Text Container */}
       <div className="h-[40px] px-5 flex items-center bg-[#111111]/40 backdrop-blur-[2px] rounded-full">
-        <span className="font-sans text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+        <span className="font-sans text-[15px] leading-[25px] whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
           <span className="font-bold">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
         </span>
       </div>
