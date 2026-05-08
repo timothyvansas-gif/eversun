@@ -34,7 +34,11 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
       window.addEventListener("resize", checkMobile);
 
       const onNavStart = () => setIsNavigating(true);
-      const onNavEnd = () => setIsNavigating(false);
+      const onNavEnd = () => {
+        setIsNavigating(false);
+        // Ensure GSAP is in sync after switching back to sticky
+        ScrollTrigger.refresh();
+      };
       window.addEventListener("programmatic-scroll-start", onNavStart);
       window.addEventListener("programmatic-scroll-end", onNavEnd);
 

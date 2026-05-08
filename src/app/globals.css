@@ -97,15 +97,10 @@ body {
     color: rgba(255, 255, 255, 0.96) !important;
   }
 
-  /* Disable sticky/scaling behaviors during programmatic scroll */
+  /* Disable sticky behaviors during programmatic scroll */
   body.is-programmatic-scrolling .sticky-card-wrapper {
     position: relative !important;
     top: auto !important;
-    z-index: 1 !important;
-  }
-
-  body.is-programmatic-scrolling .sticky-card-scaling {
-    transform: none !important;
   }
 
   body.is-programmatic-scrolling .sticky-bento-header {

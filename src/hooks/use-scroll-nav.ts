@@ -27,7 +27,8 @@ export function useScrollNav() {
         ...SCROLL_OPTIONS,
         onComplete: () => {
           clearTimeout(fallbackTimeout);
-          cleanup();
+          // Small delay before enabling sticky again to avoid flicker
+          setTimeout(cleanup, 100);
         }
       });
     };
