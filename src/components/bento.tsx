@@ -33,8 +33,7 @@ export default function Bento() {
   const [startVisible, setStartVisible] = useState(false);
   const isInView = useInView(headerWrapperRef, { once: true });
 
-  const modeRef = useRef<"sticky" | "fixed">("sticky");
-  const releaseScrollY = useRef(0);
+  const modeRef = useRef<"sticky" | "absolute">("sticky");
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -78,17 +77,16 @@ export default function Bento() {
 
       const threshold = headerHeight + SITE_HEADER_H;
       const lastCardTop = lastCardRef.current.getBoundingClientRect().top;
-      const scrollY = window.scrollY;
-
       if (modeRef.current === "sticky") {
         if (lastCardTop <= threshold) {
           const rect = el.getBoundingClientRect();
-          modeRef.current = "fixed";
-          releaseScrollY.current = scrollY;
+          const sectionRect = el.closest("section")!.getBoundingClientRect();
+          
+          modeRef.current = "absolute";
 
-          el.style.position = "fixed";
-          el.style.top = `${SITE_HEADER_H}px`;
-          el.style.left = `${rect.left}px`;
+          el.style.position = "absolute";
+          el.style.top = `${rect.top - sectionRect.top}px`;
+          el.style.left = `${rect.left - sectionRect.left}px`;
           el.style.width = `${rect.width}px`;
           el.style.zIndex = "40";
 
@@ -98,13 +96,10 @@ export default function Bento() {
         return;
       }
 
-      // fixed mode
-      const delta = scrollY - releaseScrollY.current;
-      if (delta <= 0) {
+      // absolute mode
+      if (lastCardTop > threshold) {
         toSticky();
-        return;
       }
-      el.style.top = `${SITE_HEADER_H - delta}px`;
     };
 
     const onScroll = () => {
@@ -124,7 +119,7 @@ export default function Bento() {
       id="waarom"
       initial="hidden"
       animate={(isInView || startVisible) ? "visible" : "hidden"}
-      className="w-full max-w-[1280px] mx-auto pt-4 pb-16 md:pt-8 xl:pt-16 min-h-[500px]"
+      className="relative w-full max-w-[1280px] mx-auto pt-4 pb-16 md:pt-8 xl:pt-16 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >
       <div

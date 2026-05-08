@@ -32,10 +32,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
     <div
       className="absolute inset-0 flex flex-col z-20"
       style={{
-        paddingTop: "calc(clamp(1.5rem, 4vw, 2rem) + env(safe-area-inset-top))",
-        paddingBottom: "clamp(1.5rem, 4vw, 2rem)",
-        paddingLeft: "clamp(1.5rem, 4vw, 2rem)",
-        paddingRight: "clamp(1.5rem, 4vw, 2rem)"
+        paddingTop: "calc(clamp(1.5rem, 4vw, 3.5rem) + env(safe-area-inset-top))",
+        paddingBottom: "clamp(1.5rem, 4vw, 3.5rem)",
+        paddingLeft: "clamp(1.5rem, 4vw, 3.5rem)",
+        paddingRight: "clamp(1.5rem, 4vw, 3.5rem)"
       }}
     >
       {/* Below 2xl: max-w-[1280px] contains everything (MacBook). At 2xl+: max-w-none so header/status go edge-to-edge. */}
