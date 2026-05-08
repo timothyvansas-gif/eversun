@@ -37,7 +37,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           fill
           priority
           placeholder="blur"
-          className={`object-cover transition-all duration-[1500ms] ease-out ${
+          className={`object-cover object-[35%_50%] md:object-center transition-all duration-[1500ms] ease-out ${
             isImageLoaded ? "scale-100 blur-0" : "scale-110 blur-xl"
           }`}
           onLoad={() => setIsImageLoaded(true)}
@@ -50,10 +50,14 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
         />
       </motion.div>
 
-      {/* Top gradient — always visible, not affected by image fade-in animation */}
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-10" />
-      {/* Bottom gradient */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-10" />
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(107deg, rgba(0, 0, 0, 0.00) 24.78%, rgba(0, 0, 0, 0.23) 42.77%, rgba(0, 0, 0, 0.48) 60.16%, rgba(0, 0, 0, 0.60) 93.14%)",
+        }}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
 
       <HeroContent
         onOpenMenu={onOpenMenu}
