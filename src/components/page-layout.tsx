@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Bento from "@/components/bento";
+import CtaSection from "@/components/cta-section";
 import HeroSection from "@/components/hero-section";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
@@ -37,6 +38,7 @@ export default function PageLayout() {
         <div className="relative z-10 w-full flex flex-col items-center bg-surface-page rounded-t-[16px]" style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}>
           <Bento />
         </div>
+        <CtaSection />
       </motion.main>
 
       <AnimatePresence>
