@@ -13,25 +13,7 @@ export function useScrollNav() {
   function scrollToNav(item: string, delay = 0) {
     const target = SECTION_MAP[item] ?? `#${item.toLowerCase().replace(" ", "-")}`;
     
-    const go = () => {
-      document.body.classList.add("is-programmatic-scrolling");
-      window.dispatchEvent(new Event("programmatic-scroll-start"));
-      
-      const cleanup = () => {
-        document.body.classList.remove("is-programmatic-scrolling");
-        window.dispatchEvent(new Event("programmatic-scroll-end"));
-      };
-      const fallbackTimeout = setTimeout(cleanup, 2000); // Fallback if onComplete doesn't fire
-
-      lenis?.scrollTo(target, { 
-        ...SCROLL_OPTIONS,
-        onComplete: () => {
-          clearTimeout(fallbackTimeout);
-          // Small delay before enabling sticky again to avoid flicker
-          setTimeout(cleanup, 100);
-        }
-      });
-    };
+    const go = () => lenis?.scrollTo(target, SCROLL_OPTIONS);
     
     delay > 0 ? setTimeout(go, delay) : go();
   }

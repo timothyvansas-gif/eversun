@@ -96,15 +96,4 @@ body {
   button[data-status-button]:hover span[data-status-times] {
     color: rgba(255, 255, 255, 0.96) !important;
   }
-
-  /* Disable sticky behaviors during programmatic scroll */
-  body.is-programmatic-scrolling .sticky-card-wrapper {
-    position: relative !important;
-    top: auto !important;
-  }
-
-  body.is-programmatic-scrolling .sticky-bento-header {
-    position: relative !important;
-    top: auto !important;
-  }
 }

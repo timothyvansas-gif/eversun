@@ -25,7 +25,6 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     const scalingRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [isNavigating, setIsNavigating] = useState(false);
 
     useEffect(() => {
       setIsMounted(true);
@@ -33,23 +32,12 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
       checkMobile();
       window.addEventListener("resize", checkMobile);
 
-      const onNavStart = () => setIsNavigating(true);
-      const onNavEnd = () => {
-        setIsNavigating(false);
-        // Ensure GSAP is in sync after switching back to sticky
-        ScrollTrigger.refresh();
-      };
-      window.addEventListener("programmatic-scroll-start", onNavStart);
-      window.addEventListener("programmatic-scroll-end", onNavEnd);
-
       const timeout = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 100);
 
       return () => {
         window.removeEventListener("resize", checkMobile);
-        window.removeEventListener("programmatic-scroll-start", onNavStart);
-        window.removeEventListener("programmatic-scroll-end", onNavEnd);
         clearTimeout(timeout);
       };
     }, []);
@@ -62,7 +50,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
           trigger: containerRef.current,
           start: `top ${offsetTop}px`,
           end: "bottom top",
-          scrub: true,
+          scrub: 0.8,
           invalidateOnRefresh: true,
         }
       });
@@ -81,14 +69,14 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
           else if (forwardedRef) forwardedRef.current = node;
         }}
         style={{
-          position: isMounted && isMobile && !isNavigating ? "sticky" : "relative",
-          top: isMounted && isMobile && !isNavigating ? `${offsetTop}px` : "auto",
+          position: isMounted && isMobile ? "sticky" : "relative",
+          top: isMounted && isMobile ? `${offsetTop}px` : "auto",
         } as React.CSSProperties}
-        className="w-full origin-top sticky-card-wrapper"
+        className="w-full origin-top"
       >
         <div
           ref={scalingRef}
-          className="origin-top w-full will-change-transform sticky-card-scaling"
+          className="origin-top w-full will-change-transform"
         >
           <motion.div
             variants={variants}
