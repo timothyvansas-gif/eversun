@@ -6,11 +6,11 @@ import { useLenis } from "lenis/react";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 
-export default function StickyHeader({ 
-  onOpenMenu, 
-  animate, 
-  transition 
-}: { 
+export default function StickyHeader({
+  onOpenMenu,
+  animate,
+  transition
+}: {
   onOpenMenu: () => void;
   animate: TargetAndTransition;
   transition: Transition;
@@ -20,13 +20,13 @@ export default function StickyHeader({
   const lenis = useLenis();
 
   useEffect(() => {
-    if (window.scrollY > 500) {
+    if (window.scrollY > 570) {
       setIsVisible(true);
     }
   }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 500) {
+    if (latest > 550) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -48,14 +48,14 @@ export default function StickyHeader({
         >
           <div className="w-full flex items-center justify-between px-6">
             {/* Smaller logo with specific colors */}
-            <button 
+            <button
               onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
               className="cursor-pointer active:scale-95 transition-transform duration-200"
             >
-              <Logo 
-                className="h-8 w-auto" 
-                textColor="#FAF4EC" 
-                iconColor="#FAF4EC" 
+              <Logo
+                className="h-8 w-auto"
+                textColor="#FAF4EC"
+                iconColor="#FAF4EC"
               />
             </button>
 
