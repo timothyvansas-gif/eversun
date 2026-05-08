@@ -33,7 +33,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
       <div
         className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col justify-between lg:justify-start"
         style={{
-          paddingTop: "calc(clamp(1.5rem, 4vw, 3.5rem) + env(safe-area-inset-top))",
+          paddingTop: "calc(clamp(1.5rem, 4vw, 2rem) + env(safe-area-inset-top))",
           paddingBottom: "clamp(1.5rem, 4vw, 3.5rem)",
           paddingLeft: "clamp(1.5rem, 4vw, 5rem)",
           paddingRight: "clamp(1.5rem, 4vw, 5rem)"
@@ -50,7 +50,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
-            <Logo className="h-[52px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" iconOpacity={0.8} />
+            <Logo className="h-[52px] w-auto" textColor="#FAF4EC" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48/52} />
           </button>
 
           <nav className="flex items-center gap-1">
@@ -116,7 +116,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
                   className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px]"
-                  style={{ fontSize: "clamp(56px, 7.5vw, 96px)", lineHeight: "clamp(58px, 7.8vw, 100px)", marginLeft: "-3px", color: "rgba(255, 255, 255, 0.96)" }}
+                  style={{ fontSize: "clamp(56px, 7.5vw, 96px)", lineHeight: "clamp(58px, 7.8vw, 100px)", marginLeft: "-3px", color: "rgba(255, 255, 255, 1)" }}
                 >
                   De perfecte gouden gloed
                 </h1>

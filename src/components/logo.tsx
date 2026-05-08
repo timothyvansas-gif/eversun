@@ -5,6 +5,7 @@ interface LogoProps {
   textColor?: string;
   iconColor?: string;
   iconOpacity?: number;
+  iconScale?: number;
 }
 
 export default function Logo({
@@ -12,6 +13,7 @@ export default function Logo({
   textColor = "currentColor",
   iconColor = "#C49764",
   iconOpacity = 1,
+  iconScale = 1,
 }: LogoProps) {
   return (
     <svg
@@ -22,7 +24,7 @@ export default function Logo({
       preserveAspectRatio="xMidYMid meet"
       style={{ aspectRatio: "192/52" }}
     >
-      <g opacity={iconOpacity}>
+      <g opacity={iconOpacity} transform={iconScale !== 1 ? `translate(26 26) scale(${iconScale}) translate(-26 -26)` : undefined}>
       <path d="M26 18.1619C30.3289 18.1619 33.8378 21.6709 33.8379 25.9998C33.8379 30.3287 30.3289 33.8376 26 33.8376C21.6711 33.8376 18.1621 30.3287 18.1621 25.9998C18.1622 21.6709 21.6712 18.1619 26 18.1619ZM32.3086 25.9998C32.3086 29.484 29.4843 32.3083 26 32.3083C22.5158 32.3083 19.6914 29.484 19.6914 25.9998C19.6915 22.5156 22.5158 19.6912 26 19.6912C29.4842 19.6912 32.3085 22.5155 32.3086 25.9998ZM32.6914 25.9998C32.6913 22.3044 29.6954 19.3083 26 19.3083C22.3047 19.3084 19.3087 22.3044 19.3086 25.9998C19.3086 29.6952 22.3046 32.6911 26 32.6912C29.6954 32.6912 32.6914 29.6952 32.6914 25.9998Z" stroke={iconColor} strokeWidth="0.382353"/>
       <circle cx="26.0002" cy="25.9997" r="23.8971" stroke={iconColor} strokeWidth="0.573529"/>
       <circle cx="26" cy="26" r="25.7132" stroke={iconColor} strokeWidth="0.573529"/>
