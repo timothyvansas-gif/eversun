@@ -34,8 +34,8 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
       style={{
         paddingTop: "calc(clamp(1.5rem, 4vw, 2rem) + env(safe-area-inset-top))",
         paddingBottom: "clamp(1.5rem, 4vw, 2rem)",
-        paddingLeft: "clamp(1.5rem, 4vw, 10rem)",
-        paddingRight: "clamp(1.5rem, 4vw, 10rem)"
+        paddingLeft: "clamp(1.5rem, 4vw, 2rem)",
+        paddingRight: "clamp(1.5rem, 4vw, 2rem)"
       }}
     >
       {/* Below 2xl: max-w-[1280px] contains everything (MacBook). At 2xl+: max-w-none so header/status go edge-to-edge. */}
