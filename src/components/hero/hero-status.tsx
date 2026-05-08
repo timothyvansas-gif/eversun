@@ -5,14 +5,6 @@ import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
 
-const statusHoverStyle = `
-  button[data-status-button]:hover span[data-status-text],
-  button[data-status-button]:hover span[data-status-dash],
-  button[data-status-button]:hover span[data-status-times] {
-    color: rgba(255, 255, 255, 0.96) !important;
-  }
-`;
-
 export function getStudioStatus(): { isOpen: boolean; label: string } {
   const now = new Date();
 
@@ -72,7 +64,6 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
 
   return (
     <>
-      <style>{statusHoverStyle}</style>
       <button ref={ref} onClick={onOpen} data-status-button className="relative flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
       <span className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">

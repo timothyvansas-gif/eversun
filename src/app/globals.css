@@ -90,4 +90,10 @@ body {
   .nav-link.light::after {
     @apply bg-[#FAF4EC];
   }
+
+  button[data-status-button]:hover span[data-status-text],
+  button[data-status-button]:hover span[data-status-dash],
+  button[data-status-button]:hover span[data-status-times] {
+    color: rgba(255, 255, 255, 0.96) !important;
+  }
 }
