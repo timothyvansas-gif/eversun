@@ -66,7 +66,7 @@ function CloseIcon() {
 
 function AddressInfo() {
   return (
-    <p className="font-sans text-[15px] text-[#1a1a1a]/80 leading-[24px] mt-2.5">
+    <p className="font-sans text-[15px] text-[#1a1a1a]/80 leading-[24px] pt-3 border-t border-[#FAF4EC]">
       Kloekhorststraat 4a, Assen, 9401 BD
       <br />
       <a href="tel:+31625306491" className="text-[#1a1a1a]/80">
@@ -87,11 +87,11 @@ function HoursTable() {
         return (
           <div
             key={day}
-            className={`grid grid-cols-[110px_1fr] gap-x-3 py-3 ${i < HOURS.length - 1 ? "border-b border-[#FAF4EC]" : ""}`}
+            className={`grid grid-cols-2 py-3 ${i < HOURS.length - 1 ? "border-b border-[#FAF4EC]" : ""}`}
           >
-            <span className="font-sans font-normal text-[15px] text-[#1a1a1a] leading-[1.4]">{day}</span>
+            <span className={`font-sans text-[15px] text-[#1a1a1a] leading-[1.4] ${isToday ? "font-semibold" : "font-normal"}`}>{day}</span>
             <div className="flex items-center gap-4">
-              <p className="font-sans font-medium text-[15px] text-[#1a1a1a] leading-[1.4]">{hours}</p>
+              <p className={`font-sans text-[15px] text-[#1a1a1a] leading-[1.4] ${isToday ? "font-semibold" : "font-medium"}`}>{hours}</p>
               {isToday && (
                 <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
                   {isOpen ? (
@@ -194,12 +194,12 @@ export default function OpeningstijdenOverlay({
               <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
             </div>
             <div className="px-6 pt-5">
-              <div className="mb-5">
+              <div className="mb-6">
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
-                <AddressInfo />
               </div>
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
+                <AddressInfo />
               </div>
               <AppointmentButton />
               <RouteButton />
@@ -221,12 +221,12 @@ export default function OpeningstijdenOverlay({
               >
                 <CloseIcon />
               </button>
-              <div className="mb-5">
+              <div className="mb-6">
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>
-                <AddressInfo />
               </div>
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
+                <AddressInfo />
               </div>
               <RouteButton />
             </div>
