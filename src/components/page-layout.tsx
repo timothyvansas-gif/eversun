@@ -32,10 +32,10 @@ export default function PageLayout() {
         className="min-h-screen flex flex-col items-center relative z-10"
         style={{ width: "100%" }}
       >
-        <div className="w-full sticky top-0 z-0 bg-surface-page lg:p-6 lg:[&>*]:rounded-lg lg:[&>*]:overflow-hidden">
+        <div className="w-full bg-surface-page lg:p-6 lg:[&>*]:rounded-lg lg:[&>*]:overflow-hidden">
           <HeroSection onOpenMenu={toggleMenu} />
         </div>
-        <div className="relative z-10 w-full flex flex-col items-center bg-surface-page rounded-t-[16px] lg:rounded-t-[8px]" style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}>
+        <div className="relative z-10 w-full flex flex-col items-center bg-surface-page " style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}>
           <Bento />
         </div>
         <CtaSection />
