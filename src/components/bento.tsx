@@ -53,7 +53,7 @@ export default function Bento() {
       id="waarom"
       initial="hidden"
       animate={(isInView || startVisible) ? "visible" : "hidden"}
-      className="w-full max-w-[1280px] mx-auto pt-4 pb-16 md:pt-8 xl:pt-10 min-h-[500px]"
+      className="w-full max-w-[1280px] mx-auto pt-4 pb-16 md:pt-8 xl:pt-16 min-h-[500px]"
       style={{ "--header-height": `${headerHeight}px` } as React.CSSProperties}
     >
       <motion.div

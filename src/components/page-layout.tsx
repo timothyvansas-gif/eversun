@@ -34,7 +34,7 @@ export default function PageLayout() {
         <div className="w-full sticky top-0 z-0">
           <HeroSection onOpenMenu={toggleMenu} />
         </div>
-        <div className="relative z-10 w-full flex flex-col items-center px-[24px] md:px-10 bg-surface-page rounded-t-[16px]">
+        <div className="relative z-10 w-full flex flex-col items-center bg-surface-page rounded-t-[16px]" style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}>
           <Bento />
         </div>
       </motion.main>

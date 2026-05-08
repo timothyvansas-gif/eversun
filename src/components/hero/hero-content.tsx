@@ -29,15 +29,18 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
   const lenis = useLenis();
   const { scrollToNav } = useScrollNav();
   return (
-    <div className="absolute inset-0 flex flex-col z-20">
+    <div
+      className="absolute inset-0 flex flex-col z-20"
+      style={{
+        paddingTop: "calc(clamp(1.5rem, 4vw, 2rem) + env(safe-area-inset-top))",
+        paddingBottom: "clamp(1.5rem, 4vw, 2rem)",
+        paddingLeft: "clamp(1.5rem, 4vw, 10rem)",
+        paddingRight: "clamp(1.5rem, 4vw, 10rem)"
+      }}
+    >
+      {/* Below 2xl: max-w-[1280px] contains everything (MacBook). At 2xl+: max-w-none so header/status go edge-to-edge. */}
       <div
-        className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col justify-between lg:justify-start"
-        style={{
-          paddingTop: "calc(clamp(1.5rem, 4vw, 2rem) + env(safe-area-inset-top))",
-          paddingBottom: "clamp(1.5rem, 4vw, 3.5rem)",
-          paddingLeft: "clamp(1.5rem, 4vw, 5rem)",
-          paddingRight: "clamp(1.5rem, 4vw, 5rem)"
-        }}
+        className="max-w-[1280px] w-full mx-auto 2xl:max-w-none flex-1 flex flex-col justify-between lg:justify-start"
       >
         {/* Desktop Header */}
         <motion.div
@@ -111,12 +114,13 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         </motion.div>
 
         <div className="flex-1 flex flex-col justify-end lg:translate-y-8">
-          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
+          {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
+          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center 2xl:max-w-[1280px] 2xl:w-full 2xl:mx-auto">
             <div className="lg:translate-y-10">
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
-                  className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px]"
-                  style={{ fontSize: "clamp(56px, 7.5vw, 96px)", lineHeight: "clamp(58px, 7.8vw, 100px)", marginLeft: "-3px", color: "rgba(255, 255, 255, 1)" }}
+                  className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
+                  style={{ marginLeft: "-3px", color: "rgba(255, 255, 255, 1)" }}
                 >
                   De perfecte gouden gloed
                 </h1>
@@ -152,18 +156,18 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </motion.div>
             </div>
           </div>
-
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={0.9}
-            className="mb-10 lg:mb-[48px] flex items-center justify-between"
-          >
-            <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
-            <HeroReviews />
-          </motion.div>
         </div>
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.9}
+          className="mb-10 lg:mb-0 flex items-center justify-between"
+        >
+          <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
+          <HeroReviews />
+        </motion.div>
       </div>
     </div>
   );
