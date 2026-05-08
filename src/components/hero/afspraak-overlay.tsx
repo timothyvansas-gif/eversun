@@ -37,7 +37,7 @@ export default function AfspraakOverlay({
       {isOpen && (
         <>
           <motion.div
-            className="absolute inset-0 z-30"
+            className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -47,7 +47,7 @@ export default function AfspraakOverlay({
           />
 
           <motion.div
-            className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-40 w-[364px]"
+            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-50 w-[364px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
