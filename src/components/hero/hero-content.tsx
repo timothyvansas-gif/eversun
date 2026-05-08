@@ -64,9 +64,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 className="nav-link light"
                 style={{ color: "rgba(255, 255, 255, 0.96)" }}
                 onClick={(e) => {
-                  if (item === "Studio") {
+                  if (item !== "WhatsApp") {
                     e.preventDefault();
-                    scrollToNav("Studio");
+                    scrollToNav(item);
                   }
                 }}
               >

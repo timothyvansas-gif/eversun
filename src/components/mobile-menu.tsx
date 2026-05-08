@@ -17,7 +17,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const handleNavClick = (e: React.MouseEvent, item: string) => {
     e.preventDefault();
     onClose();
-    scrollToNav(item, 600);
+    scrollToNav(item, 900);
   };
 
   return (

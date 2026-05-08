@@ -31,6 +31,7 @@ export default function Bento() {
   const lastCardRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(132);
   const [startVisible, setStartVisible] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const isInView = useInView(headerWrapperRef, { once: true });
 
   const modeRef = useRef<"sticky" | "absolute">("sticky");
@@ -42,7 +43,17 @@ export default function Bento() {
       const { top } = headerWrapperRef.current.getBoundingClientRect();
       if (top < window.innerHeight) setStartVisible(true);
     });
-    return () => cancelAnimationFrame(raf);
+    
+    const onNavStart = () => setIsNavigating(true);
+    const onNavEnd = () => setIsNavigating(false);
+    window.addEventListener("programmatic-scroll-start", onNavStart);
+    window.addEventListener("programmatic-scroll-end", onNavEnd);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("programmatic-scroll-start", onNavStart);
+      window.removeEventListener("programmatic-scroll-end", onNavEnd);
+    };
   }, []);
 
   useEffect(() => {
@@ -124,7 +135,9 @@ export default function Bento() {
     >
       <div
         ref={headerWrapperRef}
-        className="mb-6 xl:mb-10 w-full xl:max-w-[849px] relative z-[40] max-md:sticky max-md:top-[56px] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page"
+        className={`mb-6 xl:mb-10 w-full xl:max-w-[849px] relative z-[40] max-md:pt-6 max-md:pb-6 max-md:mb-0 max-md:bg-surface-page sticky-bento-header ${
+          !isNavigating ? "max-md:sticky max-md:top-[56px]" : ""
+        }`}
       >
         <motion.div variants={cardVariants} custom={-1}>
           <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">

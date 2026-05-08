@@ -10,9 +10,9 @@ export default function NavBar() {
   const navItems = ["Studio", "Banken", "Producten", "Over ons", "Contact"];
 
   const handleScroll = (e: React.MouseEvent, item: string) => {
-    if (item === "Studio") {
+    if (item !== "WhatsApp") {
       e.preventDefault();
-      scrollToNav("Studio");
+      scrollToNav(item);
     }
   };
 

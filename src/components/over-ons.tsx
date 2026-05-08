@@ -1,9 +1,10 @@
 import Image from "next/image";
 import logoBackground from "@/images/people/logo-background.webp";
 
-export default function CtaSection() {
+export default function OverOns() {
   return (
     <section
+      id="over-ons"
       className="relative w-full overflow-hidden"
       style={{ backgroundColor: "#1F1F1E", minHeight: 200 }}
     >
