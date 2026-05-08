@@ -76,14 +76,14 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
             <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-[#E15E1D]" />
           )}
         </span>
-        <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none" suppressHydrationWarning>
+        <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none opacity-80" suppressHydrationWarning>
           {label}
         </span>
       </span>
 
-      <span className="font-sans text-[15px] text-[#FAF4EC] opacity-50">-</span>
+      <span className="font-sans text-[15px] text-[#FAF4EC] opacity-80">-</span>
 
-      <span className="flex items-center gap-2">
+      <span className="flex items-center gap-2 opacity-80">
         <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
         <span className="font-sans font-medium text-[15px] text-[#FAF4EC] leading-none">
           <span className="md:hidden">Openingstijden</span>

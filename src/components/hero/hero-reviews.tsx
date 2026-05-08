@@ -34,7 +34,7 @@ export default function HeroReviews() {
       <div 
         className="h-[48px] px-5 flex items-center bg-[rgba(64,43,26,0.40)] backdrop-blur-[2px] rounded-full"
       >
-        <span className="font-sans text-[15px] text-[#FAF4EC] leading-none whitespace-nowrap">
+        <span className="font-sans text-[15px] text-[#FAF4EC] leading-none whitespace-nowrap opacity-80">
           <span className="font-bold">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
         </span>
       </div>
