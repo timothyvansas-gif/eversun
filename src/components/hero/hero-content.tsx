@@ -10,6 +10,7 @@ import HeroReviews from "./hero-reviews";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import whatsappIcon from "@/images/whatsapp.svg";
+import { NAV_ITEMS } from "@/lib/nav-items";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -55,17 +56,15 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
 
           <nav className="flex items-center gap-1">
-            {["Studio", "Banken", "Producten", "Over ons", "Contact"].map((item) => (
+            {NAV_ITEMS.map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="nav-link light"
                 style={{ color: "rgba(255, 255, 255, 0.96)" }}
                 onClick={(e) => {
-                  if (item !== "WhatsApp") {
-                    e.preventDefault();
-                    scrollToNav(item);
-                  }
+                  e.preventDefault();
+                  scrollToNav(item);
                 }}
               >
                 {item}

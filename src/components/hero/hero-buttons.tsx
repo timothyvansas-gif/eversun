@@ -4,13 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 
-const EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
-
-const shadowDefault =
-  "0 -2px 0 0 #D45110 inset, 0 0 0 1px rgba(255, 255, 255, 0.16) inset, 0 0 0 1px #B53B02, -93px 101px 38px 0 rgba(46, 14, 0, 0.00), -59px 64px 35px 0 rgba(46, 14, 0, 0.04), -33px 36px 30px 0 rgba(46, 14, 0, 0.12), -15px 16px 22px 0 rgba(46, 14, 0, 0.21), -4px 4px 12px 0 rgba(46, 14, 0, 0.24)";
-
-const shadowHover =
-  "0 -3px 0 0 rgba(0, 0, 0, 0.40) inset, 0 1px 0 1px rgba(255, 255, 255, 0.11) inset, 0 0 0 1px #000, -93px 101px 38px 0 rgba(46, 14, 0, 0.00), -59px 64px 35px 0 rgba(46, 14, 0, 0.04), -33px 36px 30px 0 rgba(46, 14, 0, 0.12), -15px 16px 22px 0 rgba(46, 14, 0, 0.21), -4px 4px 12px 0 rgba(46, 14, 0, 0.24)";
+import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 
 const baseStyle: React.CSSProperties = {
   display: "flex",
@@ -22,8 +16,6 @@ const baseStyle: React.CSSProperties = {
   borderRadius: "16px",
 };
 
-// Large enough to cover the button from any cursor entry point
-const BLOB_SIZE = 460;
 
 export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => void }) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
@@ -51,9 +43,9 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         }}
         style={{
           ...baseStyle,
-          transition: `box-shadow ${EASE}, transform 0.2s ease`,
+          transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
           background: "#E15E1D",
-          boxShadow: primaryHovered ? shadowHover : shadowDefault,
+          boxShadow: primaryHovered ? SHADOW_HOVER : SHADOW_DEFAULT,
         }}
       >
         <motion.span
@@ -82,7 +74,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         }}
         style={{
           ...baseStyle,
-          transition: `border-color ${EASE}, transform 0.2s ease`,
+          transition: `border-color ${SHADOW_EASE}, transform 0.2s ease`,
           border: `1px solid ${secondaryHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.40)"}`,
           color: secondaryHovered ? "rgba(255, 255, 255, 0.96)" : "rgba(255, 255, 255, 0.8)",
         }}

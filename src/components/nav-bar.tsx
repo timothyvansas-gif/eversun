@@ -4,16 +4,14 @@ import Logo from "@/components/logo";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
+import { NAV_ITEMS } from "@/lib/nav-items";
 
 export default function NavBar() {
   const { scrollToNav } = useScrollNav();
-  const navItems = ["Studio", "Banken", "Producten", "Over ons", "Contact"];
 
   const handleScroll = (e: React.MouseEvent, item: string) => {
-    if (item !== "WhatsApp") {
-      e.preventDefault();
-      scrollToNav(item);
-    }
+    e.preventDefault();
+    scrollToNav(item);
   };
 
   return (
@@ -22,7 +20,7 @@ export default function NavBar() {
         <Logo className="h-10 w-auto lg:h-[52px] text-black" />
         
         <nav className="flex items-center gap-1">
-          {navItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <a 
               key={item} 
               href={`#${item.toLowerCase().replace(" ", "-")}`} 

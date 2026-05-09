@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
+import { NAV_ITEMS } from "@/lib/nav-items";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,7 +13,6 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { scrollToNav } = useScrollNav();
-  const navItems = ["Studio", "Banken", "Producten", "Over ons", "Contact"];
 
   const handleNavClick = (e: React.MouseEvent, item: string) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Navigation Items */}
       <nav className="flex flex-col gap-8">
-        {navItems.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <a 
             key={item} 
             href={`#${item.toLowerCase().replace(" ", "-")}`} 

@@ -4,14 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
-
-function CloseIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <path d="M14 4L4 14M4 4l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
+import CloseIcon from "@/components/ui/close-icon";
 
 export default function AfspraakOverlay({
   isOpen,
