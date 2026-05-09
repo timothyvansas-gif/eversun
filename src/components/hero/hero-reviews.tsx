@@ -103,7 +103,7 @@ export default function HeroReviews() {
       </div>
 
       {/* Text Container */}
-      <div className="h-[40px] px-5 flex items-center bg-[#111111]/40 backdrop-blur-[2px] rounded-full">
+      <div className="h-[40px] flex items-center">
         <span className="font-sans text-[15px] leading-[25px] whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.7)" }}>
           <span className="font-bold">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
         </span>
