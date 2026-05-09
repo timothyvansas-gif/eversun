@@ -103,7 +103,7 @@ export default function OverOns() {
 
     const checkScroll = () => {
       const { scrollLeft, scrollWidth, clientWidth } = slider;
-      setCanScroll(scrollWidth > clientWidth + 10); // 10px buffer
+      setCanScroll(scrollWidth > clientWidth + 200);
       setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
     };
 
