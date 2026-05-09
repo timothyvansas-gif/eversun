@@ -3,6 +3,8 @@
 import Image from "next/image";
 import logoBackground from "@/images/people/logo-background.webp";
 import teamAisha from "@/images/people/team-aisha.webp";
+import teamDummy from "@/images/people/team-dummy.webp";
+import teamDummy2 from "@/images/people/team-dummy2.webp";
 import { useRef, useEffect } from "react";
 
 function useDraggableScroll() {
@@ -66,21 +68,25 @@ const teamMembers = [
   {
     id: 1,
     name: "Aisha Uktolseja",
+    image: teamAisha,
     description: "Passie voor ondernemen en een hart voor haar klanten. Al tien jaar aan het roer van Ever Sun, maar thuis vooral de trotse moeder van een eigenwijze zoon. De perfecte balans tussen vakvrouw en familiemens.",
   },
   {
     id: 2,
     name: "Naam medewerker",
+    image: teamDummy,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 3,
     name: "Naam medewerker",
+    image: teamDummy2,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 4,
     name: "Naam medewerker",
+    image: teamDummy,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   }
 ];
@@ -140,7 +146,7 @@ export default function OverOns() {
                 {/* Image */}
                 <div className="w-full h-[360px] md:h-[415px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
                   <Image 
-                    src={teamAisha} 
+                    src={member.image} 
                     alt={member.name} 
                     fill 
                     className="object-cover"
