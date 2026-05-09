@@ -1,14 +1,13 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import StickyCardWrapper from "@/components/sticky-card-wrapper";
-
-// Direct imports for maximum stability
 import PhotoCard from "@/components/photo-card";
 import ParkingCard from "@/components/parking-card";
 import MerkenCard from "@/components/merken-card";
 import AdviesCard from "@/components/advies-card";
 import LuxeCard from "@/components/luxe-card";
+import { useStickyBentoHeader, SITE_HEADER_H } from "@/hooks/use-sticky-bento-header";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -23,96 +22,8 @@ const cardVariants = {
   }),
 };
 
-const SITE_HEADER_H = 56;
-
 export default function Bento() {
-  const headerWrapperRef = useRef<HTMLDivElement>(null);
-  const placeholderRef = useRef<HTMLDivElement>(null);
-  const lastCardRef = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(132);
-  const [startVisible, setStartVisible] = useState(false);
-  const isInView = useInView(headerWrapperRef, { once: true });
-
-  const modeRef = useRef<"sticky" | "absolute">("sticky");
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (!headerWrapperRef.current) return;
-      const { top } = headerWrapperRef.current.getBoundingClientRect();
-      if (top < window.innerHeight) setStartVisible(true);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  useEffect(() => {
-    if (!headerWrapperRef.current) return;
-    const observer = new ResizeObserver((entries) => {
-      setHeaderHeight(entries[0].borderBoxSize[0].blockSize);
-    });
-    observer.observe(headerWrapperRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const el = headerWrapperRef.current;
-    const ph = placeholderRef.current;
-    if (!el || !ph) return;
-
-    const toSticky = () => {
-      modeRef.current = "sticky";
-      el.style.cssText = "";
-      ph.style.display = "none";
-    };
-
-    const update = () => {
-      rafRef.current = null;
-      if (!lastCardRef.current) return;
-
-      const isMobile = window.matchMedia("(max-width: 767px)").matches;
-      if (!isMobile) {
-        if (modeRef.current !== "sticky") toSticky();
-        return;
-      }
-
-      const threshold = headerHeight + SITE_HEADER_H;
-      const lastCardTop = lastCardRef.current.getBoundingClientRect().top;
-      if (modeRef.current === "sticky") {
-        if (lastCardTop <= threshold) {
-          const rect = el.getBoundingClientRect();
-          const sectionRect = el.closest("section")!.getBoundingClientRect();
-          
-          modeRef.current = "absolute";
-
-          el.style.position = "absolute";
-          el.style.top = `${rect.top - sectionRect.top}px`;
-          el.style.left = `${rect.left - sectionRect.left}px`;
-          el.style.width = `${rect.width}px`;
-          el.style.zIndex = "40";
-
-          ph.style.display = "block";
-          ph.style.height = `${rect.height}px`;
-        }
-        return;
-      }
-
-      // absolute mode
-      if (lastCardTop > threshold) {
-        toSticky();
-      }
-    };
-
-    const onScroll = () => {
-      if (rafRef.current != null) return;
-      rafRef.current = requestAnimationFrame(update);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
-    };
-  }, [headerHeight]);
+  const { headerWrapperRef, placeholderRef, lastCardRef, headerHeight, startVisible, isInView } = useStickyBentoHeader();
 
   return (
     <motion.section
