@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
@@ -43,15 +43,22 @@ export function getStudioStatus(): { isOpen: boolean; label: string } {
 }
 
 const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
-  const { isOpen, label } = getStudioStatus();
+  const [isMounted, setIsMounted] = useState(false);
+  const [status, setStatus] = useState({ isOpen: false, label: "" });
 
-  const labelRef = useRef(label);
   useEffect(() => {
+    setIsMounted(true);
+    setStatus(getStudioStatus());
+
     const check = () => {
-      const { label: newLabel } = getStudioStatus();
-      if (newLabel !== labelRef.current) {
-        window.location.reload();
-      }
+      setStatus((prev) => {
+        const newStatus = getStudioStatus();
+        // Reload if the status text actually changes while the user is on the page
+        if (prev.label && newStatus.label !== prev.label) {
+          window.location.reload();
+        }
+        return newStatus;
+      });
     };
 
     const interval = setInterval(check, 60_000);
@@ -62,10 +69,12 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
     };
   }, []);
 
+  const { isOpen, label } = isMounted ? status : getStudioStatus();
+
   return (
     <>
       <button ref={ref} onClick={onOpen} data-status-button className="relative flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
-      <span className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
+      <span key={isMounted ? "mounted" : "unmounted"} className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
             <>
