@@ -111,11 +111,11 @@ export default function PhotoCard() {
             <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
           </button>
           <button
-            className="hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer"
+            className="group hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer"
             onClick={() => setLightboxOpen(true)}
             aria-label="Alle foto's bekijken"
           >
-            Meer foto&apos;s
+            <span className="relative after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-zinc-500 group-hover:after:w-full after:transition-[width] after:duration-300">Meer foto&apos;s</span>
             <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
           </button>
         </div>

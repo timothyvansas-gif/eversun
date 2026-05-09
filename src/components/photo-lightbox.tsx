@@ -17,7 +17,11 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        (document.activeElement as HTMLElement)?.blur();
+        onClose();
+        return;
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
