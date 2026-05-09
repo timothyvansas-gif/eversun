@@ -102,7 +102,7 @@ export default function AfspraakOverlay({
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
-                  className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-1 block"
+                  className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-1 block underline decoration-dotted md:no-underline"
                 >
                   06 25306491
                 </a>

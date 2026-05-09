@@ -84,9 +84,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </p>
         <a 
           href="tel:0625306491" 
-          className="text-[#FAF4EC]/40 text-sm font-medium active:text-[#FAF4EC]"
+          className="text-[#FAF4EC]/40 text-sm font-medium active:text-[#FAF4EC] underline decoration-dotted"
         >
-          Telefoon: 06 25306491
+          06 25306491
         </a>
       </div>
     </motion.div>
