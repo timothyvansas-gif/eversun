@@ -26,7 +26,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-svh lg:h-[calc(100svh-3rem)] overflow-hidden bg-black"
+      className="relative w-full h-svh lg:h-[calc(100svh-3rem)] min-[1920px]:max-h-[1000px] min-[1920px]:max-w-[1920px] min-[1920px]:mx-auto overflow-hidden bg-black"
     >
       <motion.div
         className="absolute inset-0 overflow-hidden"
@@ -38,16 +38,14 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           fill
           priority
           placeholder="blur"
-          className={`object-cover object-[35%_50%] md:object-center transition-all duration-[1500ms] ease-out ${
-            isImageLoaded ? "scale-100 blur-0" : "scale-110 blur-xl"
-          }`}
+          className={`object-cover object-[35%_50%] md:object-center transition-all duration-[1500ms] ease-out ${isImageLoaded ? "scale-100 blur-0" : "scale-110 blur-xl"
+            }`}
           onLoad={() => setIsImageLoaded(true)}
         />
         {/* Subtle overlay to soften the transition from bg color */}
         <div
-          className={`absolute inset-0 bg-[#684F37]/20 transition-opacity duration-1000 ${
-            isImageLoaded ? "opacity-0" : "opacity-100"
-          }`}
+          className={`absolute inset-0 bg-[#684F37]/20 transition-opacity duration-1000 ${isImageLoaded ? "opacity-0" : "opacity-100"
+            }`}
         />
       </motion.div>
 

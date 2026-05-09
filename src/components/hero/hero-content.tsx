@@ -37,9 +37,8 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         paddingRight: "clamp(1.5rem, 4vw, 3.5rem)"
       }}
     >
-      {/* Below 2xl: max-w-[1280px] contains everything (MacBook). At 2xl+: max-w-none so header/status go edge-to-edge. */}
       <div
-        className="max-w-[1280px] w-full mx-auto 2xl:max-w-none flex-1 flex flex-col justify-between lg:justify-start"
+        className="max-w-[1280px] w-full mx-auto flex-1 flex flex-col justify-between lg:justify-start"
       >
         {/* Desktop Header */}
         <motion.div
@@ -112,7 +111,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
 
         <div className="flex-1 flex flex-col justify-end lg:translate-y-8">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
-          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center 2xl:max-w-[1280px] 2xl:w-full 2xl:mx-auto">
+          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
             <div className="lg:translate-y-10">
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
