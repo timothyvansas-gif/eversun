@@ -133,8 +133,8 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 animate="visible"
                 custom={0.5}
                 style={{
-                  fontSize: "clamp(21px, 3.44vw, 44px)",
-                  lineHeight: "clamp(27px, 4.06vw, 52px)",
+                  fontSize: "clamp(21px, 3.44vw, 40px)",
+                  lineHeight: "clamp(27px, 4.06vw, 48px)",
                   color: "#ffffff",
                 }}
               >
