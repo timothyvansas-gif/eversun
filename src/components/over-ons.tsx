@@ -171,7 +171,6 @@ export default function OverOns() {
           <div
             ref={scrollRef}
             className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
-            data-lenis-prevent
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
