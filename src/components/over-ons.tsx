@@ -10,11 +10,11 @@ import { useRef, useEffect, useState } from "react";
 
 function useDraggableScroll() {
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const slider = ref.current;
     if (!slider) return;
-    
+
     let isDown = false;
     let startX: number;
     let scrollLeft: number;
@@ -26,21 +26,21 @@ function useDraggableScroll() {
       startX = e.pageX - slider.offsetLeft;
       scrollLeft = slider.scrollLeft;
     };
-    
+
     const onMouseLeave = () => {
       if (!isDown) return;
       isDown = false;
       slider.classList.remove("active-drag");
       slider.style.scrollSnapType = "x mandatory";
     };
-    
+
     const onMouseUp = () => {
       if (!isDown) return;
       isDown = false;
       slider.classList.remove("active-drag");
       slider.style.scrollSnapType = "x mandatory";
     };
-    
+
     const onMouseMove = (e: MouseEvent) => {
       if (!isDown) return;
       e.preventDefault();
@@ -122,7 +122,7 @@ export default function OverOns() {
 
     slider.addEventListener("scroll", checkScroll);
     checkScroll(); // Initial check
-    
+
     return () => {
       slider.removeEventListener("scroll", checkScroll);
       observer.disconnect();
@@ -155,7 +155,7 @@ export default function OverOns() {
         aria-hidden
       />
 
-      <div 
+      <div
         className="relative z-10 w-full flex flex-col items-center"
         style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
       >
@@ -172,13 +172,13 @@ export default function OverOns() {
                 </h3>
               </div>
               <p className="text-[#818181] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
-                Maak kennis met de deskundige experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
+                Maak kennis met de experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>
           </div>
 
           {/* Scroll Container */}
-          <div 
+          <div
             ref={scrollRef}
             className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4 touch-pan-x overscroll-x-contain"
             style={{
@@ -188,27 +188,27 @@ export default function OverOns() {
             }}
           >
             {teamMembers.map((member) => (
-              <div 
+              <div
                 key={member.id}
                 className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
               >
                 {/* Image */}
                 <div className="w-full h-[360px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
-                  <Image 
-                    src={member.image} 
-                    alt={member.name} 
-                    fill 
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
                     className="object-cover object-top"
                     sizes="(max-width: 768px) 310px, 411px"
                     draggable={false}
                   />
                   {/* Gradient Overlay */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none" 
-                    style={{ background: "linear-gradient(180deg, rgba(31, 31, 30, 0.00) 71.16%, rgba(31, 31, 30, 0.90) 99.64%)" }} 
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(180deg, rgba(31, 31, 30, 0.00) 71.16%, rgba(31, 31, 30, 0.90) 99.64%)" }}
                   />
                 </div>
-                
+
                 {/* Text Area */}
                 <div className="flex flex-col gap-[10px] pr-4">
                   <h4 className="text-white text-[18px] font-semibold tracking-[-0.27px] font-sans">
@@ -224,21 +224,22 @@ export default function OverOns() {
 
           {canScroll && (
             <div className="hidden xl:flex justify-end mt-2">
-              <button 
+              <button
                 onClick={handleClick}
                 className="w-[60px] h-[60px] rounded-full border border-white/12 hover:border-white/24 flex items-center justify-center transition-colors cursor-pointer group"
               >
-                <svg 
+                <svg
                   width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
                   className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
                 >
-                  <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+                  <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
                 </svg>
               </button>
             </div>
           )}
 
-          <style dangerouslySetInnerHTML={{__html: `
+          <style dangerouslySetInnerHTML={{
+            __html: `
             #over-ons .overflow-x-auto::-webkit-scrollbar {
               display: none;
             }
