@@ -105,20 +105,28 @@ const teamMembers = [
 export default function OverOns() {
   const scrollRef = useDraggableScroll();
   const [isAtEnd, setIsAtEnd] = useState(false);
+  const [canScroll, setCanScroll] = useState(false);
 
   useEffect(() => {
     const slider = scrollRef.current;
     if (!slider) return;
 
-    const handleScroll = () => {
+    const checkScroll = () => {
       const { scrollLeft, scrollWidth, clientWidth } = slider;
-      // Using a buffer of 50px to detect the end
+      setCanScroll(scrollWidth > clientWidth + 10); // 10px buffer
       setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
     };
 
-    slider.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
-    return () => slider.removeEventListener("scroll", handleScroll);
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(slider);
+
+    slider.addEventListener("scroll", checkScroll);
+    checkScroll(); // Initial check
+    
+    return () => {
+      slider.removeEventListener("scroll", checkScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const handleClick = () => {
@@ -214,19 +222,21 @@ export default function OverOns() {
             ))}
           </div>
 
-          <div className="hidden xl:flex justify-end mt-2">
-            <button 
-              onClick={handleClick}
-              className="w-[60px] h-[60px] rounded-full border border-white/12 hover:border-white/24 flex items-center justify-center transition-colors cursor-pointer group"
-            >
-              <svg 
-                width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
-                className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
+          {canScroll && (
+            <div className="hidden xl:flex justify-end mt-2">
+              <button 
+                onClick={handleClick}
+                className="w-[60px] h-[60px] rounded-full border border-white/12 hover:border-white/24 flex items-center justify-center transition-colors cursor-pointer group"
               >
-                <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
-              </svg>
-            </button>
-          </div>
+                <svg 
+                  width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
+                  className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
+                >
+                  <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+                </svg>
+              </button>
+            </div>
+          )}
 
           <style dangerouslySetInnerHTML={{__html: `
             #over-ons .overflow-x-auto::-webkit-scrollbar {
