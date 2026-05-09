@@ -112,7 +112,7 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            className="hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-[#e2d1b3] transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
+            className="hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-zinc-500 transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
             onClick={() => setLightboxOpen(true)}
             aria-label="Alle foto's bekijken"
           >
