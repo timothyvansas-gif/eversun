@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useLenis } from "lenis/react";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
@@ -26,7 +25,6 @@ const fadeUp = {
 };
 
 export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
-  const lenis = useLenis();
   const { scrollToNav } = useScrollNav();
   return (
     <div
@@ -50,7 +48,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           className="hidden lg:flex items-center justify-between"
         >
           <button
-            onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
             <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48 / 52} />
@@ -100,7 +98,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           className="lg:hidden flex items-center justify-between"
         >
           <button
-            onClick={() => lenis?.scrollTo(0, { duration: 1.0 })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
             <Logo className="h-[38px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} />

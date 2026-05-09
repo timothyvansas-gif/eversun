@@ -1,20 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { ReactLenis, useLenis } from "lenis/react";
+import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
- * ScrollTriggerConfig
+ * GsapConfig
  * 
- * Bridges Lenis smooth scroll with GSAP ScrollTrigger.
- * This ensures that GSAP is aware of the virtual scroll position 
- * managed by Lenis, preventing laggy or misplaced triggers.
+ * Initializes GSAP ScrollTrigger for native scrolling.
  */
-function ScrollTriggerConfig() {
-  const lenis = useLenis();
-
+function GsapConfig() {
   useEffect(() => {
     // 1. Register the plugin
     gsap.registerPlugin(ScrollTrigger);
@@ -24,32 +19,22 @@ function ScrollTriggerConfig() {
       history.scrollRestoration = "manual";
     }
 
-    // 3. Link Lenis scroll to ScrollTrigger update
-    // This ensures GSAP animations stay in sync with the smooth scroll
-    lenis?.on("scroll", ScrollTrigger.update);
+    // 3. Initial refresh
+    ScrollTrigger.refresh();
 
     // 4. Handle visibility change (mobile "wake up")
-    // Stop Lenis when hidden so it doesn't run in the background.
-    // Delay refresh on return so browser layout is stable before GSAP recalculates.
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden") {
-        lenis?.stop();
-      } else {
-        lenis?.start();
+      if (document.visibilityState === "visible") {
         setTimeout(() => ScrollTrigger.refresh(), 150);
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    // 5. Initial refresh
-    ScrollTrigger.refresh();
-
     return () => {
-      lenis?.off("scroll", ScrollTrigger.update);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [lenis]);
+  }, []);
 
   return null;
 }
@@ -60,17 +45,9 @@ export default function SmoothScroll({
   children: React.ReactNode;
 }) {
   return (
-    <ReactLenis 
-      root 
-      options={{ 
-        lerp: 0.12, 
-        duration: 1.2, 
-        smoothWheel: true,
-        // syncTouch verwijderd: we gebruiken native scroll op mobiel voor het beste gevoel
-      }}
-    >
-      <ScrollTriggerConfig />
+    <>
+      <GsapConfig />
       {children}
-    </ReactLenis>
+    </>
   );
 }

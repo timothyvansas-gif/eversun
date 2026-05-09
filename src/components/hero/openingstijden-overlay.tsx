@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLenis } from "lenis/react";
 import { getStudioStatus } from "@/components/hero/hero-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 
@@ -144,7 +143,6 @@ export default function OpeningstijdenOverlay({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const lenis = useLenis();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -183,9 +181,7 @@ export default function OpeningstijdenOverlay({
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.5 }}
-            onDragStart={() => lenis?.stop()}
             onDragEnd={(_, info) => {
-              lenis?.start();
               if (info.offset.y > 80 || info.velocity.y > 400) onClose();
             }}
             style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
