@@ -162,7 +162,7 @@ export default function OverOns() {
                 </h3>
               </div>
               <p className="text-[#818181] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
-                Maak kennis met de experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
+                Maak kennis met de zonnestralen die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>
           </div>
@@ -171,6 +171,7 @@ export default function OverOns() {
           <div
             ref={scrollRef}
             className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
+            data-lenis-prevent
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",

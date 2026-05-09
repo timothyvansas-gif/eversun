@@ -1,28 +1,32 @@
 "use client";
 
 import { useEffect } from "react";
+import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/**
- * GsapConfig
- * 
- * Initializes GSAP ScrollTrigger for native scrolling.
- */
-function GsapConfig() {
+function SmoothScrollInit() {
   useEffect(() => {
-    // 1. Register the plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    // 2. Prevent browser from jumping to scroll positions automatically
     if (typeof window !== "undefined" && "scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
 
-    // 3. Initial refresh
+    const lenis = new Lenis({
+      smoothWheel: true,
+      lerp: 0.12,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
     ScrollTrigger.refresh();
 
-    // 4. Handle visibility change (mobile "wake up")
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         setTimeout(() => ScrollTrigger.refresh(), 150);
@@ -33,6 +37,8 @@ function GsapConfig() {
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      lenis.destroy();
+      gsap.ticker.remove((time) => lenis.raf(time * 1000));
     };
   }, []);
 
@@ -46,7 +52,7 @@ export default function SmoothScroll({
 }) {
   return (
     <>
-      <GsapConfig />
+      <SmoothScrollInit />
       {children}
     </>
   );
