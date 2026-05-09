@@ -5,7 +5,8 @@ import logoBackground from "@/images/people/logo-background.webp";
 import teamAisha from "@/images/people/team-aisha.webp";
 import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
-import { useRef, useEffect } from "react";
+import arrow from "@/images/arrow.svg";
+import { useRef, useEffect, useState } from "react";
 
 function useDraggableScroll() {
   const ref = useRef<HTMLDivElement>(null);
@@ -103,6 +104,34 @@ const teamMembers = [
 
 export default function OverOns() {
   const scrollRef = useDraggableScroll();
+  const [isAtEnd, setIsAtEnd] = useState(false);
+
+  useEffect(() => {
+    const slider = scrollRef.current;
+    if (!slider) return;
+
+    const handleScroll = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = slider;
+      // Using a buffer of 50px to detect the end
+      setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
+    };
+
+    slider.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial check
+    return () => slider.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleClick = () => {
+    if (scrollRef.current) {
+      if (isAtEnd) {
+        scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        const cardWidth = 411;
+        const gap = 24;
+        scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <section
@@ -124,18 +153,20 @@ export default function OverOns() {
       >
         <div className="w-full max-w-[1280px] mx-auto">
           {/* Header Area */}
-          <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-5 xl:gap-6 mb-9 xl:mb-14">
-            <div>
-              <h2 className="text-white text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
-                De zonnestralen
-              </h2>
-              <h3 className="text-[#808080] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
-                van Ever Sun
-              </h3>
+          <div className="mb-9 xl:mb-14">
+            <div className="flex flex-col xl:flex-row xl:items-end gap-5 xl:gap-16">
+              <div>
+                <h2 className="text-white text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
+                  De zonnestralen
+                </h2>
+                <h3 className="text-[#808080] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                  van Ever Sun
+                </h3>
+              </div>
+              <p className="text-[#818181] text-[15px] leading-[25px] max-w-[400px] tracking-[-0.01em] xl:mb-[2px]">
+                Maak kennis met de deskundige experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
+              </p>
             </div>
-            <p className="text-[#818181] text-[15px] leading-[25px] max-w-[400px] tracking-[-0.01em]">
-              Maak kennis met de deskundige experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
-            </p>
           </div>
 
           {/* Scroll Container */}
@@ -154,12 +185,12 @@ export default function OverOns() {
                 className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
               >
                 {/* Image */}
-                <div className="w-full h-[360px] md:h-[415px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
+                <div className="w-full h-[360px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
                   <Image 
                     src={member.image} 
                     alt={member.name} 
                     fill 
-                    className="object-cover"
+                    className="object-cover object-top"
                     sizes="(max-width: 768px) 310px, 411px"
                     draggable={false}
                   />
@@ -181,6 +212,20 @@ export default function OverOns() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="hidden xl:flex justify-end mt-2">
+            <button 
+              onClick={handleClick}
+              className="w-[60px] h-[60px] rounded-full border border-white/12 hover:border-white/24 flex items-center justify-center transition-colors cursor-pointer group"
+            >
+              <svg 
+                width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
+                className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
+              >
+                <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke"/>
+              </svg>
+            </button>
           </div>
 
           <style dangerouslySetInnerHTML={{__html: `
