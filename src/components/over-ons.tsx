@@ -154,7 +154,7 @@ export default function OverOns() {
         <div className="w-full max-w-[1280px] mx-auto">
           {/* Header Area */}
           <div className="mb-9 xl:mb-14">
-            <div className="flex flex-col xl:flex-row xl:items-end gap-5 xl:gap-16">
+            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-5 xl:gap-6">
               <div>
                 <h2 className="text-white text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   De zonnestralen
@@ -163,7 +163,7 @@ export default function OverOns() {
                   van Ever Sun
                 </h3>
               </div>
-              <p className="text-[#818181] text-[15px] leading-[25px] max-w-[400px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-[#818181] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Maak kennis met de deskundige experts die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>
