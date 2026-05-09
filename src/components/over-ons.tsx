@@ -68,25 +68,25 @@ function useDraggableScroll() {
 const teamMembers = [
   {
     id: 1,
-    name: "Aisha Uktolseja",
+    name: "Aisha",
     image: teamAisha,
     description: "Passie voor ondernemen en een hart voor haar klanten. Al tien jaar aan het roer van Ever Sun, maar thuis vooral de trotse moeder van een eigenwijze zoon. De perfecte balans tussen vakvrouw en familiemens.",
   },
   {
     id: 2,
-    name: "Naam medewerker",
+    name: "Sofie",
     image: teamDummy,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 3,
-    name: "Naam medewerker",
+    name: "Chloe",
     image: teamDummy2,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 4,
-    name: "Naam medewerker",
+    name: "Yara",
     image: teamDummy,
     description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   }
