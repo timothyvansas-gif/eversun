@@ -55,7 +55,8 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
           scrub: 0.8,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            setIsCovered(self.progress > 0.85);
+            const covered = self.progress > 0.85;
+            setIsCovered((prev) => prev === covered ? prev : covered);
           }
         }
       });
@@ -69,7 +70,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     return (
       <div
         ref={(node) => {
-          (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          (containerRef as React.RefObject<HTMLDivElement | null>).current = node;
           if (typeof forwardedRef === "function") forwardedRef(node);
           else if (forwardedRef) forwardedRef.current = node;
         }}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Bento from "@/components/bento";
 import OverOns from "@/components/over-ons";
-import HeroSection from "@/components/hero-section";
+import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
 

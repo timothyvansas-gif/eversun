@@ -4,9 +4,10 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-backgournd.webp";
+import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
-import OpeningstijdenOverlay from "./openingstijden-overlay";
-import AfspraakOverlay from "./afspraak-overlay";
+const OpeningstijdenOverlay = dynamic(() => import("./openingstijden-overlay"));
+const AfspraakOverlay = dynamic(() => import("./afspraak-overlay"));
 
 export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
