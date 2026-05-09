@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import logoBackground from "@/images/people/logo-background.webp";
+import teamAisha from "@/images/people/team-aisha.webp";
 import { useRef, useEffect } from "react";
 
 function useDraggableScroll() {
@@ -124,7 +125,7 @@ export default function OverOns() {
           {/* Scroll Container */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto gap-4 md:gap-6 snap-x snap-mandatory cursor-grab pb-4"
+            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -134,10 +135,23 @@ export default function OverOns() {
             {teamMembers.map((member) => (
               <div 
                 key={member.id}
-                className="w-[310px] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
+                className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
               >
-                {/* Image Placeholder */}
-                <div className="w-full h-[400px] md:h-[455px] bg-[#2A2A2A] rounded-[24px] overflow-hidden" />
+                {/* Image */}
+                <div className="w-full h-[360px] md:h-[415px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
+                  <Image 
+                    src={teamAisha} 
+                    alt={member.name} 
+                    fill 
+                    className="object-cover"
+                    sizes="(max-width: 768px) 310px, 411px"
+                  />
+                  {/* Gradient Overlay */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none" 
+                    style={{ background: "linear-gradient(180deg, rgba(31, 31, 30, 0.00) 71.16%, rgba(31, 31, 30, 0.90) 99.64%)" }} 
+                  />
+                </div>
                 
                 {/* Text Area */}
                 <div className="flex flex-col gap-3 pr-4">
