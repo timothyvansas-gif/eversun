@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import imageBig from "@/images/image-big.webp";
 import imageRight from "@/images/image-right.webp";
-import moreIcon from "@/images/more-icon.svg";
+import moreIcon from "@/images/camera-03.svg";
 import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
@@ -53,7 +53,7 @@ export default function PhotoCard() {
   return (
     <>
       <div className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-lg flex flex-col justify-between" style={{ padding: 'clamp(24px, 4vw, 40px)' }}>
-        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] xl:gap-[2px] mb-4 h-[220px] xl:h-[270px] rounded overflow-hidden">
+        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded overflow-hidden">
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={handlePhotoClick}
@@ -95,6 +95,14 @@ export default function PhotoCard() {
               sizes="50vw"
             />
           </button>
+          <button
+            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium text-zinc-500 cursor-pointer rounded-full border border-[#ece2d2] bg-[#faf4ec] px-[14px] py-1.5"
+            onClick={() => setSheetOpen(true)}
+            aria-label="Alle foto's bekijken"
+          >
+            Meer
+            <Image src={moreIcon} width={16} height={16} alt="Meer foto's bekijken" />
+          </button>
         </div>
         <div className="flex items-end justify-between">
           <div>
@@ -104,18 +112,11 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            className="md:hidden flex items-center justify-center flex-shrink-0 ml-4 mb-[4px]"
-            onClick={() => setSheetOpen(true)}
-            aria-label="Alle foto's bekijken"
-          >
-            <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
-          </button>
-          <button
-            className="group hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer"
+            className="hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-[#e2d1b3] transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
             onClick={() => setLightboxOpen(true)}
             aria-label="Alle foto's bekijken"
           >
-            <span className="relative after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-zinc-500 group-hover:after:w-full after:transition-[width] after:duration-300">Meer foto&apos;s</span>
+            Meer foto&apos;s
             <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
           </button>
         </div>
