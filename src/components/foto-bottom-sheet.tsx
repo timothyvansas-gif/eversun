@@ -5,6 +5,11 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import dummyImg from "@/images/impressie/dummy.webp";
+import dummy2Img from "@/images/impressie/dummy-2.webp";
+import dummy3Img from "@/images/impressie/dummy-3.webp";
+import dummy4Img from "@/images/impressie/dummy-4.webp";
+
+const photos = [dummyImg, dummy2Img, dummy3Img, dummy4Img];
 
 export default function FotoBottomSheet({
   isOpen,
@@ -107,10 +112,10 @@ export default function FotoBottomSheet({
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="relative w-full shrink-0" style={{ paddingBottom: "66.67%" }}>
+                {photos.map((photo, i) => (
+                  <div key={i} className="relative w-full shrink-0" style={{ paddingBottom: "56.04%" }}>
                     <Image
-                      src={dummyImg}
+                      src={photo}
                       alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
                       fill
                       className="object-cover rounded-lg"
