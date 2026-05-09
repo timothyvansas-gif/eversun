@@ -22,7 +22,7 @@ export default function HeroReviews() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="hidden lg:flex items-center gap-3">
+    <div className="hidden lg:flex items-center gap-4">
       {/* Photo stack */}
       <div className="flex -space-x-3">
         {reviewers.map((img, i) => (
@@ -42,7 +42,7 @@ export default function HeroReviews() {
             aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
           >
             <motion.div
-              className="w-[40px] h-[40px] rounded-full overflow-hidden border border-[#111111]"
+              className="w-[48px] h-[48px] rounded-full overflow-hidden border border-[#111111]"
               animate={{
                 y: hoveredIndex === i ? -4 : 0,
                 opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.35,
@@ -52,8 +52,8 @@ export default function HeroReviews() {
               <Image
                 src={img}
                 alt={tooltips[i]?.name ?? `Reviewer ${i + 1}`}
-                width={40}
-                height={40}
+                width={48}
+                height={48}
                 className="object-cover"
               />
             </motion.div>
