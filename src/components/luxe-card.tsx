@@ -3,10 +3,13 @@ import { useRef } from "react";
 import { useInView } from "framer-motion";
 import ovalsErgo from "@/images/ovals-ergo.svg";
 import ErgolineSignature from "@/components/ergoline-signature";
+import { useStickyCard } from "@/components/sticky-card-context";
 
 export default function LuxeCard() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.6 });
+  const inView = useInView(containerRef, { once: false, amount: 0.6 });
+  const { isCovered } = useStickyCard();
+  const isInView = inView && !isCovered;
 
   return (
     <div ref={containerRef} className="relative w-full h-[362px] bg-white rounded-lg pb-[52px] xl:pb-[40px] flex flex-col overflow-hidden xl:overflow-visible" style={{ paddingTop: 'clamp(24px, 4vw, 40px)', paddingLeft: 'clamp(24px, 4vw, 40px)', paddingRight: 'clamp(24px, 4vw, 40px)' }}>

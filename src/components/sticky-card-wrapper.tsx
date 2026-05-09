@@ -5,6 +5,7 @@ import { motion, Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { StickyCardContext } from "./sticky-card-context";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -25,6 +26,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     const scalingRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [isCovered, setIsCovered] = useState(false);
 
     useEffect(() => {
       setIsMounted(true);
@@ -52,6 +54,9 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
           end: "bottom top",
           scrub: 0.8,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            setIsCovered(self.progress > 0.85);
+          }
         }
       });
 
@@ -83,7 +88,9 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
             custom={custom}
             className="w-full"
           >
-            {children}
+            <StickyCardContext.Provider value={{ isCovered }}>
+              {children}
+            </StickyCardContext.Provider>
           </motion.div>
         </div>
       </div>

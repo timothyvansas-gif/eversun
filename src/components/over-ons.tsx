@@ -160,7 +160,7 @@ export default function OverOns() {
                 </div>
                 
                 {/* Text Area */}
-                <div className="flex flex-col gap-3 pr-4">
+                <div className="flex flex-col gap-[10px] pr-4">
                   <h4 className="text-white text-[18px] font-semibold tracking-[-0.27px] font-sans">
                     {member.name}
                   </h4>

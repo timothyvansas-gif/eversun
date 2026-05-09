@@ -1,6 +1,7 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useContainerScale } from "@/hooks/use-container-scale";
+import { useStickyCard } from "@/components/sticky-card-context";
 import PinMarker from "@/components/pin-marker";
 import pBordSm from "@/images/p-bord-sm.svg";
 import pBordL from "@/images/p-bord-l.svg";
@@ -22,7 +23,14 @@ const P_BORD_SM = [
 ];
 
 const itemVariants = {
-  hidden: { y: -180, opacity: 0, transition: { duration: 0 } },
+  hidden: { 
+    y: -180, 
+    opacity: 0, 
+    transition: { 
+      opacity: { duration: 0.4, ease: "easeOut" as const }, 
+      y: { delay: 0.4, duration: 0 } 
+    } 
+  },
   visible: (i: number) => ({
     y: 0,
     opacity: 1,
@@ -33,12 +41,13 @@ const itemVariants = {
       delay: 0.3 + i * 0.08,
     },
   }),
-};
+} as const;
 
 export default function ParkingCard() {
   const { containerRef, contentRef, bgRef } = useContainerScale(411);
   const parkingInView = useInView(containerRef, { once: false, amount: 0.5 });
-  const shouldAnimate = parkingInView;
+  const { isCovered } = useStickyCard();
+  const shouldAnimate = parkingInView && !isCovered;
 
   return (
     <div

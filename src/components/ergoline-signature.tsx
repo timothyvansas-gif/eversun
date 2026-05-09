@@ -39,7 +39,7 @@ export default function ErgolineSignature({ isInView }: Props) {
                   fillOpacity: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
                   strokeWidth: { duration: 1.8, ease: "easeInOut", delay: 0.8 },
                 }
-              : { duration: 0 }
+              : { duration: 0.5, ease: "easeOut" }
           }
         />
       </svg>
