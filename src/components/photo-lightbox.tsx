@@ -42,7 +42,7 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute -top-10 right-6 text-white text-[28px] leading-none opacity-80 hover:opacity-100 transition-opacity duration-150 px-2 py-1 cursor-pointer"
+              className="absolute -top-11 right-[18px] text-white text-[28px] leading-none opacity-80 hover:opacity-100 transition-opacity duration-150 px-2 py-1 cursor-pointer"
               onClick={onClose}
               aria-label="Sluiten"
             >
@@ -81,7 +81,7 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
               </AnimatePresence>
             </div>
 
-            <div className="flex gap-2 mt-3 justify-center">
+            <div className="flex gap-3 mt-6 justify-center">
               {photos.map((photo, i) => (
                 <button
                   key={i}
