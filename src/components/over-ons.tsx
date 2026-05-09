@@ -131,7 +131,8 @@ export default function OverOns() {
           {/* Scroll Container */}
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
+            data-lenis-prevent="true"
+            className="flex overflow-x-auto overflow-y-hidden gap-6 snap-x snap-mandatory cursor-grab pb-4 touch-pan-x overscroll-none"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
