@@ -53,11 +53,7 @@ function AppointmentButton() {
 function AddressInfo() {
   return (
     <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen, 9401 BD
-      <br />
-      <a href="tel:+31625306491" className="text-[#1a1a1a]/60">
-        06 25306491
-      </a>
+      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60">06 25306491</a>
     </p>
   );
 }
@@ -157,10 +153,7 @@ export default function OpeningstijdenOverlay({
       }
     };
 
-    const firstFocusable = overlayRef.current?.querySelector<HTMLElement>(
-      'button, [href], [tabindex]:not([tabindex="-1"])'
-    );
-    firstFocusable?.focus();
+    overlayRef.current?.focus({ preventScroll: true });
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -181,7 +174,7 @@ export default function OpeningstijdenOverlay({
             onClick={onClose}
           />
 
-          <div ref={overlayRef}>
+          <div ref={overlayRef} tabIndex={-1} className="outline-none">
           {/* Mobile: Bottom Sheet */}
           <motion.div
             role="dialog"

@@ -98,11 +98,8 @@ export default function FotoBottomSheet({
                 <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
               </div>
               <div className="px-6 pt-5 pb-4 shrink-0">
-                <h2 className="card-title text-zinc-900">Alle foto&apos;s</h2>
-                <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-[6px]">
-                  Kloekhorststraat 4a, Assen, 9401 BD
-                  <br />
-                  <a href="tel:+31625306491" className="text-[#1a1a1a]/60">06 25306491</a>
+                <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px]">
+                  Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60">06 25306491</a>
                 </p>
               </div>
               <div
