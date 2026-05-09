@@ -19,7 +19,7 @@ function AppointmentButton() {
       className="mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-[#FAF4EC] active:scale-[0.98] relative overflow-hidden"
       style={{
         minHeight: "48px",
-        borderRadius: "16px",
+        borderRadius: "9999px",
         background: "#E15E1D",
         transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
         boxShadow: hovered ? SHADOW_HOVER : SHADOW_DEFAULT,
@@ -113,7 +113,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-2xl border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
+      className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
       onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
       onMouseLeave={() => setHovered(false)}
