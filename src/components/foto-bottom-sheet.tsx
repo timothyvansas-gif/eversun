@@ -22,6 +22,7 @@ export default function FotoBottomSheet({
 
   useEffect(() => {
     if (!isOpen) return;
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
     document.documentElement.style.overflow = "hidden";
     return () => {
       document.documentElement.style.overflow = "";
