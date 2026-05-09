@@ -112,7 +112,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         <div className="flex-1 flex flex-col justify-end lg:translate-y-8">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
-            <div className="translate-y-8 lg:translate-y-10">
+            <div className="translate-y-8 lg:translate-y-[52px]">
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
                   className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
@@ -142,7 +142,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </motion.p>
 
               <motion.div
-                className="mt-7 lg:mt-11 flex flex-col sm:flex-row gap-4 md:gap-4"
+                className="mt-7 lg:mt-9 flex flex-col sm:flex-row gap-4 md:gap-4"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"

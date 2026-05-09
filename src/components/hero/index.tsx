@@ -56,7 +56,12 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(107deg, rgba(0, 0, 0, 0.00) 24.78%, rgba(0, 0, 0, 0.23) 42.77%, rgba(0, 0, 0, 0.48) 60.16%, rgba(0, 0, 0, 0.60) 93.14%)",
         }}
       />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
+      <div
+        className="absolute inset-x-0 bottom-0 h-32 pointer-events-none z-10"
+        style={{
+          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+        }}
+      />
 
       <HeroContent
         onOpenMenu={onOpenMenu}
