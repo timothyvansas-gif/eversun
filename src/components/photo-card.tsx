@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import imageBig from "@/images/image-big.webp";
 import imageRight from "@/images/image-right.webp";
@@ -17,6 +17,30 @@ const lightboxPhotos = [dummyImg, dummy2Img, dummy3Img, dummy4Img];
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const preloaded = useRef(new Set<string>());
+
+  const preloadImage = useCallback((src: string) => {
+    if (preloaded.current.has(src)) return;
+    preloaded.current.add(src);
+    const img = new window.Image();
+    img.src = src;
+  }, []);
+
+  useEffect(() => {
+    preloadImage(lightboxPhotos[0].src);
+  }, [preloadImage]);
+
+  useEffect(() => {
+    const rIC = (window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (id: number) => void }).requestIdleCallback;
+    if (!rIC) return;
+    const id = rIC(() => lightboxPhotos.slice(1).forEach((p) => preloadImage(p.src)));
+    return () => window.cancelIdleCallback?.(id);
+  }, [preloadImage]);
+
+  const handleHoverPreload = useCallback(() => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    lightboxPhotos.slice(1).forEach((p) => preloadImage(p.src));
+  }, [preloadImage]);
 
   const handlePhotoClick = () => {
     if (window.matchMedia("(min-width: 768px)").matches) {
@@ -33,6 +57,7 @@ export default function PhotoCard() {
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={handlePhotoClick}
+            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             <Image
@@ -46,6 +71,7 @@ export default function PhotoCard() {
           <button
             className="relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
             onClick={handlePhotoClick}
+            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             <Image
