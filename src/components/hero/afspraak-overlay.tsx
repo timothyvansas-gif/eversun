@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
@@ -13,14 +13,38 @@ export default function AfspraakOverlay({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         (document.activeElement as HTMLElement)?.blur();
         onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !overlayRef.current) return;
+      const focusable = Array.from(
+        overlayRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     };
+
+    const firstFocusable = overlayRef.current?.querySelector<HTMLElement>(
+      'button, [href], [tabindex]:not([tabindex="-1"])'
+    );
+    firstFocusable?.focus();
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
@@ -39,7 +63,11 @@ export default function AfspraakOverlay({
             onClick={onClose}
           />
 
+          <div ref={overlayRef}>
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Afspraak maken"
             className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-50 w-[364px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -49,6 +77,7 @@ export default function AfspraakOverlay({
             <div className="relative px-8 pb-8 pt-14">
               <button
                 onClick={onClose}
+                aria-label="Sluiten"
                 className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] transition-colors cursor-pointer"
               >
                 <CloseIcon />
@@ -80,6 +109,7 @@ export default function AfspraakOverlay({
               </div>
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

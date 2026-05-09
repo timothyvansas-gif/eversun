@@ -26,6 +26,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       animate={{ x: isOpen ? "0%" : "100%" }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 right-0 w-[95%] h-full bg-black z-[200] p-8 flex flex-col lg:hidden"
+      aria-hidden={!isOpen}
+      // @ts-ignore -- inert not yet in React TS types but broadly supported
+      inert={!isOpen ? true : undefined}
     >
       {/* Close Button */}
       <button 

@@ -49,7 +49,8 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         >
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="cursor-pointer active:scale-95 transition-transform duration-200"
+            aria-label="Naar begin van de pagina"
+            className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >
             <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48 / 52} />
           </button>
@@ -97,13 +98,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         >
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="cursor-pointer active:scale-95 transition-transform duration-200"
+            aria-label="Naar begin van de pagina"
+            className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >
             <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} />
           </button>
           <button
             onClick={onOpenMenu}
-            className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200"
+            aria-label="Menu openen"
+            aria-expanded={false}
+            className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200 rounded-sm"
           >
             <HamburgerIcon />
           </button>

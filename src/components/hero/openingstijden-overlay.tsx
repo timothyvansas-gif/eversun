@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/components/hero/hero-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
@@ -113,7 +113,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200 focus:outline-none"
+      className="mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
       onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
       onMouseLeave={() => setHovered(false)}
@@ -130,15 +130,38 @@ export default function OpeningstijdenOverlay({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         (document.activeElement as HTMLElement)?.blur();
         onClose();
+        return;
+      }
+      if (e.key !== "Tab" || !overlayRef.current) return;
+      const focusable = Array.from(
+        overlayRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     };
+
+    const firstFocusable = overlayRef.current?.querySelector<HTMLElement>(
+      'button, [href], [tabindex]:not([tabindex="-1"])'
+    );
+    firstFocusable?.focus();
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
@@ -158,8 +181,12 @@ export default function OpeningstijdenOverlay({
             onClick={onClose}
           />
 
+          <div ref={overlayRef}>
           {/* Mobile: Bottom Sheet */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Openingstijden"
             className="md:hidden fixed bottom-0 inset-x-0 bg-[#FAF4EC] rounded-t-[20px] z-50"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
@@ -191,6 +218,9 @@ export default function OpeningstijdenOverlay({
 
           {/* Desktop: Modal */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Openingstijden"
             className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-50 w-[400px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -200,6 +230,7 @@ export default function OpeningstijdenOverlay({
             <div className="relative p-8">
               <button
                 onClick={onClose}
+                aria-label="Sluiten"
                 className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] transition-colors cursor-pointer"
               >
                 <CloseIcon />
@@ -214,6 +245,7 @@ export default function OpeningstijdenOverlay({
               <RouteButton />
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

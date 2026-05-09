@@ -35,6 +35,11 @@ export default function HeroReviews() {
               setHoveredIndex(i);
             }}
             onMouseLeave={() => setHoveredIndex(null)}
+            onFocus={() => setHoveredIndex(i)}
+            onBlur={() => setHoveredIndex(null)}
+            tabIndex={0}
+            role="button"
+            aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
           >
             <motion.div
               className="w-[40px] h-[40px] rounded-full overflow-hidden border border-[#111111]"
@@ -46,7 +51,7 @@ export default function HeroReviews() {
             >
               <Image
                 src={img}
-                alt={`Reviewer ${i + 1}`}
+                alt={tooltips[i]?.name ?? `Reviewer ${i + 1}`}
                 width={40}
                 height={40}
                 className="object-cover"
