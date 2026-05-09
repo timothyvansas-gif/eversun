@@ -60,7 +60,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 key={item}
                 href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="nav-link light"
-                style={{ color: "rgba(255, 255, 255, 0.96)" }}
+                style={{ color: "rgba(255, 255, 255, 0.85)" }}
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToNav(item);
@@ -99,7 +99,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="cursor-pointer active:scale-95 transition-transform duration-200"
           >
-            <Logo className="h-[38px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} />
+            <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} />
           </button>
           <button
             onClick={onOpenMenu}
@@ -116,7 +116,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
                 <h1
                   className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
-                  style={{ marginLeft: "-3px", color: "rgba(255, 255, 255, 1)" }}
+                  style={{ marginLeft: "-3px", color: "#ffffff" }}
                 >
                   De perfecte gouden gloed
                 </h1>
@@ -131,7 +131,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 style={{
                   fontSize: "clamp(21px, 3.44vw, 44px)",
                   lineHeight: "clamp(27px, 4.06vw, 52px)",
-                  color: "rgba(255, 255, 255, 0.8)",
+                  color: "rgba(255, 255, 255, 0.85)",
                 }}
               >
                 begint bij zonnestudio{" "}
