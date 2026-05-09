@@ -6,14 +6,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import reviewer1 from "@/images/people/reviewer-1.webp";
 import reviewer2 from "@/images/people/reviewer-2.webp";
 import reviewer3 from "@/images/people/reviewer-3.webp";
+import reviewer4 from "@/images/people/reviewer-4.webp";
 import iconStar from "@/images/icon-star.svg";
 
-const reviewers = [reviewer1, reviewer2, reviewer3];
+const reviewers = [reviewer1, reviewer4, reviewer2, reviewer3];
 
 const tooltips: Record<number, { quote: string; name: string }> = {
   0: { quote: "Schoon en vriendelijk personeel", name: "Diana Boonstra" },
-  1: { quote: "Hier ga je altijd vrolijk en getint de deur uit!", name: "Jackelien Beikes" },
-  2: { quote: "Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.", name: "Willeke Veenstra" },
+  1: { quote: "Wat een heerlijk schone en moderne studio is Ever Sun. Fijn in het centrum van Assen & parkeren voor de deur (gratis op zondag). Vriendelijk ontvangst en goede kwaliteit zonnebank met allemaal opties om naar eigen smaak in te stellen (ik had de medium sterke bank). Hier kom ik vaker!", name: "Koosje van Goinga" },
+  2: { quote: "Hier ga je altijd vrolijk en getint de deur uit!", name: "Jackelien Beikes" },
+  3: { quote: "Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.", name: "Willeke Veenstra" },
 };
 
 export default function HeroReviews() {
