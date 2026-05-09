@@ -151,6 +151,7 @@ export default function OverOns() {
                     fill 
                     className="object-cover"
                     sizes="(max-width: 768px) 310px, 411px"
+                    draggable={false}
                   />
                   {/* Gradient Overlay */}
                   <div 
