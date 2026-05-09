@@ -48,16 +48,26 @@ function useDraggableScroll() {
       slider.scrollLeft = scrollLeft - walk;
     };
 
+    const onWheel = (e: WheelEvent) => {
+      const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      if (isHorizontal) {
+        // Prevent Lenis from picking up the slight vertical delta during horizontal swipes
+        e.stopPropagation();
+      }
+    };
+
     slider.addEventListener("mousedown", onMouseDown);
     slider.addEventListener("mouseleave", onMouseLeave);
     slider.addEventListener("mouseup", onMouseUp);
     slider.addEventListener("mousemove", onMouseMove);
+    slider.addEventListener("wheel", onWheel, { passive: false });
 
     return () => {
       slider.removeEventListener("mousedown", onMouseDown);
       slider.removeEventListener("mouseleave", onMouseLeave);
       slider.removeEventListener("mouseup", onMouseUp);
       slider.removeEventListener("mousemove", onMouseMove);
+      slider.removeEventListener("wheel", onWheel);
     };
   }, []);
 
@@ -131,8 +141,7 @@ export default function OverOns() {
           {/* Scroll Container */}
           <div 
             ref={scrollRef}
-            data-lenis-prevent="true"
-            className="flex overflow-x-auto overflow-y-hidden gap-6 snap-x snap-mandatory cursor-grab pb-4 touch-pan-x overscroll-none"
+            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4 touch-pan-x overscroll-x-contain"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
