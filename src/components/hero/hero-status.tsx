@@ -86,7 +86,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
             <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-[#E15E1D]" />
           )}
         </span>
-        <span data-status-text className="font-sans font-medium text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }} suppressHydrationWarning>
+        <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }} suppressHydrationWarning>
           {label}
         </span>
       </span>
@@ -95,7 +95,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
 
       <span data-status-times className="flex items-center gap-2" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
         <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
-        <span className="font-sans font-medium text-[15px] leading-none">
+        <span className="font-sans font-normal text-[15px] leading-none">
           <span className="md:hidden">Openingstijden</span>
           <span className="hidden md:inline">Alle openingstijden</span>
         </span>
