@@ -20,8 +20,8 @@ function AfspraakButton({ minuten, prijs }: { minuten: string; prijs: string }) 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0">
-              <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25"/>
-              <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+              <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
           </div>
@@ -42,7 +42,7 @@ function AfspraakButton({ minuten, prijs }: { minuten: string; prijs: string }) 
 
 export default function OnzeZonnebanken() {
   return (
-    <section className="w-full bg-white py-16 xl:py-24">
+    <section id="banken" className="w-full bg-white py-16 xl:py-24">
       <div
         className="w-full flex flex-col items-center"
         style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
@@ -108,7 +108,7 @@ export default function OnzeZonnebanken() {
                     De Prestige 1600 is de ultieme combinatie van een diepe bruining en intensieve huidverzorging dankzij het rode Beauty Light.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
-                    Met de 'Personal Sunstyle' functie stem je de bank direct af op jouw huidtype: kies voor Intensive voor maximale kracht, Medium voor een natuurlijke kleur of Sensitive voor een milde, verzorgende sessie.
+                    Met de 'Personal Sunstyle' functie stem je de bank direct af op jouw huidtype: kies voor intensive voor maximale kracht, medium voor een natuurlijke kleur of sensitive voor een milde, verzorgende sessie.
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 18,00" />
                 </div>
