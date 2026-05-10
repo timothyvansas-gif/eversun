@@ -29,12 +29,9 @@ function AfspraakButton({ minuten, prijs }: { minuten: string; prijs: string }) 
         </div>
         <button
           onClick={handleClick}
-          className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-4 py-[10px] cursor-pointer hover:border-zinc-400 transition-colors duration-150"
+          className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 transition-colors duration-150"
         >
           Maak afspraak
-          <svg width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block ml-2">
-            <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-          </svg>
         </button>
       </div>
 
