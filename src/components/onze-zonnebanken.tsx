@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600.webp";
 import blueVision from "@/images/banken/blue-vision-2-clean.webp";
@@ -10,12 +10,14 @@ import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
 import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
 
 function CardWrapper({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px 30% 0px" }}
-      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+      transition={{ duration: 0.7, delay: shouldReduceMotion ? 0 : index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
       className="flex-1 flex flex-col gap-6"
     >
       {children}
@@ -39,7 +41,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
       <div className="mt-4 flex items-center justify-between md:justify-start md:gap-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
               <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
               <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -49,7 +51,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
         </div>
         <button
           onClick={handleClick}
-          className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 transition-colors duration-150"
+          className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150"
         >
           Maak afspraak
         </button>
@@ -74,9 +76,9 @@ export default function OnzeZonnebanken() {
                 <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
                   Onze zes zonnebanken
                 </h2>
-                <h3 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-400 font-display mt-1">
+                <p className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-400 font-display mt-1">
                   voor echt comfort
-                </h3>
+                </p>
               </div>
               <p className="text-zinc-600 text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Ervaar de wereldwijde standaard in zonlicht. Met Ergoline kies je voor slimme sensoren, verfijnd ligcomfort en een resultaat dat gezien mag worden.
