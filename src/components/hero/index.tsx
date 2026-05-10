@@ -25,7 +25,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-svh lg:h-[calc(100svh-3rem)] min-[1920px]:max-h-[1000px] min-[1920px]:max-w-[1920px] min-[1920px]:mx-auto overflow-hidden bg-black"
+      className="relative w-full h-svh lg:h-[calc(100svh-3rem)] min-[1920px]:max-h-[1000px] min-[1920px]:max-w-[1920px] min-[1920px]:mx-auto overflow-hidden bg-black max-lg:rounded-b-[16px]"
     >
       <div className="absolute inset-0">
         <motion.div
