@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
-import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600-2.webp";
-import blueVision from "@/images/banken/eversun-ergoline-blue-vision-3.webp";
-import affinity600 from "@/images/banken/eversun-ergoline-affinity-600.webp";
-import ergoline700 from "@/images/banken/eversun-ergoline-700.webp";
+import prestige1600 from "@/images/banken/prestige-1600-clean.webp";
+import blueVision from "@/images/banken/blue-vision-clean.webp";
+import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
+import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
 
 function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prijs: string; whatsappUrl: string }) {
   const [qrOpen, setQrOpen] = useState(false);
@@ -131,6 +131,7 @@ export default function OnzeZonnebanken() {
                     alt="Ergoline 770 Medium zonnebad"
                     fill
                     className="object-cover"
+                    style={{ objectPosition: "center center" }}
                     sizes="(max-width: 767px) 100vw, 50vw"
                   />
                 </div>
