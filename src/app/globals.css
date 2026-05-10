@@ -28,10 +28,12 @@ body {
 
 @keyframes hero-reveal {
   from {
-    opacity: 0;
+    filter: blur(20px);
+    transform: scale(1.08);
   }
   to {
-    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
   }
 }
 

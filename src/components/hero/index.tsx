@@ -38,7 +38,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             fill
             priority
             placeholder="blur"
-            className="object-cover object-[35%_50%] md:object-center"
+            className="object-cover object-[35%_50%] md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]"
           />
         </motion.div>
 
