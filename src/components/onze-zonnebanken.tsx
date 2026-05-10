@@ -9,13 +9,13 @@ import blueVision from "@/images/banken/blue-vision-2-clean.webp";
 import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
 import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
 
-function CardWrapper({ children }: { children: React.ReactNode }) {
+function CardWrapper({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 48 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px 250px 0px" }}
-      transition={{ type: "spring", stiffness: 80, damping: 15 }}
+      viewport={{ once: true, margin: "0px 0px 30% 0px" }}
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
       className="flex-1 flex flex-col gap-6"
     >
       {children}
@@ -86,7 +86,7 @@ export default function OnzeZonnebanken() {
           <div className="flex flex-col gap-6 md:gap-16">
             {/* Rij 1 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <CardWrapper>
+              <CardWrapper index={0}>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={blueVision}
@@ -111,7 +111,7 @@ export default function OnzeZonnebanken() {
                 </div>
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <CardWrapper>
+              <CardWrapper index={1}>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={prestige1600}
@@ -139,7 +139,7 @@ export default function OnzeZonnebanken() {
             <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
             {/* Rij 2 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <CardWrapper>
+              <CardWrapper index={0}>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={ergoline700}
@@ -164,7 +164,7 @@ export default function OnzeZonnebanken() {
                 </div>
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <CardWrapper>
+              <CardWrapper index={1}>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={affinity600}
