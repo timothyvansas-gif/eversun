@@ -12,6 +12,7 @@ html {
 
 body {
   background-color: #000000;
+  overflow-x: clip;
 }
 
 @theme {
