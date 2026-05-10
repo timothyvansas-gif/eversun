@@ -9,15 +9,15 @@ import blueVision from "@/images/banken/blue-vision-2-clean.webp";
 import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
 import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
 
-function CardWrapper({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+function CardWrapper({ children }: { children: React.ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
       initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px 30% 0px" }}
-      transition={{ duration: 0.7, delay: shouldReduceMotion ? 0 : index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+      viewport={{ once: true, margin: "0px" }}
+      transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
       className="flex-1 flex flex-col gap-6"
     >
       {children}
@@ -88,7 +88,7 @@ export default function OnzeZonnebanken() {
           <div className="flex flex-col gap-6 md:gap-16">
             {/* Rij 1 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <CardWrapper index={0}>
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={blueVision}
@@ -113,7 +113,7 @@ export default function OnzeZonnebanken() {
                 </div>
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <CardWrapper index={1}>
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={prestige1600}
@@ -132,7 +132,7 @@ export default function OnzeZonnebanken() {
                     De Prestige 1600 is de ultieme combinatie van een diepe bruining en intensieve huidverzorging dankzij het rode Beauty Light.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
-                    Met de 'Personal Sunstyle' functie stem je de bank direct af op jouw huidtype: kies voor intensive voor maximale kracht, medium voor een natuurlijke kleur of sensitive voor een milde, verzorgende sessie.
+                    Met de &lsquo;Personal Sunstyle&rsquo; functie stem je de bank direct af op jouw huidtype: kies voor intensive voor maximale kracht, medium voor een natuurlijke kleur of sensitive voor een milde, verzorgende sessie.
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 18,00" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Prestige%201600" />
                 </div>
@@ -141,7 +141,7 @@ export default function OnzeZonnebanken() {
             <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
             {/* Rij 2 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <CardWrapper index={0}>
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={ergoline700}
@@ -166,7 +166,7 @@ export default function OnzeZonnebanken() {
                 </div>
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <CardWrapper index={1}>
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={affinity600}
