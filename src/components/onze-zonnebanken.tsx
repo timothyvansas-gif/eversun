@@ -5,6 +5,7 @@ import Image from "next/image";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600.webp";
 import blueVision from "@/images/banken/eversun-ergoline-blue-vision.webp";
+import affinity600 from "@/images/banken/eversun-ergoline-affinity-600.webp";
 
 function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prijs: string; whatsappUrl: string }) {
   const [qrOpen, setQrOpen] = useState(false);
@@ -19,7 +20,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 
   return (
     <>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 flex items-center justify-between md:justify-start md:gap-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0">
@@ -80,7 +81,7 @@ export default function OnzeZonnebanken() {
                   />
                   <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                 </div>
-                <div className="flex flex-col gap-[10px] md:pr-14">
+                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
                   <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
                     Ergoline Blue Vision
                   </h3>
@@ -105,7 +106,7 @@ export default function OnzeZonnebanken() {
                   />
                   <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                 </div>
-                <div className="flex flex-col gap-[10px] md:pr-14">
+                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
                   <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
                     Ergoline Prestige 1600
                   </h3>
@@ -131,7 +132,7 @@ export default function OnzeZonnebanken() {
                     <p className="text-zinc-400 text-sm">Afbeelding</p>
                   </div>
                 </div>
-                <div className="flex flex-col gap-[10px] md:pr-14">
+                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
                   <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
                     Ergoline 770 medium
                   </h3>
@@ -146,15 +147,16 @@ export default function OnzeZonnebanken() {
               </div>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
               <div className="flex-1 flex flex-col gap-6">
-                <div className="relative min-h-[300px] md:min-h-[320px] bg-zinc-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <svg className="w-12 h-12 mx-auto mb-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <p className="text-zinc-400 text-sm">Afbeelding</p>
-                  </div>
+                <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
+                  <Image
+                    src={affinity600}
+                    alt="Ergoline Affinity 600 zonnebad"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 767px) 100vw, 50vw"
+                  />
                 </div>
-                <div className="flex flex-col gap-[10px] md:pr-14">
+                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
                   <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
                     Ergoline 600 light
                   </h3>
