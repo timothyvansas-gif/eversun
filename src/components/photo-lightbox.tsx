@@ -13,6 +13,9 @@ interface Props {
 
 export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -27,7 +30,7 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  if (typeof document === "undefined") return null;
+  if (!mounted) return null;
 
   return createPortal(
     <AnimatePresence>

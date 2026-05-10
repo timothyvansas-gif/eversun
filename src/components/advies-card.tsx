@@ -141,9 +141,11 @@ export default function AdviesCard() {
         </div>
 
         {SLIDES.map((slide, i) => (
-          <motion.div
+          <motion.button
             key={i}
-            className="absolute top-0 rounded-full overflow-hidden"
+            onClick={() => setActive(i)}
+            aria-label={`Bekijk foto ${i + 1}`}
+            className="absolute top-0 rounded-full overflow-hidden cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             initial={{ x: getX(i) }}
             animate={{ x: getX(i) }}
             transition={{ type: "spring", stiffness: 280, damping: 28 }}
@@ -156,10 +158,10 @@ export default function AdviesCard() {
           >
             <img
               src={slide.image.src}
-              alt={`Foto ${active + 1} van Ever Sun klanten`}
+              alt={`Foto ${i + 1} van Ever Sun klanten`}
               className="w-full h-full object-cover object-center"
             />
-          </motion.div>
+          </motion.button>
         ))}
       </div>
     </div>

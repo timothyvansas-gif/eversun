@@ -43,11 +43,9 @@ export function getStudioStatus(): { isOpen: boolean; label: string } {
 }
 
 const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
-  const [isMounted, setIsMounted] = useState(false);
   const [status, setStatus] = useState({ isOpen: false, label: "" });
 
   useEffect(() => {
-    setIsMounted(true);
     setStatus(getStudioStatus());
 
     const check = () => {
@@ -69,12 +67,12 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
     };
   }, []);
 
-  const { isOpen, label } = isMounted ? status : getStudioStatus();
+  const { isOpen, label } = status;
 
   return (
     <>
       <button ref={ref} onClick={onOpen} data-status-button className="relative flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
-      <span key={isMounted ? "mounted" : "unmounted"} className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
+      <span key={label} className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
             <>
