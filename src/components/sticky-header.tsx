@@ -1,71 +1,59 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, type Transition, type TargetAndTransition } from "framer-motion";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 
 export default function StickyHeader({
   onOpenMenu,
-  animate,
-  transition
+  isMenuOpen,
 }: {
   onOpenMenu: () => void;
-  animate: TargetAndTransition;
-  transition: Transition;
+  isMenuOpen: boolean;
 }) {
   const [isVisible, setIsVisible] = useState(false);
-  const { scrollY } = useScroll();
 
   useEffect(() => {
-    if (window.scrollY > 570) {
-      setIsVisible(true);
-    }
+    const onScroll = () => {
+      setIsVisible(window.scrollY > 550);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 550) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  });
-
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.header
-          initial={{ y: -100 }}
-          animate={{ y: 0, ...animate }}
-          exit={{ y: -100 }}
-          transition={{
-            y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-            marginLeft: transition
-          }}
-          className="fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm h-14 flex items-center lg:hidden"
+    <header
+      style={{
+        marginLeft: isMenuOpen ? "-95%" : "0%",
+        transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+        transitionProperty: "transform, margin-left",
+        transitionDuration: "800ms",
+        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      className={`fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm h-14 flex items-center lg:hidden ${
+        isVisible ? "" : "pointer-events-none"
+      }`}
+    >
+      <div className="w-full flex items-center justify-between px-6">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="cursor-pointer active:scale-95 transition-transform duration-200"
         >
-          <div className="w-full flex items-center justify-between px-6">
-            {/* Smaller logo with specific colors */}
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="cursor-pointer active:scale-95 transition-transform duration-200"
-            >
-              <Logo
-                className="h-8 w-auto"
-                textColor="#FFFFFF"
-                iconColor="#FAF4EC"
-              />
-            </button>
+          <Logo
+            className="h-8 w-auto"
+            textColor="#FFFFFF"
+            iconColor="#FAF4EC"
+          />
+        </button>
 
-            <button
-              onClick={onOpenMenu}
-              className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
-            >
-              <HamburgerIcon />
-            </button>
-          </div>
-        </motion.header>
-      )}
-    </AnimatePresence>
+        <button
+          onClick={onOpenMenu}
+          className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
+        >
+          <HamburgerIcon />
+        </button>
+      </div>
+    </header>
   );
 }
