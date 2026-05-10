@@ -38,23 +38,25 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 
   return (
     <>
-      <div className="mt-4 flex items-center justify-between md:justify-start md:gap-6">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
-              <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-              <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
+      <div className="mt-auto">
+        <div className="mt-4 flex items-center justify-between md:justify-start md:gap-6">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
+                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
+            </div>
+            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
-          <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
+          <button
+            onClick={handleClick}
+            className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
+          >
+            Maak afspraak
+          </button>
         </div>
-        <button
-          onClick={handleClick}
-          className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150"
-        >
-          Maak afspraak
-        </button>
       </div>
 
       <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
@@ -85,25 +87,25 @@ export default function OnzeZonnebanken() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6 md:gap-16">
+          <div className="flex flex-col gap-6 md:gap-16 xl:gap-6">
             {/* Rij 1 */}
             <div className="flex flex-col md:flex-row gap-6">
               <CardWrapper>
-                <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
-                  <Image
-                    src={blueVision}
-                    alt="Ergoline Blue Vision zonnebad"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 767px) 100vw, 50vw"
-                  />
-                  <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
-                </div>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
-                  <h3 className="card-title text-zinc-900">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                  <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
+                    <Image
+                      src={blueVision}
+                      alt="Ergoline Blue Vision zonnebad"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                    />
+                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
+                  </div>
+                  <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline Blue Vision
                   </h3>
-                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans mt-[2px] md:mt-0 xl:-mt-3">
                     De Blue Vision maakt gebruik van activerend blauw licht om de zuurstofopname in de huid te stimuleren, wat zorgt voor een direct zichtbaar en dieper resultaat.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -114,21 +116,21 @@ export default function OnzeZonnebanken() {
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
               <CardWrapper>
-                <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
-                  <Image
-                    src={prestige1600}
-                    alt="Ergoline Prestige 1600 zonnebad"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 767px) 100vw, 50vw"
-                  />
-                  <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
-                </div>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
-                  <h3 className="card-title text-zinc-900">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                  <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
+                    <Image
+                      src={prestige1600}
+                      alt="Ergoline Prestige 1600 zonnebad"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                    />
+                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
+                  </div>
+                  <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline Prestige 1600
                   </h3>
-                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans mt-[2px] md:mt-0 xl:-mt-3">
                     De Prestige 1600 is de ultieme combinatie van een diepe bruining en intensieve huidverzorging dankzij het rode Beauty Light.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -142,21 +144,21 @@ export default function OnzeZonnebanken() {
             {/* Rij 2 */}
             <div className="flex flex-col md:flex-row gap-6">
               <CardWrapper>
-                <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
-                  <Image
-                    src={ergoline700}
-                    alt="Ergoline 770 Medium zonnebad"
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: "center center" }}
-                    sizes="(max-width: 767px) 100vw, 50vw"
-                  />
-                </div>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
-                  <h3 className="card-title text-zinc-900">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                  <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
+                    <Image
+                      src={ergoline700}
+                      alt="Ergoline 770 Medium zonnebad"
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: "center center" }}
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                    />
+                  </div>
+                  <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline 770 medium
                   </h3>
-                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans mt-[2px] md:mt-0 xl:-mt-3">
                     De Ergoline 770 is een vertrouwde krachtpatser die bekendstaat om zijn consistente en onberispelijk egale bruiningsresultaat.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -167,20 +169,20 @@ export default function OnzeZonnebanken() {
               </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
               <CardWrapper>
-                <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
-                  <Image
-                    src={affinity600}
-                    alt="Ergoline Affinity 600 zonnebad"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 767px) 100vw, 50vw"
-                  />
-                </div>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
-                  <h3 className="card-title text-zinc-900">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                  <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
+                    <Image
+                      src={affinity600}
+                      alt="Ergoline Affinity 600 zonnebad"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                    />
+                  </div>
+                  <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline 600 light
                   </h3>
-                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+                  <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans mt-[2px] md:mt-0 xl:-mt-3">
                     De Ergoline 600 Light is een toegankelijke klassieker die comfort combineert met een betrouwbare, gelijkmatige bruining.
                   </p>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
