@@ -73,7 +73,7 @@ export default function OnzeZonnebanken() {
       >
         <div className="w-full max-w-[1280px] mx-auto">
           <div className="mb-8 xl:mb-10">
-            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-5 xl:gap-6">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-5 lg:gap-6">
               <div>
                 <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
                   Onze zes zonnebanken
@@ -82,16 +82,16 @@ export default function OnzeZonnebanken() {
                   voor echt comfort
                 </p>
               </div>
-              <p className="text-zinc-600 text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-zinc-600 text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] lg:mb-[2px]">
                 Ervaar de wereldwijde standaard in zonlicht. Met Ergoline kies je voor slimme sensoren, verfijnd ligcomfort en een resultaat dat gezien mag worden.
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6 md:gap-16 xl:gap-6">
+          <div className="flex flex-col gap-6 md:gap-10 xl:gap-6">
             {/* Rij 1 */}
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6">
               <CardWrapper>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
                   <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
                     <Image
                       src={blueVision}
@@ -114,9 +114,9 @@ export default function OnzeZonnebanken() {
                   <AfspraakButton minuten="20 min" prijs="€ 19,50" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Blue%20Vision" />
                 </div>
               </CardWrapper>
-              <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
+              <div className="lg:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
               <CardWrapper>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
                   <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
                     <Image
                       src={prestige1600}
@@ -140,11 +140,11 @@ export default function OnzeZonnebanken() {
                 </div>
               </CardWrapper>
             </div>
-            <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
+            <div className="lg:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
             {/* Rij 2 */}
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col lg:flex-row gap-6">
               <CardWrapper>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
                   <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
                     <Image
                       src={ergoline700}
@@ -167,9 +167,9 @@ export default function OnzeZonnebanken() {
                   <AfspraakButton minuten="20 min" prijs="€ 14,00" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20770%20medium" />
                 </div>
               </CardWrapper>
-              <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
+              <div className="lg:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
               <CardWrapper>
-                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] md:pr-14 xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
                   <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
                     <Image
                       src={affinity600}
