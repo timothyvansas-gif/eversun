@@ -99,8 +99,8 @@ export default function OnzeZonnebanken() {
                   />
                   <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                 </div>
-                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
-                  <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
+                  <h3 className="card-title text-zinc-900">
                     Ergoline Blue Vision
                   </h3>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -124,8 +124,8 @@ export default function OnzeZonnebanken() {
                   />
                   <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                 </div>
-                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
-                  <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
+                  <h3 className="card-title text-zinc-900">
                     Ergoline Prestige 1600
                   </h3>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -152,8 +152,8 @@ export default function OnzeZonnebanken() {
                     sizes="(max-width: 767px) 100vw, 50vw"
                   />
                 </div>
-                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
-                  <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
+                  <h3 className="card-title text-zinc-900">
                     Ergoline 770 medium
                   </h3>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -176,8 +176,8 @@ export default function OnzeZonnebanken() {
                     sizes="(max-width: 767px) 100vw, 50vw"
                   />
                 </div>
-                <div className="flex flex-col gap-[6px] md:gap-[10px] md:pr-14">
-                  <h3 className="text-zinc-900 text-[18px] font-semibold tracking-[-0.27px] font-sans">
+                <div className="flex flex-col gap-[10px] md:gap-[14px] md:pr-14">
+                  <h3 className="card-title text-zinc-900">
                     Ergoline 600 light
                   </h3>
                   <p className="text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
