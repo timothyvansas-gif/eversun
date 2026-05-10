@@ -27,7 +27,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       ref={containerRef}
       className="relative w-full h-svh lg:h-[calc(100svh-3rem)] min-[1920px]:max-h-[1000px] min-[1920px]:max-w-[1920px] min-[1920px]:mx-auto overflow-hidden bg-black"
     >
-      <div className="absolute inset-0 animate-[hero-reveal_1.5s_ease-out_forwards]">
+      <div className="absolute inset-0">
         <motion.div
           className="absolute inset-0 overflow-hidden"
           style={{ y, scale }}
