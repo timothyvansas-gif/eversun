@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/prestige-1600-clean.webp";
-import blueVision from "@/images/banken/blue-vision-clean.webp";
+import blueVision from "@/images/banken/blue-vision-2-clean.webp";
 import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
 import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
 
