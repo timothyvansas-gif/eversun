@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Bento from "@/components/bento";
+import OnzeZonnebanken from "@/components/onze-zonnebanken";
 import OverOns from "@/components/over-ons";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
@@ -38,6 +39,7 @@ export default function PageLayout() {
         <div className="relative z-10 w-full flex flex-col items-center bg-surface-page " style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}>
           <Bento />
         </div>
+        <OnzeZonnebanken />
         <OverOns />
       </motion.main>
 
