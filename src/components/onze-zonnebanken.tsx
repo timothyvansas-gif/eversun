@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
-import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600.webp";
-import blueVision from "@/images/banken/eversun-ergoline-blue-vision.webp";
+import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600-2.webp";
+import blueVision from "@/images/banken/eversun-ergoline-blue-vision-3.webp";
 import affinity600 from "@/images/banken/eversun-ergoline-affinity-600.webp";
 import ergoline700 from "@/images/banken/eversun-ergoline-700.webp";
 
