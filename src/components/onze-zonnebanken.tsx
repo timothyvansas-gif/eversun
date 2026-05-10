@@ -2,11 +2,26 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/prestige-1600-clean.webp";
 import blueVision from "@/images/banken/blue-vision-2-clean.webp";
 import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
 import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
+
+function CardWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px 250px 0px" }}
+      transition={{ type: "spring", stiffness: 80, damping: 15 }}
+      className="flex-1 flex flex-col gap-6"
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prijs: string; whatsappUrl: string }) {
   const [qrOpen, setQrOpen] = useState(false);
@@ -71,7 +86,7 @@ export default function OnzeZonnebanken() {
           <div className="flex flex-col gap-6 md:gap-16">
             {/* Rij 1 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex-1 flex flex-col gap-6">
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={blueVision}
@@ -94,9 +109,9 @@ export default function OnzeZonnebanken() {
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 19,50" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Blue%20Vision" />
                 </div>
-              </div>
+              </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <div className="flex-1 flex flex-col gap-6">
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={prestige1600}
@@ -119,12 +134,12 @@ export default function OnzeZonnebanken() {
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 18,00" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Prestige%201600" />
                 </div>
-              </div>
+              </CardWrapper>
             </div>
             <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
             {/* Rij 2 */}
             <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex-1 flex flex-col gap-6">
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={ergoline700}
@@ -147,9 +162,9 @@ export default function OnzeZonnebanken() {
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 14,00" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20770%20medium" />
                 </div>
-              </div>
+              </CardWrapper>
               <div className="md:hidden h-px my-2" style={{ backgroundColor: "#ece2d2", opacity: 0.5 }} />
-              <div className="flex-1 flex flex-col gap-6">
+              <CardWrapper>
                 <div className="relative min-h-[300px] md:min-h-[320px] rounded-lg overflow-hidden">
                   <Image
                     src={affinity600}
@@ -171,7 +186,7 @@ export default function OnzeZonnebanken() {
                   </p>
                   <AfspraakButton minuten="20 min" prijs="€ 12,00" whatsappUrl="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20600%20light" />
                 </div>
-              </div>
+              </CardWrapper>
             </div>
           </div>
         </div>
