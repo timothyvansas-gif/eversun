@@ -4,10 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
-import prestige1600 from "@/images/banken/eversun-ergoline-prestige-1600.webp";
-import blueVision from "@/images/banken/blue-vision-2-clean.webp";
-import affinity600 from "@/images/banken/ergo-line-600-clean.webp";
-import ergoline700 from "@/images/banken/ergoline-770-clean.webp";
+import prestige1600 from "@/images/banken/Ergoline-Prestige-1600.webp";
+import blueVision from "@/images/banken/Ergoline-Blue-Vision.webp";
+import affinity600 from "@/images/banken/Ergoline-600-v2.webp";
+import ergoline700 from "@/images/banken/Ergoline-770.webp";
 
 function CardWrapper({ children }: { children: React.ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
@@ -98,6 +98,7 @@ export default function OnzeZonnebanken() {
                       alt="Ergoline Blue Vision zonnebad"
                       fill
                       className="object-cover"
+                      style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
                     <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
@@ -123,6 +124,7 @@ export default function OnzeZonnebanken() {
                       alt="Ergoline Prestige 1600 zonnebad"
                       fill
                       className="object-cover"
+                      style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
                     <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
@@ -151,7 +153,7 @@ export default function OnzeZonnebanken() {
                       alt="Ergoline 770 Medium zonnebad"
                       fill
                       className="object-cover"
-                      style={{ objectPosition: "center center" }}
+                      style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
                   </div>
@@ -176,6 +178,7 @@ export default function OnzeZonnebanken() {
                       alt="Ergoline Affinity 600 zonnebad"
                       fill
                       className="object-cover"
+                      style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
                   </div>
