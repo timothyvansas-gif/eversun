@@ -37,7 +37,10 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             alt="EverSun"
             fill
             priority
+            fetchPriority="high"
+            quality={80}
             placeholder="blur"
+            sizes="100vw"
             className="object-cover object-[35%_50%] md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]"
           />
         </motion.div>
