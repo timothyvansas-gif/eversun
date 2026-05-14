@@ -257,7 +257,7 @@ export default function Producten() {
             {canScroll && (
               <button
                 onClick={handleClick}
-                className="hidden xl:flex w-[60px] h-[60px] shrink-0 rounded-full border border-[#1F1F1E]/12 hover:border-[#1F1F1E]/24 items-center justify-center transition-colors cursor-pointer group"
+                className="hidden xl:flex w-[60px] h-[60px] shrink-0 rounded-full border border-[#6B5C40]/30 hover:border-[#6B5C40]/50 items-center justify-center transition-colors cursor-pointer group"
               >
                 <svg
                   width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
