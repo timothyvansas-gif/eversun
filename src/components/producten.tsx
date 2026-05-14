@@ -251,7 +251,7 @@ export default function Producten() {
           </div>
 
           <div className="flex items-center justify-between mt-4 xl:mt-2">
-            <p className="text-[#6B5C40] text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+            <p className="text-[#6B5C40] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat.
             </p>
             {canScroll && (
