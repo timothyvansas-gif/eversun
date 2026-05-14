@@ -185,11 +185,11 @@ export default function Producten() {
                 <h2 className="text-[#1F1F1E] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   Devoted Creations producten
                 </h2>
-                <h3 className="text-[#A0906E] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                <h3 className="text-[#94825C] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
                   voor jouw perfecte kleur
                 </h3>
               </div>
-              <p className="text-[#A0906E] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-[#94825C] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Ontdek ons aanbod van hoogwaardige producten. Speciaal geselecteerd voor een optimaal resultaat.
               </p>
             </div>
@@ -251,7 +251,7 @@ export default function Producten() {
           </div>
 
           <div className="flex items-center justify-between mt-4 xl:mt-2">
-            <p className="text-[#A0906E] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
+            <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat.
             </p>
             {canScroll && (
