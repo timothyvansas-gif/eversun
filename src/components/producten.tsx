@@ -114,7 +114,7 @@ const products = [
   {
     id: 7,
     name: "Sun Honey",
-    description: "Gouden glans met een honingzoete finish. Agave en ceramiden herstellen de vochtbalans en bereiden je huid voor op een egale kleurontwikkeling.",
+    description: "Gouden glans, honingzoet. Agave en ceramiden herstellen vocht voor een egale kleur.",
     image: imgSunHoney,
     labels: ["Gouden glow", "Huidherstel"],
   },
