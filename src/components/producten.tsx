@@ -72,7 +72,7 @@ const products = [
   {
     id: 1,
     name: "Dare to be Dark",
-    description: "Hypoallergene formule met komkommer en groene klei voor een rustige, gezonde teint",
+    description: "Hypoallergene formule met komkommer en groene klei voor een rustige, gezonde teint.",
     image: imgDareToBeDark,
     labels: ["Gevoelige huid", "Hypoallergeen"],
   },
