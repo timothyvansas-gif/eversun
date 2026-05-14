@@ -250,11 +250,14 @@ export default function Producten() {
             ))}
           </div>
 
-          {canScroll && (
-            <div className="hidden xl:flex justify-end mt-2">
+          <div className="flex items-center justify-between mt-4 xl:mt-2">
+            <p className="text-[#6B5C40] text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+              Uitsluitend verkrijgbaar in de studio voor passend advies op maat.
+            </p>
+            {canScroll && (
               <button
                 onClick={handleClick}
-                className="w-[60px] h-[60px] rounded-full border border-[#1F1F1E]/12 hover:border-[#1F1F1E]/24 flex items-center justify-center transition-colors cursor-pointer group"
+                className="hidden xl:flex w-[60px] h-[60px] shrink-0 rounded-full border border-[#1F1F1E]/12 hover:border-[#1F1F1E]/24 items-center justify-center transition-colors cursor-pointer group"
               >
                 <svg
                   width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -263,8 +266,8 @@ export default function Producten() {
                   <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#1F1F1E" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
                 </svg>
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           <style dangerouslySetInnerHTML={{
             __html: `
