@@ -52,7 +52,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
       setStatus((prev) => {
         const newStatus = getStudioStatus();
         // Reload if the status text actually changes while the user is on the page
-        if (prev.label && newStatus.label !== prev.label) {
+        if (prev && prev.label && newStatus.label !== prev.label) {
           window.location.reload();
         }
         return newStatus;
