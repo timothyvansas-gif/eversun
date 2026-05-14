@@ -237,7 +237,7 @@ export default function Producten() {
                       {product.labels.map((label) => (
                         <span
                           key={label}
-                          className="text-[#6B5C40] text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-full"
+                          className="text-[#6B5C40] text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
                           style={{ backgroundColor: "#FEF9F5" }}
                         >
                           {label}
@@ -252,7 +252,7 @@ export default function Producten() {
 
           <div className="flex items-center justify-between mt-4 xl:mt-2">
             <p className="text-[#6B5C40] text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
-              Uitsluitend verkrijgbaar in de studio voor passend advies op maat.
+              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat.
             </p>
             {canScroll && (
               <button
