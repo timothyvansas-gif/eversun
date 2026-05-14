@@ -8,6 +8,7 @@ import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
 
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
+const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
 
 const PUSH_TRANSITION = "margin-left 800ms cubic-bezier(0.16, 1, 0.3, 1)";
@@ -41,6 +42,7 @@ export default function PageLayout() {
           <Bento />
         </div>
         <OnzeZonnebanken />
+        <Producten />
         <OverOns />
       </main>
 

@@ -5,7 +5,6 @@ import logoBackground from "@/images/people/logo-background.webp";
 import teamAisha from "@/images/people/team-aisha.webp";
 import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
-import arrow from "@/images/arrow.svg";
 import { useRef, useEffect, useState } from "react";
 
 function useDraggableScroll() {
@@ -174,7 +173,6 @@ export default function OverOns() {
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
-              scrollbarWidth: "none"
             }}
           >
             {teamMembers.map((member) => (
@@ -183,7 +181,7 @@ export default function OverOns() {
                 className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
               >
                 {/* Image */}
-                <div className="w-full h-[360px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
+                <div className="w-full h-[400px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -201,7 +199,7 @@ export default function OverOns() {
 
                 {/* Text Area */}
                 <div className="flex flex-col gap-[10px] pr-4">
-                  <h4 className="text-white text-[18px] font-semibold tracking-[-0.27px] font-sans">
+                  <h4 className="text-white text-[20px] font-medium tracking-[-0.27px] font-display">
                     {member.name}
                   </h4>
                   <p className="text-[#888888] text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
@@ -232,6 +230,9 @@ export default function OverOns() {
             __html: `
             #over-ons .overflow-x-auto::-webkit-scrollbar {
               display: none;
+            }
+            #over-ons .overflow-x-auto {
+              scrollbar-width: none;
             }
             #over-ons .active-drag {
               cursor: grabbing !important;
