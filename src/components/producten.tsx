@@ -76,6 +76,7 @@ const products = [
     image: imgDareToBeDark,
     labels: ["Gevoelige huid", "Hypoallergeen"],
     containerLabel: "Fles",
+    containerPrice: "€ 27,95",
   },
   {
     id: 2,
@@ -84,6 +85,7 @@ const products = [
     image: imgWhiteBronzeCoconut,
     labels: ["Voor beginners", "Natuurlijke kleur"],
     containerLabel: "Fles",
+    containerPrice: "€ 44,95",
   },
   {
     id: 3,
@@ -92,6 +94,7 @@ const products = [
     image: imgBlackCrown,
     labels: ["Max effect", "Voor gevorderden"],
     containerLabel: "Fles",
+    containerPrice: "€ 82,65",
   },
   {
     id: 4,
@@ -100,6 +103,7 @@ const products = [
     image: imgBronzeButter,
     labels: ["Bronzervrij", "Hydraterend"],
     containerLabel: "Fles",
+    containerPrice: "€ 44,95",
   },
   {
     id: 5,
@@ -108,6 +112,7 @@ const products = [
     image: imgHimJet,
     labels: ["Direct effect", "Deep bronzer"],
     containerLabel: "Tube",
+    containerPrice: "€ 34,95",
   },
   {
     id: 6,
@@ -116,6 +121,7 @@ const products = [
     image: imgHimSurf,
     labels: ["Tattoo protection", "Trekt snel in"],
     containerLabel: "Tube",
+    containerPrice: "€ 30,95",
   },
   {
     id: 7,
@@ -124,6 +130,7 @@ const products = [
     image: imgSunHoney,
     labels: ["Gouden glow", "Huidherstel"],
     containerLabel: "Fles",
+    containerPrice: "€ 66,99",
   },
   {
     id: 8,
@@ -132,6 +139,7 @@ const products = [
     image: imgVault,
     labels: ["Kleurbehoud", "Premium finish"],
     containerLabel: "Fles",
+    containerPrice: "€ 122,99",
   },
 ];
 
@@ -232,7 +240,7 @@ export default function Producten() {
                     />
                     <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
                       <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet € 4,95</span>
-                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} € 49,95</span>
+                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} {product.containerPrice}</span>
                     </div>
                   </div>
 
