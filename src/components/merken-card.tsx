@@ -1,5 +1,5 @@
 import Image from "next/image";
-import exlMerken from "@/images/exl-merken.webp";
+import exlMerken from "@/images/exl-merken-update.webp";
 
 export default function MerkenCard() {
   return (

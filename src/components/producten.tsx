@@ -136,7 +136,7 @@ export default function Producten() {
                   className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1"
                 >
                   {/* Image */}
-                  <div className="w-full aspect-[4/5] overflow-hidden relative bg-[#F0EAE0]">
+                  <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
                     <Image
                       src={product.image}
                       alt={product.name}
