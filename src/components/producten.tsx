@@ -207,7 +207,7 @@ export default function Producten() {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="w-[clamp(260px,85vw,280px)] md:w-[280px] shrink-0 snap-start select-none flex flex-col"
+                className="w-[clamp(260px,85vw,310px)] md:w-[280px] shrink-0 snap-start select-none flex flex-col"
               >
                 <div
                   className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1"
