@@ -95,7 +95,7 @@ const products = [
     name: "Bronze Butter",
     description: "Luxe, bronzervrije butter met zes voedende boters en vegan collageen. Hydrateert intensief voor een zijdezachte huid en een natuurlijke glow.",
     image: imgBronzeButter,
-    labels: ["Zonder bronzer", "Ultra hydraterend"],
+    labels: ["Bronzervrij", "Hydraterend"],
   },
   {
     id: 5,
@@ -237,7 +237,7 @@ export default function Producten() {
                       {product.labels.map((label) => (
                         <span
                           key={label}
-                          className="text-[#6B5C40] text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[6px] rounded-full"
+                          className="text-[#6B5C40] text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-full"
                           style={{ backgroundColor: "#FEF9F5" }}
                         >
                           {label}
