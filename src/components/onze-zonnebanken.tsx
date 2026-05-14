@@ -101,7 +101,7 @@ export default function OnzeZonnebanken() {
                       style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
-                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
+                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                   </div>
                   <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline Blue Vision
@@ -127,7 +127,7 @@ export default function OnzeZonnebanken() {
                       style={{ objectPosition: "center bottom" }}
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
-                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
+                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>2 banken</span>
                   </div>
                   <h3 className="card-title text-zinc-900 mt-3 md:mt-0">
                     Ergoline Prestige 1600

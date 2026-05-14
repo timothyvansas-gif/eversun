@@ -222,7 +222,7 @@ export default function Producten() {
                       sizes="(max-width: 768px) 220px, 280px"
                       draggable={false}
                     />
-                    <span className="absolute bottom-3 right-3 text-[13px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>€ bedrag</span>
+                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>€ bedrag</span>
                   </div>
 
                   {/* Text */}
