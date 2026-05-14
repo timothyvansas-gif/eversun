@@ -43,7 +43,7 @@ export function getStudioStatus(): { isOpen: boolean; label: string } {
 }
 
 const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
-  const [status, setStatus] = useState({ isOpen: false, label: "" });
+  const [status, setStatus] = useState<{ isOpen: boolean; label: string } | null>(null);
 
   useEffect(() => {
     setStatus(getStudioStatus());
@@ -67,6 +67,8 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
     };
   }, []);
 
+  if (!status) return null;
+
   const { isOpen, label } = status;
 
   return (
@@ -84,7 +86,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
             <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-[#E15E1D]" />
           )}
         </span>
-        <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }} suppressHydrationWarning>
+        <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
           {label}
         </span>
       </span>

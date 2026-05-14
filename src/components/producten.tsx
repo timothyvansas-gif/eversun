@@ -75,6 +75,7 @@ const products = [
     description: "Hypoallergene formule met komkommer en groene klei voor een rustige, gezonde teint.",
     image: imgDareToBeDark,
     labels: ["Gevoelige huid", "Hypoallergeen"],
+    containerLabel: "Fles",
   },
   {
     id: 2,
@@ -82,6 +83,7 @@ const products = [
     description: "Kokos- en cactuswater voor een egale tropische teint zonder oranje gloed.",
     image: imgWhiteBronzeCoconut,
     labels: ["Voor beginners", "Natuurlijke kleur"],
+    containerLabel: "Fles",
   },
   {
     id: 3,
@@ -89,6 +91,7 @@ const products = [
     description: "Krachtige DHA-bronzer voor een direct intens donker resultaat.",
     image: imgBlackCrown,
     labels: ["Max effect", "Voor gevorderden"],
+    containerLabel: "Fles",
   },
   {
     id: 4,
@@ -96,6 +99,7 @@ const products = [
     description: "Zes voedende boters en vegan collageen voor een zijdezachte huid en natuurlijke glow.",
     image: imgBronzeButter,
     labels: ["Bronzervrij", "Hydraterend"],
+    containerLabel: "Fles",
   },
   {
     id: 5,
@@ -103,6 +107,7 @@ const products = [
     description: "Truffelextract en zwarte kombucha voor een diep, intens bruiningsresultaat.",
     image: imgHimJet,
     labels: ["Direct effect", "Deep bronzer"],
+    containerLabel: "Tube",
   },
   {
     id: 6,
@@ -110,6 +115,7 @@ const products = [
     description: "Beschermt tatoeages en voedt de huid met antioxidanten uit zeebes.",
     image: imgHimSurf,
     labels: ["Tattoo protection", "Trekt snel in"],
+    containerLabel: "Tube",
   },
   {
     id: 7,
@@ -117,6 +123,7 @@ const products = [
     description: "Gouden glans, honingzoet. Agave en ceramiden herstellen vocht voor een egale kleur.",
     image: imgSunHoney,
     labels: ["Gouden glow", "Huidherstel"],
+    containerLabel: "Fles",
   },
   {
     id: 8,
@@ -124,6 +131,7 @@ const products = [
     description: "Ingekapselde DHA houdt je diepdonkere finish dagenlang perfect.",
     image: imgVault,
     labels: ["Kleurbehoud", "Premium finish"],
+    containerLabel: "Fles",
   },
 ];
 
@@ -160,8 +168,8 @@ export default function Producten() {
       if (isAtEnd) {
         scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        const cardWidth = 280;
-        const gap = 16;
+        const cardWidth = 411;
+        const gap = 24;
         scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: "smooth" });
       }
     }
@@ -198,7 +206,7 @@ export default function Producten() {
           {/* Scroll Container */}
           <div
             ref={scrollRef}
-            className="flex overflow-x-auto gap-4 snap-x snap-mandatory cursor-grab pb-4"
+            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -207,7 +215,7 @@ export default function Producten() {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="w-[clamp(260px,85vw,310px)] md:w-[280px] shrink-0 snap-start select-none flex flex-col"
+                className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start select-none flex flex-col"
               >
                 <div
                   className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1"
@@ -222,7 +230,10 @@ export default function Producten() {
                       sizes="(max-width: 768px) 220px, 280px"
                       draggable={false}
                     />
-                    <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>€ bedrag</span>
+                    <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
+                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet € 4,95</span>
+                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} € 49,95</span>
+                    </div>
                   </div>
 
                   {/* Text */}
@@ -252,7 +263,7 @@ export default function Producten() {
 
           <div className="flex items-center justify-between mt-4 xl:mt-2">
             <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
-              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat.
+              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
             </p>
             {canScroll && (
               <button
