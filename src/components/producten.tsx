@@ -237,7 +237,7 @@ export default function Producten() {
                       {product.labels.map((label) => (
                         <span
                           key={label}
-                          className="text-[#6B5C40] text-[14px] md:text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
+                          className="text-[#94825C] text-[14px] md:text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
                           style={{ backgroundColor: "#FEF9F5" }}
                         >
                           {label}
