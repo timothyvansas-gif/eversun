@@ -5,64 +5,8 @@ import logoBackground from "@/images/people/logo-background.webp";
 import teamAisha from "@/images/people/team-aisha.webp";
 import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
-import { useRef, useEffect, useState } from "react";
-
-function useDraggableScroll() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const slider = ref.current;
-    if (!slider) return;
-
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      slider.classList.add("active-drag");
-      slider.style.scrollSnapType = "none";
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    };
-
-    const onMouseLeave = () => {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
-    };
-
-    const onMouseUp = () => {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      slider.scrollLeft = scrollLeft - walk;
-    };
-
-    slider.addEventListener("mousedown", onMouseDown);
-    slider.addEventListener("mouseleave", onMouseLeave);
-    slider.addEventListener("mouseup", onMouseUp);
-    slider.addEventListener("mousemove", onMouseMove);
-
-    return () => {
-      slider.removeEventListener("mousedown", onMouseDown);
-      slider.removeEventListener("mouseleave", onMouseLeave);
-      slider.removeEventListener("mouseup", onMouseUp);
-      slider.removeEventListener("mousemove", onMouseMove);
-    };
-  }, []);
-
-  return ref;
-}
+import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
+import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 
 const teamMembers = [
   {
@@ -92,43 +36,7 @@ const teamMembers = [
 ];
 
 export default function OverOns() {
-  const scrollRef = useDraggableScroll();
-  const [isAtEnd, setIsAtEnd] = useState(false);
-  const [canScroll, setCanScroll] = useState(false);
-
-  useEffect(() => {
-    const slider = scrollRef.current;
-    if (!slider) return;
-
-    const checkScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = slider;
-      setCanScroll(scrollWidth > clientWidth + 200);
-      setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
-    };
-
-    const observer = new ResizeObserver(checkScroll);
-    observer.observe(slider);
-
-    slider.addEventListener("scroll", checkScroll);
-    checkScroll(); // Initial check
-
-    return () => {
-      slider.removeEventListener("scroll", checkScroll);
-      observer.disconnect();
-    };
-  }, []);
-
-  const handleClick = () => {
-    if (scrollRef.current) {
-      if (isAtEnd) {
-        scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        const cardWidth = 411;
-        const gap = 24;
-        scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: "smooth" });
-      }
-    }
-  };
+  const { scrollRef, canScroll, isAtEnd, scrollNext } = useHorizontalScroller();
 
   return (
     <section
@@ -169,7 +77,7 @@ export default function OverOns() {
           {/* Scroll Container */}
           <div
             ref={scrollRef}
-            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
+            className="draggable-scroll flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -212,32 +120,13 @@ export default function OverOns() {
 
           {canScroll && (
             <div className="hidden xl:flex justify-end mt-2">
-              <button
-                onClick={handleClick}
-                className="w-[60px] h-[60px] rounded-full border border-white/12 hover:border-white/24 flex items-center justify-center transition-colors cursor-pointer group"
-              >
-                <svg
-                  width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
-                >
-                  <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#ffffff" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-                </svg>
-              </button>
+              <CarouselNavButton
+                variant="light"
+                isAtEnd={isAtEnd}
+                onClick={scrollNext}
+              />
             </div>
           )}
-
-          <style dangerouslySetInnerHTML={{
-            __html: `
-            #over-ons .overflow-x-auto::-webkit-scrollbar {
-              display: none;
-            }
-            #over-ons .overflow-x-auto {
-              scrollbar-width: none;
-            }
-            #over-ons .active-drag {
-              cursor: grabbing !important;
-            }
-          `}} />
         </div>
       </div>
     </section>

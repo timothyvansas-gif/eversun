@@ -5,6 +5,7 @@ import { motion, Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { StickyCardContext } from "./sticky-card-context";
 
 if (typeof window !== "undefined") {
@@ -25,23 +26,15 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     const containerRef = useRef<HTMLDivElement>(null);
     const scalingRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const [isCovered, setIsCovered] = useState(false);
 
     useEffect(() => {
       setIsMounted(true);
-      const checkMobile = () => setIsMobile(window.matchMedia("(max-width: 767px)").matches);
-      checkMobile();
-      window.addEventListener("resize", checkMobile);
-
       const timeout = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 100);
-
-      return () => {
-        window.removeEventListener("resize", checkMobile);
-        clearTimeout(timeout);
-      };
+      return () => clearTimeout(timeout);
     }, []);
 
     useGSAP(() => {

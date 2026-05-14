@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import manAdvies from "@/images/people/man-advies.webp";
 import meisjeRood from "@/images/people/meisje-rood-advies.webp";
 import vrouwOuder from "@/images/people/vrouw-ouder-advies.webp";
@@ -34,16 +35,8 @@ export default function AdviesCard() {
   const dashOffset = useTransform(progress, [0, 1], [CIRC, 0]);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  // Senior approach: responsive threshold and delay based on viewport
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 1279px)");
   const [started, setStarted] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1280);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const isInView = useInView(containerRef, {
     once: false,

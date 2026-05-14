@@ -113,4 +113,16 @@ body {
   button[data-status-button]:hover span[data-status-times] {
     color: rgba(255, 255, 255, 0.96) !important;
   }
+
+  .draggable-scroll {
+    scrollbar-width: none;
+  }
+
+  .draggable-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .draggable-scroll.active-drag {
+    cursor: grabbing !important;
+  }
 }

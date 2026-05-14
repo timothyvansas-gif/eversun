@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
 import CloseIcon from "@/components/ui/close-icon";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 export default function AfspraakOverlay({
   isOpen,
@@ -20,39 +21,15 @@ export default function AfspraakOverlay({
 
   useEffect(() => { setMounted(true); }, []);
 
+  useFocusTrap(overlayRef, isOpen, onClose);
+
   useEffect(() => {
     if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        (document.activeElement as HTMLElement)?.blur();
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab" || !overlayRef.current) return;
-      const focusable = Array.from(
-        overlayRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-      ).filter((el) => el.offsetParent !== null);
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-
     const firstFocusable = overlayRef.current?.querySelector<HTMLElement>(
       'button, [href], [tabindex]:not([tabindex="-1"])'
     );
     firstFocusable?.focus();
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!mounted) return null;
 

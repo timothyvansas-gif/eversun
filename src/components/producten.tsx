@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
+import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
 import imgWhiteBronzeCoconut from "@/images/producten/eversun-White-2-bronze-coconut.webp";
 import imgBlackCrown from "@/images/producten/eversun-blackcrown.webp";
@@ -10,63 +11,6 @@ import imgHimJet from "@/images/producten/eversun-him-jet.webp";
 import imgHimSurf from "@/images/producten/eversun-him-surf.webp";
 import imgSunHoney from "@/images/producten/eversun-sun-honey.webp";
 import imgVault from "@/images/producten/eversun-vault.webp";
-
-function useDraggableScroll() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const slider = ref.current;
-    if (!slider) return;
-
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      slider.classList.add("active-drag");
-      slider.style.scrollSnapType = "none";
-      startX = e.pageX - slider.offsetLeft;
-      scrollLeft = slider.scrollLeft;
-    };
-
-    const onMouseLeave = () => {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
-    };
-
-    const onMouseUp = () => {
-      if (!isDown) return;
-      isDown = false;
-      slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - slider.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      slider.scrollLeft = scrollLeft - walk;
-    };
-
-    slider.addEventListener("mousedown", onMouseDown);
-    slider.addEventListener("mouseleave", onMouseLeave);
-    slider.addEventListener("mouseup", onMouseUp);
-    slider.addEventListener("mousemove", onMouseMove);
-
-    return () => {
-      slider.removeEventListener("mousedown", onMouseDown);
-      slider.removeEventListener("mouseleave", onMouseLeave);
-      slider.removeEventListener("mouseup", onMouseUp);
-      slider.removeEventListener("mousemove", onMouseMove);
-    };
-  }, []);
-
-  return ref;
-}
 
 const products = [
   {
@@ -144,44 +88,7 @@ const products = [
 ];
 
 export default function Producten() {
-  const scrollRef = useDraggableScroll();
-  const [isAtEnd, setIsAtEnd] = useState(false);
-  const [canScroll, setCanScroll] = useState(false);
-
-  useEffect(() => {
-    const slider = scrollRef.current;
-    if (!slider) return;
-
-    const checkScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = slider;
-      setCanScroll(scrollWidth > clientWidth + 200);
-      setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
-    };
-
-    const observer = new ResizeObserver(checkScroll);
-    observer.observe(slider);
-
-    slider.addEventListener("scroll", checkScroll);
-    checkScroll();
-
-    return () => {
-      slider.removeEventListener("scroll", checkScroll);
-      observer.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleClick = () => {
-    if (scrollRef.current) {
-      if (isAtEnd) {
-        scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        const cardWidth = 411;
-        const gap = 24;
-        scrollRef.current.scrollBy({ left: cardWidth + gap, behavior: "smooth" });
-      }
-    }
-  };
+  const { scrollRef, canScroll, isAtEnd, scrollNext } = useHorizontalScroller();
 
   return (
     <section
@@ -214,7 +121,7 @@ export default function Producten() {
           {/* Scroll Container */}
           <div
             ref={scrollRef}
-            className="flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
+            className="draggable-scroll flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
             style={{
               marginRight: "calc(50% - 50vw)",
               paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -274,32 +181,14 @@ export default function Producten() {
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
             </p>
             {canScroll && (
-              <button
-                onClick={handleClick}
-                className="hidden xl:flex w-[60px] h-[60px] shrink-0 rounded-full border border-[#6B5C40]/30 hover:border-[#6B5C40]/50 items-center justify-center transition-colors cursor-pointer group"
-              >
-                <svg
-                  width="20" height="15" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
-                >
-                  <path d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1" stroke="#1F1F1E" strokeWidth="1.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-                </svg>
-              </button>
+              <CarouselNavButton
+                variant="dark"
+                isAtEnd={isAtEnd}
+                onClick={scrollNext}
+                className="hidden xl:flex"
+              />
             )}
           </div>
-
-          <style dangerouslySetInnerHTML={{
-            __html: `
-            #producten .overflow-x-auto::-webkit-scrollbar {
-              display: none;
-            }
-            #producten .overflow-x-auto {
-              scrollbar-width: none;
-            }
-            #producten .active-drag {
-              cursor: grabbing !important;
-            }
-          `}} />
         </div>
       </div>
     </section>
