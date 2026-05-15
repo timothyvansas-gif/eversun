@@ -53,9 +53,10 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           }}
         />
         <div
-          className="absolute inset-x-0 bottom-0 h-32 pointer-events-none z-10"
+          className="absolute inset-x-0 bottom-0 pointer-events-none z-10"
           style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%)",
+            height: "250px",
+            background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.55) 8%, rgba(0,0,0,0.45) 18%, rgba(0,0,0,0.33) 30%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0.13) 60%, rgba(0,0,0,0.06) 75%, rgba(0,0,0,0.02) 88%, rgba(0,0,0,0) 100%)",
           }}
         />
 
