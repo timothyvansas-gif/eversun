@@ -11,6 +11,7 @@ import imgHimJet from "@/images/producten/eversun-him-jet.webp";
 import imgHimSurf from "@/images/producten/eversun-him-surf.webp";
 import imgSunHoney from "@/images/producten/eversun-sun-honey.webp";
 import imgVault from "@/images/producten/eversun-vault.webp";
+import imgCocoCreamsicle from "@/images/producten/eversun-coco-creamsicle.webp";
 
 const products = [
   {
@@ -93,6 +94,15 @@ const products = [
     containerLabel: "Fles",
     containerPrice: "€ 134,99",
   },
+  {
+    id: 9,
+    name: "Coco Creamsicle",
+    description: "Decadente moisturizer met sinaasappelolie en Bacuri-boter voor diepe voeding en een zijdezachte glans.",
+    image: imgCocoCreamsicle,
+    labels: ["Moisturizer", "Vitamine C boost"],
+    containerLabel: "Fles",
+    containerPrice: "€ 24,99",
+  },
 ];
 
 export default function Producten() {
@@ -154,7 +164,9 @@ export default function Producten() {
                       draggable={false}
                     />
                     <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
-                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
+                      {product.sachetPrice && (
+                        <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
+                      )}
                       <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} {product.containerPrice}</span>
                     </div>
                   </div>
