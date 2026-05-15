@@ -12,6 +12,8 @@ import imgHimSurf from "@/images/producten/eversun-him-surf.webp";
 import imgSunHoney from "@/images/producten/eversun-sun-honey.webp";
 import imgVault from "@/images/producten/eversun-vault.webp";
 import imgCocoCreamsicle from "@/images/producten/eversun-coco-creamsicle.webp";
+import imgBarefootBeachwood from "@/images/producten/eversun-barefoot-beachwood.webp";
+import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.webp";
 
 const products = [
   {
@@ -100,6 +102,24 @@ const products = [
     description: "Decadente moisturizer met sinaasappelolie en Bacuri-boter voor diepe voeding en een zijdezachte glans.",
     image: imgCocoCreamsicle,
     labels: ["Moisturizer", "Vitamine C boost"],
+    containerLabel: "Fles",
+    containerPrice: "€ 24,99",
+  },
+  {
+    id: 10,
+    name: "Barefoot Beachwood",
+    description: "After-sun hydratatie met Cacay-olie en kokosmelk voor herstel en een langdurig egale teint.",
+    image: imgBarefootBeachwood,
+    labels: ["After-sun", "24-uurs hydratatie"],
+    containerLabel: "Fles",
+    containerPrice: "€ 24,99",
+  },
+  {
+    id: 11,
+    name: "Enchanted Emerald",
+    description: "Framboos-extract en cactuswater voor een herstellende hydratatie en een stralende, vitale finish.",
+    image: imgEnchantedEmerald,
+    labels: ["Daily Hydrator", "Anti-aging"],
     containerLabel: "Fles",
     containerPrice: "€ 24,99",
   },
