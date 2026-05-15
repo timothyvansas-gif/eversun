@@ -39,7 +39,7 @@ export function useHorizontalScroller() {
     if (isAtEnd) {
       slider.scrollTo({ left: 0, behavior: "smooth" });
     } else {
-      slider.scrollBy({ left: CARD_WIDTH + GAP, behavior: "smooth" });
+      slider.scrollBy({ left: (CARD_WIDTH + GAP) * 2, behavior: "smooth" });
     }
   }, [isAtEnd, scrollRef]);
 

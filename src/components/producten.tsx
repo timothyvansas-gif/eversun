@@ -19,8 +19,9 @@ const products = [
     description: "Hypoallergene formule met komkommer en groene klei voor een rustige, gezonde teint.",
     image: imgDareToBeDark,
     labels: ["Gevoelige huid", "Hypoallergeen"],
+    sachetPrice: "€ 4,99",
     containerLabel: "Fles",
-    containerPrice: "€ 27,95",
+    containerPrice: "€ 29,99",
   },
   {
     id: 2,
@@ -28,8 +29,9 @@ const products = [
     description: "Kokos- en cactuswater voor een egale tropische teint zonder oranje gloed.",
     image: imgWhiteBronzeCoconut,
     labels: ["Voor beginners", "Natuurlijke kleur"],
+    sachetPrice: "€ 4,99",
     containerLabel: "Fles",
-    containerPrice: "€ 44,95",
+    containerPrice: "€ 49,99",
   },
   {
     id: 3,
@@ -37,8 +39,9 @@ const products = [
     description: "Krachtige DHA-bronzer voor een direct intens donker resultaat.",
     image: imgBlackCrown,
     labels: ["Max effect", "Voor gevorderden"],
+    sachetPrice: "€ 8,50",
     containerLabel: "Fles",
-    containerPrice: "€ 82,65",
+    containerPrice: "€ 84,99",
   },
   {
     id: 4,
@@ -46,8 +49,9 @@ const products = [
     description: "Zes voedende boters en vegan collageen voor een zijdezachte huid en natuurlijke glow.",
     image: imgBronzeButter,
     labels: ["Bronzervrij", "Hydraterend"],
+    sachetPrice: "€ 4,99",
     containerLabel: "Fles",
-    containerPrice: "€ 44,95",
+    containerPrice: "€ 44,99",
   },
   {
     id: 5,
@@ -55,8 +59,9 @@ const products = [
     description: "Truffelextract en zwarte kombucha voor een diep, intens bruiningsresultaat.",
     image: imgHimJet,
     labels: ["Direct effect", "Deep bronzer"],
+    sachetPrice: "€ 5,49",
     containerLabel: "Tube",
-    containerPrice: "€ 34,95",
+    containerPrice: "€ 34,99",
   },
   {
     id: 6,
@@ -64,8 +69,9 @@ const products = [
     description: "Beschermt tatoeages en voedt de huid met antioxidanten uit zeebes.",
     image: imgHimSurf,
     labels: ["Tattoo protection", "Trekt snel in"],
+    sachetPrice: "€ 4,99",
     containerLabel: "Tube",
-    containerPrice: "€ 30,95",
+    containerPrice: "€ 29,99",
   },
   {
     id: 7,
@@ -73,8 +79,9 @@ const products = [
     description: "Gouden glans, honingzoet. Agave en ceramiden herstellen vocht voor een egale kleur.",
     image: imgSunHoney,
     labels: ["Gouden glow", "Huidherstel"],
+    sachetPrice: "€ 8,49",
     containerLabel: "Fles",
-    containerPrice: "€ 66,99",
+    containerPrice: "€ 69,99",
   },
   {
     id: 8,
@@ -82,8 +89,9 @@ const products = [
     description: "Ingekapselde DHA houdt je diepdonkere finish dagenlang perfect.",
     image: imgVault,
     labels: ["Kleurbehoud", "Premium finish"],
+    sachetPrice: "€ 12,99",
     containerLabel: "Fles",
-    containerPrice: "€ 122,99",
+    containerPrice: "€ 134,99",
   },
 ];
 
@@ -146,7 +154,7 @@ export default function Producten() {
                       draggable={false}
                     />
                     <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
-                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet € 4,95</span>
+                      <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
                       <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} {product.containerPrice}</span>
                     </div>
                   </div>
