@@ -12,7 +12,7 @@ export default function Footer() {
         <p className="text-sm font-medium">
           <span className="text-white">Ever Sun ©</span>
           <span style={{ color: "#888888" }}>
-            &nbsp; – &nbsp;<span className="hidden sm:inline">Ontworpen en ontwikkeld door Timothy van Sas</span><span className="sm:hidden">Ontwikkeld door Timothy van Sas</span>
+            &nbsp; – &nbsp;<span className="hidden sm:inline">Realisatie Timothy van Sas</span><span className="sm:hidden">Ontwikkeld door Timothy van Sas</span>
           </span>
         </p>
 

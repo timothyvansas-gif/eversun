@@ -25,6 +25,7 @@ const fadeUp = {
   }),
 };
 
+
 export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   const { scrollToNav } = useScrollNav();
   return (
@@ -117,14 +118,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
             <div className="translate-y-8 lg:translate-y-[52px]">
-              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
-                <h1
-                  className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
-                  style={{ marginLeft: "-3px", color: "#ffffff" }}
-                >
-                  De perfecte gouden gloed
-                </h1>
-              </motion.div>
+              <motion.h1
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={0.3}
+                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
+                style={{ marginLeft: "-3px", color: "#ffffff" }}
+              >
+                De perfecte gouden gloed
+              </motion.h1>
 
               <motion.p
                 className="mt-4 lg:mt-3 font-alice font-normal tracking-[-0.5px] lg:tracking-[-1.5px]"

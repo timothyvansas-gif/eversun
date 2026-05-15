@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
+import { useImageHoverScale } from "@/hooks/use-image-hover-scale";
 import { motion, useReducedMotion } from "framer-motion";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/Ergoline-Prestige-1600.webp";
@@ -129,17 +130,20 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 }
 
 function ZonnebankCard({ data }: { data: Zonnebank }) {
+  const { cardHandlers, imageStyle } = useImageHoverScale();
   return (
     <CardWrapper>
-      <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
+      <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]" {...cardHandlers}>
         <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
-          <Image
-            src={data.image}
-            alt={data.alt}
-            fill
-            className="object-cover object-bottom"
-            sizes="(max-width: 767px) 100vw, 50vw"
-          />
+          <div className="absolute inset-0" style={imageStyle}>
+            <Image
+              src={data.image}
+              alt={data.alt}
+              fill
+              className="object-cover object-bottom"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          </div>
           {data.badge && (
             <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
               {data.badge}

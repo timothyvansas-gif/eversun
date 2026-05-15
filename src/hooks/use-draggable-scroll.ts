@@ -21,18 +21,33 @@ export function useDraggableScroll() {
       scrollLeft = slider.scrollLeft;
     };
 
+    const snapToNearest = () => {
+      const firstChild = slider.firstElementChild as HTMLElement | null;
+      if (!firstChild) {
+        slider.style.scrollSnapType = "x mandatory";
+        return;
+      }
+      const gap = parseFloat(window.getComputedStyle(slider).gap) || 0;
+      const itemStep = firstChild.offsetWidth + gap;
+      const nearest = Math.round(slider.scrollLeft / itemStep) * itemStep;
+      slider.scrollTo({ left: nearest, behavior: "smooth" });
+      setTimeout(() => {
+        slider.style.scrollSnapType = "x mandatory";
+      }, 500);
+    };
+
     const onMouseLeave = () => {
       if (!isDown) return;
       isDown = false;
       slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
+      snapToNearest();
     };
 
     const onMouseUp = () => {
       if (!isDown) return;
       isDown = false;
       slider.classList.remove("active-drag");
-      slider.style.scrollSnapType = "x mandatory";
+      snapToNearest();
     };
 
     const onMouseMove = (e: MouseEvent) => {
