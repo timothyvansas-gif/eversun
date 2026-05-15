@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
@@ -15,7 +16,39 @@ import imgCocoCreamsicle from "@/images/producten/eversun-coco-creamsicle.webp";
 import imgBarefootBeachwood from "@/images/producten/eversun-barefoot-beachwood.webp";
 import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.webp";
 
+function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <>
+      {!loaded && (
+        <div
+          className="absolute inset-0 animate-pulse"
+          style={{ background: "linear-gradient(90deg, #F0EAE0 25%, #E8DDD0 50%, #F0EAE0 75%)", backgroundSize: "200% 100%" }}
+        />
+      )}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={`object-cover object-center transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        sizes="(max-width: 768px) 220px, 280px"
+        draggable={false}
+        onLoad={() => setLoaded(true)}
+      />
+    </>
+  );
+}
+
 const products = [
+  {
+    id: 9,
+    name: "Coco Creamsicle",
+    description: "Decadente moisturizer met sinaasappelolie en Bacuri-boter voor diepe voeding en een zijdezachte glans.",
+    image: imgCocoCreamsicle,
+    labels: ["Moisturizer", "Vitamine C boost"],
+    containerLabel: "Fles",
+    containerPrice: "€ 24,99",
+  },
   {
     id: 1,
     name: "Dare to be Dark",
@@ -25,16 +58,6 @@ const products = [
     sachetPrice: "€ 4,99",
     containerLabel: "Fles",
     containerPrice: "€ 29,99",
-  },
-  {
-    id: 2,
-    name: "White 2 Bronze Coconut",
-    description: "Kokos- en cactuswater voor een egale tropische teint zonder oranje gloed.",
-    image: imgWhiteBronzeCoconut,
-    labels: ["Voor beginners", "Natuurlijke kleur"],
-    sachetPrice: "€ 4,99",
-    containerLabel: "Fles",
-    containerPrice: "€ 49,99",
   },
   {
     id: 3,
@@ -47,16 +70,6 @@ const products = [
     containerPrice: "€ 84,99",
   },
   {
-    id: 4,
-    name: "Bronze Butter",
-    description: "Zes voedende boters en vegan collageen voor een zijdezachte huid en natuurlijke glow.",
-    image: imgBronzeButter,
-    labels: ["Bronzervrij", "Hydraterend"],
-    sachetPrice: "€ 4,99",
-    containerLabel: "Fles",
-    containerPrice: "€ 44,99",
-  },
-  {
     id: 5,
     name: "Him Jet",
     description: "Truffelextract en zwarte kombucha voor een diep, intens bruiningsresultaat.",
@@ -65,6 +78,26 @@ const products = [
     sachetPrice: "€ 5,49",
     containerLabel: "Tube",
     containerPrice: "€ 34,99",
+  },
+  {
+    id: 2,
+    name: "White 2 Bronze Coconut",
+    description: "Kokos- en cactuswater voor een egale tropische teint zonder oranje gloed.",
+    image: imgWhiteBronzeCoconut,
+    labels: ["Voor beginners", "Natuurlijke kleur"],
+    sachetPrice: "€ 4,99",
+    containerLabel: "Fles",
+    containerPrice: "€ 49,99",
+  },
+  {
+    id: 4,
+    name: "Bronze Butter",
+    description: "Zes voedende boters en vegan collageen voor een zijdezachte huid en natuurlijke glow.",
+    image: imgBronzeButter,
+    labels: ["Bronzervrij", "Hydraterend"],
+    sachetPrice: "€ 4,99",
+    containerLabel: "Fles",
+    containerPrice: "€ 44,99",
   },
   {
     id: 6,
@@ -95,15 +128,6 @@ const products = [
     sachetPrice: "€ 12,99",
     containerLabel: "Fles",
     containerPrice: "€ 134,99",
-  },
-  {
-    id: 9,
-    name: "Coco Creamsicle",
-    description: "Decadente moisturizer met sinaasappelolie en Bacuri-boter voor diepe voeding en een zijdezachte glans.",
-    image: imgCocoCreamsicle,
-    labels: ["Moisturizer", "Vitamine C boost"],
-    containerLabel: "Fles",
-    containerPrice: "€ 24,99",
   },
   {
     id: 10,
@@ -175,14 +199,7 @@ export default function Producten() {
                 >
                   {/* Image */}
                   <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover object-center"
-                      sizes="(max-width: 768px) 220px, 280px"
-                      draggable={false}
-                    />
+                    <ProductImage src={product.image} alt={product.name} />
                     <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
                       {product.sachetPrice && (
                         <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
