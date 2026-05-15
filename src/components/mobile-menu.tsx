@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
+import facebookIcon from "@/images/socials/social-facebook.svg";
+import instagramIcon from "@/images/socials/social-instagram.svg";
 import { NAV_ITEMS } from "@/lib/nav-items";
 
 interface MobileMenuProps {
@@ -30,16 +32,38 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       // @ts-ignore -- inert not yet in React TS types but broadly supported
       inert={!isOpen ? true : undefined}
     >
-      {/* Close Button */}
-      <button 
-        onClick={onClose}
-        className="self-end p-2 mb-12 text-[#FAF4EC] active:scale-90 transition-transform"
-      >
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      {/* Top Bar: Social Icons + Close */}
+      <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center gap-2">
+          <a
+            href="https://www.facebook.com/eversun.assen/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+            aria-label="Facebook"
+          >
+            <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+          </a>
+          <a
+            href="https://www.instagram.com/ever_sun_assen/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+            aria-label="Instagram"
+          >
+            <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+          </a>
+        </div>
+        <button
+          onClick={onClose}
+          className="p-2 text-[#FAF4EC] active:scale-90 transition-transform"
+        >
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
 
       {/* Navigation Items */}
       <nav className="flex flex-col gap-8">
