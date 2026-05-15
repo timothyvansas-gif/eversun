@@ -6,6 +6,7 @@ import Bento from "@/components/bento";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
+import Footer from "@/components/footer";
 
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
@@ -44,6 +45,7 @@ export default function PageLayout() {
         <OnzeZonnebanken />
         <Producten />
         <OverOns />
+        <Footer />
       </main>
 
       <div
