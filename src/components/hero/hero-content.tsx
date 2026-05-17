@@ -32,8 +32,8 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
     <div
       className="absolute inset-0 flex flex-col z-20"
       style={{
-        paddingTop: "calc(clamp(1.5rem, 4vw, 3.5rem) + env(safe-area-inset-top))",
-        paddingBottom: "clamp(1.5rem, 4vw, 3.5rem)",
+        paddingTop: "calc(clamp(1.5rem, 4vw, 2.5rem) + env(safe-area-inset-top))",
+        paddingBottom: "clamp(1.5rem, 4vw, 2.5rem)",
         paddingLeft: "clamp(1.5rem, 4vw, 3.5rem)",
         paddingRight: "clamp(1.5rem, 4vw, 3.5rem)"
       }}

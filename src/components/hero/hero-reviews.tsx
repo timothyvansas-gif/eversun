@@ -24,7 +24,7 @@ export default function HeroReviews() {
   return (
     <div className="hidden lg:flex items-center gap-4">
       {/* Photo stack */}
-      <div className="flex -space-x-3">
+      <div className="flex -space-x-5">
         {reviewers.map((img, i) => (
           <div
             key={i}
@@ -44,7 +44,8 @@ export default function HeroReviews() {
             <motion.div
               className="w-[48px] h-[48px] rounded-full overflow-hidden border border-[#111111]"
               animate={{
-                y: hoveredIndex === i ? -4 : 0,
+                y: hoveredIndex === i ? -8 : 0,
+                scale: hoveredIndex === i ? 1 : 40 / 48,
                 opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.35,
               }}
               transition={{ type: "spring", stiffness: 320, damping: 24 }}
@@ -76,7 +77,7 @@ export default function HeroReviews() {
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ type: "spring", stiffness: 300, damping: 26 }}
                       style={{
-                        width: 320,
+                        width: 400,
                         padding: "20px",
                         display: "flex",
                         flexDirection: "column",
