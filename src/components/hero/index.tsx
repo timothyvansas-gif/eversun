@@ -1,15 +1,26 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import heroImage from "@/images/hero-backgournd.webp";
+import heroImageA from "@/images/hero-backgournd.webp";
+import heroImageB from "@/images/hero-eversun-3.webp";
+
 import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
 const OpeningstijdenOverlay = dynamic(() => import("./openingstijden-overlay"));
 const AfspraakOverlay = dynamic(() => import("./afspraak-overlay"));
 
+const heroImages = [
+  { src: heroImageA, mobileClass: "object-[35%_50%]" },
+  { src: heroImageB, mobileClass: "object-[60%_50%]" },
+];
+
 export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
+  const [heroConfig, setHeroConfig] = useState(heroImages[0]);
+  useEffect(() => {
+    setHeroConfig(heroImages[Math.floor(Math.random() * heroImages.length)]);
+  }, []);
   const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
   const [isAfspraakOpen, setIsAfspraakOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +44,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           style={{ y, scale }}
         >
           <Image
-            src={heroImage}
+            src={heroConfig.src}
             alt="EverSun"
             fill
             priority
@@ -41,7 +52,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             quality={80}
             placeholder="blur"
             sizes="100vw"
-            className="object-cover object-[35%_50%] md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]"
+            className={`object-cover ${heroConfig.mobileClass} md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]`}
           />
         </motion.div>
 

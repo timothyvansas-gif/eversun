@@ -123,7 +123,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,96px)] leading-[clamp(58px,7.8vw,100px)] 2xl:text-[clamp(56px,7.5vw,112px)] 2xl:leading-[clamp(58px,7.8vw,118px)]"
+                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,88px)] leading-[clamp(58px,7.8vw,95px)] 2xl:text-[clamp(56px,7.5vw,88px)] 2xl:leading-[clamp(58px,7.8vw,95px)]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 De perfecte gouden gloed
@@ -136,9 +136,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 animate="visible"
                 custom={0.5}
                 style={{
-                  fontSize: "clamp(21px, 3.44vw, 40px)",
-                  lineHeight: "clamp(27px, 4.06vw, 48px)",
-                  color: "#ffffff",
+                  fontSize: "clamp(21px, 3.44vw, 32px)",
+                  lineHeight: "clamp(27px, 4.06vw, 40px)",
+                  color: "rgba(255, 255, 255, 0.90)",
                 }}
               >
                 begint bij zonnestudio{" "}

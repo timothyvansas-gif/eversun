@@ -8,7 +8,6 @@ import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/componen
 
 const baseStyle: React.CSSProperties = {
   display: "flex",
-  minHeight: "56px",
   justifyContent: "center",
   alignItems: "center",
   gap: "8px",
@@ -25,7 +24,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
   return (
     <>
       <button
-        className="w-[calc(70%-28px)] sm:w-[220px] px-6 sm:px-8 font-sans font-medium text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-[calc(63%-25px)] sm:w-[200px] min-h-[56px] px-3 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -63,7 +62,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         <span className="relative z-10">Maak een afspraak</span>
       </button>
       <button
-        className="w-[calc(70%-28px)] sm:w-[220px] px-6 sm:px-8 font-sans font-medium text-[15px] cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="w-[calc(63%-25px)] sm:w-[200px] min-h-[56px] px-3 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onMouseEnter={() => {
           if (window.matchMedia("(hover: hover)").matches) setSecondaryHovered(true);
         }}
