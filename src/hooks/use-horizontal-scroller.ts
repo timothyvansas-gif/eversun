@@ -9,6 +9,7 @@ const GAP = 24;
 export function useHorizontalScroller() {
   const scrollRef = useDraggableScroll();
   const [isAtEnd, setIsAtEnd] = useState(false);
+  const [isAtStart, setIsAtStart] = useState(true);
   const [canScroll, setCanScroll] = useState(false);
 
   useEffect(() => {
@@ -19,6 +20,7 @@ export function useHorizontalScroller() {
       const { scrollLeft, scrollWidth, clientWidth } = slider;
       setCanScroll(scrollWidth > clientWidth + 200);
       setIsAtEnd(scrollLeft + clientWidth >= scrollWidth - 50);
+      setIsAtStart(scrollLeft <= 10);
     };
 
     const observer = new ResizeObserver(checkScroll);
@@ -43,5 +45,11 @@ export function useHorizontalScroller() {
     }
   }, [isAtEnd, scrollRef]);
 
-  return { scrollRef, canScroll, isAtEnd, scrollNext };
+  const scrollPrev = useCallback(() => {
+    const slider = scrollRef.current;
+    if (!slider) return;
+    slider.scrollBy({ left: -(CARD_WIDTH + GAP) * 2, behavior: "smooth" });
+  }, [scrollRef]);
+
+  return { scrollRef, canScroll, isAtEnd, isAtStart, scrollNext, scrollPrev };
 }

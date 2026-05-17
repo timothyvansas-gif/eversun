@@ -15,18 +15,20 @@ const VARIANTS: Record<Variant, { border: string; stroke: string }> = {
 
 interface Props {
   variant: Variant;
-  isAtEnd: boolean;
+  isAtEnd?: boolean;
+  reversed?: boolean;
   onClick: () => void;
   className?: string;
 }
 
-export function CarouselNavButton({ variant, isAtEnd, onClick, className = "" }: Props) {
+export function CarouselNavButton({ variant, isAtEnd = false, reversed = false, onClick, className = "" }: Props) {
   const { border, stroke } = VARIANTS[variant];
+  const rotated = reversed ? !isAtEnd : isAtEnd;
 
   return (
     <button
       onClick={onClick}
-      aria-label={isAtEnd ? "Terug naar begin" : "Volgende"}
+      aria-label={reversed ? "Vorige" : isAtEnd ? "Terug naar begin" : "Volgende"}
       className={`w-[60px] h-[60px] shrink-0 rounded-full border ${border} flex items-center justify-center transition-colors cursor-pointer group ${className}`}
     >
       <svg
@@ -35,7 +37,7 @@ export function CarouselNavButton({ variant, isAtEnd, onClick, className = "" }:
         viewBox="0 0 16 13"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className={`transition-transform duration-500 ${isAtEnd ? "rotate-180" : ""}`}
+        className={`transition-transform duration-500 ${rotated ? "rotate-180" : ""}`}
       >
         <path
           d="M9.73343 0.625L14.8921 5.85984C15.036 6.00628 15.036 6.24372 14.8921 6.39016L9.73343 11.625M14.7843 6.125H1"

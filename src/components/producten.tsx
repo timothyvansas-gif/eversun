@@ -199,7 +199,7 @@ const products = [
 ];
 
 export default function Producten() {
-  const { scrollRef, canScroll, isAtEnd, scrollNext } = useHorizontalScroller();
+  const { scrollRef, canScroll, isAtStart, scrollNext, scrollPrev } = useHorizontalScroller();
 
   return (
     <section
@@ -248,12 +248,21 @@ export default function Producten() {
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
             </p>
             {canScroll && (
-              <CarouselNavButton
-                variant="dark"
-                isAtEnd={isAtEnd}
-                onClick={scrollNext}
-                className="hidden xl:flex"
-              />
+              <div className="hidden xl:flex items-center gap-2">
+                <div
+                  className={`transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                >
+                  <CarouselNavButton
+                    variant="dark"
+                    reversed
+                    onClick={scrollPrev}
+                  />
+                </div>
+                <CarouselNavButton
+                  variant="dark"
+                  onClick={scrollNext}
+                />
+              </div>
             )}
           </div>
         </div>

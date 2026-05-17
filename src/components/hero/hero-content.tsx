@@ -123,21 +123,19 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,88px)] leading-[clamp(58px,7.8vw,95px)] 2xl:text-[clamp(56px,7.5vw,88px)] 2xl:leading-[clamp(58px,7.8vw,95px)]"
+                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,88px)] leading-[clamp(58px,7.8vw,95px)] lg:text-[72px] lg:leading-[80px] 2xl:text-[92px] 2xl:leading-[100px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 De perfecte gouden gloed
               </motion.h1>
 
               <motion.p
-                className="mt-4 lg:mt-3 font-alice font-normal tracking-[-0.5px] lg:tracking-[-1.5px]"
+                className="mt-4 lg:mt-3 font-alice font-normal tracking-[-0.5px] lg:tracking-[-1.5px] text-[clamp(21px,3.44vw,32px)] leading-[clamp(27px,4.06vw,40px)] 2xl:text-[42px] 2xl:leading-[52px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.5}
                 style={{
-                  fontSize: "clamp(21px, 3.44vw, 32px)",
-                  lineHeight: "clamp(27px, 4.06vw, 40px)",
                   color: "rgba(255, 255, 255, 0.90)",
                 }}
               >

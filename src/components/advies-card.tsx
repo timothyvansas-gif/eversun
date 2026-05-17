@@ -10,8 +10,8 @@ const GRADIENT =
   "linear-gradient(78deg, rgba(0,0,0,0.70) 6.7%, rgba(0,0,0,0.70) 26.82%, rgba(0,0,0,0.49) 42.53%, rgba(0,0,0,0.00) 62.73%)";
 
 const SLIDES = [
-  { image: manAdvies },
   { image: meisjeRood },
+  { image: manAdvies },
   { image: vrouwOuder },
 ];
 

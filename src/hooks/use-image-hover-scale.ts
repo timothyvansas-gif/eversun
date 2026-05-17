@@ -14,7 +14,7 @@ export function useImageHoverScale() {
     },
     imageStyle: {
       transform: hovered ? "scale(1.05)" : "scale(1)",
-      transition: "transform 500ms ease-out",
+      transition: "transform 250ms ease-out",
     } as React.CSSProperties,
   };
 }
