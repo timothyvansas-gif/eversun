@@ -73,7 +73,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         style={{
           ...baseStyle,
           transition: `border-color ${SHADOW_EASE}, transform 0.2s ease`,
-          border: `1px solid ${secondaryHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.60)"}`,
+          border: `1px solid ${secondaryHovered ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.30)"}`,
           color: "#ffffff",
         }}
       >
