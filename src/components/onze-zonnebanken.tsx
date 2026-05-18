@@ -119,7 +119,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
             onClick={handleClick}
             className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#ece2d2] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
           >
-            Maak afspraak
+            Plan je moment
           </button>
         </div>
       </div>

@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useScrollNav } from "@/hooks/use-scroll-nav";
-
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 
 const baseStyle: React.CSSProperties = {
@@ -18,12 +16,11 @@ const baseStyle: React.CSSProperties = {
 export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => void }) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
-  const { scrollToNav } = useScrollNav();
 
   return (
     <>
       <button
-        className="w-auto sm:w-[200px] min-h-[56px] px-[40px] sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-auto sm:w-[200px] lg:w-[232px] min-h-[56px] px-[40px] sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -58,23 +55,8 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
           animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
           transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
         />
-        <span className="relative z-10">Maak een afspraak</span>
+        <span className="relative z-10">Plan je moment</span>
       </button>
-      <div className="hidden sm:block">
-        <button
-          className="w-auto min-h-[56px] px-0 font-sans font-normal text-[14px] sm:text-[15px] cursor-pointer active:scale-[0.98] transition-transform duration-200 underline decoration-1 underline-offset-[8px]"
-          onClick={() => {
-            scrollToNav("Studio");
-          }}
-          style={{
-            ...baseStyle,
-            transition: `border-color ${SHADOW_EASE}, transform 0.2s ease`,
-            color: "rgba(255, 255, 255, 0.75)",
-          }}
-        >
-          Ontdek de studio
-        </button>
-      </div>
     </>
   );
 }

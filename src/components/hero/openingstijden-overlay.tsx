@@ -46,7 +46,7 @@ function AppointmentButton() {
         animate={{ scale: hovered ? 1 : 0 }}
         transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       />
-      <span className="relative z-10">Maak een afspraak</span>
+      <span className="relative z-10">Plan je moment</span>
     </a>
   );
 }
