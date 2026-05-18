@@ -142,7 +142,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
-                Jouw zonnestudio voor persoonlijk advies, verantwoord zonnen en langdurige bruining.
+                Jouw zonnestudio voor persoonlijk advies, verantwoord zonnen en een natuurlijk resultaat.
               </motion.p>
 
               <motion.div
