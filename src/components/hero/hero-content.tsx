@@ -76,7 +76,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
 
             <button
               onClick={onOpenAfspraak}
-              className="nav-link light cursor-pointer"
+              className="nav-link light cursor-pointer lg:!pr-0"
             >
               WhatsApp
               <Image
@@ -114,40 +114,39 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
         </motion.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:translate-y-8">
+        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-14">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
-          <div className="mb-18 lg:mb-0 lg:flex-1 lg:flex lg:flex-col lg:justify-center">
-            <div className="translate-y-8 lg:translate-y-[52px]">
+          <div className="mb-18 lg:mb-0">
+            <div className="translate-y-4 lg:translate-y-0">
               <motion.h1
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-medium tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(56px,7.5vw,88px)] leading-[clamp(58px,7.8vw,95px)] lg:text-[72px] lg:leading-[80px] 2xl:text-[92px] 2xl:leading-[100px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(36px,7.5vw,88px)] leading-[clamp(45px,7.8vw,95px)] lg:text-[66px] lg:leading-[80px] 2xl:text-[72px] 2xl:leading-[78px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
-                De perfecte gouden gloed
-              </motion.h1>
-
-              <motion.p
-                className="mt-4 lg:mt-3 font-alice font-normal tracking-[-0.5px] lg:tracking-[-1.5px] text-[clamp(21px,3.44vw,32px)] leading-[clamp(27px,4.06vw,40px)] 2xl:text-[42px] 2xl:leading-[52px]"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={0.5}
-                style={{
-                  color: "rgba(255, 255, 255, 0.90)",
-                }}
-              >
+                De perfecte gouden gloed{" "}<br className="hidden lg:inline" />
                 begint bij zonnestudio{" "}
                 <span className="relative inline-block">
                   Ever Sun
                   <HeroLines />
                 </span>
+              </motion.h1>
+
+              <motion.p
+                className="block mt-4 font-sans font-normal text-[15px] leading-[24px]"
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={0.6}
+                style={{ color: "rgba(255, 255, 255, 0.75)" }}
+              >
+                6 dagen per week open voor persoonlijk advies en een verantwoorde, langdurige bruining.
               </motion.p>
 
               <motion.div
-                className="mt-7 lg:mt-9 flex flex-col sm:flex-row gap-4 md:gap-4"
+                className="mt-7 lg:mt-9 flex flex-row items-center w-full lg:w-auto gap-6 lg:gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"

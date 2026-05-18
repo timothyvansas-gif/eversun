@@ -223,7 +223,7 @@ export default function Producten() {
                   voor jouw perfecte kleur
                 </h3>
               </div>
-              <p className="text-[#94825C] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-[#94825C] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Ontdek ons aanbod van hoogwaardige producten. Speciaal geselecteerd voor een optimaal resultaat.
               </p>
             </div>

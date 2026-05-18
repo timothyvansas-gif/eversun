@@ -10,7 +10,7 @@ export default function HeroLines() {
       viewBox="0 0 169 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute left-0 -bottom-2 md:-bottom-2 w-full"
+      className="absolute left-0 -bottom-[6px] md:-bottom-2 lg:-bottom-[4px] w-full lg:scale-x-[1.44] lg:origin-center"
       style={{ height: 10, overflow: "visible" }}
     >
       <motion.path
@@ -18,7 +18,7 @@ export default function HeroLines() {
         stroke="#E15E1D"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[stroke-width:3] md:[stroke-width:3]"
+        className="[stroke-width:1.25] md:[stroke-width:3] lg:[stroke-width:2]"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.3, ease }}
@@ -28,7 +28,7 @@ export default function HeroLines() {
         stroke="#E15E1D"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[stroke-width:3] md:[stroke-width:3] translate-y-[5px] md:translate-y-[4px]"
+        className="[stroke-width:1.25] md:[stroke-width:3] lg:[stroke-width:2] translate-y-[3px] md:translate-y-[4px]"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.75, ease }}

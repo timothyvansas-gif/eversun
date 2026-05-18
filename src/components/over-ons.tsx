@@ -68,7 +68,7 @@ export default function OverOns() {
                   van Ever Sun
                 </h3>
               </div>
-              <p className="text-[#818181] text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-[#818181] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Maak kennis met de zonnestralen die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>
@@ -110,7 +110,7 @@ export default function OverOns() {
                   <h4 className="text-white text-[20px] font-medium tracking-[-0.27px] font-display">
                     {member.name}
                   </h4>
-                  <p className="text-[#888888] text-[15px] leading-[25px] tracking-[-0.01em] font-sans">
+                  <p className="text-[#888888] text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
                     {member.description}
                   </p>
                 </div>

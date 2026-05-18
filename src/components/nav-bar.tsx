@@ -33,7 +33,7 @@ export default function NavBar() {
           
           <div className="w-[1px] h-6 bg-[#F5E9DA] mx-2" />
           
-          <a href="#" className="nav-link">
+          <a href="#" className="nav-link lg:!pr-0">
             WhatsApp
             <Image 
               src={whatsappIcon} 

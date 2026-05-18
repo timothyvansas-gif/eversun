@@ -154,7 +154,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         {data.description.map((paragraph, i) => (
           <p
             key={i}
-            className={`text-zinc-600 text-[15px] leading-[25px] tracking-[-0.01em] font-sans ${
+            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${
               i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""
             }`}
           >
@@ -189,8 +189,8 @@ export default function OnzeZonnebanken() {
                   voor echt comfort
                 </p>
               </div>
-              <p className="text-zinc-600 text-[15px] leading-[25px] max-w-[411px] tracking-[-0.01em] lg:mb-[2px]">
-                Ervaar de wereldwijde standaard in zonlicht. Met Ergoline kies je voor slimme sensoren, verfijnd ligcomfort en een resultaat dat gezien mag worden.
+              <p className="text-zinc-600 text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] lg:mb-[2px]">
+                Kies voor de wereldwijde standaard van Ergoline. Slimme sensoren, verfijnd comfort en een topresultaat door altijd preventief vernieuwde lampen.
               </p>
             </div>
           </div>
