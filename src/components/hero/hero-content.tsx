@@ -123,11 +123,11 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(36px,7.5vw,88px)] leading-[clamp(45px,7.8vw,95px)] lg:text-[66px] lg:leading-[80px] 2xl:text-[72px] 2xl:leading-[78px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(45px,7.8vw,95px)] lg:text-[66px] lg:leading-[80px] 2xl:text-[72px] 2xl:leading-[78px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
-                begint bij zonnestudio{" "}
+                begint bij{" "}
                 <span className="relative inline-block">
                   Ever Sun
                   <HeroLines />
