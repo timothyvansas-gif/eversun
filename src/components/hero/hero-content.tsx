@@ -126,7 +126,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(36px,7.5vw,88px)] leading-[clamp(45px,7.8vw,95px)] lg:text-[66px] lg:leading-[80px] 2xl:text-[72px] 2xl:leading-[78px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
-                De perfecte gouden gloed{" "}<br className="hidden lg:inline" />
+                Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
                 begint bij zonnestudio{" "}
                 <span className="relative inline-block">
                   Ever Sun
@@ -142,7 +142,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
-                6 dagen per week open voor persoonlijk advies en een verantwoorde, langdurige bruining.
+                Met persoonlijk advies bouw je verantwoord aan een natuurlijke, langdurige bruining.
               </motion.p>
 
               <motion.div
