@@ -3,7 +3,6 @@
 import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
-import { useImageHoverScale } from "@/hooks/use-image-hover-scale";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
 import imgWhiteBronzeCoconut from "@/images/producten/eversun-White-2-bronze-coconut.webp";
@@ -20,18 +19,12 @@ import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.we
 type Product = (typeof products)[number];
 
 function ProductCardItem({ product }: { product: Product }) {
-  const { cardHandlers, imageStyle } = useImageHoverScale();
   return (
     <div className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start select-none flex flex-col">
-      <div
-        className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1"
-        {...cardHandlers}
-      >
+      <div className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1">
         {/* Image */}
         <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
-          <div className="absolute inset-0" style={imageStyle}>
-            <ProductImage src={product.image} alt={product.name} />
-          </div>
+          <ProductImage src={product.image} alt={product.name} />
           <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
