@@ -102,7 +102,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 
   return (
     <>
-      <div className="mt-auto">
+      <div className="mt-3 md:mt-auto">
         <div className="flex items-center justify-between md:justify-start md:gap-6">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
