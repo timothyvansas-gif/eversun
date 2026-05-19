@@ -27,8 +27,8 @@ const ZONNEBANKEN: Zonnebank[] = [
     title: "Ergoline Blue Vision",
     badge: "2 banken",
     description: [
-      "De Blue Vision maakt gebruik van activerend blauw licht om de zuurstofopname in de huid te stimuleren, wat zorgt voor een direct zichtbaar en dieper resultaat.",
-      "Via het display kies je eenvoudig jouw gewenste intensiteit: intensive voor de meest donkere teint, medium voor een vitale opbouw of sensitive voor een verfrissende, rustige activatie van de huid.",
+      "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
+      "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
     ],
     minuten: "20 min",
     prijs: "€ 19,50",
@@ -40,8 +40,8 @@ const ZONNEBANKEN: Zonnebank[] = [
     title: "Ergoline Prestige 1600",
     badge: "2 banken",
     description: [
-      "De Prestige 1600 is de ultieme combinatie van een diepe bruining en intensieve huidverzorging dankzij het rode Beauty Light.",
-      "Met de ‘Personal Sunstyle’ functie stem je de bank direct af op jouw huidtype: kies voor intensive voor maximale kracht, medium voor een natuurlijke kleur of sensitive voor een milde, verzorgende sessie.",
+      "Rood Beauty Light biedt de ultieme combinatie van een diepe, egale bruining en intensieve, hoogwaardige huidverzorging.",
+      "Stem de bank via 'Personal Sunstyle' af op jouw huid: kies intensive voor maximale kracht, medium voor natuurlijk of sensitive voor mild.",
     ],
     minuten: "20 min",
     prijs: "€ 18,00",
@@ -52,8 +52,8 @@ const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline 770 Medium zonnebad",
     title: "Ergoline 770 medium",
     description: [
-      "De Ergoline 770 is een vertrouwde krachtpatser die bekendstaat om zijn consistente en onberispelijk egale bruiningsresultaat.",
-      "Deze bank focust op pure performance en is de ideale keuze voor de ervaren zonner die op zoek is naar een krachtige, betrouwbare sessie zonder poespas.",
+      "Een vertrouwde en geliefde krachtpatser die garant staat voor een consistent, onberispelijk en egaal bruiningsresultaat.",
+      "Deze bank focust op pure performance. De ideale keuze voor de ervaren zonner die gaat voor een krachtige, betrouwbare sessie zonder poespas.",
     ],
     minuten: "20 min",
     prijs: "€ 14,00",
@@ -64,8 +64,8 @@ const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline Affinity 600 zonnebad",
     title: "Ergoline 600 light",
     description: [
-      "De Ergoline 600 Light is een toegankelijke klassieker die comfort combineert met een betrouwbare, gelijkmatige bruining.",
-      "Dankzij de ergonomische vormgeving en de verfrissende koeling geniet je van een ontspannen sessie met een natuurlijk en egaal resultaat als einddoel.",
+      "Een toegankelijke en comfortabele klassieker die zorgt voor een betrouwbare, mooie en gelijkmatige bruining.",
+      "Dankzij de ergonomische vormgeving en de verfrissende koeling geniet je van een ontspannen sessie met een natuurlijk resultaat als einddoel.",
     ],
     minuten: "20 min",
     prijs: "€ 12,00",
@@ -150,9 +150,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         {data.description.map((paragraph, i) => (
           <p
             key={i}
-            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${
-              i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""
-            }`}
+            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""
+              }`}
           >
             {paragraph}
           </p>
