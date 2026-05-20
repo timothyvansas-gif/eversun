@@ -20,7 +20,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
   return (
     <>
       <button
-        className="w-auto sm:w-[200px] lg:w-[232px] min-h-[56px] px-[40px] sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-auto sm:w-[200px] lg:w-[232px] min-h-[48px] sm:min-h-[56px] px-[40px] sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
