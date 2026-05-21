@@ -131,13 +131,13 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 function ZonnebankCard({ data }: { data: Zonnebank }) {
   return (
     <CardWrapper>
-      <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:border xl:border-transparent xl:hover:border-[#ece2d2] xl:p-10 xl:h-full xl:rounded-[8px] xl:transition-[border-color] xl:duration-300">
+      <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
         <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
           <Image
             src={data.image}
             alt={data.alt}
             fill
-            className="object-cover object-bottom"
+            className="object-cover object-bottom transition-transform duration-200 ease-out xl:group-hover:scale-[1.04] xl:group-hover:duration-700"
             sizes="(max-width: 767px) 100vw, 50vw"
           />
           {data.badge && (
