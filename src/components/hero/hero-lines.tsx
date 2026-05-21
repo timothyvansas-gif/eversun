@@ -10,7 +10,7 @@ export default function HeroLines() {
       viewBox="0 0 169 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute left-0 -bottom-[4px] md:-bottom-2 lg:-bottom-[4px] w-full lg:scale-x-[1.44] lg:origin-center"
+      className="absolute left-0 -bottom-[8px] md:-bottom-2 lg:-bottom-[4px] w-full lg:scale-x-[1.44] lg:origin-center"
       style={{ height: 10, overflow: "visible" }}
     >
       <motion.path
