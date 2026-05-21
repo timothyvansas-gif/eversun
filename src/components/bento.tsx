@@ -78,7 +78,7 @@ export default function Bento() {
 
         {/* Row 2: Merken, Advies & Luxe */}
         <div className="flex flex-col xl:flex-row gap-4 md:contents max-md:contents xl:flex">
-          <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:535] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={2}
               total={5}
@@ -86,10 +86,10 @@ export default function Bento() {
               variants={cardVariants}
               custom={2}
             >
-              <MerkenCard />
+              <AdviesCard />
             </StickyCardWrapper>
           </div>
-          <div className="flex flex-col md:col-span-1 xl:[flex:535] max-md:contents max-md:mb-4">
+          <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
             <StickyCardWrapper
               index={3}
               total={5}
@@ -97,7 +97,7 @@ export default function Bento() {
               variants={cardVariants}
               custom={3}
             >
-              <AdviesCard />
+              <MerkenCard />
             </StickyCardWrapper>
           </div>
           <div className="flex flex-col md:col-span-1 xl:[flex:302] max-md:contents max-md:mb-4">
