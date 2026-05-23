@@ -15,12 +15,13 @@ const baseStyle: React.CSSProperties = {
 
 export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => void }) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
+  const [secondaryHovered, setSecondaryHovered] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
   return (
-    <>
+    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
       <button
-        className="w-auto sm:w-[200px] lg:w-[232px] min-h-[48px] sm:min-h-[56px] px-[40px] sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-[212px] min-h-[48px] sm:min-h-[56px] px-0 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -57,6 +58,25 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         />
         <span className="relative z-10">Plan je moment</span>
       </button>
-    </>
+
+      <div className="hidden sm:block">
+      <button
+        className="w-[212px] min-h-[48px] sm:min-h-[56px] px-0 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] text-white cursor-pointer active:scale-[0.98] border"
+        onMouseEnter={() => {
+          if (!window.matchMedia("(hover: hover)").matches) return;
+          setSecondaryHovered(true);
+        }}
+        onMouseLeave={() => setSecondaryHovered(false)}
+        onClick={() => document.getElementById("waarom")?.scrollIntoView({ behavior: "smooth" })}
+        style={{
+          ...baseStyle,
+          borderColor: secondaryHovered ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.3)",
+          transition: "border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s ease",
+        }}
+      >
+        De studio
+      </button>
+      </div>
+    </div>
   );
 }

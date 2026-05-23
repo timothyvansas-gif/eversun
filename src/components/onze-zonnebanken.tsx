@@ -22,19 +22,6 @@ type Zonnebank = {
 
 const ZONNEBANKEN: Zonnebank[] = [
   {
-    image: blueVision,
-    alt: "Ergoline Blue Vision zonnebad",
-    title: "Ergoline Blue Vision",
-    badge: "2 banken",
-    description: [
-      "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
-      "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
-    ],
-    minuten: "20 min",
-    prijs: "€ 19,50",
-    whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Blue%20Vision",
-  },
-  {
     image: prestige1600,
     alt: "Ergoline Prestige 1600 zonnebad",
     title: "Ergoline Prestige 1600",
@@ -46,6 +33,19 @@ const ZONNEBANKEN: Zonnebank[] = [
     minuten: "20 min",
     prijs: "€ 18,00",
     whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Prestige%201600",
+  },
+  {
+    image: blueVision,
+    alt: "Ergoline Blue Vision zonnebad",
+    title: "Ergoline Blue Vision",
+    badge: "2 banken",
+    description: [
+      "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
+      "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
+    ],
+    minuten: "20 min",
+    prijs: "€ 19,50",
+    whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Blue%20Vision",
   },
   {
     image: ergoline700,
