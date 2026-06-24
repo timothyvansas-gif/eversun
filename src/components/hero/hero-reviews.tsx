@@ -98,7 +98,7 @@ export default function HeroReviews() {
                       <span className="font-sans text-[15px] leading-[24px] text-white/90">
                         {tooltips[i].quote}
                       </span>
-                      <span className="font-sans text-[13px] text-white/50">
+                      <span className="font-sans text-[13px] text-white/50" style={{ marginTop: 12 }}>
                         {tooltips[i].name}
                       </span>
                     </motion.div>
