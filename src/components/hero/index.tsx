@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import heroImage from "@/images/hero-eversun-3.webp";
 
 import dynamic from "next/dynamic";
@@ -20,8 +20,20 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+  // Spring-smoothed progress: mobile fires scroll events sparsely during
+  // momentum scrolling, which makes a directly-linked transform step visibly.
+  // The spring interpolates between those events on every animation frame.
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  // The image layer bleeds 30% above the section (see the motion.div below), so
+  // the spring can lag behind fast upward scrolls without exposing the black
+  // section background. 19% of the 130%-tall layer ≈ the original 25% travel.
+  const y = useTransform(smoothProgress, [0, 1], ["0%", "19%"]);
+  const scale = useTransform(smoothProgress, [0, 1], [1, 1.05]);
 
   return (
     <section
@@ -30,8 +42,8 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
     >
       <div className="absolute inset-0">
         <motion.div
-          className="absolute inset-0 overflow-hidden"
-          style={{ y, scale }}
+          className="absolute inset-x-0 overflow-hidden"
+          style={{ y, scale, willChange: "transform", top: "-30%", height: "130%" }}
         >
           <Image
             src={heroImage}
