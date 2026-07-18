@@ -24,7 +24,11 @@ export function useScrollNav() {
       }
     };
     
-    delay > 0 ? setTimeout(go, delay) : go();
+    if (delay > 0) {
+      setTimeout(go, delay);
+    } else {
+      go();
+    }
   }
 
   return { scrollToNav };

@@ -18,6 +18,8 @@ export default function LuxeCard() {
         Onder de nummer één <span className="xl:hidden">zonne</span>banken
       </p>
 
+      {/* Decorative SVG — next/image optimizer rejects SVG without dangerouslyAllowSVG; plain img is correct here. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={ovalsErgo.src}
         width={221}

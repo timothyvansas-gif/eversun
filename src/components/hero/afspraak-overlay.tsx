@@ -19,7 +19,11 @@ export default function AfspraakOverlay({
   const [mounted, setMounted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   useFocusTrap(overlayRef, isOpen, onClose);
 

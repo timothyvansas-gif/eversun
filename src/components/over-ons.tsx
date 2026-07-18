@@ -36,7 +36,7 @@ const teamMembers = [
 ];
 
 export default function OverOns() {
-  const { scrollRef, canScroll, isAtEnd, scrollNext } = useHorizontalScroller();
+  const { scrollRef, canScroll, isAtStart, isAtEnd, scrollNext, scrollPrev } = useHorizontalScroller();
 
   return (
     <section
@@ -75,18 +75,19 @@ export default function OverOns() {
           </div>
 
           {/* Scroll Container */}
-          <div
-            ref={scrollRef}
-            className="draggable-scroll flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
-            style={{
-              marginRight: "calc(50% - 50vw)",
-              paddingRight: "clamp(1.5rem, 4vw, 10rem)",
-            }}
-          >
-            {teamMembers.map((member) => (
+          <div className="relative">
+            <div
+              ref={scrollRef}
+              className="draggable-scroll flex overflow-x-auto gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              style={{
+                marginRight: "calc(50% - 50vw)",
+                paddingRight: "clamp(1.5rem, 4vw, 10rem)",
+              }}
+            >
+              {teamMembers.map((member) => (
               <div
                 key={member.id}
-                className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start flex flex-col gap-6 select-none"
+                className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start flex flex-col gap-6 select-none"
               >
                 {/* Image */}
                 <div className="w-full h-[400px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
@@ -115,18 +116,34 @@ export default function OverOns() {
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {canScroll && (
-            <div className="hidden xl:flex justify-end mt-2">
-              <CarouselNavButton
-                variant="light"
-                isAtEnd={isAtEnd}
-                onClick={scrollNext}
-              />
+              ))}
             </div>
-          )}
+
+            {/* Overlay nav buttons — desktop only, vertically centered on the member photo (h-400px) */}
+            {canScroll && (
+              <>
+                <div
+                  className={`hidden xl:block absolute left-0 top-[200px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                >
+                  <CarouselNavButton
+                    variant="light"
+                    reversed
+                    onClick={scrollPrev}
+                    className="bg-[#1F1F1E]/50 hover:bg-[#1F1F1E]/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                  />
+                </div>
+                <div
+                  className={`hidden xl:block absolute right-0 top-[200px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                >
+                  <CarouselNavButton
+                    variant="light"
+                    onClick={scrollNext}
+                    className="bg-[#1F1F1E]/50 hover:bg-[#1F1F1E]/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </section>

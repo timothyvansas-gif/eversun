@@ -15,7 +15,11 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;

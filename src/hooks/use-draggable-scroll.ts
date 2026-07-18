@@ -8,6 +8,8 @@ export function useDraggableScroll() {
   useEffect(() => {
     const slider = ref.current;
     if (!slider) return;
+    // Desktop pointer only — mobile uses native momentum scroll (no snap, no drag hook).
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     let isDown = false;
     let startX: number;
@@ -24,7 +26,7 @@ export function useDraggableScroll() {
     const snapToNearest = () => {
       const firstChild = slider.firstElementChild as HTMLElement | null;
       if (!firstChild) {
-        slider.style.scrollSnapType = "x mandatory";
+        slider.style.scrollSnapType = "x proximity";
         return;
       }
       const gap = parseFloat(window.getComputedStyle(slider).gap) || 0;
@@ -32,7 +34,7 @@ export function useDraggableScroll() {
       const nearest = Math.round(slider.scrollLeft / itemStep) * itemStep;
       slider.scrollTo({ left: nearest, behavior: "smooth" });
       setTimeout(() => {
-        slider.style.scrollSnapType = "x mandatory";
+        slider.style.scrollSnapType = "x proximity";
       }, 500);
     };
 

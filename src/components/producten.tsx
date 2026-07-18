@@ -20,7 +20,7 @@ type Product = (typeof products)[number];
 
 function ProductCardItem({ product }: { product: Product }) {
   return (
-    <div className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 snap-start select-none flex flex-col">
+    <div className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start select-none flex flex-col">
       <div className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1">
         {/* Image */}
         <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
@@ -192,7 +192,7 @@ const products = [
 ];
 
 export default function Producten() {
-  const { scrollRef, canScroll, isAtStart, scrollNext, scrollPrev } = useHorizontalScroller();
+  const { scrollRef, canScroll, isAtStart, isAtEnd, scrollNext, scrollPrev } = useHorizontalScroller();
 
   return (
     <section
@@ -223,40 +223,50 @@ export default function Producten() {
           </div>
 
           {/* Scroll Container */}
-          <div
-            ref={scrollRef}
-            className="draggable-scroll flex overflow-x-auto gap-6 snap-x snap-mandatory cursor-grab pb-4"
-            style={{
-              marginRight: "calc(50% - 50vw)",
-              paddingRight: "clamp(1.5rem, 4vw, 10rem)",
-            }}
-          >
-            {products.map((product) => (
-              <ProductCardItem key={product.id} product={product} />
-            ))}
-          </div>
+          <div className="relative">
+            <div
+              ref={scrollRef}
+              className="draggable-scroll flex overflow-x-auto gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              style={{
+                marginRight: "calc(50% - 50vw)",
+                paddingRight: "clamp(1.5rem, 4vw, 10rem)",
+              }}
+            >
+              {products.map((product) => (
+                <ProductCardItem key={product.id} product={product} />
+              ))}
+            </div>
 
-          <div className="flex items-center justify-between mt-4 xl:mt-2">
-            <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
-              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
-            </p>
+            {/* Overlay nav buttons — desktop only, vertically centered on the card image (h-480px) */}
             {canScroll && (
-              <div className="hidden xl:flex items-center gap-2">
+              <>
                 <div
-                  className={`transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute left-0 top-[240px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
                     reversed
                     onClick={scrollPrev}
+                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-[#94825C]/40 hover:!border-[#94825C]/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
                   />
                 </div>
-                <CarouselNavButton
-                  variant="dark"
-                  onClick={scrollNext}
-                />
-              </div>
+                <div
+                  className={`hidden xl:block absolute right-0 top-[240px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                >
+                  <CarouselNavButton
+                    variant="dark"
+                    onClick={scrollNext}
+                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-[#94825C]/40 hover:!border-[#94825C]/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+                  />
+                </div>
+              </>
             )}
+          </div>
+
+          <div className="mt-4 xl:mt-6">
+            <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
+              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
+            </p>
           </div>
         </div>
       </div>

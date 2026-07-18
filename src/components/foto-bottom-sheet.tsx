@@ -22,6 +22,8 @@ export default function FotoBottomSheet({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

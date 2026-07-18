@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate, useInView } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import manAdvies from "@/images/people/man-advies.webp";
@@ -51,6 +52,8 @@ export default function AdviesCard() {
       }, delay);
       return () => clearTimeout(timer);
     } else {
+      // Reset animation when scrolled out of view — syncing to external scroll state is intended here.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStarted(false);
     }
   }, [isInView, isMobile]);
@@ -149,9 +152,11 @@ export default function AdviesCard() {
               zIndex: getZ(i),
             }}
           >
-            <img
-              src={slide.image.src}
+            <Image
+              src={slide.image}
               alt={`Foto ${i + 1} van Ever Sun klanten`}
+              width={THUMB}
+              height={THUMB}
               className="w-full h-full object-cover object-center"
             />
           </motion.button>
