@@ -11,7 +11,7 @@ import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
 
-export const sheetPhotos = [dummyImg, dummy2Img, dummy3Img, dummy4Img];
+export const sheetPhotos = [dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img];
 
 export default function FotoBottomSheet({
   isOpen,
@@ -122,9 +122,14 @@ export default function FotoBottomSheet({
               </div>
               <div className="px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
                 <div>
-                  <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
-                    Binnenkijken bij Ever Sun
-                  </h2>
+                  <div className="flex items-baseline gap-2.5">
+                    <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
+                      Binnenkijken bij Ever Sun
+                    </h2>
+                    <span className="font-sans text-[15px] text-[#1a1a1a]/40 tracking-[-0.01em] whitespace-nowrap">
+                      {`${sheetPhotos.length} foto's`}
+                    </span>
+                  </div>
                   <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-1">
                     Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60 underline decoration-dotted">06 25306491</a>
                   </p>
