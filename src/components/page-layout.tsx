@@ -33,8 +33,7 @@ export default function PageLayout() {
         }}
         className="min-h-screen flex flex-col items-center relative z-10"
       >
-        {/* bg: black on mobile so Safari's toolbar/home-bar zone samples dark; beige frame look on lg */}
-        <div className="w-full bg-black lg:bg-surface-page lg:p-6 lg:[&>*]:rounded-lg lg:[&>*]:overflow-hidden">
+        <div className="w-full bg-surface-page lg:p-6 lg:[&>*]:rounded-lg lg:[&>*]:overflow-hidden">
           <HeroSection onOpenMenu={toggleMenu} />
         </div>
         <div
