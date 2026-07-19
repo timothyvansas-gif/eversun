@@ -49,7 +49,7 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
           aria-modal="true"
           aria-label="Fotogalerij"
           className="fixed inset-0 z-[100] hidden md:flex items-center justify-center"
-          style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
+          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

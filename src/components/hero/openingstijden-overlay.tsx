@@ -143,7 +143,7 @@ export default function OpeningstijdenOverlay({
           {/* Backdrop — dims hero content */}
           <motion.div
             className="fixed inset-0 z-50"
-            style={{ backgroundColor: "rgba(0,0,0,0.65)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
+            style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
