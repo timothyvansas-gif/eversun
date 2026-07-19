@@ -52,7 +52,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     try {
       await navigator.share({
         title: "Ever Sun",
-        text: "Zonnestudio Ever Sun in Assen",
+        text: "Een gouden gloed die blijft — Ever Sun, jouw zonnestudio in Assen.",
         url: window.location.href,
       });
     } catch {
