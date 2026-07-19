@@ -50,6 +50,7 @@ export default function PageLayout() {
       </main>
 
       <div
+        data-lenis-prevent
         onClick={() => setIsMenuOpen(false)}
         aria-hidden={!isMenuOpen}
         className={`fixed inset-0 z-20 cursor-pointer transition-opacity duration-300 ${

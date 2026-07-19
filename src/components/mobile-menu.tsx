@@ -62,6 +62,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   return (
     <motion.div
+      data-lenis-prevent
       initial={{ x: "100%" }}
       animate={{ x: isOpen ? "0%" : "100%" }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}

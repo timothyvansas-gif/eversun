@@ -7,6 +7,7 @@ import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import CloseIcon from "@/components/ui/close-icon";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 
 function AppointmentButton() {
   const [hovered, setHovered] = useState(false);
@@ -130,6 +131,7 @@ export default function OpeningstijdenOverlay({
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useFocusTrap(overlayRef, isOpen, onClose);
+  useScrollLock(isOpen);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -142,6 +144,7 @@ export default function OpeningstijdenOverlay({
         <>
           {/* Backdrop — dims hero content */}
           <motion.div
+            data-lenis-prevent
             className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
             initial={{ opacity: 0 }}
@@ -154,6 +157,7 @@ export default function OpeningstijdenOverlay({
           <div ref={overlayRef} tabIndex={-1} className="outline-none">
           {/* Mobile: Bottom Sheet */}
           <motion.div
+            data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"
@@ -188,6 +192,7 @@ export default function OpeningstijdenOverlay({
 
           {/* Desktop: Modal */}
           <motion.div
+            data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"

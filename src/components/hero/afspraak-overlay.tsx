@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
 import CloseIcon from "@/components/ui/close-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useScrollLock } from "@/hooks/use-scroll-lock";
 
 export default function AfspraakOverlay({
   isOpen,
@@ -26,6 +27,7 @@ export default function AfspraakOverlay({
   }, []);
 
   useFocusTrap(overlayRef, isOpen, onClose);
+  useScrollLock(isOpen);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,6 +44,7 @@ export default function AfspraakOverlay({
       {isOpen && (
         <>
           <motion.div
+            data-lenis-prevent
             className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
             initial={{ opacity: 0 }}
@@ -53,6 +56,7 @@ export default function AfspraakOverlay({
 
           <div ref={overlayRef}>
           <motion.div
+            data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label="Afspraak maken"
