@@ -163,7 +163,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 }
 
 function MobileDivider() {
-  return <div className="lg:hidden h-px my-2 bg-[#ece2d2]/50" />;
+  return <div className="md:hidden h-px my-2 bg-[#ece2d2]/50" />;
 }
 
 export default function OnzeZonnebanken() {
@@ -175,7 +175,7 @@ export default function OnzeZonnebanken() {
       >
         <div className="w-full max-w-[1280px] mx-auto">
           <div id="banken" className="mb-8 xl:mb-10 scroll-mt-20 lg:scroll-mt-10">
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-5 lg:gap-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-5 md:gap-6">
               <div>
                 <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
                   Onze zes zonnebanken
@@ -184,19 +184,19 @@ export default function OnzeZonnebanken() {
                   voor echt comfort
                 </p>
               </div>
-              <p className="text-zinc-600 text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] lg:mb-[2px]">
+              <p className="text-zinc-600 text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] md:mb-[2px]">
                 Kies voor de wereldwijde standaard van Ergoline. Slimme sensoren, verfijnd comfort en een topresultaat door altijd preventief vernieuwde lampen.
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6 md:gap-10 xl:gap-6">
-            <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row gap-6">
               <ZonnebankCard data={ZONNEBANKEN[0]} />
               <MobileDivider />
               <ZonnebankCard data={ZONNEBANKEN[1]} />
             </div>
             <MobileDivider />
-            <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-6">
               <ZonnebankCard data={ZONNEBANKEN[2]} />
               <MobileDivider />
               <ZonnebankCard data={ZONNEBANKEN[3]} />
