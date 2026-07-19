@@ -31,7 +31,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
   const { scrollToNav } = useScrollNav();
   return (
     <div
-      className="absolute inset-0 flex flex-col z-20"
+      // Section is lvh (image runs behind the mobile browser toolbar for the
+      // immersive dark-chrome look) but the content stays within svh so the
+      // bottom row remains above the expanded toolbar.
+      className="absolute inset-x-0 top-0 h-svh lg:inset-0 lg:h-full flex flex-col z-20"
       style={{
         paddingTop: "calc(clamp(1.5rem, 4vw, 2.5rem) + env(safe-area-inset-top))",
         paddingBottom: "clamp(1.5rem, 4vw, 2.5rem)",

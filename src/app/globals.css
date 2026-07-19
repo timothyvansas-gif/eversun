@@ -10,6 +10,16 @@ html {
   outline-offset: 3px;
 }
 
+/* Rounded focus ring for elements without their own radius. In @layer base so
+   any rounded-* utility or inline radius still wins. */
+@layer base {
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    border-radius: 6px;
+  }
+}
+
 body {
   background-color: #000000;
   overflow-x: clip;
