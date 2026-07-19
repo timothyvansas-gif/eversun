@@ -5,18 +5,10 @@ import Image from "next/image";
 import imageBig from "@/images/image-big.webp";
 import imageRight from "@/images/image-right.webp";
 import moreIcon from "@/images/camera-03.svg";
-import dummyImg from "@/images/impressie/dummy.webp";
-import dummy2Img from "@/images/impressie/dummy-2.webp";
-import dummy3Img from "@/images/impressie/dummy-3.webp";
-import dummy4Img from "@/images/impressie/dummy-4.webp";
-import FotoBottomSheet from "@/components/foto-bottom-sheet";
-import PhotoLightbox from "@/components/photo-lightbox";
-
-const lightboxPhotos = [dummyImg, dummy2Img, dummy3Img, dummy4Img];
+import FotoBottomSheet, { sheetPhotos } from "@/components/foto-bottom-sheet";
 
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
   const preloaded = useRef(new Set<string>());
 
   const preloadImage = useCallback((src: string) => {
@@ -27,28 +19,20 @@ export default function PhotoCard() {
   }, []);
 
   useEffect(() => {
-    preloadImage(lightboxPhotos[0].src);
+    preloadImage(sheetPhotos[0].src);
   }, [preloadImage]);
 
   useEffect(() => {
     const rIC = (window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (id: number) => void }).requestIdleCallback;
     if (!rIC) return;
-    const id = rIC(() => lightboxPhotos.slice(1).forEach((p) => preloadImage(p.src)));
+    const id = rIC(() => sheetPhotos.slice(1).forEach((p) => preloadImage(p.src)));
     return () => window.cancelIdleCallback?.(id);
   }, [preloadImage]);
 
   const handleHoverPreload = useCallback(() => {
     if (!window.matchMedia("(hover: hover)").matches) return;
-    lightboxPhotos.slice(1).forEach((p) => preloadImage(p.src));
+    sheetPhotos.slice(1).forEach((p) => preloadImage(p.src));
   }, [preloadImage]);
-
-  const handlePhotoClick = () => {
-    if (window.matchMedia("(min-width: 768px)").matches) {
-      setLightboxOpen(true);
-    } else {
-      setSheetOpen(true);
-    }
-  };
 
   return (
     <>
@@ -56,7 +40,7 @@ export default function PhotoCard() {
         <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded overflow-hidden">
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
-            onClick={handlePhotoClick}
+            onClick={() => setSheetOpen(true)}
             onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
@@ -70,7 +54,7 @@ export default function PhotoCard() {
           </button>
           <button
             className="relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
-            onClick={handlePhotoClick}
+            onClick={() => setSheetOpen(true)}
             onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
@@ -113,7 +97,8 @@ export default function PhotoCard() {
           </div>
           <button
             className="hidden xl:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-zinc-500 transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
-            onClick={() => setLightboxOpen(true)}
+            onClick={() => setSheetOpen(true)}
+            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             Meer foto&apos;s
@@ -123,7 +108,6 @@ export default function PhotoCard() {
       </div>
 
       <FotoBottomSheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
-      <PhotoLightbox isOpen={lightboxOpen} onClose={() => setLightboxOpen(false)} photos={lightboxPhotos} />
     </>
   );
 }
