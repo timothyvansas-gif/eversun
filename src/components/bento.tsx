@@ -41,7 +41,7 @@ export default function Bento() {
           <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
             Waarom Ever Sun
           </h2>
-          <p className="mt-2 text-[15px] xl:text-[20px] font-normal xl:font-medium leading-[24px] xl:leading-8 tracking-[-0.02em] text-zinc-600">
+          <p className="mt-2 text-[15px] xl:text-[20px] font-normal xl:font-medium leading-[24px] xl:leading-8 tracking-[-0.02em] text-[#6f6f78]">
             Je pakt je moment onder de beste banken, krijgt advies dat bij jou
             past en loopt twintig minuten later weer als herboren naar buiten.
           </p>
