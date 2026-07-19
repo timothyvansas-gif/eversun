@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
@@ -21,6 +22,7 @@ export default function FotoBottomSheet({
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const [canDrag, setCanDrag] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false
   );
@@ -40,8 +42,10 @@ export default function FotoBottomSheet({
 
   useScrollLock(isOpen);
 
+  // Paused while the QR overlay is open on top: that overlay has its own
+  // focus trap, and without the guard one Escape would close both layers.
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || qrOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -69,11 +73,17 @@ export default function FotoBottomSheet({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, qrOpen, onClose]);
 
   if (!mounted) return null;
 
+  const handleClose = () => {
+    setQrOpen(false);
+    onClose();
+  };
+
   return createPortal(
+    <>
     <AnimatePresence>
       {isOpen && (
         <>
@@ -85,7 +95,7 @@ export default function FotoBottomSheet({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            onClick={onClose}
+            onClick={handleClose}
           />
 
           <div ref={sheetRef} tabIndex={-1} className="outline-none">
@@ -103,27 +113,37 @@ export default function FotoBottomSheet({
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={{ top: 0, bottom: 0.5 }}
               onDragEnd={(_, info) => {
-                if (info.offset.y > 80 || info.velocity.y > 400) onClose();
+                if (info.offset.y > 80 || info.velocity.y > 400) handleClose();
               }}
               style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
             >
               <div className="md:hidden flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing shrink-0">
                 <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
               </div>
-              <div className="relative px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0">
-                <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
-                  Binnenkijken bij Ever Sun
-                </h2>
-                <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-1">
-                  Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60 underline decoration-dotted">06 25306491</a>
-                </p>
-                <button
-                  className="hidden md:flex absolute top-7 right-6 items-center justify-center w-9 h-9 rounded-full text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors duration-150 cursor-pointer"
-                  onClick={onClose}
-                  aria-label="Sluiten"
-                >
-                  ×
-                </button>
+              <div className="px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
+                <div>
+                  <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
+                    Binnenkijken bij Ever Sun
+                  </h2>
+                  <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-1">
+                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60 underline decoration-dotted">06 25306491</a>
+                  </p>
+                </div>
+                <div className="hidden md:flex items-center gap-3 shrink-0">
+                  <button
+                    onClick={() => setQrOpen(true)}
+                    className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
+                  >
+                    Plan je moment
+                  </button>
+                  <button
+                    className="flex items-center justify-center w-9 h-9 rounded-full text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors duration-150 cursor-pointer"
+                    onClick={handleClose}
+                    aria-label="Sluiten"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
               <div
                 className="px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto"
@@ -146,7 +166,9 @@ export default function FotoBottomSheet({
           </div>
         </>
       )}
-    </AnimatePresence>,
+    </AnimatePresence>
+    <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+    </>,
     document.body
   );
 }
