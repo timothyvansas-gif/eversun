@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, animate } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
@@ -21,6 +21,7 @@ export default function FotoBottomSheet({
   onClose: () => void;
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [canDrag, setCanDrag] = useState(() =>
@@ -41,6 +42,46 @@ export default function FotoBottomSheet({
   }, []);
 
   useScrollLock(isOpen);
+
+  // One-time peek after the sheet lands: scroll the grid down a bit and spring
+  // back, so visitors see there are more photos below the fold. Skipped for
+  // prefers-reduced-motion and when everything already fits; aborted the
+  // moment the visitor scrolls or touches the grid themselves.
+  useEffect(() => {
+    if (!isOpen) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = gridRef.current;
+    if (!el) return;
+
+    let controls: ReturnType<typeof animate> | undefined;
+    const stop = () => controls?.stop();
+    const timeout = setTimeout(() => {
+      if (el.scrollHeight <= el.clientHeight || el.scrollTop > 0) return;
+      el.addEventListener("pointerdown", stop);
+      el.addEventListener("wheel", stop);
+      controls = animate(0, 64, {
+        type: "spring",
+        damping: 22,
+        stiffness: 180,
+        onUpdate: (v) => { el.scrollTop = v; },
+        onComplete: () => {
+          controls = animate(64, 0, {
+            type: "spring",
+            damping: 24,
+            stiffness: 160,
+            onUpdate: (v) => { el.scrollTop = v; },
+          });
+        },
+      });
+    }, 600);
+
+    return () => {
+      clearTimeout(timeout);
+      stop();
+      el.removeEventListener("pointerdown", stop);
+      el.removeEventListener("wheel", stop);
+    };
+  }, [isOpen]);
 
   // Paused while the QR overlay is open on top: that overlay has its own
   // focus trap, and without the guard one Escape would close both layers.
@@ -151,6 +192,7 @@ export default function FotoBottomSheet({
                 </div>
               </div>
               <div
+                ref={gridRef}
                 className="px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto"
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
