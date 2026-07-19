@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
 import heroImage from "@/images/hero-eversun-3.webp";
 
 import dynamic from "next/dynamic";
@@ -20,20 +22,71 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
     offset: ["start start", "end start"],
   });
 
-  // Spring-smoothed progress: mobile fires scroll events sparsely during
-  // momentum scrolling, which makes a directly-linked transform step visibly.
-  // The spring interpolates between those events on every animation frame.
+  // Desktop (fine pointer) fires scroll events every frame, so the parallax
+  // tracks scroll 1:1 there — any smoothing would lag behind fast jumps
+  // (Cmd+↑, Home, scrollbar drags) and make the image glide into place.
+  const isFinePointer = useMediaQuery("(hover: hover) and (pointer: fine)");
+
+  // Touch devices fire scroll events sparsely during momentum scrolling, which
+  // makes a directly-linked transform step visibly. The spring interpolates
+  // between those events on every animation frame.
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
     restDelta: 0.001,
   });
 
+  // Touch only: during a programmatic scroll-to-top (logo tap) any parallax
+  // motion reads as the image "gliding into place". So while that scroll runs
+  // we pin the image at its final resting position (progress 0): the hero
+  // arrives with the photo already in place, like a fresh page load.
+  useEffect(() => {
+    let pinned = false;
+    let settleTimer: ReturnType<typeof setTimeout>;
+
+    const release = () => {
+      pinned = false;
+      clearTimeout(settleTimer);
+    };
+
+    const onProgrammaticScroll = () => {
+      pinned = true;
+      clearTimeout(settleTimer);
+      smoothProgress.set(0);
+    };
+
+    // NB: no wheel/touch release listeners — macOS trackpads keep firing
+    // momentum wheel events after the click, which would drop the pin
+    // immediately. If the user genuinely interrupts, the browser cancels the
+    // programmatic scroll and the settle timer below releases the pin.
+    const unsubscribe = scrollYProgress.on("change", () => {
+      if (!pinned) return;
+      // useSpring re-targets to the source on every change; keep steering it
+      // back to 0 (set = spring-animated, so a partially-visible hero eases
+      // into place instead of snapping).
+      smoothProgress.set(0);
+      clearTimeout(settleTimer);
+      // No scroll updates for 200ms → arrived; smoothing resumes (progress is 0
+      // at the top, so there is no visual jump on release).
+      settleTimer = setTimeout(release, 200);
+    });
+
+    window.addEventListener(PROGRAMMATIC_SCROLL_EVENT, onProgrammaticScroll);
+    return () => {
+      unsubscribe();
+      window.removeEventListener(PROGRAMMATIC_SCROLL_EVENT, onProgrammaticScroll);
+      clearTimeout(settleTimer);
+    };
+  }, [scrollYProgress, smoothProgress]);
+
+  // Desktop: raw 1:1 progress. Touch: spring-smoothed progress.
+  const parallaxProgress = isFinePointer ? scrollYProgress : smoothProgress;
+
   // The image layer bleeds 30% above the section (see the motion.div below), so
   // the spring can lag behind fast upward scrolls without exposing the black
   // section background. 19% of the 130%-tall layer ≈ the original 25% travel.
-  const y = useTransform(smoothProgress, [0, 1], ["0%", "19%"]);
-  const scale = useTransform(smoothProgress, [0, 1], [1, 1.05]);
+  const y = useTransform(parallaxProgress, [0, 1], ["0%", "19%"]);
+  const scale = useTransform(parallaxProgress, [0, 1], [1, 1.05]);
 
   return (
     <section

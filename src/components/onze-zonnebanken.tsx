@@ -168,13 +168,13 @@ function MobileDivider() {
 
 export default function OnzeZonnebanken() {
   return (
-    <section id="banken" className="w-full bg-white py-16 xl:py-24">
+    <section className="w-full bg-white py-16 xl:py-24">
       <div
         className="w-full flex flex-col items-center"
         style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
       >
         <div className="w-full max-w-[1280px] mx-auto">
-          <div className="mb-8 xl:mb-10">
+          <div id="banken" className="mb-8 xl:mb-10 scroll-mt-20 lg:scroll-mt-10">
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-5 lg:gap-6">
               <div>
                 <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">

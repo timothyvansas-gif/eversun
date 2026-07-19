@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
+import { scrollToTop } from "@/lib/scroll-to-top";
 
 export default function StickyHeader({
   onOpenMenu,
@@ -37,7 +38,7 @@ export default function StickyHeader({
     >
       <div className="w-full flex items-center justify-between px-6">
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={scrollToTop}
           className="cursor-pointer active:scale-95 transition-transform duration-200"
         >
           <Logo

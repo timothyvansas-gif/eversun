@@ -11,6 +11,7 @@ import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import whatsappIcon from "@/images/whatsapp.svg";
 import { NAV_ITEMS } from "@/lib/nav-items";
+import { scrollToTop } from "@/lib/scroll-to-top";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -49,7 +50,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           className="hidden lg:flex items-center justify-between"
         >
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={scrollToTop}
             aria-label="Naar begin van de pagina"
             className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >
@@ -98,7 +99,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           className="lg:hidden flex items-center justify-between"
         >
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={scrollToTop}
             aria-label="Naar begin van de pagina"
             className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >

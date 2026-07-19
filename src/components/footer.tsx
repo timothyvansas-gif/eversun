@@ -5,7 +5,8 @@ import instagramIcon from "@/images/socials/social-instagram.svg";
 export default function Footer() {
   return (
     <footer
-      className="w-full bg-black py-6 sm:py-10"
+      id="contact"
+      className="w-full bg-black py-6 sm:py-10 scroll-mt-20 lg:scroll-mt-10"
       style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
     >
       <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between">
