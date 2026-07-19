@@ -39,6 +39,7 @@ export default function StickyHeader({
       <div className="w-full flex items-center justify-between px-6">
         <button
           onClick={scrollToTop}
+          aria-label="Naar begin van de pagina"
           className="cursor-pointer active:scale-95 transition-transform duration-200"
         >
           <Logo
@@ -50,6 +51,7 @@ export default function StickyHeader({
 
         <button
           onClick={onOpenMenu}
+          aria-label="Menu openen"
           className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
         >
           <HamburgerIcon />

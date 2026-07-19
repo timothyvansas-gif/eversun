@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 interface Props {
   isOpen: boolean;
@@ -14,6 +15,9 @@ interface Props {
 export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(overlayRef, isOpen, onClose);
 
   useEffect(() => {
     // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
@@ -40,6 +44,10 @@ export default function PhotoLightbox({ isOpen, onClose, photos }: Props) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={overlayRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Fotogalerij"
           className="fixed inset-0 z-[100] hidden md:flex items-center justify-center"
           style={{ background: "rgba(0,0,0,0.9)" }}
           initial={{ opacity: 0 }}

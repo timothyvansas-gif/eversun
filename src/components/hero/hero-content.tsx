@@ -82,7 +82,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               WhatsApp
               <Image
                 src={whatsappIcon}
-                alt="WhatsApp"
+                alt=""
                 width={18}
                 height={18}
                 className="w-[18px] h-[18px] brightness-0 invert"

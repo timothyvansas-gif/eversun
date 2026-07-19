@@ -32,6 +32,12 @@ export function animateScrollTo(targetY: number) {
   const distance = target - start;
   if (distance === 0) return;
 
+  // WCAG 2.3.3: no scroll animation for users who prefer reduced motion.
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    window.scrollTo(0, target);
+    return;
+  }
+
   // ~0.35ms per px, clamped: short hops stay snappy, long jumps get room.
   const duration = Math.min(1100, Math.max(500, Math.abs(distance) * 0.35));
 

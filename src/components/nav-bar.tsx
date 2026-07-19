@@ -35,12 +35,12 @@ export default function NavBar() {
           
           <a href="#" className="nav-link lg:!pr-0">
             WhatsApp
-            <Image 
-              src={whatsappIcon} 
-              alt="WhatsApp" 
-              width={18} 
-              height={18} 
-              className="w-[18px] h-[18px]" 
+            <Image
+              src={whatsappIcon}
+              alt=""
+              width={18}
+              height={18}
+              className="w-[18px] h-[18px]"
             />
           </a>
         </nav>

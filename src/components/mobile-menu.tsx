@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
@@ -15,6 +16,31 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { scrollToNav } = useScrollNav();
+  const [canShare, setCanShare] = useState(false);
+
+  useEffect(() => {
+    // Feature-detect after mount to avoid a hydration mismatch — the Web Share
+    // API only exists in (mostly mobile) browsers, never during SSR.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCanShare(typeof navigator !== "undefined" && !!navigator.share);
+  }, []);
+
+  // Lock page scroll while the menu is open. overflow:hidden alone is not
+  // enough: wheel/touch input over the fixed menu chains straight to the
+  // viewport in Chromium. Blocking the input events themselves is reliable on
+  // iOS (momentum) and Android alike, and causes no layout shift.
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevent = (e: Event) => e.preventDefault();
+    document.addEventListener("touchmove", prevent, { passive: false });
+    document.addEventListener("wheel", prevent, { passive: false });
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("touchmove", prevent);
+      document.removeEventListener("wheel", prevent);
+      document.documentElement.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const handleNavClick = (e: React.MouseEvent, item: string) => {
     e.preventDefault();
@@ -22,11 +48,26 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     scrollToNav(item, 900);
   };
 
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: "Ever Sun",
+        text: "Zonnestudio Ever Sun in Assen",
+        url: window.location.href,
+      });
+    } catch {
+      // User dismissed the share sheet — nothing to do.
+    }
+  };
+
   return (
     <motion.div
       initial={{ x: "100%" }}
       animate={{ x: isOpen ? "0%" : "100%" }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
       className="fixed top-0 right-0 w-[95%] h-full bg-black z-[200] p-8 flex flex-col lg:hidden"
       aria-hidden={!isOpen}
       inert={!isOpen}
@@ -52,9 +93,35 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
           </a>
+          {canShare && (
+            <button
+              onClick={handleShare}
+              aria-label="Pagina delen"
+              className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </button>
+          )}
         </div>
         <button
           onClick={onClose}
+          aria-label="Menu sluiten"
           className="p-2 text-[#FAF4EC] active:scale-90 transition-transform"
         >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -87,12 +154,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           className="flex items-center gap-3 text-[28px] font-semibold text-[#FAF4EC] tracking-tight active:opacity-60 transition-opacity"
         >
           WhatsApp
-          <Image 
-            src={whatsappIcon} 
-            alt="WhatsApp" 
-            width={24} 
-            height={24} 
-            className="w-6 h-6 brightness-0 invert" 
+          <Image
+            src={whatsappIcon}
+            alt=""
+            width={24}
+            height={24}
+            className="w-6 h-6 brightness-0 invert"
           />
         </a>
       </nav>

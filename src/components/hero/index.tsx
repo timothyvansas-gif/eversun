@@ -104,7 +104,11 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             fill
             priority
             fetchPriority="high"
-            quality={80}
+            // Serve the original file as-is. The optimizer would re-encode the
+            // (already lossy) 1672px source down to ~1200px, which mobile's
+            // portrait cover-crop then upscales 3×+ — double generation loss
+            // for a ~25KB saving. The original is the sharpest we have.
+            unoptimized
             placeholder="blur"
             sizes="100vw"
             className="object-cover object-[60%_50%] md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]"

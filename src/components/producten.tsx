@@ -225,6 +225,9 @@ export default function Producten() {
           <div className="relative">
             <div
               ref={scrollRef}
+              tabIndex={0}
+              role="region"
+              aria-label="Producten carrousel"
               className="draggable-scroll flex overflow-x-auto gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
               style={{
                 marginRight: "calc(50% - 50vw)",
