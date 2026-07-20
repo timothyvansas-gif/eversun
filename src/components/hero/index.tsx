@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
 import heroImage from "@/images/hero-eversun-3.webp";
@@ -82,7 +82,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   // Desktop: raw 1:1 progress. Touch: spring-smoothed progress.
   const parallaxProgress = isFinePointer ? scrollYProgress : smoothProgress;
 
-  // The image layer bleeds 30% above the section (see the motion.div below), so
+  // The image layer bleeds 30% above the section (see the m.div below), so
   // the spring can lag behind fast upward scrolls without exposing the black
   // section background. 19% of the 130%-tall layer ≈ the original 25% travel.
   const y = useTransform(parallaxProgress, [0, 1], ["0%", "19%"]);
@@ -94,7 +94,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       className="relative w-full h-svh lg:h-[calc(100svh-3rem)] min-[1920px]:max-h-[1000px] min-[1920px]:max-w-[1920px] min-[1920px]:mx-auto overflow-hidden bg-black"
     >
       <div className="absolute inset-0">
-        <motion.div
+        <m.div
           className="absolute inset-x-0 overflow-hidden"
           style={{ y, scale, willChange: "transform", top: "-30%", height: "130%" }}
         >
@@ -111,9 +111,9 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             unoptimized
             placeholder="blur"
             sizes="100vw"
-            className="object-cover object-[60%_50%] md:object-center animate-[hero-reveal_1.5s_ease-out_forwards]"
+            className="object-cover object-[60%_50%] md:object-center"
           />
-        </motion.div>
+        </m.div>
 
         <div
           className="absolute inset-0 pointer-events-none z-10"
