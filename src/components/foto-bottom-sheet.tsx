@@ -178,9 +178,17 @@ export default function FotoBottomSheet({
                 <div className="hidden md:flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => setQrOpen(true)}
-                    className="text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
+                    className="group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
                   >
                     Plan je moment
+                    <span
+                      aria-hidden="true"
+                      className="flex items-center overflow-hidden w-0 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover/cta:w-4 group-hover/cta:ml-2 group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
+                    >
+                      <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+                      </svg>
+                    </span>
                   </button>
                   <button
                     className="flex items-center justify-center w-9 h-9 rounded-full text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors duration-150 cursor-pointer"
