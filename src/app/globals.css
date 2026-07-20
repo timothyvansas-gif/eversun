@@ -3,6 +3,10 @@
 html {
   background-color: #000000;
   overflow-x: clip;
+  /* Reserve the scrollbar gutter so the page doesn't shift right when a modal
+     locks scroll (overflow:hidden) and the classic scrollbar disappears.
+     No-op on overlay-scrollbar platforms (macOS/iOS), where nothing shifts. */
+  scrollbar-gutter: stable;
 }
 
 *:focus-visible {
