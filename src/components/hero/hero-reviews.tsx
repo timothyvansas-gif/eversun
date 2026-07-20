@@ -83,7 +83,7 @@ export default function HeroReviews() {
                         flexDirection: "column",
                         alignItems: "flex-start",
                         gap: 4,
-                        borderRadius: 8,
+                        borderRadius: 16,
                         border: "1px solid #111",
                         background: "rgba(0, 0, 0, 0.85)",
                         boxShadow: "0 4px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.22)",
