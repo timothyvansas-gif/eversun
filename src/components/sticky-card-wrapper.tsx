@@ -1,16 +1,9 @@
 "use client";
 
 import React, { useRef, useEffect, useState, forwardRef } from "react";
-import { motion, Variants } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { m, Variants } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { StickyCardContext } from "./sticky-card-context";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface Props {
   children: React.ReactNode;
@@ -31,34 +24,61 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
 
     useEffect(() => {
       setIsMounted(true);
-      const timeout = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
-      return () => clearTimeout(timeout);
     }, []);
 
-    useGSAP(() => {
+    // The scroll-driven scale-down is mobile-only, below the fold, and purely
+    // cosmetic — so gsap + ScrollTrigger (and the layout-reading refresh) load
+    // lazily here instead of in the initial bundle. Desktop and the last card
+    // never load gsap at all.
+    useEffect(() => {
       if (!isMounted || !isMobile || index === total - 1) return;
+      const container = containerRef.current;
+      const scaling = scalingRef.current;
+      if (!container || !scaling) return;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: `top ${offsetTop}px`,
-          end: "bottom top",
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const covered = self.progress > 0.85;
-            setIsCovered((prev) => prev === covered ? prev : covered);
-          }
-        }
-      });
+      let cancelled = false;
+      let cleanup: (() => void) | undefined;
 
-      tl.to(scalingRef.current, {
-        scale: 0.9,
-        ease: "power1.inOut"
-      });
-    }, { dependencies: [isMounted, isMobile, offsetTop], scope: containerRef });
+      void (async () => {
+        const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+          import("gsap"),
+          import("gsap/ScrollTrigger"),
+        ]);
+        if (cancelled) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: `top ${offsetTop}px`,
+            end: "bottom top",
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const covered = self.progress > 0.85;
+              setIsCovered((prev) => (prev === covered ? prev : covered));
+            },
+          },
+        });
+
+        tl.to(scaling, {
+          scale: 0.9,
+          ease: "power1.inOut",
+        });
+
+        ScrollTrigger.refresh();
+
+        cleanup = () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
+      })();
+
+      return () => {
+        cancelled = true;
+        cleanup?.();
+      };
+    }, [isMounted, isMobile, index, total, offsetTop]);
 
     return (
       <div
@@ -77,7 +97,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
           ref={scalingRef}
           className="origin-top w-full will-change-transform"
         >
-          <motion.div
+          <m.div
             variants={variants}
             custom={custom}
             className="w-full"
@@ -85,7 +105,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
             <StickyCardContext.Provider value={{ isCovered }}>
               {children}
             </StickyCardContext.Provider>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     );
