@@ -7,7 +7,6 @@ import Bento from "@/components/bento";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
-import Footer from "@/components/footer";
 
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
@@ -22,7 +21,10 @@ const loadMotionFeatures = () =>
 
 const PUSH_TRANSITION = "margin-left 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
-export default function PageLayout() {
+// `footer` is rendered by the server page and passed in as a slot, so the
+// static Footer stays a server component instead of being pulled into this
+// client bundle.
+export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -54,7 +56,7 @@ export default function PageLayout() {
         <OnzeZonnebanken />
         <Producten />
         <OverOns />
-        <Footer />
+        {footer}
       </main>
 
       <div
