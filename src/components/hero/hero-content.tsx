@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
@@ -43,7 +43,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         className="max-w-[1280px] w-full mx-auto flex-1 flex flex-col justify-between lg:justify-start"
       >
         {/* Desktop Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -89,10 +89,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               />
             </button>
           </nav>
-        </motion.div>
+        </m.div>
 
         {/* Mobile Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -113,13 +113,13 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           >
             <HamburgerIcon />
           </button>
-        </motion.div>
+        </m.div>
 
         <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-14">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-18 lg:mb-0">
             <div className="translate-y-4 lg:translate-y-0">
-              <motion.h1
+              <m.h1
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -133,9 +133,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   Ever Sun
                   <HeroLines />
                 </span>
-              </motion.h1>
+              </m.h1>
 
-              <motion.p
+              <m.p
                 className="block mt-3 md:mt-4 font-sans font-normal text-[15px] md:text-[20px] leading-[24px] md:leading-[30px]"
                 variants={fadeUp}
                 initial="hidden"
@@ -144,9 +144,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
                 Jouw zonnestudio voor persoonlijk advies, verantwoord zonnen<br className="hidden lg:inline" /> en een natuurlijk resultaat.
-              </motion.p>
+              </m.p>
 
-              <motion.div
+              <m.div
                 className="mt-7 lg:mt-9 flex flex-row items-center w-full lg:w-auto gap-6 lg:gap-6"
                 variants={fadeUp}
                 initial="hidden"
@@ -154,12 +154,12 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.7}
               >
                 <HeroButtons onOpenAfspraak={onOpenAfspraak} />
-              </motion.div>
+              </m.div>
             </div>
           </div>
         </div>
 
-        <motion.div
+        <m.div
           variants={fadeUp}
           initial="hidden"
           animate="visible"
@@ -168,7 +168,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         >
           <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
           <HeroReviews />
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

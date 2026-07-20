@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, animate } from "framer-motion";
+import { m, AnimatePresence, animate } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
@@ -128,7 +128,7 @@ export default function FotoBottomSheet({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <m.div
             data-lenis-prevent
             className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
@@ -140,7 +140,7 @@ export default function FotoBottomSheet({
           />
 
           <div ref={sheetRef} tabIndex={-1} className="outline-none">
-            <motion.div
+            <m.div
               data-lenis-prevent
               role="dialog"
               aria-modal="true"
@@ -209,7 +209,7 @@ export default function FotoBottomSheet({
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </>
       )}

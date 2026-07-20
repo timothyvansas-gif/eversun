@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/components/hero/hero-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import CloseIcon from "@/components/ui/close-icon";
@@ -34,7 +34,7 @@ function AppointmentButton() {
       }}
       onMouseLeave={() => setHovered(false)}
     >
-      <motion.span
+      <m.span
         aria-hidden
         className="absolute rounded-full bg-[#111] pointer-events-none"
         style={{
@@ -143,7 +143,7 @@ export default function OpeningstijdenOverlay({
       {isOpen && (
         <>
           {/* Backdrop — dims hero content */}
-          <motion.div
+          <m.div
             data-lenis-prevent
             className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
@@ -156,7 +156,7 @@ export default function OpeningstijdenOverlay({
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none">
           {/* Mobile: Bottom Sheet */}
-          <motion.div
+          <m.div
             data-lenis-prevent
             role="dialog"
             aria-modal="true"
@@ -188,10 +188,10 @@ export default function OpeningstijdenOverlay({
               <AppointmentButton />
               <RouteButton />
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Desktop: Modal */}
-          <motion.div
+          <m.div
             data-lenis-prevent
             role="dialog"
             aria-modal="true"
@@ -219,7 +219,7 @@ export default function OpeningstijdenOverlay({
               </div>
               <RouteButton />
             </div>
-          </motion.div>
+          </m.div>
           </div>
         </>
       )}

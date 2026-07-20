@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
 import CloseIcon from "@/components/ui/close-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -43,7 +43,7 @@ export default function AfspraakOverlay({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <m.div
             data-lenis-prevent
             className="fixed inset-0 z-50"
             style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
@@ -55,7 +55,7 @@ export default function AfspraakOverlay({
           />
 
           <div ref={overlayRef}>
-          <motion.div
+          <m.div
             data-lenis-prevent
             role="dialog"
             aria-modal="true"
@@ -100,7 +100,7 @@ export default function AfspraakOverlay({
                 </a>
               </div>
             </div>
-          </motion.div>
+          </m.div>
           </div>
         </>
       )}

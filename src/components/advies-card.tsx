@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import { m, AnimatePresence, useMotionValue, useTransform, animate, useInView } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import manAdvies from "@/images/people/man-advies.webp";
 import meisjeRood from "@/images/people/meisje-rood-advies.webp";
@@ -88,7 +88,7 @@ export default function AdviesCard() {
   return (
     <div ref={containerRef} className="w-full h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative">
       <AnimatePresence initial={false}>
-        <motion.div
+        <m.div
           key={active}
           className="absolute inset-0"
           style={{
@@ -122,7 +122,7 @@ export default function AdviesCard() {
           }}
         >
           <svg width={RING} height={RING} style={{ transform: "rotate(-90deg)" }}>
-            <motion.circle
+            <m.circle
               cx={RING / 2}
               cy={RING / 2}
               r={R}
@@ -137,7 +137,7 @@ export default function AdviesCard() {
         </div>
 
         {SLIDES.map((slide, i) => (
-          <motion.button
+          <m.button
             key={i}
             onClick={() => setActive(i)}
             aria-label={`Bekijk foto ${i + 1}`}
@@ -159,7 +159,7 @@ export default function AdviesCard() {
               height={THUMB}
               className="w-full h-full object-cover object-center"
             />
-          </motion.button>
+          </m.button>
         ))}
       </div>
     </div>

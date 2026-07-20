@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 
 const baseStyle: React.CSSProperties = {
@@ -43,7 +43,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
           boxShadow: primaryHovered ? SHADOW_HOVER : SHADOW_DEFAULT,
         }}
       >
-        <motion.span
+        <m.span
           aria-hidden
           className="absolute rounded-full bg-[#111] pointer-events-none"
           style={{

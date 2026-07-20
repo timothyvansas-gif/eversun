@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface Props {
   isInView: boolean;
@@ -19,7 +19,7 @@ export default function ErgolineSignature({ isInView }: Props) {
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-auto"
       >
-        <motion.path
+        <m.path
           fillRule="evenodd"
           clipRule="evenodd"
           d={d}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/Ergoline-Prestige-1600.webp";
 import blueVision from "@/images/banken/Ergoline-Blue-Vision.webp";
@@ -77,7 +77,7 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px" }}
@@ -85,7 +85,7 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
       className="flex-1 flex flex-col gap-6"
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 

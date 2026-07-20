@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { LazyMotion } from "framer-motion";
 import Bento from "@/components/bento";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
@@ -12,6 +13,13 @@ const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
 
+// LazyMotion ships only the tiny `m` component in the initial bundle; the full
+// DOM feature set (gestures, drag, layout, the animation engine) loads as a
+// separate async chunk after hydration, off the critical path. `domMax`
+// (not `domAnimation`) because the overlays and photo sheet use drag.
+const loadMotionFeatures = () =>
+  import("framer-motion").then((mod) => mod.domMax);
+
 const PUSH_TRANSITION = "margin-left 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
 export default function PageLayout() {
@@ -20,6 +28,7 @@ export default function PageLayout() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
+    <LazyMotion features={loadMotionFeatures} strict>
     <div className="relative bg-black min-h-screen">
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
@@ -58,5 +67,6 @@ export default function PageLayout() {
         style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
       />
     </div>
+    </LazyMotion>
   );
 }

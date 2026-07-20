@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import reviewer1 from "@/images/people/reviewer-1.webp";
 import reviewer2 from "@/images/people/reviewer-2.webp";
 import reviewer3 from "@/images/people/reviewer-3.webp";
@@ -41,7 +41,7 @@ export default function HeroReviews() {
             role="button"
             aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
           >
-            <motion.div
+            <m.div
               className="w-[48px] h-[48px] rounded-full overflow-hidden border border-[#111111]"
               animate={{
                 y: hoveredIndex === i ? -8 : 0,
@@ -57,7 +57,7 @@ export default function HeroReviews() {
                 height={48}
                 className="object-cover"
               />
-            </motion.div>
+            </m.div>
 
             {tooltips[i] && (
               <AnimatePresence>
@@ -71,7 +71,7 @@ export default function HeroReviews() {
                       pointerEvents: "none",
                     }}
                   >
-                    <motion.div
+                    <m.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
@@ -101,7 +101,7 @@ export default function HeroReviews() {
                       <span className="font-sans text-[13px] text-white/50" style={{ marginTop: 12 }}>
                         {tooltips[i].name}
                       </span>
-                    </motion.div>
+                    </m.div>
                   </div>
                 )}
               </AnimatePresence>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
@@ -61,7 +61,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   };
 
   return (
-    <motion.div
+    <m.div
       data-lenis-prevent
       initial={{ x: "100%" }}
       animate={{ x: isOpen ? "0%" : "100%" }}
@@ -180,6 +180,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           06 25306491
         </a>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

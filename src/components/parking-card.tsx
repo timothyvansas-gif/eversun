@@ -1,5 +1,5 @@
 "use client";
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import { useContainerScale } from "@/hooks/use-container-scale";
 import { useStickyCard } from "@/components/sticky-card-context";
 import PinMarker from "@/components/pin-marker";
@@ -70,7 +70,7 @@ export default function ParkingCard() {
       >
 
         {P_BORD_SM.map((s, i) => (
-          <motion.img
+          <m.img
             key={i}
             src={pBordSm.src}
             width={24}
@@ -84,7 +84,7 @@ export default function ParkingCard() {
             variants={itemVariants}
           />
         ))}
-        <motion.img
+        <m.img
           src={pBordL.src}
           alt="Groot parkeerbord icoon"
           className="absolute"

@@ -1,19 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
 export default function HeroLines() {
   return (
-    <motion.svg
+    <m.svg
       viewBox="0 0 169 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="absolute left-0 -bottom-[8px] md:-bottom-2 lg:-bottom-[4px] w-full lg:scale-x-[1.44] lg:origin-center"
       style={{ height: 10, overflow: "visible" }}
     >
-      <motion.path
+      <m.path
         d="M1 6.56622C56.3941 3.06094 112.187 1.20107 168 1"
         stroke="#E15E1D"
         strokeLinecap="round"
@@ -23,7 +23,7 @@ export default function HeroLines() {
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.6, delay: 1.3, ease }}
       />
-      <motion.path
+      <m.path
         d="M32.1309 8.63371C68.2143 6.92799 104.462 6.13378 140.695 6.25107"
         stroke="#E15E1D"
         strokeLinecap="round"
@@ -33,6 +33,6 @@ export default function HeroLines() {
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.75, ease }}
       />
-    </motion.svg>
+    </m.svg>
   );
 }
