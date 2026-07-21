@@ -36,8 +36,8 @@ export default function PhotoCard() {
 
   return (
     <>
-      <div className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-lg flex flex-col justify-between" style={{ padding: 'clamp(24px, 4vw, 40px)' }}>
-        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded overflow-hidden">
+      <div className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-[12px] flex flex-col justify-between" style={{ padding: 'clamp(24px, 4vw, 40px)' }}>
+        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[12px] overflow-hidden">
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={() => setSheetOpen(true)}

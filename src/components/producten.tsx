@@ -21,7 +21,7 @@ type Product = (typeof products)[number];
 function ProductCardItem({ product }: { product: Product }) {
   return (
     <div className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start select-none flex flex-col">
-      <div className="flex flex-col bg-white rounded-[8px] overflow-hidden flex-1">
+      <div className="flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
         <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
           <ProductImage src={product.image} alt={product.name} />

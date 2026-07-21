@@ -52,7 +52,7 @@ export default function ParkingCard() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[362px] xl:h-[431px] bg-brand rounded-lg overflow-hidden"
+      className="relative w-full h-[362px] xl:h-[431px] bg-brand rounded-[12px] overflow-hidden"
     >
       {/* Background canvas — same transform as contentRef, below overlay */}
       <div

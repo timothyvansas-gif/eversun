@@ -86,7 +86,7 @@ export default function AdviesCard() {
   };
 
   return (
-    <div ref={containerRef} className="w-full h-[362px] bg-[#1F1F1E] rounded-lg overflow-hidden relative">
+    <div ref={containerRef} className="w-full h-[362px] bg-[#1F1F1E] rounded-[12px] overflow-hidden relative">
       <AnimatePresence initial={false}>
         <m.div
           key={active}

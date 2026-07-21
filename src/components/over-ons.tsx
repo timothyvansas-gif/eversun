@@ -92,7 +92,7 @@ export default function OverOns() {
                 className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start flex flex-col gap-6 select-none"
               >
                 {/* Image */}
-                <div className="w-full h-[400px] bg-[#2A2A2A] rounded-[8px] overflow-hidden relative">
+                <div className="w-full h-[400px] bg-[#2A2A2A] rounded-[12px] overflow-hidden relative">
                   <Image
                     src={member.image}
                     alt={member.name}

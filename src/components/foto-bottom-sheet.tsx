@@ -211,7 +211,7 @@ export default function FotoBottomSheet({
                       src={photo}
                       alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-cover rounded-[12px]"
                       sizes="(max-width: 767px) 100vw, 536px"
                     />
                   </div>

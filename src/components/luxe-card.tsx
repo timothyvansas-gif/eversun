@@ -12,7 +12,7 @@ export default function LuxeCard() {
   const isInView = inView && !isCovered;
 
   return (
-    <div ref={containerRef} className="relative w-full h-[362px] bg-white rounded-lg pb-[52px] xl:pb-[40px] flex flex-col overflow-hidden xl:overflow-visible" style={{ paddingTop: 'clamp(24px, 4vw, 40px)', paddingLeft: 'clamp(24px, 4vw, 40px)', paddingRight: 'clamp(24px, 4vw, 40px)' }}>
+    <div ref={containerRef} className="relative w-full h-[362px] bg-white rounded-[12px] pb-[52px] xl:pb-[40px] flex flex-col overflow-hidden xl:overflow-visible" style={{ paddingTop: 'clamp(24px, 4vw, 40px)', paddingLeft: 'clamp(24px, 4vw, 40px)', paddingRight: 'clamp(24px, 4vw, 40px)' }}>
       <h3 className="card-title text-zinc-900">Ultieme luxe</h3>
       <p className="card-body text-zinc-500 mt-1">
         Onder de nummer één <span className="xl:hidden">zonne</span>banken

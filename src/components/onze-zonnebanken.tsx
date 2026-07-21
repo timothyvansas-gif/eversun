@@ -139,8 +139,8 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
 function ZonnebankCard({ data }: { data: Zonnebank }) {
   return (
     <CardWrapper>
-      <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[8px]">
-        <div className="relative min-h-[300px] md:min-h-[320px] rounded-[8px] xl:rounded-[4px] overflow-hidden">
+      <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]">
+        <div className="relative min-h-[300px] md:min-h-[320px] rounded-[12px] overflow-hidden">
           <Image
             src={data.image}
             alt={data.alt}
