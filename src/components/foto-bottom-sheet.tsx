@@ -211,6 +211,7 @@ export default function FotoBottomSheet({
                       src={photo}
                       alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
                       fill
+                      placeholder="blur"
                       className="object-cover rounded-[12px]"
                       sizes="(max-width: 767px) 100vw, 600px"
                     />
