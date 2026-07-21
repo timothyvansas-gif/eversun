@@ -74,7 +74,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
             transition: "border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s ease",
           }}
         >
-          De studio
+          Waarom Ever Sun
         </button>
       </div>
     </div>
