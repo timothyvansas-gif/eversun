@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/components/hero/hero-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
-import CloseIcon from "@/components/ui/close-icon";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -214,9 +213,9 @@ export default function OpeningstijdenOverlay({
               <button
                 onClick={onClose}
                 aria-label="Sluiten"
-                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] transition-colors cursor-pointer"
+                className="absolute top-4 right-4 flex items-center justify-center w-9 h-9 rounded-full border border-transparent text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] transition-colors duration-150 cursor-pointer"
               >
-                <CloseIcon />
+                ×
               </button>
               <div className="mb-[22px]">
                 <h2 className="card-title text-zinc-900">Openingstijden</h2>

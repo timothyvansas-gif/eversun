@@ -145,7 +145,7 @@ export default function FotoBottomSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Binnenkijken bij Ever Sun"
-              className="fixed bottom-0 inset-x-0 md:mx-auto md:w-[calc(90vw-0.9*clamp(3rem,8vw,20rem))] md:max-w-[1152px] bg-[#FAF4EC] rounded-t-[20px] z-50 h-[90svh] md:h-[94svh] flex flex-col"
+              className="fixed bottom-0 inset-x-0 bg-[#FAF4EC] rounded-t-[20px] z-50 h-[90svh] md:h-[94svh] flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -161,7 +161,7 @@ export default function FotoBottomSheet({
               <div className="md:hidden flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing shrink-0">
                 <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
               </div>
-              <div className="px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
+              <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
                 <div>
                   <div className="flex items-baseline gap-2.5">
                     <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
@@ -191,7 +191,7 @@ export default function FotoBottomSheet({
                     </span>
                   </button>
                   <button
-                    className="flex items-center justify-center w-9 h-9 rounded-full text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/5 transition-colors duration-150 cursor-pointer"
+                    className="flex items-center justify-center w-9 h-9 rounded-full border border-transparent text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] transition-colors duration-150 cursor-pointer"
                     onClick={handleClose}
                     aria-label="Sluiten"
                   >
@@ -201,7 +201,7 @@ export default function FotoBottomSheet({
               </div>
               <div
                 ref={gridRef}
-                className="px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto"
+                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto"
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
@@ -212,7 +212,7 @@ export default function FotoBottomSheet({
                       alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
                       fill
                       className="object-cover rounded-[12px]"
-                      sizes="(max-width: 767px) 100vw, 536px"
+                      sizes="(max-width: 767px) 100vw, 600px"
                     />
                   </div>
                 ))}

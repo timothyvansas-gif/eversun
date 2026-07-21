@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
-import CloseIcon from "@/components/ui/close-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 
@@ -70,9 +69,9 @@ export default function AfspraakOverlay({
               <button
                 onClick={onClose}
                 aria-label="Sluiten"
-                className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-[6px] text-[#1a1a1a]/80 md:hover:bg-[#ffffff] md:hover:text-[#000000] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 flex items-center justify-center w-9 h-9 rounded-full border border-transparent text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer"
               >
-                <CloseIcon />
+                ×
               </button>
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto">
