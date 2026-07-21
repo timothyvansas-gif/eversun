@@ -124,7 +124,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(42px,10vw,94px)] lg:text-[66px] lg:leading-[74px] 2xl:text-[72px] 2xl:leading-[80px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[66px] lg:leading-[74px] 2xl:text-[72px] 2xl:leading-[80px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -136,14 +136,14 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </m.h1>
 
               <m.p
-                className="block mt-3 md:mt-4 font-sans font-normal text-[15px] md:text-[20px] leading-[24px] md:leading-[30px]"
+                className="block mt-1 md:mt-4 font-sans font-normal text-[16px] md:text-[20px] leading-[25px] md:leading-[30px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
-                Jouw zonnestudio voor persoonlijk advies, verantwoord zonnen<br className="hidden lg:inline" /> en een natuurlijk resultaat.
+                Jouw zonnestudio voor persoonlijk advies{" "}<br className="md:hidden" />en een kleur die blijft
               </m.p>
 
               <m.div
