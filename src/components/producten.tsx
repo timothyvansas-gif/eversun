@@ -1,6 +1,7 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
@@ -15,6 +16,43 @@ import imgVault from "@/images/producten/eversun-vault.webp";
 import imgCocoCreamsicle from "@/images/producten/eversun-coco-creamsicle.webp";
 import imgBarefootBeachwood from "@/images/producten/eversun-barefoot-beachwood.webp";
 import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.webp";
+
+const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
+
+const WHATSAPP_URL =
+  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
+
+function PlanMomentButton() {
+  const [qrOpen, setQrOpen] = useState(false);
+
+  const handleClick = () => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      window.open(WHATSAPP_URL, "_blank");
+    } else {
+      setQrOpen(true);
+    }
+  };
+
+  return (
+    <>
+      <button
+        onClick={handleClick}
+        className="group/cta inline-flex w-full md:w-auto items-center justify-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-3 md:py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 shrink-0"
+      >
+        Plan je moment
+        <span
+          aria-hidden="true"
+          className="flex items-center overflow-hidden w-0 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover/cta:w-4 group-hover/cta:ml-2 group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
+        >
+          <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          </svg>
+        </span>
+      </button>
+      <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+    </>
+  );
+}
 
 type Product = (typeof products)[number];
 
@@ -228,7 +266,7 @@ export default function Producten() {
               tabIndex={0}
               role="region"
               aria-label="Producten carrousel"
-              className="draggable-scroll flex overflow-x-auto gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              className="draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
               style={{
                 marginRight: "calc(50% - 50vw)",
                 paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -265,10 +303,11 @@ export default function Producten() {
             )}
           </div>
 
-          <div className="mt-4 xl:mt-6">
+          <div className="mt-4 xl:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-7 md:gap-8">
             <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
             </p>
+            <PlanMomentButton />
           </div>
         </div>
       </div>
