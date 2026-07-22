@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, forwardRef } from "react";
 import { m, Variants } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { StickyCardContext } from "./sticky-card-context";
 
 interface Props {
@@ -19,7 +20,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     const containerRef = useRef<HTMLDivElement>(null);
     const scalingRef = useRef<HTMLDivElement>(null);
     const [isMounted, setIsMounted] = useState(false);
-    const isMobile = useMediaQuery("(max-width: 767px)");
+    const isMobile = useMediaQuery(MOBILE_QUERY);
     const [isCovered, setIsCovered] = useState(false);
 
     useEffect(() => {

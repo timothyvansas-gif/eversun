@@ -7,6 +7,7 @@ import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { CloseButton } from "@/components/ui/close-button";
 
 export default function AfspraakOverlay({
   isOpen,
@@ -66,13 +67,7 @@ export default function AfspraakOverlay({
             transition={{ type: "spring", damping: 14, stiffness: 260 }}
           >
             <div className="relative px-8 pb-8 pt-14">
-              <button
-                onClick={onClose}
-                aria-label="Sluiten"
-                className="absolute top-4 right-4 flex items-center justify-center w-9 h-9 rounded-full border border-transparent text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer"
-              >
-                ×
-              </button>
+              <CloseButton onClick={onClose} className="absolute top-4 right-4" />
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto">
                 <Image

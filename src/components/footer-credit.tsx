@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { CloseButton } from "@/components/ui/close-button";
 import timothyPhoto from "@/images/timothy.webp";
 
 // base64 of the address. atob() is decoded at runtime and is not
@@ -67,15 +68,7 @@ export default function FooterCredit() {
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.98, y: shouldReduceMotion ? 0 : 6, transition: { duration: 0.15, ease: [0.36, 0, 0.66, 0] } }}
             transition={{ type: "spring", damping: 20, stiffness: 320 }}
           >
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={close}
-              aria-label="Sluiten"
-              className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full border border-transparent text-[22px] leading-none text-[#1a1a1a]/50 hover:text-[#1a1a1a] hover:border-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer"
-            >
-              ×
-            </button>
+            <CloseButton ref={closeRef} onClick={close} size="sm" className="absolute top-3 right-3" />
 
             <span className="flex items-center gap-5">
               <Image

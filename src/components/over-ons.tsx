@@ -7,6 +7,7 @@ import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
+import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS } from "@/lib/carousel";
 
 const teamMembers = [
   {
@@ -80,7 +81,7 @@ export default function OverOns() {
               tabIndex={0}
               role="region"
               aria-label="Team carrousel"
-              className="draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              className={CAROUSEL_TRACK_CLASS}
               style={{
                 marginRight: "calc(50% - 50vw)",
                 paddingRight: "clamp(1.5rem, 4vw, 10rem)",
@@ -89,7 +90,7 @@ export default function OverOns() {
               {teamMembers.map((member) => (
               <div
                 key={member.id}
-                className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start flex flex-col gap-6 select-none"
+                className={`${CAROUSEL_CARD_CLASS} flex flex-col gap-6 select-none`}
               >
                 {/* Image */}
                 <div className="w-full h-[400px] bg-[#2A2A2A] rounded-[12px] overflow-hidden relative">

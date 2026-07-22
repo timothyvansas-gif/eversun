@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { m, AnimatePresence, animate } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
+import { CloseButton } from "@/components/ui/close-button";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
@@ -25,7 +27,7 @@ export default function FotoBottomSheet({
   const [mounted, setMounted] = useState(false);
   const [qrOpen, setQrOpen] = useState(false);
   const [canDrag, setCanDrag] = useState(() =>
-    typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false
+    typeof window !== "undefined" ? window.matchMedia(MOBILE_QUERY).matches : false
   );
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function FotoBottomSheet({
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
+    const mq = window.matchMedia(MOBILE_QUERY);
     const update = (e: MediaQueryListEvent) => setCanDrag(e.matches);
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
@@ -190,13 +192,7 @@ export default function FotoBottomSheet({
                       </svg>
                     </span>
                   </button>
-                  <button
-                    className="flex items-center justify-center w-9 h-9 rounded-full border border-transparent text-[24px] leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] transition-colors duration-150 cursor-pointer"
-                    onClick={handleClose}
-                    aria-label="Sluiten"
-                  >
-                    ×
-                  </button>
+                  <CloseButton onClick={handleClose} />
                 </div>
               </div>
               <div

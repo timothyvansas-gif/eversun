@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import { m, useReducedMotion } from "framer-motion";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import prestige1600 from "@/images/banken/Ergoline-Prestige-1600.webp";
 import blueVision from "@/images/banken/Ergoline-Blue-Vision.webp";
@@ -93,7 +94,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
   const [qrOpen, setQrOpen] = useState(false);
 
   const handleClick = () => {
-    if (window.matchMedia("(max-width: 767px)").matches) {
+    if (window.matchMedia(MOBILE_QUERY).matches) {
       window.open(whatsappUrl, "_blank");
     } else {
       setQrOpen(true);

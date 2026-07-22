@@ -4,6 +4,8 @@ import Image, { StaticImageData } from "next/image";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
+import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS } from "@/lib/carousel";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
 import imgWhiteBronzeCoconut from "@/images/producten/eversun-White-2-bronze-coconut.webp";
@@ -26,7 +28,7 @@ function PlanMomentButton() {
   const [qrOpen, setQrOpen] = useState(false);
 
   const handleClick = () => {
-    if (window.matchMedia("(max-width: 767px)").matches) {
+    if (window.matchMedia(MOBILE_QUERY).matches) {
       window.open(WHATSAPP_URL, "_blank");
     } else {
       setQrOpen(true);
@@ -58,7 +60,7 @@ type Product = (typeof products)[number];
 
 function ProductCardItem({ product }: { product: Product }) {
   return (
-    <div className="w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start select-none flex flex-col">
+    <div className={`${CAROUSEL_CARD_CLASS} select-none flex flex-col`}>
       <div className="flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
         <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
@@ -266,7 +268,7 @@ export default function Producten() {
               tabIndex={0}
               role="region"
               aria-label="Producten carrousel"
-              className="draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              className={CAROUSEL_TRACK_CLASS}
               style={{
                 marginRight: "calc(50% - 50vw)",
                 paddingRight: "clamp(1.5rem, 4vw, 10rem)",
