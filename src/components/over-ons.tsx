@@ -80,7 +80,7 @@ export default function OverOns() {
               tabIndex={0}
               role="region"
               aria-label="Team carrousel"
-              className="draggable-scroll flex overflow-x-auto gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
+              className="draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4"
               style={{
                 marginRight: "calc(50% - 50vw)",
                 paddingRight: "clamp(1.5rem, 4vw, 10rem)",
