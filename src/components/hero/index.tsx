@@ -5,7 +5,7 @@ import Image from "next/image";
 import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
-import heroImage from "@/images/hero-eversun-3.webp";
+import heroImage from "@/images/hero-dark-hair.webp";
 
 import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
@@ -120,6 +120,22 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           style={{
             background:
               "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(107deg, rgba(0, 0, 0, 0.00) 24.78%, rgba(0, 0, 0, 0.23) 42.77%, rgba(0, 0, 0, 0.48) 60.16%, rgba(0, 0, 0, 0.60) 93.14%)",
+          }}
+        />
+        {/* Desktop: darken the light left edge, left → right to halfway */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10 hidden md:block"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.59) 6%, rgba(0,0,0,0.53) 13%, rgba(0,0,0,0.44) 21%, rgba(0,0,0,0.34) 29%, rgba(0,0,0,0.24) 37%, rgba(0,0,0,0.14) 44%, rgba(0,0,0,0.05) 48%, rgba(0,0,0,0) 52%)",
+          }}
+        />
+        {/* Mobile: darken bottom → top to halfway */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10 md:hidden"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.59) 8%, rgba(0,0,0,0.53) 16%, rgba(0,0,0,0.44) 26%, rgba(0,0,0,0.34) 36%, rgba(0,0,0,0.24) 46%, rgba(0,0,0,0.14) 55%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0) 65%)",
           }}
         />
         <div
