@@ -135,7 +135,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           className="absolute inset-0 pointer-events-none z-10 md:hidden"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.59) 8%, rgba(0,0,0,0.53) 16%, rgba(0,0,0,0.44) 26%, rgba(0,0,0,0.34) 36%, rgba(0,0,0,0.24) 46%, rgba(0,0,0,0.14) 55%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0) 65%)",
+              "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.59) 9%, rgba(0,0,0,0.53) 18%, rgba(0,0,0,0.44) 30%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.24) 53%, rgba(0,0,0,0.14) 63%, rgba(0,0,0,0.05) 69%, rgba(0,0,0,0) 75%)",
           }}
         />
         <div
