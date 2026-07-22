@@ -5,7 +5,7 @@ import Image from "next/image";
 import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
-import heroImage from "@/images/hero-eversun-3.webp";
+import heroImage from "@/images/hero-side-face.webp";
 
 import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
