@@ -143,7 +143,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
-                Even helemaal tijd voor jezelf, met advies op maat en aandacht voor jouw huid
+                Even tijd voor jezelf, met advies op maat en aandacht voor jouw huid
               </m.p>
 
               <m.div
