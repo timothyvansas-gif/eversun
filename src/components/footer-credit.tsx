@@ -46,7 +46,7 @@ export default function FooterCredit() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="underline decoration-dotted underline-offset-2 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70 rounded-sm transition-colors cursor-pointer"
+        className="underline decoration-dotted underline-offset-2 hover:text-white focus-visible:[outline:none]! focus-visible:text-white rounded-sm transition-colors cursor-pointer"
         style={{ color: "inherit" }}
       >
         Realisatie Timothy
