@@ -5,7 +5,11 @@ import Image from "next/image";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import timothyPhoto from "@/images/timothy.webp";
 
-const EMAIL = "timothyvansas@gmail.com";
+// base64 of the address. atob() is decoded at runtime and is not
+// constant-folded by the bundler, so the plaintext email never appears in
+// the built JS or the server HTML (the popover is client-only and starts
+// closed) — keeping it out of reach of email harvesters.
+const EMAIL_B64 = "dGltb3RoeXZhbnNhc0BnbWFpbC5jb20=";
 
 export default function FooterCredit() {
   const [open, setOpen] = useState(false);
@@ -90,7 +94,7 @@ export default function FooterCredit() {
                   Product/UX designer
                 </span>
                 <a
-                  href={`mailto:${EMAIL}`}
+                  href={`mailto:${atob(EMAIL_B64)}`}
                   className="inline-block mt-2.5 text-[15px] font-sans underline underline-offset-2 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#046ADF] rounded-sm transition-opacity"
                   style={{ color: "#046ADF" }}
                 >
