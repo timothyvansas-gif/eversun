@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import imageBig from "@/images/image-big.webp";
 import imageRight from "@/images/image-right.webp";
@@ -18,30 +18,27 @@ export default function PhotoCard() {
     img.src = src;
   }, []);
 
-  useEffect(() => {
-    preloadImage(sheetPhotos[0].src);
-  }, [preloadImage]);
-
-  useEffect(() => {
-    const rIC = (window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (id: number) => void }).requestIdleCallback;
-    if (!rIC) return;
-    const id = rIC(() => sheetPhotos.slice(1).forEach((p) => preloadImage(p.src)));
-    return () => window.cancelIdleCallback?.(id);
-  }, [preloadImage]);
-
-  const handleHoverPreload = useCallback(() => {
-    if (!window.matchMedia("(hover: hover)").matches) return;
-    sheetPhotos.slice(1).forEach((p) => preloadImage(p.src));
+  // Preload the gallery only when the visitor signals intent (hover, touch or
+  // keyboard focus on the card) instead of on every page load. Same full-size
+  // images — only the timing changes — so the sheet still opens instantly once
+  // intent is shown, without costing ~0.5MB up front for visitors who never
+  // open it.
+  const preloadAll = useCallback(() => {
+    sheetPhotos.forEach((p) => preloadImage(p.src));
   }, [preloadImage]);
 
   return (
     <>
-      <div className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-[12px] flex flex-col justify-between" style={{ padding: 'clamp(24px, 4vw, 40px)' }}>
+      <div
+        className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-[12px] flex flex-col justify-between"
+        style={{ padding: 'clamp(24px, 4vw, 40px)' }}
+        onPointerEnter={preloadAll}
+        onFocusCapture={preloadAll}
+      >
         <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[12px] overflow-hidden">
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={() => setSheetOpen(true)}
-            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             <Image
@@ -55,7 +52,6 @@ export default function PhotoCard() {
           <button
             className="relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
             onClick={() => setSheetOpen(true)}
-            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             <Image
@@ -98,7 +94,6 @@ export default function PhotoCard() {
           <button
             className="hidden md:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-zinc-500 transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
             onClick={() => setSheetOpen(true)}
-            onMouseEnter={handleHoverPreload}
             aria-label="Alle foto's bekijken"
           >
             Meer foto&apos;s
