@@ -8,11 +8,11 @@ export const HOURS = [
   { day: "Zondag", hours: "10:00 – 16:00", note: "na 16:00: Dinsdag open om 10:00" },
 ];
 
-export function getCurrentDayIndex(): number {
+export function getCurrentDayIndex(now: Date = new Date()): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Europe/Amsterdam",
     weekday: "short",
-  }).formatToParts(new Date());
+  }).formatToParts(now);
   const dayStr = parts.find((p) => p.type === "weekday")?.value ?? "Mon";
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const day = WEEKDAYS.indexOf(dayStr);

@@ -5,9 +5,17 @@ const SECTION_MAP: Record<string, string> = {
   "Over ons": "#over-ons",
 };
 
+/**
+ * Resolve a nav label to its target selector. Explicit entries in SECTION_MAP
+ * win; otherwise the label is slugified (lowercased, spaces to hyphens).
+ */
+export function resolveNavTarget(item: string): string {
+  return SECTION_MAP[item] ?? `#${item.toLowerCase().replaceAll(" ", "-")}`;
+}
+
 export function useScrollNav() {
   function scrollToNav(item: string, delay = 0) {
-    const target = SECTION_MAP[item] ?? `#${item.toLowerCase().replace(" ", "-")}`;
+    const target = resolveNavTarget(item);
 
     const go = () => {
       const element = document.querySelector(target);
