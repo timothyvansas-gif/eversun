@@ -147,7 +147,7 @@ export default function FotoBottomSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Binnenkijken bij Ever Sun"
-              className="fixed bottom-0 inset-x-0 bg-[#FAF4EC] rounded-t-[20px] z-50 h-[90svh] md:h-[94svh] flex flex-col"
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 h-[90svh] md:h-[94svh] flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -161,26 +161,26 @@ export default function FotoBottomSheet({
               style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
             >
               <div className="md:hidden flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing shrink-0">
-                <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
+                <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
               <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
                 <div>
                   <div className="flex items-baseline gap-2.5">
-                    <h2 className="font-display text-[20px] md:text-[24px] font-medium text-[#1a1a1a] tracking-[-0.01em]">
+                    <h2 className="font-display text-[20px] md:text-[24px] font-medium text-ink tracking-[-0.01em]">
                       Binnenkijken bij Ever Sun
                     </h2>
-                    <span className="font-sans text-[15px] text-[#1a1a1a]/40 tracking-[-0.01em] whitespace-nowrap">
+                    <span className="font-sans text-[15px] text-ink/40 tracking-[-0.01em] whitespace-nowrap">
                       {`${sheetPhotos.length} foto's`}
                     </span>
                   </div>
-                  <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-1">
-                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60 underline decoration-dotted">06 25306491</a>
+                  <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-1">
+                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted">06 25306491</a>
                   </p>
                 </div>
                 <div className="hidden md:flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => setQrOpen(true)}
-                    className="group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
+                    className="group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
                   >
                     Plan je moment
                     <span

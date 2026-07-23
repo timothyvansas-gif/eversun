@@ -117,7 +117,7 @@ function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prij
           </div>
           <button
             onClick={handleClick}
-            className="group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
+            className="group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 flex-shrink-0"
           >
             Plan je moment
             <span

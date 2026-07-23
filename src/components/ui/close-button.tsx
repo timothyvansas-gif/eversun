@@ -28,7 +28,7 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
         type="button"
         onClick={onClick}
         aria-label={label}
-        className={`flex items-center justify-center rounded-full border border-transparent leading-none text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:border-[#d5be9c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer ${SIZES[size]} ${className}`}
+        className={`flex items-center justify-center rounded-full border border-transparent leading-none text-ink/60 hover:text-ink hover:border-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer ${SIZES[size]} ${className}`}
       >
         ×
       </button>

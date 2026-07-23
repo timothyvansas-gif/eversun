@@ -18,7 +18,7 @@ function AppointmentButton() {
       href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-[#FAF4EC] active:scale-[0.98] relative overflow-hidden"
+      className="mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
       style={{
         minHeight: "48px",
         borderRadius: "9999px",
@@ -54,8 +54,8 @@ function AppointmentButton() {
 
 function AddressInfo() {
   return (
-    <p className="font-sans text-[15px] text-[#1a1a1a]/60 leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-[#1a1a1a]/60 underline decoration-dotted md:no-underline">06 25306491</a>
+    <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
+      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted md:no-underline">06 25306491</a>
     </p>
   );
 }
@@ -71,11 +71,11 @@ function HoursTable() {
         return (
           <div
             key={day}
-            className={`grid grid-cols-2 py-3 ${i < HOURS.length - 1 ? "border-b border-[#FAF4EC]" : ""}`}
+            className={`grid grid-cols-2 py-3 ${i < HOURS.length - 1 ? "border-b border-surface-page" : ""}`}
           >
-            <span className={`font-sans text-[15px] text-[#1a1a1a] leading-[1.4] ${isToday ? "font-semibold" : "font-normal"}`}>{day}</span>
+            <span className={`font-sans text-[15px] text-ink leading-[1.4] ${isToday ? "font-semibold" : "font-normal"}`}>{day}</span>
             <div className="flex items-center gap-4">
-              <p className={`font-sans text-[15px] text-[#1a1a1a] leading-[1.4] ${isToday ? "font-semibold" : "font-medium"}`}>{hours}</p>
+              <p className={`font-sans text-[15px] text-ink leading-[1.4] ${isToday ? "font-semibold" : "font-medium"}`}>{hours}</p>
               {isToday && (
                 <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
                   {isOpen ? (
@@ -85,7 +85,7 @@ function HoursTable() {
                       <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#4FA800]" />
                     </>
                   ) : (
-                    <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#E15E1D]" />
+                    <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-accent" />
                   )}
                 </span>
               )}
@@ -111,7 +111,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-[#1a1a1a] rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
+      className="group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
       onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
       onMouseLeave={() => setHovered(false)}
@@ -169,7 +169,7 @@ export default function OpeningstijdenOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"
-            className="md:hidden fixed bottom-0 inset-x-0 bg-[#FAF4EC] rounded-t-[20px] z-50"
+            className="md:hidden fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -183,7 +183,7 @@ export default function OpeningstijdenOverlay({
             style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
           >
             <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
-              <div className="w-10 h-1 rounded-full bg-[#1a1a1a]/20" />
+              <div className="w-10 h-1 rounded-full bg-ink/20" />
             </div>
             <div className="px-6 pt-5">
               <div className="mb-[22px]">
@@ -204,7 +204,7 @@ export default function OpeningstijdenOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"
-            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-50 w-[400px]"
+            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-50 w-[400px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}

@@ -47,7 +47,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
               <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
             </>
           ) : (
-            <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-[#E15E1D]" />
+            <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-accent" />
           )}
         </span>
         <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
@@ -64,7 +64,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
           <span className="hidden md:inline">Alle openingstijden</span>
         </span>
       </span>
-      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-[#FAF4EC]/50 transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
+      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-surface-page/50 transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
     </button>
     </>
   );

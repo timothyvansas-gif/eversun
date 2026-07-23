@@ -76,7 +76,7 @@ export default function PhotoCard() {
             />
           </button>
           <button
-            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium text-zinc-500 cursor-pointer rounded-full border border-[#ece2d2] bg-[#faf4ec] px-[14px] py-1.5"
+            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium text-zinc-500 cursor-pointer rounded-full border border-[#ece2d2] bg-surface-page px-[14px] py-1.5"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >

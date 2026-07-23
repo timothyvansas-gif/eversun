@@ -132,7 +132,7 @@ export default function OverOns() {
                     variant="light"
                     reversed
                     onClick={scrollPrev}
-                    className="bg-[#1F1F1E]/50 hover:bg-[#1F1F1E]/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                    className="bg-ink-strong/50 hover:bg-ink-strong/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
                   />
                 </div>
                 <div
@@ -141,7 +141,7 @@ export default function OverOns() {
                   <CarouselNavButton
                     variant="light"
                     onClick={scrollNext}
-                    className="bg-[#1F1F1E]/50 hover:bg-[#1F1F1E]/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
+                    className="bg-ink-strong/50 hover:bg-ink-strong/75 backdrop-blur-md duration-300 ease-out !border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]"
                   />
                 </div>
               </>

@@ -80,7 +80,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             href="https://www.facebook.com/eversun.assen/"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+            className="p-2 text-surface-page active:opacity-60 transition-opacity"
             aria-label="Facebook"
           >
             <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
@@ -89,7 +89,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             href="https://www.instagram.com/ever_sun_assen/"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+            className="p-2 text-surface-page active:opacity-60 transition-opacity"
             aria-label="Instagram"
           >
             <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
@@ -98,7 +98,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <button
               onClick={handleShare}
               aria-label="Pagina delen"
-              className="p-2 text-[#FAF4EC] active:opacity-60 transition-opacity"
+              className="p-2 text-surface-page active:opacity-60 transition-opacity"
             >
               <svg
                 width="24"
@@ -123,7 +123,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <button
           onClick={onClose}
           aria-label="Menu sluiten"
-          className="p-2 text-[#FAF4EC] active:scale-90 transition-transform"
+          className="p-2 text-surface-page active:scale-90 transition-transform"
         >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -139,20 +139,20 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             key={item} 
             href={`#${item.toLowerCase().replace(" ", "-")}`} 
             onClick={(e) => handleNavClick(e, item)}
-            className="text-[28px] font-semibold text-[#FAF4EC] tracking-tight active:opacity-60 transition-opacity"
+            className="text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
           >
             {item}
           </a>
         ))}
         
-        <div className="h-[1px] bg-[#FAF4EC]/10 w-full my-2" />
+        <div className="h-[1px] bg-surface-page/10 w-full my-2" />
         
         <a 
           href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
           target="_blank"
           rel="noopener noreferrer"
           onClick={onClose}
-          className="flex items-center gap-3 text-[28px] font-semibold text-[#FAF4EC] tracking-tight active:opacity-60 transition-opacity"
+          className="flex items-center gap-3 text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
         >
           WhatsApp
           <Image
@@ -167,15 +167,15 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Footer Info */}
       <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
-        <p className="text-[#FAF4EC]/40 text-sm font-medium">
+        <p className="text-surface-page/40 text-sm font-medium">
           Ever Sun Zonnestudio
         </p>
-        <p className="text-[#FAF4EC]/40 text-sm font-medium mb-2">
+        <p className="text-surface-page/40 text-sm font-medium mb-2">
           Kloekhorststraat 4a Assen
         </p>
         <a 
           href="tel:0625306491" 
-          className="text-[#FAF4EC]/40 text-sm font-medium active:text-[#FAF4EC] underline decoration-dotted"
+          className="text-surface-page/40 text-sm font-medium active:text-surface-page underline decoration-dotted"
         >
           06 25306491
         </a>

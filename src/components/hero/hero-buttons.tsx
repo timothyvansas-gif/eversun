@@ -21,7 +21,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
       <button
-        className="w-full sm:w-[212px] min-h-[48px] sm:min-h-[56px] px-0 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] md:text-[16px] text-[#FAF4EC] cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-full sm:w-[212px] min-h-[48px] sm:min-h-[56px] px-0 sm:px-5 font-sans font-medium text-[14px] sm:text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();

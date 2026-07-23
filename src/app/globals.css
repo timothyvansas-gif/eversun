@@ -10,7 +10,7 @@ html {
 }
 
 *:focus-visible {
-  outline: 2px solid #E15E1D;
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 
@@ -32,6 +32,11 @@ body {
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
+  --color-ink: #1a1a1a;
+  --color-ink-strong: #1f1f1e;
+  --color-muted: #94825c;
+  --color-accent: #e15e1d;
+  --color-line: #d5be9c;
   --width-bento-primary: 853px;
 }
 
@@ -104,11 +109,11 @@ body {
   }
 
   .nav-link.light {
-    @apply text-[#FAF4EC];
+    @apply text-surface-page;
   }
 
   .nav-link.light::after {
-    @apply bg-[#FAF4EC];
+    @apply bg-surface-page;
   }
 
   button[data-status-button]:hover span[data-status-text],

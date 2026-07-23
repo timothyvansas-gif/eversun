@@ -60,7 +60,7 @@ export default function AfspraakOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Afspraak maken"
-            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FAF4EC] rounded-2xl z-50 w-[364px]"
+            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-50 w-[364px]"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.88, y: shouldReduceMotion ? 0 : -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
@@ -80,7 +80,7 @@ export default function AfspraakOverlay({
               </div>
 
               <h2 className="card-title text-zinc-900 mt-8 text-center">Plan je zonsessie</h2>
-              <p className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-2 text-center">
+              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
                 Scan de QR-code om direct via<br />WhatsApp een afspraak te maken.
               </p>
 
@@ -88,7 +88,7 @@ export default function AfspraakOverlay({
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
-                  className="font-sans text-[15px] text-[#1a1a1a]/70 leading-[24px] mt-1 block underline decoration-dotted md:no-underline"
+                  className="font-sans text-[15px] text-ink/70 leading-[24px] mt-1 block underline decoration-dotted md:no-underline"
                 >
                   06 25306491
                 </a>

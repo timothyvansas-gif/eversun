@@ -39,7 +39,7 @@ function PlanMomentButton() {
     <>
       <button
         onClick={handleClick}
-        className="group/cta inline-flex w-full md:w-auto items-center justify-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-[#d5be9c] rounded-full px-[18px] py-3 md:py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 shrink-0"
+        className="group/cta inline-flex w-full md:w-auto items-center justify-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] py-3 md:py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 shrink-0"
       >
         Plan je moment
         <span
@@ -75,7 +75,7 @@ function ProductCardItem({ product }: { product: Product }) {
 
         {/* Text */}
         <div className="flex flex-col gap-[6px] flex-1" style={{ padding: "16px 24px 24px" }}>
-          <h4 className="text-[#1F1F1E] text-[18px] font-medium tracking-[-0.24px] font-display">
+          <h4 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
             {product.name}
           </h4>
           <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
@@ -85,7 +85,7 @@ function ProductCardItem({ product }: { product: Product }) {
             {product.labels.map((label) => (
               <span
                 key={label}
-                className="text-[#94825C] text-[14px] md:text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
+                className="text-muted text-[14px] md:text-[12px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
                 style={{ backgroundColor: "#FEF9F5" }}
               >
                 {label}
@@ -248,14 +248,14 @@ export default function Producten() {
           <div id="producten" className="mb-9 xl:mb-14 scroll-mt-20 lg:scroll-mt-10">
             <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-5 xl:gap-6">
               <div>
-                <h2 className="text-[#1F1F1E] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
+                <h2 className="text-ink-strong text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   Devoted Creations producten
                 </h2>
-                <h3 className="text-[#94825C] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                <h3 className="text-muted text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
                   voor jouw perfecte kleur
                 </h3>
               </div>
-              <p className="text-[#94825C] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-muted text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Ontdek ons aanbod van hoogwaardige producten. Speciaal geselecteerd voor een optimaal resultaat.
               </p>
             </div>
@@ -289,7 +289,7 @@ export default function Producten() {
                     variant="dark"
                     reversed
                     onClick={scrollPrev}
-                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-[#94825C]/40 hover:!border-[#94825C]/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-muted/40 hover:!border-muted/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
                   />
                 </div>
                 <div
@@ -298,7 +298,7 @@ export default function Producten() {
                   <CarouselNavButton
                     variant="dark"
                     onClick={scrollNext}
-                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-[#94825C]/40 hover:!border-[#94825C]/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+                    className="bg-white/40 hover:bg-white/70 backdrop-blur-md duration-300 ease-out !border-muted/40 hover:!border-muted/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
                   />
                 </div>
               </>
@@ -306,7 +306,7 @@ export default function Producten() {
           </div>
 
           <div className="mt-4 xl:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-7 md:gap-8">
-            <p className="text-[#94825C] text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
+            <p className="text-muted text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
             </p>
             <PlanMomentButton />

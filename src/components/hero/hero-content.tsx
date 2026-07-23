@@ -72,7 +72,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </a>
             ))}
 
-            <div className="w-[1px] h-6 bg-[#FAF4EC]/20 mx-2" />
+            <div className="w-[1px] h-6 bg-surface-page/20 mx-2" />
 
             <button
               onClick={onOpenAfspraak}
