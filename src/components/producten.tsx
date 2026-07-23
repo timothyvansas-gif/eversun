@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS } from "@/lib/carousel";
+import { BTN_PILL } from "@/lib/button-styles";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
 import imgWhiteBronzeCoconut from "@/images/producten/eversun-White-2-bronze-coconut.webp";
@@ -39,17 +41,10 @@ function PlanMomentButton() {
     <>
       <button
         onClick={handleClick}
-        className="group/cta inline-flex w-full md:w-auto items-center justify-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] py-3 md:py-[10px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 shrink-0"
+        className={`${BTN_PILL} w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         Plan je moment
-        <span
-          aria-hidden="true"
-          className="flex items-center overflow-hidden w-0 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover/cta:w-4 group-hover/cta:ml-2 group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
-        >
-          <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-          </svg>
-        </span>
+        <CtaArrow />
       </button>
       <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
     </>

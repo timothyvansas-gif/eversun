@@ -8,6 +8,7 @@ import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/componen
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 
 function AppointmentButton() {
   const [hovered, setHovered] = useState(false);
@@ -117,14 +118,7 @@ function RouteButton() {
       onMouseLeave={() => setHovered(false)}
     >
       Route naar Ever Sun
-      <span
-        aria-hidden="true"
-        className="flex items-center overflow-hidden w-0 -translate-x-1 opacity-0 transition-all duration-300 ease-out group-hover/cta:w-4 group-hover/cta:ml-2 group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
-      >
-        <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-        </svg>
-      </span>
+      <CtaArrow />
     </a>
   );
 }
