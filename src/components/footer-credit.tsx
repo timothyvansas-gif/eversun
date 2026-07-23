@@ -52,7 +52,6 @@ export default function FooterCredit() {
         aria-haspopup="dialog"
         aria-expanded={open}
         className="underline decoration-dotted underline-offset-2 hover:text-white focus-visible:[outline:none]! focus-visible:text-white rounded-sm transition-colors cursor-pointer"
-        style={{ color: "inherit" }}
       >
         Realisatie Timothy
       </button>
