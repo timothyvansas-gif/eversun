@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { getStudioStatus } from "@/components/hero/hero-status";
+import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";

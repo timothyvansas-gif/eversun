@@ -4,43 +4,7 @@ import { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import statusOpen from "@/images/status-open.svg";
 import clock from "@/images/icon-clock.svg";
-
-export function getStudioStatus(): { isOpen: boolean; label: string } {
-  const now = new Date();
-
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Europe/Amsterdam",
-    weekday: "short",
-    hour: "numeric",
-    hour12: false,
-  }).formatToParts(now);
-
-  const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const dayStr = parts.find((p) => p.type === "weekday")?.value ?? "Mon";
-  const day = WEEKDAYS.indexOf(dayStr);
-  const hour = parseInt(parts.find((p) => p.type === "hour")?.value ?? "0") % 24;
-
-  if (day === 1) {
-    return { isOpen: false, label: "Morgen open om 10:00u" };
-  }
-
-  if (day >= 2 && day <= 5) {
-    if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
-    if (hour < 21) return { isOpen: true, label: "Geopend tot 21:00u" };
-    return { isOpen: false, label: "Morgen open om 10:00u" };
-  }
-
-  if (day === 6) {
-    if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
-    if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
-    return { isOpen: false, label: "Morgen open om 10:00u" };
-  }
-
-  // Sunday
-  if (hour < 10) return { isOpen: false, label: "Geopend om 10:00u" };
-  if (hour < 16) return { isOpen: true, label: "Geopend tot 16:00u" };
-  return { isOpen: false, label: "Dinsdag open om 10:00u" };
-}
+import { getStudioStatus } from "@/lib/studio-status";
 
 const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(function HeroStatus({ onOpen }, ref) {
   const [status, setStatus] = useState<{ isOpen: boolean; label: string } | null>(null);
