@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { m } from "framer-motion";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
-import HeroLines from "./hero-lines";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
@@ -63,7 +62,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 key={item}
                 href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="nav-link light"
-                style={{ color: "rgba(255, 255, 255, 0.85)" }}
+                style={{ color: "rgba(255, 255, 255, 0.80)" }}
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToNav(item);
@@ -124,24 +123,21 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[66px] lg:leading-[74px] 2xl:text-[72px] 2xl:leading-[80px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[66px] lg:leading-[70px] 2xl:text-[72px] 2xl:leading-[76px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
                 begint bij{" "}
-                <span className="relative inline-block">
-                  Ever Sun
-                  <HeroLines />
-                </span>
+                Ever Sun
               </m.h1>
 
               <m.p
-                className="block mt-2.5 md:mt-4 font-sans font-normal text-[16px] md:text-[20px] leading-[25px] md:leading-[30px]"
+                className="block mt-1 md:mt-3 font-sans font-normal text-[16px] md:text-[20px] leading-[25px] md:leading-[30px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.6}
-                style={{ color: "rgba(255, 255, 255, 0.75)" }}
+                style={{ color: "rgba(255, 255, 255, 0.85)" }}
               >
                 Even tijd voor jezelf in een zonnestudio met alle aandacht voor je huid
               </m.p>
