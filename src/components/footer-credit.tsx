@@ -62,7 +62,7 @@ export default function FooterCredit() {
           <m.span
             role="dialog"
             aria-label="Contact Timothy van Sas"
-            className="block fixed bottom-16 left-6 right-6 origin-bottom md:absolute md:bottom-full md:left-0 md:right-auto md:mb-3 md:w-[340px] md:origin-bottom-left rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 z-50 text-left"
+            className="block fixed bottom-16 left-6 right-6 origin-bottom md:absolute md:bottom-full md:left-1/2 md:ml-[-170px] md:right-auto md:mb-3 md:w-[340px] rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 z-50 text-left"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.98, y: shouldReduceMotion ? 0 : 6, transition: { duration: 0.15, ease: [0.36, 0, 0.66, 0] } }}
