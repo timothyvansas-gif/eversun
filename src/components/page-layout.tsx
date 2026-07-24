@@ -3,11 +3,15 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { LazyMotion } from "framer-motion";
-import Bento from "@/components/bento";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
 
+// Bento sits below the hero fold and pulls in six framer-motion card
+// components. Loading it as a dynamic chunk (ssr:true, so the HTML and SEO
+// content stay server-rendered) keeps its script out of the initial <script>
+// set — trimming the eager JS the desktop audit flags as unused.
+const Bento = dynamic(() => import("@/components/bento"));
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
