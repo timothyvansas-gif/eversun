@@ -13,10 +13,12 @@ const nextConfig: NextConfig = {
   // cross-page cache to lose — the CSS is needed on first paint anyway.
   experimental: {
     inlineCss: true,
-    // Rewrite barrel imports (`import { m } from "framer-motion"`) to deep
-    // per-module paths so only the used exports land in the bundle. Trims the
-    // parse/eval cost that shows up as desktop main-thread time.
-    optimizePackageImports: ["framer-motion", "gsap"],
+    // Rewrite framer-motion's barrel import (`import { m } from "framer-motion"`)
+    // to deep per-module paths so only the used exports land in the bundle,
+    // trimming the parse/eval cost that shows up as desktop main-thread time.
+    // (gsap is a single default-export entry, not a named-export barrel, so it
+    // gains nothing here — left out to avoid implying a win that doesn't exist.)
+    optimizePackageImports: ["framer-motion"],
   },
 };
 

@@ -33,6 +33,7 @@ export default function SmoothScrollInit() {
     }
 
     let started = false;
+    let cancelled = false;
     let cleanup: (() => void) | undefined;
 
     const stopWaiting = () =>
@@ -49,6 +50,10 @@ export default function SmoothScrollInit() {
           import("gsap"),
           import("gsap/ScrollTrigger"),
         ]);
+
+      // The effect may have been torn down while the imports were in flight;
+      // bail before creating a Lenis instance / ticker that nothing owns.
+      if (cancelled) return;
 
       gsap.registerPlugin(ScrollTrigger);
 
@@ -89,6 +94,7 @@ export default function SmoothScrollInit() {
     );
 
     return () => {
+      cancelled = true;
       stopWaiting();
       cleanup?.();
     };
