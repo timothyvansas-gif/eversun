@@ -167,15 +167,15 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
       {/* Footer Info */}
       <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
-        <p className="text-surface-page/40 text-sm font-medium">
+        <p className="text-surface-page/60 text-sm font-medium">
           Ever Sun Zonnestudio
         </p>
-        <p className="text-surface-page/40 text-sm font-medium mb-2">
+        <p className="text-surface-page/60 text-sm font-medium mb-2">
           Kloekhorststraat 4a Assen
         </p>
         <a 
           href="tel:0625306491" 
-          className="text-surface-page/40 text-sm font-medium active:text-surface-page underline decoration-dotted"
+          className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted"
         >
           06 25306491
         </a>
