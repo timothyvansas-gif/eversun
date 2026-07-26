@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { m } from "framer-motion";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
+import DesktopMenu from "./desktop-menu";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
@@ -23,6 +25,10 @@ const fadeUp = {
 
 
 export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
+  // Desktop menu is a hero-scoped dropdown (see DesktopMenu), independent of the
+  // mobile slide-in/push flow that `onOpenMenu` drives.
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
+
   return (
     <div
       className="absolute inset-0 flex flex-col z-20"
@@ -51,17 +57,22 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
           </button>
 
-          <button
-            onClick={onOpenMenu}
-            aria-label="Menu openen"
-            aria-expanded={false}
-            className="nav-link light cursor-pointer lg:!pr-0 lg:[&::after]:right-0"
-          >
-            <span className="flex flex-col items-end gap-[5px]">
-              <HamburgerIcon />
-            </span>
-            Menu
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setDesktopMenuOpen((o) => !o)}
+              aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
+              aria-haspopup="menu"
+              aria-expanded={desktopMenuOpen}
+              aria-controls="hero-desktop-menu"
+              className="nav-link light cursor-pointer lg:!pr-0 lg:[&::after]:right-0"
+            >
+              <span className="flex flex-col items-end gap-[5px]">
+                <HamburgerIcon open={desktopMenuOpen} />
+              </span>
+              Menu
+            </button>
+            <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} />
+          </div>
         </m.div>
 
         {/* Mobile Header */}
