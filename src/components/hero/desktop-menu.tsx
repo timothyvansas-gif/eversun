@@ -12,8 +12,6 @@ import instagramIcon from "@/images/socials/social-instagram.svg";
 const WHATSAPP_URL =
   "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
 
-const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
-
 /**
  * Desktop-only navigation dropdown that unfolds from under the hero's Menu
  * button (top-right). It does not push or cover the hero — the photo stays
@@ -71,12 +69,12 @@ export default function DesktopMenu({
             id="hero-desktop-menu"
             role="menu"
             aria-label="Hoofdmenu"
-            initial={{ opacity: 0, y: -8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.4, ease: EASE }}
+            initial={{ opacity: 0, scale: 0.88, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
+            transition={{ type: "spring", damping: 14, stiffness: 260 }}
             style={{ transformOrigin: "top right" }}
-            className="absolute right-0 top-full mt-3 z-50 w-[340px] rounded-[20px] bg-black p-9 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
+            className="absolute -right-4 -top-4 z-50 w-[340px] rounded-2xl bg-black px-9 pb-9 pt-[58px] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
           >
             <nav className="flex flex-col">
               {NAV_ITEMS.map((label) => (
