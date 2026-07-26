@@ -160,7 +160,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-3 left-3 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="absolute bottom-3 left-0 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
@@ -168,7 +168,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         <div className="flex items-center gap-3 mt-3 md:mt-0">
           <h3 className="card-title text-zinc-900">{data.title}</h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
               {data.tag}
             </span>
           )}
@@ -228,7 +228,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
       {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
       <m.div
         aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/40"
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/25"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -236,7 +236,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
       />
       <m.div
         aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#D6CDBB] origin-top"
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#D8CEBB] origin-top"
         style={{ scaleY: fill }}
       />
 
@@ -256,7 +256,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             sizes="50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-5 left-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="absolute bottom-5 left-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
@@ -275,7 +275,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             {data.title}
           </h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
               {data.tag}
             </span>
           )}
