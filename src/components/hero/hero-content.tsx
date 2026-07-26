@@ -100,7 +100,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
         </m.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-15">
+        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-15 min-[1920px]:translate-y-[110px]!">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-14 lg:mb-0">
             <div className="translate-y-4 lg:translate-y-8">
@@ -147,7 +147,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.9}
-                className="hidden lg:flex items-center justify-between w-full mt-10"
+                className="hidden lg:flex items-center justify-between w-full mt-10 min-[1920px]:mt-[140px]"
               >
                 <HeroStatus onOpen={onOpenOpeningstijden} />
                 <HeroReviews />
