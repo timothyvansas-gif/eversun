@@ -6,4 +6,7 @@ export const SHADOW_HOVER =
 
 export const SHADOW_EASE = "0.4s cubic-bezier(0.22, 1, 0.36, 1)";
 
-export const BLOB_SIZE = 460;
+// Diameter of the hover fill circle. Must clear the button's diagonal (~246px
+// for the 240x56 desktop pill) from any hover origin, or the corner opposite
+// the pointer stays uncovered. 560 = radius 280, comfortably past that.
+export const BLOB_SIZE = 560;
