@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { m, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
@@ -85,13 +85,11 @@ function AfspraakButton({
   prijs,
   whatsappUrl,
   className = "mt-3 md:mt-auto",
-  reverse = false,
 }: {
   minuten: string;
   prijs: string;
   whatsappUrl: string;
   className?: string;
-  reverse?: boolean;
 }) {
   const [qrOpen, setQrOpen] = useState(false);
 
@@ -107,7 +105,7 @@ function AfspraakButton({
     <>
       <div className={className}>
         <div className="flex items-center justify-between md:justify-start md:gap-6">
-          <div className={`flex items-center gap-3 ${reverse ? "order-2" : ""}`}>
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
                 <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
@@ -117,7 +115,7 @@ function AfspraakButton({
             </div>
             <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
-          <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0 ${reverse ? "order-1" : ""}`}>
+          <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
             Plan je moment
             <CtaArrow />
           </button>
@@ -130,7 +128,7 @@ function AfspraakButton({
 }
 
 /* ------------------------------------------------------------------ */
-/* Mobile / tablet (< lg): production grid — unchanged live layout     */
+/* Grid: photo on top, text below, cards side by side                  */
 /* ------------------------------------------------------------------ */
 
 function CardWrapper({ children }: { children: React.ReactNode }) {
@@ -151,7 +149,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   return (
     <CardWrapper>
       <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]">
-        <div className="relative min-h-[240px] md:min-h-[280px] rounded-[12px] overflow-hidden">
+        <div className="relative min-h-[240px] md:min-h-[280px] xl:min-h-[360px] rounded-[12px] overflow-hidden">
           <Image
             src={data.image}
             alt={data.alt}
@@ -193,7 +191,7 @@ function MobileDivider() {
 
 function ProductionGrid() {
   return (
-    <div className="lg:hidden flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row gap-6">
         <ZonnebankCard data={ZONNEBANKEN[0]} />
         <MobileDivider />
@@ -205,97 +203,6 @@ function ProductionGrid() {
         <MobileDivider />
         <ZonnebankCard data={ZONNEBANKEN[3]} />
       </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Desktop (>= lg): scroll-driven timeline                             */
-/* ------------------------------------------------------------------ */
-
-function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index: number; total: number; progress: MotionValue<number> }) {
-  const imageLeft = false; // photo sits on the right in every card
-  // This card's bar fills only during its slice of the section scroll, so each
-  // bar starts only once the bar above it is completely full.
-  const fill = useTransform(progress, [index / total, (index + 1) / total], [0, 1], { clamp: true });
-
-  return (
-    // The whole card fades in as one unit — shell and content together, so the
-    // content no longer arrives after the card shell is already on screen.
-    <m.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-15% 0px" }}
-      transition={{ duration: 0.9, ease: EASE }}
-      className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10"
-    >
-      {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
-      <div
-        aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/25"
-      />
-      <m.div
-        aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#D8CEBB] origin-top"
-        style={{ scaleY: fill }}
-      />
-
-      {/* Image */}
-      <div className={imageLeft ? "order-1" : "order-2"}>
-        <div className="group relative aspect-[16/9] w-full overflow-hidden rounded-[16px]">
-          <Image
-            src={data.image}
-            alt={data.alt}
-            fill
-            className="object-cover object-bottom transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-            sizes="50vw"
-          />
-          {data.badge && (
-            <span className="absolute bottom-5 left-5 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
-              {data.badge}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Text + CTA */}
-      <div className={`flex flex-col ${imageLeft ? "order-2" : "order-1"}`}>
-        <div className="flex items-center gap-3">
-          <h3 className="font-display text-[clamp(26px,2.6vw,36px)] leading-[1.05] tracking-[-0.01em] text-zinc-900">
-            {data.title}
-          </h3>
-          {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-full bg-[#111111] text-white">
-              {data.tag}
-            </span>
-          )}
-        </div>
-        <div className="mt-4 flex flex-col gap-3">
-          {data.description.map((paragraph, i) => (
-            <p key={i} className="text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-9" reverse />
-      </div>
-    </m.div>
-  );
-}
-
-function DesktopTimeline() {
-  const timelineRef = useRef<HTMLDivElement>(null);
-  // One progress value for the whole timeline; each card fills its own slice of
-  // it in sequence (see TimelineRow), so a bar only starts once the one above
-  // it is completely full.
-  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ["start 0.85", "end 0.15"] });
-  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 30, restDelta: 0.001 });
-
-  return (
-    <div ref={timelineRef} className="relative hidden lg:flex lg:flex-col gap-6">
-      {ZONNEBANKEN.map((bank, i) => (
-        <TimelineRow key={bank.title} data={bank} index={i} total={ZONNEBANKEN.length} progress={progress} />
-      ))}
     </div>
   );
 }
@@ -325,7 +232,6 @@ export default function OnzeZonnebanken() {
           </div>
 
           <ProductionGrid />
-          <DesktopTimeline />
         </div>
       </div>
     </section>
