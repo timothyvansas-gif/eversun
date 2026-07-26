@@ -35,7 +35,7 @@ export default function PhotoCard() {
         onPointerEnter={preloadAll}
         onFocusCapture={preloadAll}
       >
-        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[12px] overflow-hidden">
+        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
           <button
             className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={() => setSheetOpen(true)}
