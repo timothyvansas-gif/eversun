@@ -219,20 +219,20 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
   // bar starts only once the bar above it is completely full.
   const fill = useTransform(progress, [index / total, (index + 1) / total], [0, 1], { clamp: true });
 
-  // Fade in place — no positional glide, which read as dated. Opacity only.
-  const imageMotion = { initial: { opacity: 0 }, whileInView: { opacity: 1 } };
-  const textMotion = { initial: { opacity: 0 }, whileInView: { opacity: 1 } };
-
   return (
-    <div className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10">
+    // The whole card fades in as one unit — shell and content together, so the
+    // content no longer arrives after the card shell is already on screen.
+    <m.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-15% 0px" }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10"
+    >
       {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
-      <m.div
+      <div
         aria-hidden
         className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/25"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-10% 0px" }}
-        transition={{ duration: 0.8, ease: EASE }}
       />
       <m.div
         aria-hidden
@@ -241,12 +241,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
       />
 
       {/* Image */}
-      <m.div
-        {...imageMotion}
-        viewport={{ once: true, margin: "-15% 0px" }}
-        transition={{ duration: 0.9, ease: EASE }}
-        className={imageLeft ? "order-1" : "order-2"}
-      >
+      <div className={imageLeft ? "order-1" : "order-2"}>
         <div className="group relative aspect-[16/9] w-full overflow-hidden rounded-[16px]">
           <Image
             src={data.image}
@@ -261,15 +256,10 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             </span>
           )}
         </div>
-      </m.div>
+      </div>
 
       {/* Text + CTA */}
-      <m.div
-        {...textMotion}
-        viewport={{ once: true, margin: "-15% 0px" }}
-        transition={{ duration: 0.8, ease: EASE, delay: 0.12 }}
-        className={`flex flex-col ${imageLeft ? "order-2" : "order-1"}`}
-      >
+      <div className={`flex flex-col ${imageLeft ? "order-2" : "order-1"}`}>
         <div className="flex items-center gap-3">
           <h3 className="font-display text-[clamp(26px,2.6vw,36px)] leading-[1.05] tracking-[-0.01em] text-zinc-900">
             {data.title}
@@ -288,8 +278,8 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
           ))}
         </div>
         <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-9" reverse />
-      </m.div>
-    </div>
+      </div>
+    </m.div>
   );
 }
 
