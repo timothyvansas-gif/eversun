@@ -168,7 +168,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         <div className="flex items-center gap-3 mt-3 md:mt-0">
           <h3 className="card-title text-zinc-900">{data.title}</h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-full bg-[#111111] text-white">
               {data.tag}
             </span>
           )}
@@ -265,7 +265,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             {data.title}
           </h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-full bg-[#111111] text-white">
               {data.tag}
             </span>
           )}
