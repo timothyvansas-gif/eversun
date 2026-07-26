@@ -136,10 +136,10 @@ function AfspraakButton({
 function CardWrapper({ children }: { children: React.ReactNode }) {
   return (
     <m.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px" }}
-      transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
+      transition={{ duration: 0.9, ease: EASE }}
       className="flex-1 flex flex-col gap-6"
     >
       {children}
@@ -160,7 +160,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
+            <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
@@ -168,7 +168,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         <div className="flex items-center gap-3 mt-3 md:mt-0">
           <h3 className="card-title text-zinc-900">{data.title}</h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
               {data.tag}
             </span>
           )}
@@ -223,10 +223,10 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
     // The whole card fades in as one unit — shell and content together, so the
     // content no longer arrives after the card shell is already on screen.
     <m.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-15% 0px" }}
-      transition={{ duration: 0.7, ease: EASE }}
+      transition={{ duration: 0.9, ease: EASE }}
       className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10"
     >
       {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
@@ -251,7 +251,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             sizes="50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-5 left-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
+            <span className="absolute bottom-5 left-5 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
@@ -265,7 +265,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             {data.title}
           </h3>
           {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] border border-line text-[#111111]">
               {data.tag}
             </span>
           )}
