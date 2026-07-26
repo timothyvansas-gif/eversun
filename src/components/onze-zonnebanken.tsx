@@ -160,7 +160,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-3 left-0 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
+            <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
