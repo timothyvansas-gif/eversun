@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { m, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
@@ -76,6 +76,59 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
 ];
 
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+function AfspraakButton({
+  minuten,
+  prijs,
+  whatsappUrl,
+  className = "mt-3 md:mt-auto",
+}: {
+  minuten: string;
+  prijs: string;
+  whatsappUrl: string;
+  className?: string;
+}) {
+  const [qrOpen, setQrOpen] = useState(false);
+
+  const handleClick = () => {
+    if (window.matchMedia(MOBILE_QUERY).matches) {
+      window.open(whatsappUrl, "_blank");
+    } else {
+      setQrOpen(true);
+    }
+  };
+
+  return (
+    <>
+      <div className={className}>
+        <div className="flex items-center justify-between md:justify-start md:gap-6">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
+                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
+            </div>
+            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
+          </div>
+          <button onClick={handleClick} className={`${BTN_PILL} py-[10px] flex-shrink-0`}>
+            Plan je moment
+            <CtaArrow />
+          </button>
+        </div>
+      </div>
+
+      <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile / tablet (< lg): production grid — unchanged live layout     */
+/* ------------------------------------------------------------------ */
+
 function CardWrapper({ children }: { children: React.ReactNode }) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -92,51 +145,11 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-function AfspraakButton({ minuten, prijs, whatsappUrl }: { minuten: string; prijs: string; whatsappUrl: string }) {
-  const [qrOpen, setQrOpen] = useState(false);
-
-  const handleClick = () => {
-    if (window.matchMedia(MOBILE_QUERY).matches) {
-      window.open(whatsappUrl, "_blank");
-    } else {
-      setQrOpen(true);
-    }
-  };
-
-  return (
-    <>
-      <div className="mt-3 md:mt-auto">
-        <div className="flex items-center justify-between md:justify-start md:gap-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
-                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
-            </div>
-            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
-          </div>
-          <button
-            onClick={handleClick}
-            className={`${BTN_PILL} py-[10px] flex-shrink-0`}
-          >
-            Plan je moment
-            <CtaArrow />
-          </button>
-        </div>
-      </div>
-
-      <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
-    </>
-  );
-}
-
 function ZonnebankCard({ data }: { data: Zonnebank }) {
   return (
     <CardWrapper>
       <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]">
-        <div className="relative min-h-[300px] md:min-h-[320px] rounded-[12px] overflow-hidden">
+        <div className="relative min-h-[240px] md:min-h-[280px] rounded-[12px] overflow-hidden">
           <Image
             src={data.image}
             alt={data.alt}
@@ -154,8 +167,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         {data.description.map((paragraph, i) => (
           <p
             key={i}
-            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""
-              }`}
+            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""}`}
           >
             {paragraph}
           </p>
@@ -168,6 +180,126 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 
 function MobileDivider() {
   return <div className="md:hidden h-px my-2 bg-[#ece2d2]/50" />;
+}
+
+function ProductionGrid() {
+  return (
+    <div className="lg:hidden flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        <ZonnebankCard data={ZONNEBANKEN[0]} />
+        <MobileDivider />
+        <ZonnebankCard data={ZONNEBANKEN[1]} />
+      </div>
+      <MobileDivider />
+      <div className="flex flex-col md:flex-row gap-6">
+        <ZonnebankCard data={ZONNEBANKEN[2]} />
+        <MobileDivider />
+        <ZonnebankCard data={ZONNEBANKEN[3]} />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Desktop (>= lg): scroll-driven timeline                             */
+/* ------------------------------------------------------------------ */
+
+function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index: number; total: number; progress: MotionValue<number> }) {
+  const reduce = useReducedMotion();
+  const imageLeft = false; // photo sits on the right in every card
+  // This card's bar fills only during its slice of the section scroll, so each
+  // bar starts only once the bar above it is completely full.
+  const fill = useTransform(progress, [index / total, (index + 1) / total], [0, 1], { clamp: true });
+
+  const imageMotion = reduce
+    ? { initial: { opacity: 0 }, whileInView: { opacity: 1 } }
+    : {
+        initial: { opacity: 0, y: 28, x: imageLeft ? -36 : 36, scale: 0.98 },
+        whileInView: { opacity: 1, y: 0, x: 0, scale: 1 },
+      };
+
+  const textMotion = reduce
+    ? { initial: { opacity: 0 }, whileInView: { opacity: 1 } }
+    : { initial: { opacity: 0, y: 28 }, whileInView: { opacity: 1, y: 0 } };
+
+  return (
+    <div className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10">
+      {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
+      <m.div
+        aria-hidden
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/60"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-10% 0px" }}
+        transition={{ duration: 0.8, ease: EASE }}
+      />
+      <m.div
+        aria-hidden
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#C7BBA3] origin-top"
+        style={{ scaleY: fill }}
+      />
+
+      {/* Image */}
+      <m.div
+        {...imageMotion}
+        viewport={{ once: true, margin: "-15% 0px" }}
+        transition={{ duration: 0.9, ease: EASE }}
+        className={imageLeft ? "order-1" : "order-2"}
+      >
+        <div className="group relative aspect-[16/9] w-full overflow-hidden rounded-[16px]">
+          <Image
+            src={data.image}
+            alt={data.alt}
+            fill
+            className="object-cover object-bottom transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            sizes="50vw"
+          />
+          {data.badge && (
+            <span className="absolute bottom-5 right-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+              {data.badge}
+            </span>
+          )}
+        </div>
+      </m.div>
+
+      {/* Text + CTA */}
+      <m.div
+        {...textMotion}
+        viewport={{ once: true, margin: "-15% 0px" }}
+        transition={{ duration: 0.8, ease: EASE, delay: 0.12 }}
+        className={`flex flex-col ${imageLeft ? "order-2" : "order-1"}`}
+      >
+        <h3 className="font-display text-[clamp(26px,2.6vw,36px)] leading-[1.05] tracking-[-0.01em] text-zinc-900">
+          {data.title}
+        </h3>
+        <div className="mt-4 flex flex-col gap-3">
+          {data.description.map((paragraph, i) => (
+            <p key={i} className="text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-6" />
+      </m.div>
+    </div>
+  );
+}
+
+function DesktopTimeline() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  // One progress value for the whole timeline; each card fills its own slice of
+  // it in sequence (see TimelineRow), so a bar only starts once the one above
+  // it is completely full.
+  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ["start 0.85", "end 0.15"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 30, restDelta: 0.001 });
+
+  return (
+    <div ref={timelineRef} className="relative hidden lg:flex lg:flex-col gap-6">
+      {ZONNEBANKEN.map((bank, i) => (
+        <TimelineRow key={bank.title} data={bank} index={i} total={ZONNEBANKEN.length} progress={progress} />
+      ))}
+    </div>
+  );
 }
 
 export default function OnzeZonnebanken() {
@@ -193,19 +325,9 @@ export default function OnzeZonnebanken() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              <ZonnebankCard data={ZONNEBANKEN[0]} />
-              <MobileDivider />
-              <ZonnebankCard data={ZONNEBANKEN[1]} />
-            </div>
-            <MobileDivider />
-            <div className="flex flex-col md:flex-row gap-6">
-              <ZonnebankCard data={ZONNEBANKEN[2]} />
-              <MobileDivider />
-              <ZonnebankCard data={ZONNEBANKEN[3]} />
-            </div>
-          </div>
+
+          <ProductionGrid />
+          <DesktopTimeline />
         </div>
       </div>
     </section>
