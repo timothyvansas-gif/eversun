@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import { m, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { m, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
@@ -132,12 +132,10 @@ function AfspraakButton({
 /* ------------------------------------------------------------------ */
 
 function CardWrapper({ children }: { children: React.ReactNode }) {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <m.div
-      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "0px" }}
       transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
       className="flex-1 flex flex-col gap-6"
@@ -207,22 +205,14 @@ function ProductionGrid() {
 /* ------------------------------------------------------------------ */
 
 function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index: number; total: number; progress: MotionValue<number> }) {
-  const reduce = useReducedMotion();
   const imageLeft = false; // photo sits on the right in every card
   // This card's bar fills only during its slice of the section scroll, so each
   // bar starts only once the bar above it is completely full.
   const fill = useTransform(progress, [index / total, (index + 1) / total], [0, 1], { clamp: true });
 
-  const imageMotion = reduce
-    ? { initial: { opacity: 0 }, whileInView: { opacity: 1 } }
-    : {
-        initial: { opacity: 0, y: 28, x: imageLeft ? -36 : 36, scale: 0.98 },
-        whileInView: { opacity: 1, y: 0, x: 0, scale: 1 },
-      };
-
-  const textMotion = reduce
-    ? { initial: { opacity: 0 }, whileInView: { opacity: 1 } }
-    : { initial: { opacity: 0, y: 28 }, whileInView: { opacity: 1, y: 0 } };
+  // Fade in place — no positional glide, which read as dated. Opacity only.
+  const imageMotion = { initial: { opacity: 0 }, whileInView: { opacity: 1 } };
+  const textMotion = { initial: { opacity: 0 }, whileInView: { opacity: 1 } };
 
   return (
     <div className="relative grid grid-cols-2 gap-10 xl:gap-14 items-center bg-[#FEF9F5] rounded-[24px] p-8 xl:p-10">
@@ -281,7 +271,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             </p>
           ))}
         </div>
-        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-6" reverse />
+        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-9" reverse />
       </m.div>
     </div>
   );
