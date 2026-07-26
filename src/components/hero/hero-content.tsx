@@ -51,13 +51,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           transition={{ duration: 0.8, delay: 0.2 }}
           className="hidden lg:flex items-center justify-between"
         >
-          <button
-            onClick={scrollToTop}
-            aria-label="Naar begin van de pagina"
-            className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
-          >
-            <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
-          </button>
+          <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
 
           <div className="relative">
             <button
