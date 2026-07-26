@@ -41,7 +41,7 @@ function PlanMomentButton() {
     <>
       <button
         onClick={handleClick}
-        className={`${BTN_PILL} w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
+        className={`${BTN_PILL} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         Plan je moment
         <CtaArrow />

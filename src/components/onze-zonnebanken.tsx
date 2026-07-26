@@ -83,11 +83,13 @@ function AfspraakButton({
   prijs,
   whatsappUrl,
   className = "mt-3 md:mt-auto",
+  reverse = false,
 }: {
   minuten: string;
   prijs: string;
   whatsappUrl: string;
   className?: string;
+  reverse?: boolean;
 }) {
   const [qrOpen, setQrOpen] = useState(false);
 
@@ -103,7 +105,7 @@ function AfspraakButton({
     <>
       <div className={className}>
         <div className="flex items-center justify-between md:justify-start md:gap-6">
-          <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-3 ${reverse ? "order-2" : ""}`}>
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
                 <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
@@ -113,7 +115,7 @@ function AfspraakButton({
             </div>
             <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
-          <button onClick={handleClick} className={`${BTN_PILL} py-[10px] flex-shrink-0`}>
+          <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0 ${reverse ? "order-1" : ""}`}>
             Plan je moment
             <CtaArrow />
           </button>
@@ -227,7 +229,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
       {/* Per-card progress bar: track + fill (fill driven by the section scroll) */}
       <m.div
         aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/60"
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-px -translate-x-1/2 bg-line/40"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-10% 0px" }}
@@ -235,7 +237,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
       />
       <m.div
         aria-hidden
-        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#C7BBA3] origin-top"
+        className="absolute left-1/2 top-8 bottom-8 xl:top-10 xl:bottom-10 w-[2px] -translate-x-1/2 bg-[#D6CDBB] origin-top"
         style={{ scaleY: fill }}
       />
 
@@ -279,7 +281,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             </p>
           ))}
         </div>
-        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-6" />
+        <AfspraakButton minuten={data.minuten} prijs={data.prijs} whatsappUrl={data.whatsappUrl} className="mt-6" reverse />
       </m.div>
     </div>
   );
