@@ -158,7 +158,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             sizes="(max-width: 767px) 100vw, 50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-3 right-3 md:bottom-6 md:right-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="absolute bottom-3 left-3 md:bottom-6 md:left-6 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}
@@ -247,7 +247,7 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
             sizes="50vw"
           />
           {data.badge && (
-            <span className="absolute bottom-5 right-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+            <span className="absolute bottom-5 left-5 text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
               {data.badge}
             </span>
           )}

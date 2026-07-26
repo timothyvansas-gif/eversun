@@ -60,7 +60,7 @@ function ProductCardItem({ product }: { product: Product }) {
         {/* Image */}
         <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
           <ProductImage src={product.image} alt={product.name} />
-          <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 flex gap-[4px]">
+          <div className="absolute bottom-3 left-3 md:bottom-6 md:left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
             )}
