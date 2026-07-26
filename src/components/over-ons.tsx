@@ -7,7 +7,7 @@ import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
-import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS } from "@/lib/carousel";
+import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 
 const teamMembers = [
   {
@@ -82,10 +82,7 @@ export default function OverOns() {
               role="region"
               aria-label="Team carrousel"
               className={CAROUSEL_TRACK_CLASS}
-              style={{
-                marginRight: "calc(50% - 50vw)",
-                paddingRight: "clamp(1.5rem, 4vw, 10rem)",
-              }}
+              style={CAROUSEL_BLEED_STYLE}
             >
               {teamMembers.map((member) => (
               <div

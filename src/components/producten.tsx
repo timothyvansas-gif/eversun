@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS } from "@/lib/carousel";
+import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
@@ -264,10 +264,7 @@ export default function Producten() {
               role="region"
               aria-label="Producten carrousel"
               className={CAROUSEL_TRACK_CLASS}
-              style={{
-                marginRight: "calc(50% - 50vw)",
-                paddingRight: "clamp(1.5rem, 4vw, 10rem)",
-              }}
+              style={CAROUSEL_BLEED_STYLE}
             >
               {products.map((product) => (
                 <ProductCardItem key={product.id} product={product} />
