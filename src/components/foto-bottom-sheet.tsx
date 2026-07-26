@@ -182,7 +182,7 @@ export default function FotoBottomSheet({
                 <div className="hidden md:flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => setQrOpen(true)}
-                    className={`${BTN_PILL} py-[10px] flex-shrink-0`}
+                    className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}
                   >
                     Plan je moment
                     <CtaArrow />
