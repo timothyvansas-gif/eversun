@@ -42,10 +42,10 @@ export default function HeroReviews() {
             aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
           >
             <m.div
-              className="w-[48px] h-[48px] rounded-full overflow-hidden border border-[#111111]"
+              className="w-[56px] h-[56px] rounded-full overflow-hidden border border-[#111111]"
               animate={{
                 y: hoveredIndex === i ? -8 : 0,
-                scale: hoveredIndex === i ? 1 : 40 / 48,
+                scale: hoveredIndex === i ? 64 / 56 : 48 / 56,
                 opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.35,
               }}
               transition={{ type: "spring", stiffness: 320, damping: 24 }}
@@ -53,8 +53,8 @@ export default function HeroReviews() {
               <Image
                 src={img}
                 alt={tooltips[i]?.name ?? `Reviewer ${i + 1}`}
-                width={48}
-                height={48}
+                width={56}
+                height={56}
                 className="object-cover"
               />
             </m.div>
@@ -65,7 +65,7 @@ export default function HeroReviews() {
                   <div
                     style={{
                       position: "absolute",
-                      bottom: "calc(100% + 16px)",
+                      bottom: "calc(100% + 32px)",
                       left: "50%",
                       transform: "translateX(-50%)",
                       pointerEvents: "none",
