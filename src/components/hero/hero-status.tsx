@@ -37,8 +37,7 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
 
   return (
     <>
-      <button ref={ref} onClick={onOpen} data-status-button className="relative flex flex-row items-center gap-3 md:gap-[14px] cursor-pointer group">
-      <span key={label} className={`flex items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"}`}>
+      <button ref={ref} onClick={onOpen} data-status-button className={`relative flex flex-row items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"} cursor-pointer group`}>
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
             <>
@@ -50,22 +49,27 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
             <span className="absolute inline-flex w-[10px] h-[10px] md:w-[14px] md:h-[14px] rounded-full bg-accent" />
           )}
         </span>
-        <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-          {label}
-        </span>
-      </span>
 
-      <span data-status-dash className="font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
+        {/* Text group holds the hover underline, so it starts at the first
+            letter (left-0 here) rather than at the pulsing dot. */}
+        <span key={label} className="relative flex items-center gap-3 md:gap-[14px]">
+          <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+            {label}
+          </span>
 
-      <span data-status-times className="flex items-center gap-2" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-        <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
-        <span className="font-sans font-normal text-[15px] leading-none">
-          <span className="md:hidden">Openingstijden</span>
-          <span className="hidden md:inline">Alle openingstijden</span>
+          <span data-status-dash className="font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
+
+          <span data-status-times className="flex items-center gap-2" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+            <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
+            <span className="font-sans font-normal text-[15px] leading-none">
+              <span className="md:hidden">Openingstijden</span>
+              <span className="hidden md:inline">Alle openingstijden</span>
+            </span>
+          </span>
+
+          <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-surface-page/50 transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
         </span>
-      </span>
-      <span className="hidden md:block absolute -bottom-[6px] left-0 right-0 h-[1px] bg-surface-page/50 transition-transform duration-300 ease-out scale-x-0 group-hover:scale-x-100 origin-right group-hover:origin-left" />
-    </button>
+      </button>
     </>
   );
 });
