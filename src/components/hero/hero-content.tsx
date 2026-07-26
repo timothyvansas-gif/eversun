@@ -97,7 +97,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[80px] lg:leading-[84px] 2xl:text-[80px] 2xl:leading-[84px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[72px] lg:leading-[1.1] 2xl:text-[72px] 2xl:leading-[1.1]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -127,10 +127,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </m.div>
 
               {/* Desktop: openingstijden (left) + reviews (right) on one row below the CTA */}
-              <div className="hidden lg:flex items-center justify-between w-full mt-10">
+              <m.div
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                custom={0.9}
+                className="hidden lg:flex items-center justify-between w-full mt-10"
+              >
                 <HeroStatus onOpen={onOpenOpeningstijden} />
                 <HeroReviews />
-              </div>
+              </m.div>
             </div>
           </div>
         </div>
