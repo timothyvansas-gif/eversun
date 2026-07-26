@@ -16,7 +16,7 @@ export default function FooterCredit() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLSpanElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
   const close = useCallback(() => {
@@ -26,8 +26,11 @@ export default function FooterCredit() {
 
   useEffect(() => {
     if (!open) return;
-    // Land keyboard focus inside the popover.
-    closeRef.current?.focus();
+    // Land focus inside the popover without ring-flashing a control: focus the
+    // dialog container (tabIndex -1), not the close button. After a keyboard
+    // ESC the focus-visible modality stays "keyboard", so focusing the × here
+    // would draw a ring on it every reopen.
+    dialogRef.current?.focus({ preventScroll: true });
 
     const onDown = (e: PointerEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -59,15 +62,21 @@ export default function FooterCredit() {
       <AnimatePresence>
         {open && (
           <m.span
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-label="Contact Timothy van Sas"
+            // Programmatic focus target, not a control: kill its own ring
+            // (inline beats the unlayered global *:focus-visible rule, which no
+            // Tailwind utility can). The × and Contact keep their rings.
+            style={{ outline: "none" }}
             className="block fixed bottom-16 left-6 right-6 origin-bottom md:absolute md:bottom-full md:left-1/2 md:ml-[-170px] md:right-auto md:mb-3 md:w-[340px] rounded-2xl bg-white p-6 shadow-xl ring-1 ring-black/5 z-50 text-left"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.98, y: shouldReduceMotion ? 0 : 6, transition: { duration: 0.15, ease: [0.36, 0, 0.66, 0] } }}
             transition={{ type: "spring", damping: 20, stiffness: 320 }}
           >
-            <CloseButton ref={closeRef} onClick={close} size="sm" className="absolute top-3 right-3" />
+            <CloseButton onClick={close} size="sm" className="absolute top-3 right-3" />
 
             <span className="flex items-center gap-5">
               <Image
