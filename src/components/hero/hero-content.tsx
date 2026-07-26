@@ -65,7 +65,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               aria-haspopup="menu"
               aria-expanded={desktopMenuOpen}
               aria-controls="hero-desktop-menu"
-              className="nav-link light cursor-pointer lg:!pr-0 lg:[&::after]:right-0"
+              className="nav-link light cursor-pointer relative z-50 lg:!pr-0 lg:[&::after]:right-0"
             >
               <span className="flex flex-col items-end gap-[5px]">
                 <HamburgerIcon open={desktopMenuOpen} />
@@ -88,7 +88,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             aria-label="Naar begin van de pagina"
             className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >
-            <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={34 / 42} />
+            <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={34 / 42} textOffsetX={-10} />
           </button>
           <button
             onClick={onOpenMenu}
@@ -121,7 +121,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </m.h1>
 
               <m.p
-                className="block mt-4 md:mt-3 font-sans font-normal text-[16px] md:text-[20px] leading-[25px] md:leading-[30px]"
+                className="block mt-3.5 md:mt-3 font-sans font-normal text-[16px] md:text-[20px] leading-[25px] md:leading-[30px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
