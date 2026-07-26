@@ -17,6 +17,7 @@ type Zonnebank = {
   alt: string;
   title: string;
   badge?: string;
+  tag?: string;
   description: string[];
   minuten: string;
   prijs: string;
@@ -42,6 +43,7 @@ const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline Blue Vision zonnebad",
     title: "Ergoline Blue Vision",
     badge: "2 banken",
+    tag: "Populair",
     description: [
       "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
       "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
@@ -163,7 +165,14 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             </span>
           )}
         </div>
-        <h3 className="card-title text-zinc-900 mt-3 md:mt-0">{data.title}</h3>
+        <div className="flex items-center gap-3 mt-3 md:mt-0">
+          <h3 className="card-title text-zinc-900">{data.title}</h3>
+          {data.tag && (
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+              {data.tag}
+            </span>
+          )}
+        </div>
         {data.description.map((paragraph, i) => (
           <p
             key={i}
@@ -261,9 +270,16 @@ function TimelineRow({ data, index, total, progress }: { data: Zonnebank; index:
         transition={{ duration: 0.8, ease: EASE, delay: 0.12 }}
         className={`flex flex-col ${imageLeft ? "order-2" : "order-1"}`}
       >
-        <h3 className="font-display text-[clamp(26px,2.6vw,36px)] leading-[1.05] tracking-[-0.01em] text-zinc-900">
-          {data.title}
-        </h3>
+        <div className="flex items-center gap-3">
+          <h3 className="font-display text-[clamp(26px,2.6vw,36px)] leading-[1.05] tracking-[-0.01em] text-zinc-900">
+            {data.title}
+          </h3>
+          {data.tag && (
+            <span className="shrink-0 whitespace-nowrap text-[14px] font-medium leading-none px-2.5 py-1.5 rounded-full bg-brand text-[#111111]">
+              {data.tag}
+            </span>
+          )}
+        </div>
         <div className="mt-4 flex flex-col gap-3">
           {data.description.map((paragraph, i) => (
             <p key={i} className="text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
