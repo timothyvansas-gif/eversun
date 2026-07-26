@@ -14,20 +14,6 @@ const WHATSAPP_URL =
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
-// Stagger the rows in just after the card itself has dropped — the card leads,
-// its contents follow, which reads as one deliberate motion rather than a pop.
-const list = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
-};
-// Opacity only — no vertical travel. The card drops as one unit; letting the
-// rows also translate down made them visibly settle a few px after the card had
-// already landed. A longer fade keeps the cascade soft.
-const row = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5, ease: EASE } },
-};
-
 /**
  * Desktop-only navigation dropdown that unfolds from under the hero's Menu
  * button (top-right). It does not push or cover the hero — the photo stays
@@ -79,6 +65,8 @@ export default function DesktopMenu({
             className="fixed inset-0 z-40 cursor-default"
           />
 
+          {/* One unit: the whole card (and every item inside it) fades in
+              together on a single soft opacity/drop — no per-item stagger. */}
           <m.div
             id="hero-desktop-menu"
             role="menu"
@@ -86,28 +74,26 @@ export default function DesktopMenu({
             initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
-            transition={{ duration: 0.28, ease: EASE }}
+            transition={{ duration: 0.4, ease: EASE }}
             style={{ transformOrigin: "top right" }}
             className="absolute right-0 top-full mt-3 z-50 w-[340px] rounded-[20px] bg-black p-9 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
           >
-            <m.nav variants={list} initial="hidden" animate="visible" className="flex flex-col">
+            <nav className="flex flex-col">
               {NAV_ITEMS.map((label) => (
-                <m.a
+                <a
                   key={label}
-                  variants={row}
                   role="menuitem"
                   href={resolveNavTarget(label)}
                   onClick={(e) => handleNav(e, label)}
                   className="py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white focus-visible:outline-none"
                 >
                   {label}
-                </m.a>
+                </a>
               ))}
 
-              <m.div variants={row} className="my-3 h-px w-full bg-white/10" />
+              <div className="my-3 h-px w-full bg-white/10" />
 
-              <m.a
-                variants={row}
+              <a
                 role="menuitem"
                 href={WHATSAPP_URL}
                 target="_blank"
@@ -117,9 +103,9 @@ export default function DesktopMenu({
               >
                 WhatsApp
                 <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
-              </m.a>
+              </a>
 
-              <m.div variants={row} className="mt-1 flex flex-col gap-0.5">
+              <div className="mt-1 flex flex-col gap-0.5">
                 <p className="text-[16px] leading-[24px] font-medium text-white/55">Ever Sun Zonnestudio</p>
                 <p className="text-[16px] leading-[24px] font-medium text-white/55">Kloekhorststraat 4a Assen</p>
                 <a
@@ -128,9 +114,9 @@ export default function DesktopMenu({
                 >
                   06 25306491
                 </a>
-              </m.div>
+              </div>
 
-              <m.div variants={row} className="mt-6 flex items-center gap-1">
+              <div className="mt-6 flex items-center gap-1">
                 <a
                   href="https://www.facebook.com/eversun.assen/"
                   target="_blank"
@@ -149,8 +135,8 @@ export default function DesktopMenu({
                 >
                   <Image src={instagramIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
                 </a>
-              </m.div>
-            </m.nav>
+              </div>
+            </nav>
           </m.div>
         </>
       )}
