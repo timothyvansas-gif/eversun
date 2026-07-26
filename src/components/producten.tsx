@@ -241,7 +241,7 @@ export default function Producten() {
         <div className="w-full max-w-[1280px] mx-auto">
           {/* Header */}
           <div id="producten" className="mb-9 xl:mb-14 scroll-mt-20 lg:scroll-mt-10">
-            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-5 xl:gap-6">
+            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-3 xl:gap-6">
               <div>
                 <h2 className="text-ink-strong text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   Devoted Creations producten

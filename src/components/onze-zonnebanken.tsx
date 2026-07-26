@@ -303,7 +303,7 @@ export default function OnzeZonnebanken() {
       >
         <div className="w-full max-w-[1280px] mx-auto">
           <div id="banken" className="mb-8 xl:mb-10 scroll-mt-20 lg:scroll-mt-10">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-5 md:gap-6">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-3 md:gap-6">
               <div>
                 <h2 className="text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] text-zinc-900 font-display">
                   Onze zes zonnebanken
