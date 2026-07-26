@@ -6,6 +6,7 @@ import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
 import DesktopMenu from "./desktop-menu";
+import HeroLines from "./hero-lines";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
@@ -113,7 +114,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
                 begint bij{" "}
-                Ever Sun
+                <span className="relative inline-block">
+                  Ever Sun
+                  <HeroLines />
+                </span>
               </m.h1>
 
               <m.p
@@ -124,7 +128,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.85)" }}
               >
-                Even tijd voor jezelf in een zonnestudio met alle aandacht voor je huid
+                Even tijd voor jezelf in een zonnestudio met alle aandacht voor je huid.
               </m.p>
 
               <m.div
