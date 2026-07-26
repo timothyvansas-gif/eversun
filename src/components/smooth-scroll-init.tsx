@@ -10,14 +10,15 @@ import { useEffect } from "react";
 //     there only risks a mid-gesture hitch (the async import + ScrollTrigger
 //     reflow landing while a finger drag is in flight). So: fine-pointer only.
 //
-//  2. Kicking the loop off eagerly keeps the main thread warm during load — the
-//     "Other" time desktop Lighthouse penalises. Gating it on the first real
-//     scroll intent (wheel/keydown/scrollbar drag) keeps the loop off during an
-//     automated audit (bots don't scroll) while a real visitor triggers it on
-//     their first scroll, imperceptibly. No idle fallback: an idle timer would
-//     fire during the audit trace and reintroduce the very cost we removed, and
-//     a visitor who never scrolls needs no smoothing anyway.
-const START_EVENTS = ["wheel", "keydown", "scroll"] as const;
+//  2. We start it *before* the first scroll, during idle time after mount, not
+//     *on* the first scroll. Gating on scroll intent meant Lenis attached mid-
+//     gesture — the async chunk import + ScrollTrigger.refresh() reflow landing
+//     while the wheel was already scrolling natively — a visible hitch on the
+//     very first scroll. requestIdleCallback loads the chunk while the main
+//     thread is quiet, so a real visitor's first scroll is smooth from frame one.
+//     The only cost is the loop running during an automated audit (idle fires
+//     there too); that lands on desktop Lighthouse's unscored "Other" time, so
+//     it does not move the score.
 
 export default function SmoothScrollInit() {
   useEffect(() => {
@@ -32,18 +33,10 @@ export default function SmoothScrollInit() {
       return;
     }
 
-    let started = false;
     let cancelled = false;
     let cleanup: (() => void) | undefined;
 
-    const stopWaiting = () =>
-      START_EVENTS.forEach((e) => window.removeEventListener(e, onIntent));
-
     const init = async () => {
-      if (started) return;
-      started = true;
-      stopWaiting();
-
       const [{ default: Lenis }, { default: gsap }, { ScrollTrigger }] =
         await Promise.all([
           import("lenis"),
@@ -88,14 +81,27 @@ export default function SmoothScrollInit() {
       };
     };
 
-    const onIntent = () => void init();
-    START_EVENTS.forEach((e) =>
-      window.addEventListener(e, onIntent, { once: true, passive: true }),
-    );
+    // Warm the loop during idle time after mount so it is already running before
+    // the first scroll. Fall back to a short timeout where rIC is unavailable
+    // (older Safari); the `timeout` option caps the wait on busy load too.
+    let idleHandle: number | undefined;
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+    if (typeof window.requestIdleCallback === "function") {
+      idleHandle = window.requestIdleCallback(() => void init(), {
+        timeout: 2000,
+      });
+    } else {
+      timeoutHandle = setTimeout(() => void init(), 200);
+    }
 
     return () => {
       cancelled = true;
-      stopWaiting();
+      if (idleHandle !== undefined && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleHandle);
+      }
+      if (timeoutHandle !== undefined) {
+        clearTimeout(timeoutHandle);
+      }
       cleanup?.();
     };
   }, []);
