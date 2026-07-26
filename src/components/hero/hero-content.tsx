@@ -67,7 +67,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               aria-haspopup="true"
               aria-expanded={desktopMenuOpen}
               aria-controls="hero-desktop-menu"
-              className="nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0"
+              className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
             >
               <span className="flex flex-col items-end gap-[5px]">
                 <HamburgerIcon open={desktopMenuOpen} />
