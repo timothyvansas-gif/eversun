@@ -1,15 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { m } from "framer-motion";
-import { useScrollNav } from "@/hooks/use-scroll-nav";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
 import HeroReviews from "./hero-reviews";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
-import whatsappIcon from "@/images/whatsapp.svg";
-import { NAV_ITEMS } from "@/lib/nav-items";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
 const fadeUp = {
@@ -27,7 +23,6 @@ const fadeUp = {
 
 
 export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
-  const { scrollToNav } = useScrollNav();
   return (
     <div
       className="absolute inset-0 flex flex-col z-20"
@@ -53,41 +48,20 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
             aria-label="Naar begin van de pagina"
             className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
           >
-            <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={48 / 52} />
+            <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} />
           </button>
 
-          <nav className="flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
-                className="nav-link light"
-                style={{ color: "rgba(255, 255, 255, 0.80)" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToNav(item);
-                }}
-              >
-                {item}
-              </a>
-            ))}
-
-            <div className="w-[1px] h-6 bg-surface-page/20 mx-2" />
-
-            <button
-              onClick={onOpenAfspraak}
-              className="nav-link light cursor-pointer lg:!pr-0"
-            >
-              WhatsApp
-              <Image
-                src={whatsappIcon}
-                alt=""
-                width={18}
-                height={18}
-                className="w-[18px] h-[18px] brightness-0 invert"
-              />
-            </button>
-          </nav>
+          <button
+            onClick={onOpenMenu}
+            aria-label="Menu openen"
+            aria-expanded={false}
+            className="nav-link light cursor-pointer lg:!pr-0"
+          >
+            <span className="flex flex-col items-end gap-[5px]">
+              <HamburgerIcon />
+            </span>
+            Menu
+          </button>
         </m.div>
 
         {/* Mobile Header */}
@@ -114,16 +88,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
         </m.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-20">
+        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-15">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-14 lg:mb-0">
-            <div className="translate-y-4 lg:translate-y-0">
+            <div className="translate-y-4 lg:translate-y-8">
               <m.h1
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[66px] lg:leading-[70px] 2xl:text-[72px] 2xl:leading-[76px]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[80px] lg:leading-[84px] 2xl:text-[80px] 2xl:leading-[84px]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -151,6 +125,12 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               >
                 <HeroButtons onOpenAfspraak={onOpenAfspraak} />
               </m.div>
+
+              {/* Desktop: openingstijden (left) + reviews (right) on one row below the CTA */}
+              <div className="hidden lg:flex items-center justify-between w-full mt-10">
+                <HeroStatus onOpen={onOpenOpeningstijden} />
+                <HeroReviews />
+              </div>
             </div>
           </div>
         </div>
@@ -160,10 +140,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           initial="hidden"
           animate="visible"
           custom={0.9}
-          className="mb-4 lg:mb-0 flex items-center justify-between"
+          className="mb-4 flex items-center justify-between lg:hidden"
         >
           <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
-          <HeroReviews />
         </m.div>
       </div>
     </div>
