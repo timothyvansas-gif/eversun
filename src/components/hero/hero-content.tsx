@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { m } from "framer-motion";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
@@ -29,6 +29,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
   // Desktop menu is a hero-scoped dropdown (see DesktopMenu), independent of the
   // mobile slide-in/push flow that `onOpenMenu` drives.
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
+  const desktopToggleRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div
@@ -60,9 +61,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
 
           <div className="relative">
             <button
+              ref={desktopToggleRef}
               onClick={() => setDesktopMenuOpen((o) => !o)}
               aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
-              aria-haspopup="menu"
+              aria-haspopup="true"
               aria-expanded={desktopMenuOpen}
               aria-controls="hero-desktop-menu"
               className="nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0"
@@ -72,7 +74,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </span>
               Menu
             </button>
-            <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} />
+            <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} triggerRef={desktopToggleRef} />
           </div>
         </m.div>
 

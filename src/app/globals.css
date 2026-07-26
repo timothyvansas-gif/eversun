@@ -14,6 +14,14 @@ html {
   outline-offset: 3px;
 }
 
+/* Focus returned programmatically after a quiet dismiss (e.g. closing the
+   desktop menu with Escape) keeps the element focused for keyboard/SR users
+   without flashing a ring. Cleared on the next real interaction, so normal
+   Tab focus still shows the ring. Higher specificity beats *:focus-visible. */
+[data-quiet-focus]:focus-visible {
+  outline: none;
+}
+
 /* Rounded focus ring for elements without their own radius. In @layer base so
    any rounded-* utility or inline radius still wins. */
 @layer base {

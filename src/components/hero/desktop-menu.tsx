@@ -20,9 +20,12 @@ const WHATSAPP_URL =
 export default function DesktopMenu({
   open,
   onClose,
+  triggerRef,
 }: {
   open: boolean;
   onClose: () => void;
+  /** The toggle button, so Escape can return focus to it (WAI-ARIA disclosure). */
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   const { scrollToNav } = useScrollNav();
 
@@ -32,9 +35,17 @@ export default function DesktopMenu({
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       onClose();
-      // Esc is a keyboard event, so the toggle button would regain focus with a
-      // visible focus ring. Drop focus instead — closing stays visually quiet.
-      (document.activeElement as HTMLElement | null)?.blur();
+      // Return focus to the toggle so keyboard/SR users keep their place, but
+      // mark it "quiet" so the ring doesn't flash on this programmatic return.
+      // The marker clears on the next real interaction, so Tab focus still rings.
+      const el = triggerRef.current;
+      if (el) {
+        el.setAttribute("data-quiet-focus", "");
+        el.focus({ preventScroll: true });
+        const clear = () => el.removeAttribute("data-quiet-focus");
+        el.addEventListener("blur", clear, { once: true });
+        el.addEventListener("keydown", clear, { once: true });
+      }
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener("wheel", onClose, { passive: true, once: true });
@@ -42,7 +53,7 @@ export default function DesktopMenu({
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("wheel", onClose);
     };
-  }, [open, onClose]);
+  }, [open, onClose, triggerRef]);
 
   const handleNav = (e: React.MouseEvent, label: string) => {
     e.preventDefault();
@@ -55,10 +66,11 @@ export default function DesktopMenu({
     <AnimatePresence>
       {open && (
         <>
-          {/* Transparent catcher: outside click closes, hero stays visible. */}
-          <button
-            type="button"
-            aria-label="Menu sluiten"
+          {/* Transparent catcher: outside click closes, hero stays visible.
+              Non-focusable + aria-hidden — it's a pointer convenience, not a
+              control (Escape and the visible toggle close for keyboard/SR). */}
+          <div
+            aria-hidden="true"
             onClick={onClose}
             className="fixed inset-0 z-40 cursor-default"
           />
@@ -67,8 +79,6 @@ export default function DesktopMenu({
               together on a single soft opacity/drop — no per-item stagger. */}
           <m.div
             id="hero-desktop-menu"
-            role="menu"
-            aria-label="Hoofdmenu"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
@@ -76,11 +86,10 @@ export default function DesktopMenu({
             style={{ transformOrigin: "top right" }}
             className="absolute -right-4 -top-4 z-50 w-[340px] rounded-2xl bg-black px-9 pb-9 pt-[58px] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
           >
-            <nav className="flex flex-col">
+            <nav aria-label="Hoofdmenu" className="flex flex-col">
               {NAV_ITEMS.map((label) => (
                 <a
                   key={label}
-                  role="menuitem"
                   href={resolveNavTarget(label)}
                   onClick={(e) => handleNav(e, label)}
                   className="py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white focus-visible:outline-none"
@@ -92,7 +101,6 @@ export default function DesktopMenu({
               <div className="my-3 h-px w-full bg-white/10" />
 
               <a
-                role="menuitem"
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
