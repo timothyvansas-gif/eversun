@@ -9,6 +9,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
+import { Backdrop } from "@/components/ui/backdrop";
 
 function AppointmentButton() {
   const [hovered, setHovered] = useState(false);
@@ -145,16 +146,7 @@ export default function OpeningstijdenOverlay({
       {isOpen && (
         <>
           {/* Backdrop — dims hero content */}
-          <m.div
-            data-lenis-prevent
-            className="fixed inset-0 z-50"
-            style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={onClose}
-          />
+          <Backdrop onClick={onClose} className="z-50" scrollLock />
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none">
           {/* Mobile: Bottom Sheet */}

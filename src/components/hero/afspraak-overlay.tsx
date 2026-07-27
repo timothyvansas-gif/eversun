@@ -8,6 +8,7 @@ import qrCode from "@/images/qr-code-ever-sun.svg";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
+import { Backdrop } from "@/components/ui/backdrop";
 
 export default function AfspraakOverlay({
   isOpen,
@@ -43,15 +44,11 @@ export default function AfspraakOverlay({
     <AnimatePresence>
       {isOpen && (
         <>
-          <m.div
-            data-lenis-prevent
-            className="fixed inset-0 z-50"
-            style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
+          <Backdrop
             onClick={onClose}
+            className="z-50"
+            scrollLock
+            transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
           />
 
           <div ref={overlayRef}>

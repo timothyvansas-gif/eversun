@@ -8,6 +8,7 @@ import { resolveNavTarget, useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
+import { Backdrop } from "@/components/ui/backdrop";
 
 const WHATSAPP_URL =
   "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
@@ -66,14 +67,11 @@ export default function DesktopMenu({
     <AnimatePresence>
       {open && (
         <>
-          {/* Transparent catcher: outside click closes, hero stays visible.
-              Non-focusable + aria-hidden — it's a pointer convenience, not a
-              control (Escape and the visible toggle close for keyboard/SR). */}
-          <div
-            aria-hidden="true"
-            onClick={onClose}
-            className="fixed inset-0 z-40 cursor-default"
-          />
+          {/* Blurred backdrop: dims the hero behind the menu and catches an
+              outside click to close. Non-focusable + aria-hidden — a pointer
+              convenience, not a control (Escape and the visible toggle close for
+              keyboard/SR). No scroll lock: a wheel gesture closes the menu. */}
+          <Backdrop aria-hidden="true" onClick={onClose} className="z-40 cursor-default" />
 
           {/* One unit: the whole card (and every item inside it) fades in
               together on a single soft opacity/drop — no per-item stagger. */}

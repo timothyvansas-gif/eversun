@@ -8,6 +8,7 @@ import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
+import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import dummyImg from "@/images/impressie/dummy.webp";
@@ -132,16 +133,7 @@ export default function FotoBottomSheet({
     <AnimatePresence>
       {isOpen && (
         <>
-          <m.div
-            data-lenis-prevent
-            className="fixed inset-0 z-50"
-            style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={handleClose}
-          />
+          <Backdrop onClick={handleClose} className="z-50" scrollLock />
 
           <div ref={sheetRef} tabIndex={-1} className="outline-none">
             <m.div

@@ -6,6 +6,7 @@ import { LazyMotion } from "framer-motion";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
+import { BACKDROP_SCRIM } from "@/components/ui/backdrop";
 
 // Bento sits below the hero fold and pulls in six framer-motion card
 // components. Loading it as a dynamic chunk (ssr:true, so the HTML and SEO
@@ -70,7 +71,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         className={`fixed inset-0 z-20 cursor-pointer transition-opacity duration-300 ${
           isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
-        style={{ backgroundColor: "rgba(0,0,0,0.75)", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)" }}
+        style={BACKDROP_SCRIM}
       />
     </div>
     </LazyMotion>
