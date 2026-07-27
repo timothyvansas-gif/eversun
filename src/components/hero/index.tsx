@@ -5,7 +5,7 @@ import Image from "next/image";
 import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
-import heroImage from "@/images/hero-side-face.webp";
+import heroImage from "@/images/hero-woman.webp";
 
 import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
@@ -85,7 +85,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   // The image layer bleeds 30% above the section (see the m.div below), so
   // the spring can lag behind fast upward scrolls without exposing the black
   // section background. 19% of the 130%-tall layer ≈ the original 25% travel.
-  const y = useTransform(parallaxProgress, [0, 1], ["0%", "19%"]);
+  const y = useTransform(parallaxProgress, [0, 1], ["0%", "5%"]);
   const scale = useTransform(parallaxProgress, [0, 1], [1, 1.05]);
 
   return (
@@ -95,8 +95,8 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
     >
       <div className="absolute inset-0">
         <m.div
-          className="absolute inset-x-0 overflow-hidden"
-          style={{ y, scale, willChange: "transform", top: "-30%", height: "130%" }}
+          className="absolute inset-x-0 overflow-hidden top-0 h-full md:top-[-6%] md:h-[106%]"
+          style={{ y, scale, willChange: "transform" }}
         >
           <Image
             src={heroImage}
@@ -105,21 +105,32 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             priority
             fetchPriority="high"
             // Serve the original file as-is. The optimizer would re-encode the
-            // (already lossy) 1672px source down to ~1200px, which mobile's
-            // portrait cover-crop then upscales 3×+ — double generation loss
-            // for a ~25KB saving. The original is the sharpest we have.
+            // (already lossy) 2400px source down further, which mobile's
+            // portrait cover-crop then upscales — double generation loss
+            // for a small saving. The original is the sharpest we have.
             unoptimized
             placeholder="blur"
             sizes="100vw"
-            className="object-cover object-[60%_50%] md:object-center"
+            className="object-cover object-[60%_0%] md:object-[50%_0%]"
           />
         </m.div>
 
+        {/* Mobile: darkening reaches further right (~78%) — the title/subtitle
+            wrap wider here, so their right-hand words need backing. */}
         <div
-          className="absolute inset-0 pointer-events-none z-10"
+          className="absolute inset-0 pointer-events-none z-10 lg:hidden"
           style={{
             background:
-              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(107deg, rgba(0, 0, 0, 0.00) 24.78%, rgba(0, 0, 0, 0.23) 42.77%, rgba(0, 0, 0, 0.48) 60.16%, rgba(0, 0, 0, 0.60) 93.14%)",
+              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.64) 0%, rgba(0, 0, 0, 0.56) 30%, rgba(0, 0, 0, 0.40) 52%, rgba(0, 0, 0, 0.20) 68%, rgba(0, 0, 0, 0.00) 78%)",
+          }}
+        />
+        {/* Desktop: text sits in the left column, so the fade can clear earlier
+            (~64%) and let the photo keep full colour on the right. */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10 hidden lg:block"
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.50) 22%, rgba(0, 0, 0, 0.30) 42%, rgba(0, 0, 0, 0.10) 55%, rgba(0, 0, 0, 0.00) 64%)",
           }}
         />
         <div
