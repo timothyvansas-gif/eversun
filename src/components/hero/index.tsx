@@ -121,7 +121,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           className="absolute inset-0 pointer-events-none z-10 lg:hidden"
           style={{
             background:
-              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.64) 0%, rgba(0, 0, 0, 0.56) 30%, rgba(0, 0, 0, 0.40) 52%, rgba(0, 0, 0, 0.20) 68%, rgba(0, 0, 0, 0.00) 78%)",
+              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.64) 0%, rgba(0, 0, 0, 0.56) 38%, rgba(0, 0, 0, 0.42) 62%, rgba(0, 0, 0, 0.24) 80%, rgba(0, 0, 0, 0.00) 92%)",
           }}
         />
         {/* Desktop: text sits in the left column, so the fade can clear earlier
@@ -130,7 +130,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           className="absolute inset-0 pointer-events-none z-10 hidden lg:block"
           style={{
             background:
-              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.50) 22%, rgba(0, 0, 0, 0.30) 42%, rgba(0, 0, 0, 0.10) 55%, rgba(0, 0, 0, 0.00) 64%)",
+              "linear-gradient(0deg, rgba(225, 94, 29, 0.06) 0%, rgba(225, 94, 29, 0.06) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.50) 26%, rgba(0, 0, 0, 0.32) 48%, rgba(0, 0, 0, 0.12) 62%, rgba(0, 0, 0, 0.00) 72%)",
           }}
         />
         <div
