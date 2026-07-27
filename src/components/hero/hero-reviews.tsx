@@ -42,7 +42,7 @@ export default function HeroReviews() {
             aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
           >
             <m.div
-              className="w-[56px] h-[56px] rounded-full overflow-hidden border border-[#111111]"
+              className="w-[56px] h-[56px] rounded-full overflow-hidden"
               animate={{
                 y: hoveredIndex === i ? -8 : 0,
                 scale: hoveredIndex === i ? 64 / 56 : 48 / 56,
