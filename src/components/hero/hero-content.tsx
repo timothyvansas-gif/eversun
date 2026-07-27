@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m } from "framer-motion";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
@@ -30,6 +30,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
   // mobile slide-in/push flow that `onOpenMenu` drives.
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const desktopToggleRef = useRef<HTMLButtonElement>(null);
+
+  // The title underlines wait for the review avatars to finish gliding into
+  // place (HeroReviews fires onSettled). Fallback timer covers the cases where
+  // the avatars never signal — reduced motion, or the desktop-only stack being
+  // display:none on mobile — so the underlines always draw.
+  const [reviewsSettled, setReviewsSettled] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setReviewsSettled(true), 3200);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <div
@@ -112,7 +122,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 begint bij{" "}
                 <span className="relative inline-block">
                   Ever Sun
-                  <HeroLines />
+                  <HeroLines play={reviewsSettled} />
                 </span>
               </m.h1>
 
@@ -146,7 +156,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 className="hidden lg:flex items-center justify-between w-full mt-10 min-[1920px]:mt-[140px]"
               >
                 <HeroStatus onOpen={onOpenOpeningstijden} />
-                <HeroReviews />
+                <HeroReviews onSettled={() => setReviewsSettled(true)} />
               </m.div>
             </div>
           </div>

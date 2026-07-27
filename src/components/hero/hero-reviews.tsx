@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import reviewer1 from "@/images/people/reviewer-1.webp";
 import reviewer2 from "@/images/people/reviewer-2.webp";
 import reviewer3 from "@/images/people/reviewer-3.webp";
@@ -11,6 +11,14 @@ import iconStar from "@/images/icon-star.svg";
 
 const reviewers = [reviewer1, reviewer4, reviewer2, reviewer3];
 
+// On load every avatar sits stacked behind the last one (the top of the z-stack,
+// on the right); the rest then glide out to the left into place with an elastic
+// bounce. STACK_STEP = 56px avatar − 20px (-space-x-5) overlap.
+const STACK_STEP = 36;
+const ENTRANCE_DELAY = 1.4; // wait for the review row to finish fading in
+const ENTRANCE_STAGGER = 0.1;
+const ANCHOR = reviewers.length - 1;
+
 const tooltips: Record<number, { quote: string; name: string }> = {
   0: { quote: "Schoon en vriendelijk personeel", name: "Diana Boonstra" },
   1: { quote: "Wat een heerlijk schone en moderne studio is Ever Sun. Fijn in het centrum van Assen & parkeren voor de deur (gratis op zondag). Vriendelijk ontvangst en goede kwaliteit zonnebank met allemaal opties om naar eigen smaak in te stellen (ik had de medium sterke bank). Hier kom ik vaker!", name: "Koosje van Goinga" },
@@ -18,15 +26,16 @@ const tooltips: Record<number, { quote: string; name: string }> = {
   3: { quote: "Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.", name: "Willeke Veenstra" },
 };
 
-export default function HeroReviews() {
+export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const reduce = useReducedMotion();
 
   return (
     <div className="hidden lg:flex items-center gap-4">
       {/* Photo stack */}
       <div className="flex -space-x-5">
         {reviewers.map((img, i) => (
-          <div
+          <m.div
             key={i}
             className="relative"
             style={{ zIndex: hoveredIndex === i ? 10 : i }}
@@ -40,6 +49,12 @@ export default function HeroReviews() {
             tabIndex={0}
             role="button"
             aria-label={tooltips[i] ? `Review van ${tooltips[i].name}: ${tooltips[i].quote}` : undefined}
+            initial={{ x: reduce ? 0 : (ANCHOR - i) * STACK_STEP }}
+            animate={{ x: 0 }}
+            transition={{ type: "spring", bounce: 0.5, duration: 0.85, delay: reduce ? 0 : ENTRANCE_DELAY + (ANCHOR - i) * ENTRANCE_STAGGER }}
+            // The furthest-travelling avatar (i=0) settles last — its finish is
+            // the cue for the title underlines to draw.
+            onAnimationComplete={i === 0 ? () => onSettled?.() : undefined}
           >
             <m.div
               className="w-[56px] h-[56px] rounded-full overflow-hidden"
@@ -106,7 +121,7 @@ export default function HeroReviews() {
                 )}
               </AnimatePresence>
             )}
-          </div>
+          </m.div>
         ))}
       </div>
 
