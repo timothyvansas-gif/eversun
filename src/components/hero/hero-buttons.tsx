@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { m } from "framer-motion";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 
 const baseStyle: React.CSSProperties = {
   display: "flex",
@@ -20,7 +21,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
       <button
-        className="w-[60%] sm:w-[240px] min-h-[52px] sm:min-h-[56px] px-0 sm:px-5 font-sans font-medium text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-[200px] sm:w-[224px] min-h-[52px] sm:min-h-[56px] px-0 sm:px-3 font-sans font-medium text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -55,7 +56,11 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
           animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
           transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
         />
-        <span className="relative z-10">Plan je moment</span>
+        {/* Label + arrow share one layer so the hover blob sweeps under both. */}
+        <span className="relative z-10 flex items-center gap-2.5">
+          Plan je moment
+          <CtaArrow always />
+        </span>
       </button>
     </div>
   );
