@@ -111,7 +111,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
             unoptimized
             placeholder="blur"
             sizes="100vw"
-            className="object-cover object-[60%_0%] md:object-[50%_0%]"
+            className="object-cover object-[70%_0%] md:object-[50%_0%]"
           />
         </m.div>
 
