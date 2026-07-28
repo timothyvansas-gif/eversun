@@ -137,7 +137,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 custom={0.6}
                 style={{ color: "rgba(255, 255, 255, 0.75)" }}
               >
-                Even tijd voor jezelf in een zonnestudio<br className="lg:hidden" />met alle aandacht voor je huid.
+                Even tijd voor jezelf in een zonnestudio{" "}<br className="lg:hidden" />met alle aandacht voor je huid.
               </m.p>
 
               <m.div
