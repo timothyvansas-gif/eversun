@@ -8,9 +8,10 @@ export default function HeroLines({ play }: { play: boolean }) {
   return (
     <m.svg
       viewBox="0 0 169 10"
+      preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute left-0 -bottom-[6px] md:-bottom-2 lg:-bottom-[2px] w-full lg:scale-x-[1.55] lg:origin-center"
+      className="absolute left-0 -bottom-[6px] md:-bottom-2 lg:-bottom-[2px] w-full"
       style={{ height: 10, overflow: "visible" }}
     >
       <m.path

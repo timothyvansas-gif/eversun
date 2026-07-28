@@ -37,7 +37,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
   // display:none on mobile — so the underlines always draw.
   const [reviewsSettled, setReviewsSettled] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setReviewsSettled(true), 3200);
+    // HeroReviews (the real settle cue) is desktop-only, so mobile always
+    // rides this fallback — give it a shorter wait than desktop's.
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const t = setTimeout(() => setReviewsSettled(true), isDesktop ? 3200 : 2400);
     return () => clearTimeout(t);
   }, []);
 
@@ -115,7 +118,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.3}
-                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[68px] lg:leading-[1.1] 2xl:text-[68px] 2xl:leading-[1.1]"
+                className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[64px] lg:leading-[1.1] 2xl:text-[64px] 2xl:leading-[1.1]"
                 style={{ marginLeft: "-3px", color: "#ffffff" }}
               >
                 Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -127,7 +130,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </m.h1>
 
               <m.p
-                className="block mt-2.5 md:mt-3 font-sans font-normal text-[15px] md:text-[20px] leading-[25px] md:leading-[30px]"
+                className="block mt-2.5 md:mt-3 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px]"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
