@@ -11,7 +11,7 @@ export default function HeroLines({ play }: { play: boolean }) {
       preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="absolute left-0 -bottom-[6px] md:-bottom-2 lg:-bottom-[2px] w-full"
+      className="absolute left-0 -bottom-[6px] md:-bottom-2 lg:-bottom-[5px] w-full"
       style={{ height: 10, overflow: "visible" }}
     >
       <m.path
