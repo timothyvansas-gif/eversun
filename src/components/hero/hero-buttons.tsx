@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { m } from "framer-motion";
 import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 
 const baseStyle: React.CSSProperties = {
   display: "flex",
@@ -56,11 +55,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
           animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
           transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
         />
-        {/* Label + arrow share one layer so the hover blob sweeps under both. */}
-        <span className="relative z-10 flex items-center gap-2.5">
-          Plan je moment
-          <CtaArrow always />
-        </span>
+        <span className="relative z-10">Plan je moment</span>
       </button>
     </div>
   );
