@@ -30,7 +30,12 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
         aria-label={label}
         className={`flex items-center justify-center rounded-full border border-transparent leading-none text-ink/60 hover:text-ink hover:border-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150 cursor-pointer ${SIZES[size]} ${className}`}
       >
-        ×
+        {/* The "×" glyph sits ~0.05em below the centre of its text box, which
+            shows as soon as the hover ring makes the circle visible. Nudged back
+            optically; in em, so it holds at every size. */}
+        <span aria-hidden="true" className="-translate-y-[0.05em]">
+          ×
+        </span>
       </button>
     );
   },
