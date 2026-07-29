@@ -13,8 +13,8 @@ const reviewers = [reviewer1, reviewer4, reviewer2, reviewer3];
 
 // On load every avatar sits stacked behind the last one (the top of the z-stack,
 // on the right); the rest then glide out to the left into place with an elastic
-// bounce. STACK_STEP = 56px avatar − 20px (-space-x-5) overlap.
-const STACK_STEP = 36;
+// bounce. STACK_STEP = 56px avatar − 16px (-space-x-4) overlap.
+const STACK_STEP = 40;
 const ENTRANCE_DELAY = 1.4; // wait for the review row to finish fading in
 const ENTRANCE_STAGGER = 0.1;
 const ANCHOR = reviewers.length - 1;
@@ -33,7 +33,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
   return (
     <div className="hidden lg:flex items-center gap-4">
       {/* Photo stack */}
-      <div className="flex -space-x-5">
+      <div className="flex -space-x-4">
         {reviewers.map((img, i) => (
           <m.div
             key={i}
