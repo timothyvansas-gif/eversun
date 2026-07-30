@@ -55,7 +55,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
       }}
     >
       <div
-        className="max-w-[1280px] w-full mx-auto flex-1 flex flex-col justify-between lg:justify-start"
+        className="relative min-h-0 max-w-[1280px] w-full mx-auto flex-1 flex flex-col justify-between lg:justify-start"
       >
         {/* Desktop Header */}
         <m.div
@@ -171,24 +171,32 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 <HeroButtons onOpenAfspraak={onOpenAfspraak} />
               </m.div>
 
-              {/* Desktop: openingstijden (left) + reviews (right) on one row below
-                  the CTA. The title/CTA block above is vertically centred, so
-                  lifting the text lifts this row too — the margin grows by the
-                  full lift (and the block's translate drops by half of it) to
-                  keep this row on its original line. */}
-              <m.div
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={0.9}
-                className="hidden lg:flex items-center justify-between w-full mt-[148px] min-[1920px]:mt-[248px] translate-y-6"
-              >
-                <HeroStatus onOpen={onOpenOpeningstijden} />
-                <HeroReviews onSettled={() => setReviewsSettled(true)} />
-              </m.div>
+              {/* Preserve the original height of the desktop content block now
+                  that the status/reviews row is anchored independently below.
+                  This keeps the vertically centred title, subtitle and CTA in
+                  exactly the same place. */}
+              <div
+                aria-hidden="true"
+                className="hidden lg:block h-[204px] min-[1920px]:h-[304px]"
+              />
             </div>
           </div>
         </div>
+
+        {/* Keep a stable 64px gap to the hero edge on desktop: 24px here plus
+            the content wrapper's 40px bottom padding. Unlike a flow-positioned
+            row, this does not drift toward the edge when the macOS Dock reduces
+            the browser viewport height. */}
+        <m.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.9}
+          className="hidden lg:flex absolute inset-x-0 bottom-6 items-center justify-between w-full"
+        >
+          <HeroStatus onOpen={onOpenOpeningstijden} />
+          <HeroReviews onSettled={() => setReviewsSettled(true)} />
+        </m.div>
 
         <m.div
           variants={fadeUp}
