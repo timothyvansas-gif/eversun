@@ -121,7 +121,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   On mobile the title has no forced break, so its max-content
                   exceeds the column and fit-content clamps to the full width —
                   same layout as before. */}
-              <div className="w-fit">
+              <div className="w-fit lg:translate-y-4">
                 <m.h1
                   variants={fadeUp}
                   initial="hidden"
@@ -162,7 +162,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </div>
 
               <m.div
-                className="mt-6 md:mt-8 lg:mt-9 flex flex-row items-center w-full lg:w-auto gap-6 lg:gap-6"
+                className="mt-6 md:mt-8 lg:mt-9 flex flex-row items-center w-full lg:w-auto gap-6 lg:gap-6 lg:translate-y-4"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
@@ -181,7 +181,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 initial="hidden"
                 animate="visible"
                 custom={0.9}
-                className="hidden lg:flex items-center justify-between w-full mt-[116px] min-[1920px]:mt-[216px]"
+                className="hidden lg:flex items-center justify-between w-full mt-[148px] min-[1920px]:mt-[248px] translate-y-6"
               >
                 <HeroStatus onOpen={onOpenOpeningstijden} />
                 <HeroReviews onSettled={() => setReviewsSettled(true)} />
