@@ -113,6 +113,13 @@ function isDesktopSafariBrowser() {
   );
 }
 
+function isAbortError(error: unknown) {
+  return (
+    error instanceof DOMException &&
+    error.name === "AbortError"
+  );
+}
+
 function AfspraakButton({
   minuten,
   prijs,
@@ -183,6 +190,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isHoveringRef = useRef(false);
   const isMobileVideoActiveRef = useRef(false);
+  const mobilePlaybackRequestedRef = useRef(false);
+  const mobileVideoLoadStartedRef = useRef(false);
   const reverseAnimationRef = useRef<number | null>(null);
   const mobileIdleTimerRef = useRef<number | null>(null);
   const mobilePlayTimerRef = useRef<number | null>(null);
@@ -249,7 +258,10 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 
     const prepareVideo = () => {
       setShouldLoadVideo(true);
-      videoRef.current?.load();
+      if (!mobileVideoLoadStartedRef.current) {
+        mobileVideoLoadStartedRef.current = true;
+        videoRef.current?.load();
+      }
     };
 
     if (!("IntersectionObserver" in window)) {
@@ -264,7 +276,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         prepareVideo();
         observer.disconnect();
       },
-      { rootMargin: "300px 0px" },
+      { rootMargin: "600px 0px" },
     );
 
     observer.observe(card);
@@ -331,7 +343,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
       video.muted = true;
       video.volume = 0;
       video.playbackRate = HOVER_VIDEO_SPEED;
-      void video.play().catch(() => {
+      void video.play().catch((error: unknown) => {
+        if (isAbortError(error)) return;
         if (!isMobileVideoActiveRef.current) return;
 
         isMobileVideoActiveRef.current = false;
@@ -341,6 +354,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   };
 
   const startMobileForwardPlayback = () => {
+    mobilePlaybackRequestedRef.current = true;
+
     if (mobileIdleTimerRef.current !== null) {
       window.clearTimeout(mobileIdleTimerRef.current);
       mobileIdleTimerRef.current = null;
@@ -368,7 +383,10 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     if (video.currentTime > 0.03) video.currentTime = 0;
 
     if (video.readyState === HTMLMediaElement.HAVE_NOTHING) {
-      video.load();
+      if (!mobileVideoLoadStartedRef.current) {
+        mobileVideoLoadStartedRef.current = true;
+        video.load();
+      }
       return;
     }
 
@@ -439,6 +457,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   };
 
   const fadeMobileVideoToIdle = () => {
+    mobilePlaybackRequestedRef.current = false;
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -545,7 +565,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 
                   if (
                     window.matchMedia(MOBILE_QUERY).matches &&
-                    isMobileVideoActiveRef.current
+                    isMobileVideoActiveRef.current &&
+                    mobilePlaybackRequestedRef.current
                   ) {
                     video.pause();
                     if (video.currentTime > 0.03) video.currentTime = 0;
@@ -553,6 +574,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                   }
                 }}
                 onError={() => {
+                  mobilePlaybackRequestedRef.current = false;
+                  mobileVideoLoadStartedRef.current = false;
                   isMobileVideoActiveRef.current = false;
                   setIsMobileVideoActive(false);
                   setIsVideoReady(false);
