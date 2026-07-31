@@ -91,6 +91,7 @@ const HOVER_MEDIA_QUERY =
 const HOVER_VIDEO_SPEED = 3.2;
 const REVERSE_VIDEO_SPEED = 5;
 const REVERSE_FRAME_INTERVAL_MS = 1000 / 24;
+const MOBILE_IDLE_FADE_MS = 700;
 
 function AfspraakButton({
   minuten,
@@ -163,6 +164,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const isHoveringRef = useRef(false);
   const isMobileVideoActiveRef = useRef(false);
   const reverseAnimationRef = useRef<number | null>(null);
+  const mobileIdleTimerRef = useRef<number | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isMobileVideoActive, setIsMobileVideoActive] = useState(false);
@@ -203,12 +205,20 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
       if (reverseAnimationRef.current !== null) {
         window.cancelAnimationFrame(reverseAnimationRef.current);
       }
+      if (mobileIdleTimerRef.current !== null) {
+        window.clearTimeout(mobileIdleTimerRef.current);
+      }
     },
     [],
   );
 
   const startForwardPlayback = () => {
     const wasReversing = reverseAnimationRef.current !== null;
+
+    if (mobileIdleTimerRef.current !== null) {
+      window.clearTimeout(mobileIdleTimerRef.current);
+      mobileIdleTimerRef.current = null;
+    }
 
     if (reverseAnimationRef.current !== null) {
       window.cancelAnimationFrame(reverseAnimationRef.current);
@@ -294,6 +304,27 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     reverseAnimationRef.current = window.requestAnimationFrame(playInReverse);
   };
 
+  const fadeMobileVideoToIdle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.pause();
+
+    if (reverseAnimationRef.current !== null) {
+      window.cancelAnimationFrame(reverseAnimationRef.current);
+      reverseAnimationRef.current = null;
+    }
+
+    if (mobileIdleTimerRef.current !== null) {
+      window.clearTimeout(mobileIdleTimerRef.current);
+    }
+
+    mobileIdleTimerRef.current = window.setTimeout(() => {
+      if (!isMobileVideoActiveRef.current) video.currentTime = 0;
+      mobileIdleTimerRef.current = null;
+    }, MOBILE_IDLE_FADE_MS);
+  };
+
   const handleMediaEnter = () => {
     if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
       return;
@@ -322,7 +353,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     if (nextActiveState) {
       startForwardPlayback();
     } else {
-      startReversePlayback();
+      fadeMobileVideoToIdle();
     }
   };
 
@@ -372,8 +403,12 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                   setIsMobileVideoActive(false);
                   setIsVideoReady(false);
                 }}
-                className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-300 ease-out ${
-                  isVideoReady ? "opacity-100" : "opacity-0"
+                className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-700 ease-in-out md:duration-300 md:ease-out ${
+                  isVideoReady
+                    ? isMobileVideoActive
+                      ? "opacity-100"
+                      : "opacity-0 md:opacity-100"
+                    : "opacity-0"
                 }`}
               />
             )}
