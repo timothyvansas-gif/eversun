@@ -27,6 +27,7 @@ export const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline Prestige 1600 zonnebad",
     title: "Ergoline Prestige 1600",
     badge: "2 banken",
+    tag: "Populair",
     description: [
       "Rood Beauty Light biedt de ultieme combinatie van een diepe, egale bruining en intensieve, hoogwaardige huidverzorging.",
       "Stem de bank via 'Personal Sunstyle' af op jouw huid: kies intensive voor maximale kracht, medium voor natuurlijk of sensitive voor mild.",
@@ -57,7 +58,6 @@ export const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline Blue Vision zonnebad",
     title: "Ergoline Blue Vision",
     badge: "2 banken",
-    tag: "Populair",
     description: [
       "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
       "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
