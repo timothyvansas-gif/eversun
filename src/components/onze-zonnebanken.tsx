@@ -85,8 +85,9 @@ const ZONNEBANKEN: Zonnebank[] = [
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const HOVER_MEDIA_QUERY = "(hover: hover) and (pointer: fine)";
-const HOVER_VIDEO_SPEED = 3;
-const VIDEO_FADE_OUT_MS = 800;
+const HOVER_VIDEO_SPEED = 3.2;
+const REVERSE_VIDEO_SPEED = 5;
+const REVERSE_FRAME_INTERVAL_MS = 1000 / 24;
 
 function AfspraakButton({
   minuten,
@@ -157,7 +158,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isHoveringRef = useRef(false);
-  const resetTimerRef = useRef<number | null>(null);
+  const reverseAnimationRef = useRef<number | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
 
@@ -193,8 +194,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 
   useEffect(
     () => () => {
-      if (resetTimerRef.current !== null) {
-        window.clearTimeout(resetTimerRef.current);
+      if (reverseAnimationRef.current !== null) {
+        window.cancelAnimationFrame(reverseAnimationRef.current);
       }
     },
     [],
@@ -205,9 +206,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
       return;
     }
 
-    if (resetTimerRef.current !== null) {
-      window.clearTimeout(resetTimerRef.current);
-      resetTimerRef.current = null;
+    const wasReversing = reverseAnimationRef.current !== null;
+
+    if (reverseAnimationRef.current !== null) {
+      window.cancelAnimationFrame(reverseAnimationRef.current);
+      reverseAnimationRef.current = null;
     }
 
     isHoveringRef.current = true;
@@ -223,22 +226,74 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     video.muted = true;
     video.volume = 0;
     video.playbackRate = HOVER_VIDEO_SPEED;
-    video.currentTime = 0;
+    if (!wasReversing) video.currentTime = 0;
     void video.play().catch(() => setShowVideo(false));
   };
 
   const handleMediaLeave = () => {
     isHoveringRef.current = false;
-    setShowVideo(false);
 
     const video = videoRef.current;
     if (!video) return;
 
     video.pause();
-    resetTimerRef.current = window.setTimeout(() => {
-      if (!isHoveringRef.current) video.currentTime = 0;
-      resetTimerRef.current = null;
-    }, VIDEO_FADE_OUT_MS);
+
+    if (video.currentTime <= 0) {
+      setShowVideo(false);
+      return;
+    }
+
+    setShowVideo(true);
+    const reverseStartTime = video.currentTime;
+    let reverseStartTimestamp: number | null = null;
+    let lastSeekTimestamp = 0;
+
+    const playInReverse = (timestamp: number) => {
+      if (isHoveringRef.current) {
+        reverseAnimationRef.current = null;
+        return;
+      }
+
+      reverseStartTimestamp ??= timestamp;
+      const elapsedSeconds = (timestamp - reverseStartTimestamp) / 1000;
+      const targetTime = Math.max(
+        0,
+        reverseStartTime - elapsedSeconds * REVERSE_VIDEO_SPEED,
+      );
+
+      if (targetTime > 0) {
+        const canSeek =
+          !video.seeking &&
+          timestamp - lastSeekTimestamp >= REVERSE_FRAME_INTERVAL_MS;
+
+        if (canSeek) {
+          video.currentTime = targetTime;
+          lastSeekTimestamp = timestamp;
+        }
+
+        reverseAnimationRef.current =
+          window.requestAnimationFrame(playInReverse);
+        return;
+      }
+
+      if (video.seeking) {
+        reverseAnimationRef.current =
+          window.requestAnimationFrame(playInReverse);
+        return;
+      }
+
+      if (video.currentTime > 0.03) {
+        video.currentTime = 0;
+        reverseAnimationRef.current =
+          window.requestAnimationFrame(playInReverse);
+        return;
+      }
+
+      setShowVideo(false);
+      reverseAnimationRef.current = null;
+    };
+
+    reverseAnimationRef.current = window.requestAnimationFrame(playInReverse);
   };
 
   return (
