@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
@@ -14,6 +14,7 @@ import ergoline700 from "@/images/banken/Ergoline-770.webp";
 
 type Zonnebank = {
   image: StaticImageData;
+  hoverVideo?: string;
   alt: string;
   title: string;
   badge?: string;
@@ -27,6 +28,7 @@ type Zonnebank = {
 const ZONNEBANKEN: Zonnebank[] = [
   {
     image: prestige1600,
+    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070945_1a84aa43-71ce-4d6a-8167-1fce39ca520d.mp4",
     alt: "Ergoline Prestige 1600 zonnebad",
     title: "Ergoline Prestige 1600",
     badge: "2 banken",
@@ -40,6 +42,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: blueVision,
+    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070947_1e54a093-2d46-49cb-8e00-55cb073a9a43.mp4",
     alt: "Ergoline Blue Vision zonnebad",
     title: "Ergoline Blue Vision",
     badge: "2 banken",
@@ -54,6 +57,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: ergoline700,
+    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070948_eef49561-4120-4f57-8198-75209f76b96c.mp4",
     alt: "Ergoline 770 Medium zonnebad",
     title: "Ergoline 770 medium",
     description: [
@@ -66,6 +70,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: affinity600,
+    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070949_ee7acfed-2865-4481-9494-8b6cca0037b5.mp4",
     alt: "Ergoline Affinity 600 zonnebad",
     title: "Ergoline 600 light",
     description: [
@@ -79,6 +84,9 @@ const ZONNEBANKEN: Zonnebank[] = [
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const HOVER_MEDIA_QUERY = "(hover: hover) and (pointer: fine)";
+const HOVER_VIDEO_SPEED = 3;
+const VIDEO_FADE_OUT_MS = 800;
 
 function AfspraakButton({
   minuten,
@@ -146,17 +154,141 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function ZonnebankCard({ data }: { data: Zonnebank }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const isHoveringRef = useRef(false);
+  const resetTimerRef = useRef<number | null>(null);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+
+  useEffect(() => {
+    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+      return;
+    }
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    if (!("IntersectionObserver" in window)) {
+      const fallbackTimer = window.setTimeout(() => setShouldLoadVideo(true), 0);
+      return () => window.clearTimeout(fallbackTimer);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setShouldLoadVideo(true);
+        observer.disconnect();
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [data.hoverVideo]);
+
+  useEffect(
+    () => () => {
+      if (resetTimerRef.current !== null) {
+        window.clearTimeout(resetTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const handleMediaEnter = () => {
+    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+      return;
+    }
+
+    if (resetTimerRef.current !== null) {
+      window.clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+
+    isHoveringRef.current = true;
+
+    if (!shouldLoadVideo) {
+      setShouldLoadVideo(true);
+      return;
+    }
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.volume = 0;
+    video.playbackRate = HOVER_VIDEO_SPEED;
+    video.currentTime = 0;
+    void video.play().catch(() => setShowVideo(false));
+  };
+
+  const handleMediaLeave = () => {
+    isHoveringRef.current = false;
+    setShowVideo(false);
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.pause();
+    resetTimerRef.current = window.setTimeout(() => {
+      if (!isHoveringRef.current) video.currentTime = 0;
+      resetTimerRef.current = null;
+    }, VIDEO_FADE_OUT_MS);
+  };
+
   return (
     <CardWrapper>
-      <div className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]">
+      <div
+        ref={cardRef}
+        className="group flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]"
+        onMouseEnter={handleMediaEnter}
+        onMouseLeave={handleMediaLeave}
+      >
         <div className="relative min-h-[240px] md:min-h-[280px] xl:min-h-[360px] rounded-[8px] overflow-hidden">
-          <Image
-            src={data.image}
-            alt={data.alt}
-            fill
-            className="object-cover object-bottom transition-transform duration-200 ease-out xl:group-hover:scale-[1.04] xl:group-hover:duration-700"
-            sizes="(max-width: 767px) 100vw, 50vw"
-          />
+          <div
+            className={`absolute inset-0 ${
+              data.hoverVideo
+                ? ""
+                : "transition-transform duration-200 ease-out xl:group-hover:scale-[1.04] xl:group-hover:duration-700"
+            }`}
+          >
+            <Image
+              src={data.image}
+              alt={data.alt}
+              fill
+              className="object-cover object-bottom"
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+            {data.hoverVideo && shouldLoadVideo && (
+              <video
+                ref={videoRef}
+                src={data.hoverVideo}
+                muted
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                aria-hidden="true"
+                onCanPlay={() => {
+                  const video = videoRef.current;
+                  if (!video || !isHoveringRef.current) return;
+
+                  video.muted = true;
+                  video.volume = 0;
+                  video.playbackRate = HOVER_VIDEO_SPEED;
+                  void video.play().catch(() => setShowVideo(false));
+                }}
+                onPlaying={() => {
+                  if (isHoveringRef.current) setShowVideo(true);
+                }}
+                onError={() => setShowVideo(false)}
+                className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-[800ms] ease-in-out ${
+                  showVideo ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            )}
+          </div>
           {data.badge && (
             <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
