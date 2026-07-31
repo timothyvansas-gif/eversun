@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.2.66", "192.168.2.*", "localhost:3000"],
   images: {
     formats: isProd ? ["image/avif", "image/webp"] : ["image/webp"],
-    qualities: [75, 80],
+    qualities: [75, 80, 90],
   },
   // Inline the page CSS into the HTML <head> instead of a render-blocking
   // <link>. This is a single-page site with one stylesheet, so there is no

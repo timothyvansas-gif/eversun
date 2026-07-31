@@ -16,6 +16,7 @@ import sunsetIcon from "@/images/zonsondergang.svg";
 
 type Zonnebank = {
   image: StaticImageData;
+  imageQuality?: number;
   mobileVideo: string;
   hoverVideo?: string;
   alt: string;
@@ -46,6 +47,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: blueVision,
+    imageQuality: 90,
     mobileVideo: "/videos/zonnebanken/blue-vision-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070947_1e54a093-2d46-49cb-8e00-55cb073a9a43.mp4",
     alt: "Ergoline Blue Vision zonnebad",
@@ -76,6 +78,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: affinity600,
+    imageQuality: 90,
     mobileVideo: "/videos/zonnebanken/ergoline-600-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070949_ee7acfed-2865-4481-9494-8b6cca0037b5.mp4",
     alt: "Ergoline Affinity 600 zonnebad",
@@ -519,6 +522,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               src={data.image}
               alt={data.alt}
               fill
+              quality={data.imageQuality}
               className="object-cover object-bottom"
               sizes="(max-width: 767px) 100vw, 50vw"
             />
