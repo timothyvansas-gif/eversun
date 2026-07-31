@@ -160,7 +160,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const isHoveringRef = useRef(false);
   const reverseAnimationRef = useRef<number | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
     if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
@@ -226,8 +226,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     video.muted = true;
     video.volume = 0;
     video.playbackRate = HOVER_VIDEO_SPEED;
-    if (!wasReversing) video.currentTime = 0;
-    void video.play().catch(() => setShowVideo(false));
+    if (!wasReversing && video.currentTime > 0.03) video.currentTime = 0;
+    void video.play().catch(() => undefined);
   };
 
   const handleMediaLeave = () => {
@@ -239,11 +239,9 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     video.pause();
 
     if (video.currentTime <= 0) {
-      setShowVideo(false);
       return;
     }
 
-    setShowVideo(true);
     const reverseStartTime = video.currentTime;
     let reverseStartTimestamp: number | null = null;
     let lastSeekTimestamp = 0;
@@ -289,7 +287,6 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         return;
       }
 
-      setShowVideo(false);
       reverseAnimationRef.current = null;
     };
 
@@ -330,19 +327,20 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                 aria-hidden="true"
                 onCanPlay={() => {
                   const video = videoRef.current;
-                  if (!video || !isHoveringRef.current) return;
+                  if (!video) return;
 
                   video.muted = true;
                   video.volume = 0;
                   video.playbackRate = HOVER_VIDEO_SPEED;
-                  void video.play().catch(() => setShowVideo(false));
+                  setIsVideoReady(true);
+
+                  if (isHoveringRef.current) {
+                    void video.play().catch(() => undefined);
+                  }
                 }}
-                onPlaying={() => {
-                  if (isHoveringRef.current) setShowVideo(true);
-                }}
-                onError={() => setShowVideo(false)}
-                className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-[800ms] ease-in-out ${
-                  showVideo ? "opacity-100" : "opacity-0"
+                onError={() => setIsVideoReady(false)}
+                className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-300 ease-out ${
+                  isVideoReady ? "opacity-100" : "opacity-0"
                 }`}
               />
             )}
