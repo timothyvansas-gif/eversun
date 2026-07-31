@@ -37,10 +37,6 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   const playbackTargetRef = useRef<PlaybackTarget>(null);
   const animationFrameRef = useRef<number | null>(null);
   const revealFrameRef = useRef<number | null>(null);
-  const decodedFrameCallbackRef = useRef<{
-    id: number;
-    kind: "animation" | "video";
-  } | null>(null);
   const playRetryTimerRef = useRef<number | null>(null);
   const playAttemptsRef = useRef(0);
   const playRequestIdRef = useRef(0);
@@ -90,13 +86,6 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       }
       if (revealFrameRef.current !== null) {
         window.cancelAnimationFrame(revealFrameRef.current);
-      }
-      const decodedFrameCallback = decodedFrameCallbackRef.current;
-      const video = videoRef.current;
-      if (decodedFrameCallback?.kind === "animation") {
-        window.cancelAnimationFrame(decodedFrameCallback.id);
-      } else if (decodedFrameCallback && video) {
-        video.cancelVideoFrameCallback(decodedFrameCallback.id);
       }
       if (playRetryTimerRef.current !== null) {
         window.clearTimeout(playRetryTimerRef.current);
@@ -225,7 +214,8 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     playbackTargetRef.current = target;
     setIsVideoLoading(true);
 
-    if (!shouldLoadVideo) {
+    const shouldStartLoading = !shouldLoadVideo;
+    if (shouldStartLoading) {
       video.preload = "auto";
       setShouldLoadVideo(true);
     }
@@ -250,8 +240,8 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       }
     }
 
-    if (video.readyState === HTMLMediaElement.HAVE_NOTHING) {
-      attemptPlayback();
+    if (!isVideoReadyRef.current) {
+      if (shouldStartLoading) video.load();
       return;
     }
 
@@ -267,32 +257,26 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     startPlayback(nextActiveState ? "dark" : "light");
   };
 
-  const handleVideoLoadedData = () => {
+  const revealLoadedVideo = () => {
     const video = videoRef.current;
-    if (!video || decodedFrameCallbackRef.current) return;
+    if (!video || isVideoReadyRef.current) return;
 
-    const markFrameReady = () => {
-      decodedFrameCallbackRef.current = null;
-      isVideoReadyRef.current = true;
-      setIsVideoReady(true);
-      if (playbackTargetRef.current && !video.paused) {
-        setIsVideoLoading(false);
-      }
-    };
+    video.pause();
+    isVideoReadyRef.current = true;
+    setIsVideoReady(true);
 
-    if (typeof video.requestVideoFrameCallback === "function") {
-      const id = video.requestVideoFrameCallback(markFrameReady);
-      decodedFrameCallbackRef.current = { id, kind: "video" };
-      if (video.currentTime === 0) video.currentTime = 0.001;
-      return;
+    if (playbackTargetRef.current && revealFrameRef.current === null) {
+      revealFrameRef.current = window.requestAnimationFrame(() => {
+        revealFrameRef.current = window.requestAnimationFrame(() => {
+          revealFrameRef.current = null;
+          attemptPlayback();
+        });
+      });
     }
+  };
 
-    const id = window.requestAnimationFrame(() => {
-      const nextId = window.requestAnimationFrame(markFrameReady);
-      decodedFrameCallbackRef.current = { id: nextId, kind: "animation" };
-    });
-    decodedFrameCallbackRef.current = { id, kind: "animation" };
-    if (video.currentTime === 0) video.currentTime = 0.001;
+  const handleVideoLoadedData = () => {
+    revealLoadedVideo();
   };
 
   const handleVideoCanPlay = () => {
@@ -302,8 +286,13 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     video.muted = true;
     video.volume = 0;
     video.playbackRate = VIDEO_SPEED;
+    revealLoadedVideo();
 
-    if (playbackTargetRef.current && video.paused) {
+    if (
+      playbackTargetRef.current &&
+      isVideoReadyRef.current &&
+      video.paused
+    ) {
       if (revealFrameRef.current !== null) return;
 
       revealFrameRef.current = window.requestAnimationFrame(() => {
@@ -333,14 +322,6 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       window.cancelAnimationFrame(revealFrameRef.current);
       revealFrameRef.current = null;
     }
-    const decodedFrameCallback = decodedFrameCallbackRef.current;
-    const video = videoRef.current;
-    if (decodedFrameCallback?.kind === "animation") {
-      window.cancelAnimationFrame(decodedFrameCallback.id);
-    } else if (decodedFrameCallback && video) {
-      video.cancelVideoFrameCallback(decodedFrameCallback.id);
-    }
-    decodedFrameCallbackRef.current = null;
     isVideoReadyRef.current = false;
     setIsVideoActive(false);
     setIsVideoLoading(false);
