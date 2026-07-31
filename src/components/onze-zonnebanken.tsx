@@ -11,6 +11,8 @@ import prestige1600 from "@/images/banken/Ergoline-Prestige-1600.webp";
 import blueVision from "@/images/banken/Ergoline-Blue-Vision.webp";
 import affinity600 from "@/images/banken/Ergoline-600-v2.webp";
 import ergoline700 from "@/images/banken/Ergoline-770.webp";
+import sunIcon from "@/images/zon.svg";
+import sunsetIcon from "@/images/zonsondergang.svg";
 
 type Zonnebank = {
   image: StaticImageData;
@@ -84,7 +86,8 @@ const ZONNEBANKEN: Zonnebank[] = [
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-const HOVER_MEDIA_QUERY = "(hover: hover) and (pointer: fine)";
+const HOVER_MEDIA_QUERY =
+  "(min-width: 768px) and (hover: hover) and (pointer: fine)";
 const HOVER_VIDEO_SPEED = 3.2;
 const REVERSE_VIDEO_SPEED = 5;
 const REVERSE_FRAME_INTERVAL_MS = 1000 / 24;
@@ -158,9 +161,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isHoveringRef = useRef(false);
+  const isMobileVideoActiveRef = useRef(false);
   const reverseAnimationRef = useRef<number | null>(null);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isMobileVideoActive, setIsMobileVideoActive] = useState(false);
 
   useEffect(() => {
     if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
@@ -171,10 +176,10 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     if (!card) return;
 
     if (!("IntersectionObserver" in window)) {
-      const fallbackTimer = globalThis.setTimeout(
-        () => setShouldLoadVideo(true),
-        0,
-      );
+      const fallbackTimer = globalThis.setTimeout(() => {
+        setShouldLoadVideo(true);
+        videoRef.current?.load();
+      }, 0);
       return () => globalThis.clearTimeout(fallbackTimer);
     }
 
@@ -183,6 +188,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         if (!entry.isIntersecting) return;
 
         setShouldLoadVideo(true);
+        videoRef.current?.load();
         observer.disconnect();
       },
       { rootMargin: "600px 0px" },
@@ -201,11 +207,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     [],
   );
 
-  const handleMediaEnter = () => {
-    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
-      return;
-    }
-
+  const startForwardPlayback = () => {
     const wasReversing = reverseAnimationRef.current !== null;
 
     if (reverseAnimationRef.current !== null) {
@@ -213,26 +215,25 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
       reverseAnimationRef.current = null;
     }
 
-    isHoveringRef.current = true;
-
-    if (!shouldLoadVideo) {
-      setShouldLoadVideo(true);
-      return;
-    }
-
     const video = videoRef.current;
     if (!video) return;
+
+    if (!shouldLoadVideo) setShouldLoadVideo(true);
+    if (video.readyState === HTMLMediaElement.HAVE_NOTHING) video.load();
 
     video.muted = true;
     video.volume = 0;
     video.playbackRate = HOVER_VIDEO_SPEED;
     if (!wasReversing && video.currentTime > 0.03) video.currentTime = 0;
-    void video.play().catch(() => undefined);
+    void video.play().catch(() => {
+      if (!isMobileVideoActiveRef.current) return;
+
+      isMobileVideoActiveRef.current = false;
+      setIsMobileVideoActive(false);
+    });
   };
 
-  const handleMediaLeave = () => {
-    isHoveringRef.current = false;
-
+  const startReversePlayback = () => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -247,7 +248,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     let lastSeekTimestamp = 0;
 
     const playInReverse = (timestamp: number) => {
-      if (isHoveringRef.current) {
+      if (isHoveringRef.current || isMobileVideoActiveRef.current) {
         reverseAnimationRef.current = null;
         return;
       }
@@ -293,6 +294,38 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     reverseAnimationRef.current = window.requestAnimationFrame(playInReverse);
   };
 
+  const handleMediaEnter = () => {
+    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+      return;
+    }
+
+    isHoveringRef.current = true;
+    startForwardPlayback();
+  };
+
+  const handleMediaLeave = () => {
+    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+      return;
+    }
+
+    isHoveringRef.current = false;
+    startReversePlayback();
+  };
+
+  const handleMobileVideoToggle = () => {
+    if (!data.hoverVideo) return;
+
+    const nextActiveState = !isMobileVideoActiveRef.current;
+    isMobileVideoActiveRef.current = nextActiveState;
+    setIsMobileVideoActive(nextActiveState);
+
+    if (nextActiveState) {
+      startForwardPlayback();
+    } else {
+      startReversePlayback();
+    }
+  };
+
   return (
     <CardWrapper>
       <div
@@ -316,13 +349,13 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               className="object-cover object-bottom"
               sizes="(max-width: 767px) 100vw, 50vw"
             />
-            {data.hoverVideo && shouldLoadVideo && (
+            {data.hoverVideo && (
               <video
                 ref={videoRef}
                 src={data.hoverVideo}
                 muted
                 playsInline
-                preload="auto"
+                preload={shouldLoadVideo ? "auto" : "none"}
                 disablePictureInPicture
                 aria-hidden="true"
                 onCanPlay={() => {
@@ -333,12 +366,12 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                   video.volume = 0;
                   video.playbackRate = HOVER_VIDEO_SPEED;
                   setIsVideoReady(true);
-
-                  if (isHoveringRef.current) {
-                    void video.play().catch(() => undefined);
-                  }
                 }}
-                onError={() => setIsVideoReady(false)}
+                onError={() => {
+                  isMobileVideoActiveRef.current = false;
+                  setIsMobileVideoActive(false);
+                  setIsVideoReady(false);
+                }}
                 className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-300 ease-out ${
                   isVideoReady ? "opacity-100" : "opacity-0"
                 }`}
@@ -349,6 +382,44 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">
               {data.badge}
             </span>
+          )}
+          {data.hoverVideo && (
+            <button
+              type="button"
+              onClick={handleMobileVideoToggle}
+              aria-label={
+                isMobileVideoActive
+                  ? "Toon zonnebank geopend"
+                  : "Toon zonnebank gesloten"
+              }
+              aria-pressed={isMobileVideoActive}
+              className={`absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-[background-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 md:hidden ${
+                isMobileVideoActive
+                  ? "bg-black shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
+                  : "bg-white"
+              }`}
+            >
+              <span
+                className={`absolute flex items-center justify-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  isMobileVideoActive
+                    ? "scale-75 rotate-45 opacity-0"
+                    : "scale-100 rotate-0 opacity-100"
+                }`}
+                aria-hidden="true"
+              >
+                <Image src={sunIcon} alt="" width={22} height={22} />
+              </span>
+              <span
+                className={`absolute flex items-center justify-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  isMobileVideoActive
+                    ? "scale-100 rotate-0 opacity-100"
+                    : "scale-75 -rotate-45 opacity-0"
+                }`}
+                aria-hidden="true"
+              >
+                <Image src={sunsetIcon} alt="" width={22} height={18} />
+              </span>
+            </button>
           )}
         </div>
         <div className="flex items-center gap-3 mt-3 md:mt-0">
