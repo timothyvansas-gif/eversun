@@ -56,7 +56,6 @@ export default function ZonnebankMedia({
             ref={videoRef}
             muted
             playsInline
-            poster={data.image.src}
             preload={shouldLoadVideo ? "auto" : "none"}
             disablePictureInPicture
             aria-hidden="true"
