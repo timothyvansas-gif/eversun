@@ -170,8 +170,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     if (!card) return;
 
     if (!("IntersectionObserver" in window)) {
-      const fallbackTimer = window.setTimeout(() => setShouldLoadVideo(true), 0);
-      return () => window.clearTimeout(fallbackTimer);
+      const fallbackTimer = globalThis.setTimeout(
+        () => setShouldLoadVideo(true),
+        0,
+      );
+      return () => globalThis.clearTimeout(fallbackTimer);
     }
 
     const observer = new IntersectionObserver(
