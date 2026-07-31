@@ -66,22 +66,27 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
         >
           <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
 
-          <div className="relative">
-            <button
-              ref={desktopToggleRef}
-              onClick={() => setDesktopMenuOpen((o) => !o)}
-              aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
-              aria-haspopup="true"
-              aria-expanded={desktopMenuOpen}
-              aria-controls="hero-desktop-menu"
-              className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
-            >
-              <span className="flex flex-col items-end gap-[5px]">
-                <HamburgerIcon open={desktopMenuOpen} />
-              </span>
-              Menu
-            </button>
-            <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} triggerRef={desktopToggleRef} />
+          <div className="flex items-center gap-6">
+            <HeroStatus onOpen={onOpenOpeningstijden} />
+            <span aria-hidden="true" className="h-4 w-px shrink-0 bg-white/40" />
+
+            <div className="relative">
+              <button
+                ref={desktopToggleRef}
+                onClick={() => setDesktopMenuOpen((o) => !o)}
+                aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
+                aria-haspopup="true"
+                aria-expanded={desktopMenuOpen}
+                aria-controls="hero-desktop-menu"
+                className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
+              >
+                <span className="flex flex-col items-end gap-[5px]">
+                  <HamburgerIcon open={desktopMenuOpen} />
+                </span>
+                Menu
+              </button>
+              <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} triggerRef={desktopToggleRef} />
+            </div>
           </div>
         </m.div>
 
@@ -109,10 +114,10 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
         </m.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:justify-center lg:translate-y-[3px] min-[1920px]:translate-y-[53px]!">
+        <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-12 lg:block">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-14 lg:mb-0">
-            <div className="translate-y-4 lg:translate-y-8">
+            <div className="translate-y-4 lg:translate-y-0">
               {/* w-fit sizes this wrapper to the title, so the subtitle below can
                   never run wider than it. The subtitle is w-0 min-w-full: width:0
                   keeps it out of the wrapper's intrinsic width (a percentage
@@ -121,13 +126,13 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   On mobile the title has no forced break, so its max-content
                   exceeds the column and fit-content clamps to the full width —
                   same layout as before. */}
-              <div className="w-fit lg:translate-y-4">
+              <div className="w-fit">
                 <m.h1
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
                   custom={0.3}
-                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[64px] lg:leading-[1.1] 2xl:text-[64px] 2xl:leading-[1.1]"
+                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[70px] lg:leading-[1.1] 2xl:text-[70px] 2xl:leading-[1.1]"
                   style={{ marginLeft: "-3px", color: "#ffffff" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -139,14 +144,16 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 </m.h1>
 
                 <m.p
-                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-5 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px]"
+                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px]"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
                   custom={0.6}
                   style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
-                  Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio en geniet van rust, persoonlijk advies en alle aandacht voor je huid.
+                  Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio
+                  <br />
+                  en geniet van rust, persoonlijk advies en alle aandacht voor je huid.
                 </m.p>
 
                 <m.p
@@ -162,41 +169,18 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </div>
 
               <m.div
-                className="mt-6 md:mt-8 lg:mt-9 flex flex-row items-center w-full lg:w-auto gap-6 lg:gap-6 lg:translate-y-4"
+                className="mt-6 md:mt-8 lg:mt-9 flex flex-row items-center justify-between w-full gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
                 custom={0.7}
               >
                 <HeroButtons onOpenAfspraak={onOpenAfspraak} />
+                <HeroReviews onSettled={() => setReviewsSettled(true)} />
               </m.div>
-
-              {/* Preserve the original height of the desktop content block now
-                  that the status/reviews row is anchored independently below.
-                  This keeps the vertically centred title, subtitle and CTA in
-                  exactly the same place. */}
-              <div
-                aria-hidden="true"
-                className="hidden lg:block h-[204px] min-[1920px]:h-[304px]"
-              />
             </div>
           </div>
         </div>
-
-        {/* Keep a stable 64px gap to the hero edge on desktop: 24px here plus
-            the content wrapper's 40px bottom padding. Unlike a flow-positioned
-            row, this does not drift toward the edge when the macOS Dock reduces
-            the browser viewport height. */}
-        <m.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.9}
-          className="hidden lg:flex absolute inset-x-0 bottom-6 items-center justify-between w-full"
-        >
-          <HeroStatus onOpen={onOpenOpeningstijden} />
-          <HeroReviews onSettled={() => setReviewsSettled(true)} />
-        </m.div>
 
         <m.div
           variants={fadeUp}
