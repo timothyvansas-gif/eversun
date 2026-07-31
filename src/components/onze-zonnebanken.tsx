@@ -93,11 +93,22 @@ const ZONNEBANKEN: Zonnebank[] = [
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const HOVER_MEDIA_QUERY =
   "(min-width: 768px) and (hover: hover) and (pointer: fine)";
-const HOVER_VIDEO_SPEED = 3.2;
-const REVERSE_VIDEO_SPEED = 5;
+const HOVER_VIDEO_SPEED = 4;
+const REVERSE_VIDEO_SPEED = 5.5;
 const REVERSE_FRAME_INTERVAL_MS = 1000 / 24;
 const MOBILE_IDLE_FADE_MS = 700;
-const MOBILE_VIDEO_REVEAL_MS = 220;
+const MOBILE_VIDEO_REVEAL_MS = 120;
+
+function isDesktopSafariBrowser() {
+  const { navigator } = window;
+
+  return (
+    navigator.vendor === "Apple Computer, Inc." &&
+    navigator.maxTouchPoints === 0 &&
+    /Safari/i.test(navigator.userAgent) &&
+    !/(Chrome|Chromium|CriOS|Edg|OPR)/i.test(navigator.userAgent)
+  );
+}
 
 function AfspraakButton({
   minuten,
@@ -175,9 +186,27 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isMobileVideoActive, setIsMobileVideoActive] = useState(false);
+  const [useSafariImageHover, setUseSafariImageHover] = useState(false);
 
   useEffect(() => {
-    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+    const hoverMedia = window.matchMedia(HOVER_MEDIA_QUERY);
+    const updateHoverMode = () => {
+      setUseSafariImageHover(
+        isDesktopSafariBrowser() && hoverMedia.matches,
+      );
+    };
+
+    updateHoverMode();
+    hoverMedia.addEventListener("change", updateHoverMode);
+    return () => hoverMedia.removeEventListener("change", updateHoverMode);
+  }, []);
+
+  useEffect(() => {
+    if (
+      !data.hoverVideo ||
+      !window.matchMedia(HOVER_MEDIA_QUERY).matches ||
+      isDesktopSafariBrowser()
+    ) {
       return;
     }
 
@@ -433,7 +462,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   };
 
   const handleMediaEnter = () => {
-    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+    if (
+      !data.hoverVideo ||
+      useSafariImageHover ||
+      !window.matchMedia(HOVER_MEDIA_QUERY).matches
+    ) {
       return;
     }
 
@@ -442,7 +475,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   };
 
   const handleMediaLeave = () => {
-    if (!data.hoverVideo || !window.matchMedia(HOVER_MEDIA_QUERY).matches) {
+    if (
+      !data.hoverVideo ||
+      useSafariImageHover ||
+      !window.matchMedia(HOVER_MEDIA_QUERY).matches
+    ) {
       return;
     }
 
@@ -473,9 +510,9 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         <div className="relative min-h-[240px] md:min-h-[280px] xl:min-h-[360px] rounded-[8px] overflow-hidden">
           <div
             className={`absolute inset-0 ${
-              data.hoverVideo
+              data.hoverVideo && !useSafariImageHover
                 ? ""
-                : "transition-transform duration-200 ease-out xl:group-hover:scale-[1.04] xl:group-hover:duration-700"
+                : "transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] md:group-hover:scale-[1.03] md:group-hover:duration-300"
             }`}
           >
             <Image
@@ -485,7 +522,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               className="object-cover object-bottom"
               sizes="(max-width: 767px) 100vw, 50vw"
             />
-            {data.hoverVideo && (
+            {data.hoverVideo && !useSafariImageHover && (
               <video
                 ref={videoRef}
                 muted
@@ -518,7 +555,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                 }}
                 className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity md:duration-300 md:ease-out ${
                   isMobileVideoActive
-                    ? "duration-[220ms] ease-out"
+                    ? "duration-150 ease-out"
                     : "duration-700 ease-in-out"
                 } ${
                   isVideoReady
