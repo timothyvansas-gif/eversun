@@ -46,6 +46,20 @@ const ZONNEBANKEN: Zonnebank[] = [
     whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Prestige%201600",
   },
   {
+    image: ergoline700,
+    mobileVideo: "/videos/zonnebanken/ergoline-770-mobile.mp4",
+    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070948_eef49561-4120-4f57-8198-75209f76b96c.mp4",
+    alt: "Ergoline 770 Medium zonnebad",
+    title: "Ergoline 770 medium",
+    description: [
+      "Een vertrouwde en geliefde krachtpatser die garant staat voor een consistent, onberispelijk en egaal bruiningsresultaat.",
+      "Deze bank focust op pure performance. De ideale keuze voor de ervaren zonner die gaat voor een krachtige, betrouwbare sessie zonder poespas.",
+    ],
+    minuten: "20 min",
+    prijs: "€ 14,00",
+    whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20770%20medium",
+  },
+  {
     image: blueVision,
     imageQuality: 90,
     mobileVideo: "/videos/zonnebanken/blue-vision-mobile.mp4",
@@ -61,20 +75,6 @@ const ZONNEBANKEN: Zonnebank[] = [
     minuten: "20 min",
     prijs: "€ 19,50",
     whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20Blue%20Vision",
-  },
-  {
-    image: ergoline700,
-    mobileVideo: "/videos/zonnebanken/ergoline-770-mobile.mp4",
-    hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070948_eef49561-4120-4f57-8198-75209f76b96c.mp4",
-    alt: "Ergoline 770 Medium zonnebad",
-    title: "Ergoline 770 medium",
-    description: [
-      "Een vertrouwde en geliefde krachtpatser die garant staat voor een consistent, onberispelijk en egaal bruiningsresultaat.",
-      "Deze bank focust op pure performance. De ideale keuze voor de ervaren zonner die gaat voor een krachtige, betrouwbare sessie zonder poespas.",
-    ],
-    minuten: "20 min",
-    prijs: "€ 14,00",
-    whatsappUrl: "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken%20voor%20de%20bank%20Ergoline%20770%20medium",
   },
   {
     image: affinity600,
