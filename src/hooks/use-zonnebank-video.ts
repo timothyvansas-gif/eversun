@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 
 const VIDEO_SPEED = 4;
 const VIDEO_PLAY_RETRY_MS = 120;
@@ -44,6 +45,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   const playAttemptsRef = useRef(0);
   const playRequestIdRef = useRef(0);
   const playPromisePendingRef = useRef(false);
+  const isVideoReadyRef = useRef(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isVideoActive, setIsVideoActive] = useState(false);
@@ -51,7 +53,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card) return;
+    if (!card || window.matchMedia(MOBILE_QUERY).matches) return;
 
     const prepareVideo = () => {
       const video = videoRef.current;
@@ -74,7 +76,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
         prepareVideo();
         observer.disconnect();
       },
-      { rootMargin: "1200px 0px" },
+      { rootMargin: "600px 0px" },
     );
 
     observer.observe(card);
@@ -160,7 +162,6 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     video.muted = true;
     video.volume = 0;
     video.playbackRate = VIDEO_SPEED;
-    setIsVideoReady(true);
     playAttemptsRef.current += 1;
     playPromisePendingRef.current = true;
     const requestId = playRequestIdRef.current;
@@ -170,7 +171,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
         if (requestId !== playRequestIdRef.current) return;
         playPromisePendingRef.current = false;
         playAttemptsRef.current = 0;
-        setIsVideoLoading(false);
+        if (isVideoReadyRef.current) setIsVideoLoading(false);
         stopPlaybackMonitor();
         animationFrameRef.current =
           window.requestAnimationFrame(monitorPlayback);
@@ -272,7 +273,11 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     const markFrameReady = () => {
       decodedFrameCallbackRef.current = null;
+      isVideoReadyRef.current = true;
       setIsVideoReady(true);
+      if (playbackTargetRef.current && !video.paused) {
+        setIsVideoLoading(false);
+      }
     };
 
     if (typeof video.requestVideoFrameCallback === "function") {
@@ -309,7 +314,9 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   };
 
   const handleVideoPlaying = () => {
-    if (playbackTargetRef.current) setIsVideoLoading(false);
+    if (playbackTargetRef.current && isVideoReadyRef.current) {
+      setIsVideoLoading(false);
+    }
   };
 
   const handleVideoWaiting = () => {
@@ -334,6 +341,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       video.cancelVideoFrameCallback(decodedFrameCallback.id);
     }
     decodedFrameCallbackRef.current = null;
+    isVideoReadyRef.current = false;
     setIsVideoActive(false);
     setIsVideoLoading(false);
     setIsVideoReady(false);
