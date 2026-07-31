@@ -16,6 +16,7 @@ import sunsetIcon from "@/images/zonsondergang.svg";
 
 type Zonnebank = {
   image: StaticImageData;
+  mobileVideo: string;
   hoverVideo?: string;
   alt: string;
   title: string;
@@ -30,6 +31,7 @@ type Zonnebank = {
 const ZONNEBANKEN: Zonnebank[] = [
   {
     image: prestige1600,
+    mobileVideo: "/videos/zonnebanken/prestige-1600-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070945_1a84aa43-71ce-4d6a-8167-1fce39ca520d.mp4",
     alt: "Ergoline Prestige 1600 zonnebad",
     title: "Ergoline Prestige 1600",
@@ -44,6 +46,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: blueVision,
+    mobileVideo: "/videos/zonnebanken/blue-vision-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070947_1e54a093-2d46-49cb-8e00-55cb073a9a43.mp4",
     alt: "Ergoline Blue Vision zonnebad",
     title: "Ergoline Blue Vision",
@@ -59,6 +62,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: ergoline700,
+    mobileVideo: "/videos/zonnebanken/ergoline-770-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070948_eef49561-4120-4f57-8198-75209f76b96c.mp4",
     alt: "Ergoline 770 Medium zonnebad",
     title: "Ergoline 770 medium",
@@ -72,6 +76,7 @@ const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: affinity600,
+    mobileVideo: "/videos/zonnebanken/ergoline-600-mobile.mp4",
     hoverVideo: "https://d8j0ntlcm91z4.cloudfront.net/user_2vENFymPevvw7Jf39D30rrOYhXr/hf_20260731_070949_ee7acfed-2865-4481-9494-8b6cca0037b5.mp4",
     alt: "Ergoline Affinity 600 zonnebad",
     title: "Ergoline 600 light",
@@ -203,7 +208,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   }, [data.hoverVideo]);
 
   useEffect(() => {
-    if (!data.hoverVideo || !window.matchMedia(MOBILE_QUERY).matches) {
+    if (!data.mobileVideo || !window.matchMedia(MOBILE_QUERY).matches) {
       return;
     }
 
@@ -232,7 +237,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
 
     observer.observe(card);
     return () => observer.disconnect();
-  }, [data.hoverVideo]);
+  }, [data.mobileVideo]);
 
   useEffect(
     () => () => {
@@ -446,8 +451,6 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   };
 
   const handleMobileVideoToggle = () => {
-    if (!data.hoverVideo) return;
-
     const nextActiveState = !isMobileVideoActiveRef.current;
     isMobileVideoActiveRef.current = nextActiveState;
     setIsMobileVideoActive(nextActiveState);
@@ -485,7 +488,6 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             {data.hoverVideo && (
               <video
                 ref={videoRef}
-                src={data.hoverVideo}
                 muted
                 playsInline
                 preload={shouldLoadVideo ? "auto" : "none"}
@@ -525,7 +527,14 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
                       : "opacity-0 md:opacity-100"
                     : "opacity-0"
                 }`}
-              />
+              >
+                <source
+                  src={data.mobileVideo}
+                  media={MOBILE_QUERY}
+                  type="video/mp4"
+                />
+                <source src={data.hoverVideo} type="video/mp4" />
+              </video>
             )}
           </div>
           {data.badge && (
@@ -539,8 +548,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               onClick={handleMobileVideoToggle}
               aria-label={
                 isMobileVideoActive
-                  ? "Toon zonnebank geopend"
-                  : "Toon zonnebank gesloten"
+                  ? "Toon zonnebank in het licht"
+                  : "Toon zonnebank in het donker"
               }
               aria-pressed={isMobileVideoActive}
               className={`absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-[background-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 md:hidden ${
