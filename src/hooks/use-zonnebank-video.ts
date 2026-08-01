@@ -4,10 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 
-const VIDEO_SPEED = 4;
+// Play at native speed. Above 2x Safari stops presenting anything but
+// keyframes — the clip used to run at 4x and Safari painted a single frame,
+// so the toggle jumped straight from light to dark with nothing in between.
+// The 4x speed-up is baked into the files instead (~2.6s at 60fps), which
+// every browser renders in full.
+const VIDEO_SPEED = 1;
 const VIDEO_PLAY_RETRY_MS = 120;
 const MAX_VIDEO_PLAY_ATTEMPTS = 3;
-const ENDPOINT_MARGIN_SECONDS = 0.08;
+// One rAF tick advances the clip ~17ms now that it plays at 1x, so this only
+// has to cover a single frame of overshoot before finishPlayback snaps to the
+// exact resting position.
+const ENDPOINT_MARGIN_SECONDS = 0.04;
 
 function isAbortError(error: unknown) {
   return error instanceof DOMException && error.name === "AbortError";
