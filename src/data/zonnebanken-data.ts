@@ -22,8 +22,8 @@ export type Zonnebank = {
 export const ZONNEBANKEN: Zonnebank[] = [
   {
     image: prestige1600,
-    mobileVideo: "/videos/zonnebanken/prestige-1600-toggle-mobile.mp4?v=9",
-    desktopVideo: "/videos/zonnebanken/prestige-1600-toggle-desktop.mp4?v=7",
+    mobileVideo: "/videos/zonnebanken/prestige-1600-toggle-mobile.mp4?v=10",
+    desktopVideo: "/videos/zonnebanken/prestige-1600-toggle-desktop.mp4?v=8",
     alt: "Ergoline Prestige 1600 zonnebad",
     title: "Ergoline Prestige 1600",
     badge: "2 banken",
@@ -38,8 +38,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
   },
   {
     image: ergoline700,
-    mobileVideo: "/videos/zonnebanken/ergoline-770-toggle-mobile.mp4?v=9",
-    desktopVideo: "/videos/zonnebanken/ergoline-770-toggle-desktop.mp4?v=7",
+    mobileVideo: "/videos/zonnebanken/ergoline-770-toggle-mobile.mp4?v=10",
+    desktopVideo: "/videos/zonnebanken/ergoline-770-toggle-desktop.mp4?v=8",
     alt: "Ergoline 770 Medium zonnebad",
     title: "Ergoline 770 medium",
     description: [
@@ -53,8 +53,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
   {
     image: blueVision,
     imageQuality: 90,
-    mobileVideo: "/videos/zonnebanken/blue-vision-toggle-mobile.mp4?v=9",
-    desktopVideo: "/videos/zonnebanken/blue-vision-toggle-desktop.mp4?v=7",
+    mobileVideo: "/videos/zonnebanken/blue-vision-toggle-mobile.mp4?v=10",
+    desktopVideo: "/videos/zonnebanken/blue-vision-toggle-desktop.mp4?v=8",
     alt: "Ergoline Blue Vision zonnebad",
     title: "Ergoline Blue Vision",
     badge: "2 banken",
@@ -69,8 +69,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
   {
     image: affinity600,
     imageQuality: 90,
-    mobileVideo: "/videos/zonnebanken/ergoline-600-toggle-mobile.mp4?v=9",
-    desktopVideo: "/videos/zonnebanken/ergoline-600-toggle-desktop.mp4?v=7",
+    mobileVideo: "/videos/zonnebanken/ergoline-600-toggle-mobile.mp4?v=10",
+    desktopVideo: "/videos/zonnebanken/ergoline-600-toggle-desktop.mp4?v=8",
     alt: "Ergoline Affinity 600 zonnebad",
     title: "Ergoline 600 light",
     description: [
