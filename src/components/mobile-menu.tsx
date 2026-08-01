@@ -61,125 +61,140 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   };
 
   return (
-    <m.div
-      data-lenis-prevent
-      initial={{ x: "100%" }}
-      animate={{ x: isOpen ? "0%" : "100%" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Menu"
-      className="fixed top-0 right-0 w-[95%] h-full bg-black z-[200] p-8 flex flex-col lg:hidden"
-      aria-hidden={!isOpen}
-      inert={!isOpen}
-    >
-      {/* Top Bar: Social Icons + Close */}
-      <div className="flex items-center justify-between mb-12">
-        <div className="flex items-center gap-2">
-          <a
-            href="https://www.facebook.com/eversun.assen/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 text-surface-page active:opacity-60 transition-opacity"
-            aria-label="Facebook"
-          >
-            <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
-          </a>
-          <a
-            href="https://www.instagram.com/ever_sun_assen/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 text-surface-page active:opacity-60 transition-opacity"
-            aria-label="Instagram"
-          >
-            <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
-          </a>
-          {canShare && (
-            <button
-              onClick={handleShare}
-              aria-label="Pagina delen"
+    // Viewport-sized clipping frame. The panel parks itself one screen to the
+    // right while closed, and `overflow-x: clip` on <html> does not reach it:
+    // a position:fixed box hangs off the viewport, not off the element it is
+    // drawn inside, so no ancestor's overflow can clip it. On iOS Safari that
+    // parked panel is pannable, which shows up as the whole page sliding
+    // sideways. Wrapping it in a fixed, viewport-sized box and making the panel
+    // `absolute` puts it back under this frame's control, where clipping works.
+    //
+    // `clip` (not `hidden`) on the x-axis only, so the y-axis keeps its
+    // `visible` behaviour — `hidden` would force overflow-y to `auto` and turn
+    // this into a scroll container, which would swallow the touch handling.
+    // `pointer-events-none` keeps the invisible frame from intercepting taps;
+    // the panel re-enables them for itself.
+    <div className="fixed inset-0 z-[200] overflow-x-clip pointer-events-none lg:hidden">
+      <m.div
+        data-lenis-prevent
+        initial={{ x: "100%" }}
+        animate={{ x: isOpen ? "0%" : "100%" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        className="absolute top-0 right-0 w-[95%] h-full bg-black p-8 flex flex-col pointer-events-auto"
+        aria-hidden={!isOpen}
+        inert={!isOpen}
+      >
+        {/* Top Bar: Social Icons + Close */}
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center gap-2">
+            <a
+              href="https://www.facebook.com/eversun.assen/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="p-2 text-surface-page active:opacity-60 transition-opacity"
+              aria-label="Facebook"
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
+              <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+            </a>
+            <a
+              href="https://www.instagram.com/ever_sun_assen/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-surface-page active:opacity-60 transition-opacity"
+              aria-label="Instagram"
+            >
+              <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+            </a>
+            {canShare && (
+              <button
+                onClick={handleShare}
+                aria-label="Pagina delen"
+                className="p-2 text-surface-page active:opacity-60 transition-opacity"
               >
-                <circle cx="18" cy="5" r="3" />
-                <circle cx="6" cy="12" r="3" />
-                <circle cx="18" cy="19" r="3" />
-                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-              </svg>
-            </button>
-          )}
-        </div>
-        <button
-          onClick={onClose}
-          aria-label="Menu sluiten"
-          className="p-2 text-surface-page active:scale-90 transition-transform"
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      {/* Navigation Items */}
-      <nav className="flex flex-col gap-8">
-        {NAV_ITEMS.map((item) => (
-          <a 
-            key={item} 
-            href={`#${item.toLowerCase().replace(" ", "-")}`} 
-            onClick={(e) => handleNavClick(e, item)}
-            className="text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Menu sluiten"
+            className="p-2 text-surface-page active:scale-90 transition-transform"
           >
-            {item}
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+  
+        {/* Navigation Items */}
+        <nav className="flex flex-col gap-8">
+          {NAV_ITEMS.map((item) => (
+            <a 
+              key={item} 
+              href={`#${item.toLowerCase().replace(" ", "-")}`} 
+              onClick={(e) => handleNavClick(e, item)}
+              className="text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
+            >
+              {item}
+            </a>
+          ))}
+          
+          <div className="h-[1px] bg-surface-page/10 w-full my-2" />
+          
+          <a 
+            href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="flex items-center gap-3 text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
+          >
+            WhatsApp
+            <Image
+              src={whatsappIcon}
+              alt=""
+              width={24}
+              height={24}
+              className="w-6 h-6 brightness-0 invert"
+            />
           </a>
-        ))}
-        
-        <div className="h-[1px] bg-surface-page/10 w-full my-2" />
-        
-        <a 
-          href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          className="flex items-center gap-3 text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
-        >
-          WhatsApp
-          <Image
-            src={whatsappIcon}
-            alt=""
-            width={24}
-            height={24}
-            className="w-6 h-6 brightness-0 invert"
-          />
-        </a>
-      </nav>
-
-      {/* Footer Info */}
-      <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
-        <p className="text-surface-page/60 text-sm font-medium">
-          Ever Sun Zonnestudio
-        </p>
-        <p className="text-surface-page/60 text-sm font-medium mb-2">
-          Kloekhorststraat 4a Assen
-        </p>
-        <a 
-          href="tel:0625306491" 
-          className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted"
-        >
-          06 25306491
-        </a>
-      </div>
-    </m.div>
+        </nav>
+  
+        {/* Footer Info */}
+        <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
+          <p className="text-surface-page/60 text-sm font-medium">
+            Ever Sun Zonnestudio
+          </p>
+          <p className="text-surface-page/60 text-sm font-medium mb-2">
+            Kloekhorststraat 4a Assen
+          </p>
+          <a 
+            href="tel:0625306491" 
+            className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted"
+          >
+            06 25306491
+          </a>
+        </div>
+      </m.div>
+    </div>
   );
 }
