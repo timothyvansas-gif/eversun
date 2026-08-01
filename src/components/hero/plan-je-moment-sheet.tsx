@@ -166,7 +166,7 @@ export default function PlanJeMomentSheet({
                 <div className="mb-8">
                   <h2 className="card-title text-zinc-900">Plan je moment</h2>
                   <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
-                    Toe aan een moment voor jezelf? Plan jouw bezoek aan Ever Sun, Kloekhorststraat 4a Assen
+                    Toe aan een moment voor jezelf? Kom lekker langs aan de Kloekhorststraat 4A in Assen
                   </p>
                 </div>
 
