@@ -6,8 +6,8 @@ import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
 import reviewer3 from "@/images/people/reviewer-3.webp";
-import iconStar from "@/images/icon-star.svg";
 import { BLOB_SIZE } from "@/components/hero/button-constants";
+import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { Backdrop } from "@/components/ui/backdrop";
@@ -120,7 +120,7 @@ function Review() {
           <p className="font-sans text-[14px] font-medium text-ink">Willeke Veenstra</p>
           <div className="flex gap-0.5 mt-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
-              <Image key={i} src={iconStar} alt="" width={14} height={14} />
+              <StarIcon key={i} size={14} />
             ))}
           </div>
         </div>

@@ -7,7 +7,7 @@ import reviewer1 from "@/images/people/reviewer-1.webp";
 import reviewer2 from "@/images/people/reviewer-2.webp";
 import reviewer3 from "@/images/people/reviewer-3.webp";
 import reviewer4 from "@/images/people/reviewer-4.webp";
-import iconStar from "@/images/icon-star.svg";
+import StarIcon from "@/components/ui/star-icon";
 
 const reviewers = [reviewer1, reviewer4, reviewer2, reviewer3];
 
@@ -107,7 +107,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
                     >
                       <div className="flex" style={{ gap: 4, marginBottom: 8 }}>
                         {Array.from({ length: 5 }).map((_, s) => (
-                          <Image key={s} src={iconStar} alt="" width={16} height={16} />
+                          <StarIcon key={s} size={16} />
                         ))}
                       </div>
                       <span className="font-sans text-[15px] leading-[24px] text-white/90">
