@@ -25,7 +25,7 @@ const fadeUp = {
 };
 
 
-export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
+export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, onOpenPlanJeMoment, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   // Desktop menu is a hero-scoped dropdown (see DesktopMenu), independent of the
   // mobile slide-in/push flow that `onOpenMenu` drives.
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
@@ -175,7 +175,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 animate="visible"
                 custom={0.7}
               >
-                <HeroButtons onOpenAfspraak={onOpenAfspraak} />
+                <HeroButtons onOpenAfspraak={onOpenAfspraak} onOpenPlanJeMoment={onOpenPlanJeMoment} />
                 <HeroReviews onSettled={() => setReviewsSettled(true)} />
               </m.div>
             </div>

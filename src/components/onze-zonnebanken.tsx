@@ -6,6 +6,7 @@ import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
+import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
 import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
@@ -46,10 +47,11 @@ function AfspraakButton({
   className?: string;
 }) {
   const [qrOpen, setQrOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const handleClick = () => {
     if (window.matchMedia(MOBILE_QUERY).matches) {
-      window.open(whatsappUrl, "_blank");
+      setSheetOpen(true);
     } else {
       setQrOpen(true);
     }
@@ -77,6 +79,11 @@ function AfspraakButton({
       </div>
 
       <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+      <PlanJeMomentSheet
+        isOpen={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        whatsappUrl={whatsappUrl}
+      />
     </>
   );
 }

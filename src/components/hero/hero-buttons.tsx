@@ -13,7 +13,7 @@ const baseStyle: React.CSSProperties = {
 };
 
 
-export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => void }) {
+export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
   const [primaryHovered, setPrimaryHovered] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
@@ -30,7 +30,7 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         onMouseLeave={() => setPrimaryHovered(false)}
         onClick={() => {
           if (window.innerWidth < 768) {
-            window.open("https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken", "_blank");
+            onOpenPlanJeMoment();
           } else {
             onOpenAfspraak();
           }

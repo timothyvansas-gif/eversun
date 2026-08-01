@@ -22,16 +22,15 @@ import imgBarefootBeachwood from "@/images/producten/eversun-barefoot-beachwood.
 import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.webp";
 
 const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
-
-const WHATSAPP_URL =
-  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
+const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 
 function PlanMomentButton() {
   const [qrOpen, setQrOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const handleClick = () => {
     if (window.matchMedia(MOBILE_QUERY).matches) {
-      window.open(WHATSAPP_URL, "_blank");
+      setSheetOpen(true);
     } else {
       setQrOpen(true);
     }
@@ -47,6 +46,7 @@ function PlanMomentButton() {
         <CtaArrow />
       </button>
       <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+      <PlanJeMomentSheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
     </>
   );
 }

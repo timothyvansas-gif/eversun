@@ -11,10 +11,12 @@ import dynamic from "next/dynamic";
 import HeroContent from "./hero-content";
 const OpeningstijdenOverlay = dynamic(() => import("./openingstijden-overlay"));
 const AfspraakOverlay = dynamic(() => import("./afspraak-overlay"));
+const PlanJeMomentSheet = dynamic(() => import("./plan-je-moment-sheet"));
 
 export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
   const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
   const [isAfspraakOpen, setIsAfspraakOpen] = useState(false);
+  const [isPlanJeMomentOpen, setIsPlanJeMomentOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const statusButtonRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll({
@@ -145,6 +147,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           onOpenMenu={onOpenMenu}
           onOpenOpeningstijden={() => setIsOpeningstijdenOpen(true)}
           onOpenAfspraak={() => setIsAfspraakOpen(true)}
+          onOpenPlanJeMoment={() => setIsPlanJeMomentOpen(true)}
           statusButtonRef={statusButtonRef}
         />
       </div>
@@ -155,6 +158,10 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       <AfspraakOverlay
         isOpen={isAfspraakOpen}
         onClose={() => setIsAfspraakOpen(false)}
+      />
+      <PlanJeMomentSheet
+        isOpen={isPlanJeMomentOpen}
+        onClose={() => setIsPlanJeMomentOpen(false)}
       />
     </section>
   );
