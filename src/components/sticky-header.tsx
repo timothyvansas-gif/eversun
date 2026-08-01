@@ -13,6 +13,7 @@ export default function StickyHeader({
   isMenuOpen: boolean;
 }) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -23,17 +24,40 @@ export default function StickyHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Safari on iOS pins position:fixed to the *layout* viewport. Focus a contact
+  // field and the keyboard slides the *visual* viewport down inside that layout
+  // viewport to uncover the input — which drags this header up past the top of
+  // the screen, so it looks like it tears loose and vanishes mid-focus.
+  // Re-anchoring to visualViewport.offsetTop only half works: iOS reports the
+  // shift late and stops updating while the keyboard animates, so the header
+  // settles somewhere cut off. Retracting it for as long as the keyboard is up
+  // is deterministic, and a phone showing a keyboard has no room to spare for a
+  // 56px bar anyway. It slides back in on blur, on its usual curve.
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    // Collapsing browser toolbars account for well under 150px of difference;
+    // no phone keyboard is anywhere near that small.
+    const sync = () => setIsKeyboardOpen(window.innerHeight - viewport.height > 150);
+    sync();
+    viewport.addEventListener("resize", sync);
+    return () => viewport.removeEventListener("resize", sync);
+  }, []);
+
+  const isShown = isVisible && !isKeyboardOpen;
+
   return (
     <header
       style={{
         marginLeft: isMenuOpen ? "-95%" : "0%",
-        transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+        transform: isShown ? "translateY(0)" : "translateY(-100%)",
         transitionProperty: "transform, margin-left",
         transitionDuration: "800ms",
         transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
       }}
       className={`fixed top-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-sm h-14 flex items-center lg:hidden ${
-        isVisible ? "" : "pointer-events-none"
+        isShown ? "" : "pointer-events-none"
       }`}
     >
       <div className="w-full flex items-center justify-between px-6">
