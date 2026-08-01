@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
@@ -12,28 +12,6 @@ import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-const subscribeToDesktopSafari = () => () => {};
-
-function getDesktopSafariSnapshot() {
-  const isSafari =
-    navigator.vendor === "Apple Computer, Inc." &&
-    /Safari/i.test(navigator.userAgent) &&
-    !/(CriOS|FxiOS|EdgiOS|OPiOS)/i.test(navigator.userAgent);
-  const hasDesktopPointer = window.matchMedia(
-    "(hover: hover) and (pointer: fine)",
-  ).matches;
-
-  return isSafari && hasDesktopPointer;
-}
-
-function useIsDesktopSafari() {
-  return useSyncExternalStore(
-    subscribeToDesktopSafari,
-    getDesktopSafariSnapshot,
-    () => false,
-  );
-}
 
 function AfspraakButton({
   minuten,
@@ -106,13 +84,7 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ZonnebankCard({
-  data,
-  isDesktopSafari,
-}: {
-  data: Zonnebank;
-  isDesktopSafari: boolean;
-}) {
+function ZonnebankCard({ data }: { data: Zonnebank }) {
   const {
     cardRef,
     videoRef,
@@ -136,7 +108,6 @@ function ZonnebankCard({
       >
         <ZonnebankMedia
           data={data}
-          isDesktopSafari={isDesktopSafari}
           videoRef={videoRef}
           shouldLoadVideo={shouldLoadVideo}
           isVideoReady={isVideoReady}
@@ -180,32 +151,18 @@ function MobileDivider() {
 }
 
 function ProductionGrid() {
-  const isDesktopSafari = useIsDesktopSafari();
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row gap-6">
-        <ZonnebankCard
-          data={ZONNEBANKEN[0]}
-          isDesktopSafari={isDesktopSafari}
-        />
+        <ZonnebankCard data={ZONNEBANKEN[0]} />
         <MobileDivider />
-        <ZonnebankCard
-          data={ZONNEBANKEN[1]}
-          isDesktopSafari={isDesktopSafari}
-        />
+        <ZonnebankCard data={ZONNEBANKEN[1]} />
       </div>
       <MobileDivider />
       <div className="flex flex-col md:flex-row gap-6">
-        <ZonnebankCard
-          data={ZONNEBANKEN[2]}
-          isDesktopSafari={isDesktopSafari}
-        />
+        <ZonnebankCard data={ZONNEBANKEN[2]} />
         <MobileDivider />
-        <ZonnebankCard
-          data={ZONNEBANKEN[3]}
-          isDesktopSafari={isDesktopSafari}
-        />
+        <ZonnebankCard data={ZONNEBANKEN[3]} />
       </div>
     </div>
   );

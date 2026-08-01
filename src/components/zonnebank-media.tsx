@@ -9,7 +9,6 @@ import sunsetIcon from "@/images/zonsondergang.svg";
 
 export default function ZonnebankMedia({
   data,
-  isDesktopSafari,
   videoRef,
   shouldLoadVideo,
   isVideoReady,
@@ -23,7 +22,6 @@ export default function ZonnebankMedia({
   onVideoError,
 }: {
   data: Zonnebank;
-  isDesktopSafari: boolean;
   videoRef: RefObject<HTMLVideoElement | null>;
   shouldLoadVideo: boolean;
   isVideoReady: boolean;
@@ -44,14 +42,10 @@ export default function ZonnebankMedia({
           alt={data.alt}
           fill
           quality={data.imageQuality}
-          className={`object-cover object-bottom ${
-            isDesktopSafari
-              ? "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025]"
-              : ""
-          }`}
+          className="object-cover object-bottom"
           sizes="(max-width: 767px) 100vw, 50vw"
         />
-        {data.desktopVideo && !isDesktopSafari && (
+        {data.desktopVideo && (
           <video
             ref={videoRef}
             muted
@@ -82,7 +76,7 @@ export default function ZonnebankMedia({
           {data.badge}
         </span>
       )}
-      {data.desktopVideo && !isDesktopSafari && (
+      {data.desktopVideo && (
         <button
           type="button"
           onClick={onVideoToggle}

@@ -126,7 +126,15 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   const monitorPlayback = () => {
     const video = videoRef.current;
     const target = playbackTargetRef.current;
-    if (!video || !target || !Number.isFinite(video.duration)) return;
+    if (!video || !target) return;
+
+    // Playback can begin before metadata has landed (see startPlayback), so
+    // duration is briefly unknown. Keep polling rather than bailing out — a
+    // dropped monitor would let the clip run past its stopping point.
+    if (!Number.isFinite(video.duration) || video.duration <= 0) {
+      animationFrameRef.current = window.requestAnimationFrame(monitorPlayback);
+      return;
+    }
 
     const midpoint = video.duration / 2;
     const reachedTarget =
@@ -240,14 +248,14 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       }
     }
 
-    if (!isVideoReadyRef.current) {
-      if (shouldStartLoading) video.load();
-      return;
-    }
-
-    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-      attemptPlayback();
-    }
+    // No video.load() here on purpose: load() restarts resource selection and
+    // aborts the play() below. play() pulls the media in by itself.
+    //
+    // Safari also only grants playback on the user gesture that asked for it,
+    // and that permission does not survive an await. Asking here — inside the
+    // click, before anything has buffered — claims the gesture and lets Safari
+    // start as soon as the first frames arrive.
+    attemptPlayback();
   };
 
   const handleVideoToggle = () => {
@@ -313,6 +321,16 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   };
 
   const handleVideoError = () => {
+    const video = videoRef.current;
+
+    // A <source> fires its own error event whenever the browser passes it
+    // over, and React surfaces that through the <video>'s onError. On desktop
+    // the mobile-only <source> is skipped on every single load, so this ran on
+    // a perfectly healthy video and tore the toggle down: target cleared,
+    // pressed state reset, playback abandoned. The media element itself only
+    // counts as broken when it has recorded an error of its own.
+    if (!video || !video.error) return;
+
     playbackTargetRef.current = null;
     playRequestIdRef.current += 1;
     playPromisePendingRef.current = false;
