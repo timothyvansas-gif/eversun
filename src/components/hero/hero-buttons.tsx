@@ -18,9 +18,9 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+    <div className="inline-grid w-fit grid-cols-1 items-start gap-5">
       <button
-        className="w-[200px] sm:w-[224px] min-h-[52px] sm:min-h-[56px] lg:min-h-[48px] px-0 sm:px-3 font-sans font-medium text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-[216px] sm:w-[224px] min-h-[52px] sm:min-h-[56px] lg:min-h-[48px] px-0 sm:px-3 font-sans font-medium text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -57,6 +57,15 @@ export default function HeroButtons({ onOpenAfspraak }: { onOpenAfspraak: () => 
         />
         <span className="relative z-10">Plan je moment</span>
       </button>
+      <p className="lg:hidden w-max font-sans text-[14px] leading-5 text-white/75">
+        Liever bellen?{" "}
+        <a
+          href="tel:+31625306491"
+          className="text-white underline decoration-dotted"
+        >
+          06 25306491
+        </a>
+      </p>
     </div>
   );
 }
