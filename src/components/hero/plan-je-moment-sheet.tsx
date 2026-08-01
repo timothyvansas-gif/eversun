@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
+import reviewer3 from "@/images/people/reviewer-3.webp";
+import iconStar from "@/images/icon-star.svg";
 import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -103,6 +105,33 @@ function PhoneButton() {
   );
 }
 
+function Review() {
+  return (
+    <div className="px-6 pb-2">
+      <div className="flex items-center gap-4">
+        <Image
+          src={reviewer3}
+          alt="Willeke Veenstra"
+          width={44}
+          height={44}
+          className="w-11 h-11 rounded-full object-cover shrink-0"
+        />
+        <div>
+          <p className="font-sans text-[14px] font-medium text-ink">Willeke Veenstra</p>
+          <div className="flex gap-0.5 mt-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Image key={i} src={iconStar} alt="" width={14} height={14} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <p className="mt-3 font-sans text-[14px] text-ink/60 leading-[22px]">
+        Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.
+      </p>
+    </div>
+  );
+}
+
 const DEFAULT_WHATSAPP_URL =
   "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
 
@@ -156,13 +185,15 @@ export default function PlanJeMomentSheet({
               onDragEnd={(_, info) => {
                 if (info.offset.y > 80 || info.velocity.y > 400) onClose();
               }}
-              style={{ paddingBottom: "max(3.5rem, calc(env(safe-area-inset-bottom) + 2.75rem))" }}
+              style={{ paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.25rem))" }}
             >
               <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
                 <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
               <div className="px-6 pt-8">
-                <div className="bg-white rounded-2xl px-6 py-6">
+                <Review />
+
+                <div className="bg-white rounded-2xl px-6 py-6 mt-3">
                   <div className="mb-8">
                     <h2 className="card-title text-zinc-900">Plan je moment</h2>
                     <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
