@@ -130,6 +130,51 @@ body {
     color: rgba(255, 255, 255, 0.96) !important;
   }
 
+  /* Floating labels (see components/ui/floating-field.tsx).
+     Written as real CSS rather than peer-* utilities because the float is
+     driven by a sibling selector on :placeholder-shown — plain CSS keeps the
+     cascade order explicit, and the label still floats before hydration.
+     Every control renders placeholder=" " so :placeholder-shown means "empty". */
+  .ff-label {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    pointer-events: none;
+    color: var(--color-muted);
+    line-height: 1.25;
+    transition: top 0.18s ease, font-size 0.18s ease, transform 0.18s ease, color 0.18s ease;
+  }
+
+  .ff-input ~ .ff-label {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+  }
+
+  .ff-textarea ~ .ff-label {
+    top: 26px;
+    font-size: 15px;
+  }
+
+  .ff-input:focus ~ .ff-label,
+  .ff-input:not(:placeholder-shown) ~ .ff-label,
+  .ff-textarea:focus ~ .ff-label,
+  .ff-textarea:not(:placeholder-shown) ~ .ff-label {
+    top: 10px;
+    transform: none;
+    font-size: 12px;
+  }
+
+  .ff-input:focus ~ .ff-label,
+  .ff-textarea:focus ~ .ff-label {
+    color: var(--color-ink-strong);
+  }
+
+  .ff-input:disabled ~ .ff-label,
+  .ff-textarea:disabled ~ .ff-label {
+    opacity: 0.5;
+  }
+
   .draggable-scroll {
     scrollbar-width: none;
   }

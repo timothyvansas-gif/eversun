@@ -16,6 +16,7 @@ const Bento = dynamic(() => import("@/components/bento"));
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
+const Contact = dynamic(() => import("@/components/contact"));
 
 // LazyMotion ships only the tiny `m` component in the initial bundle; the full
 // DOM feature set (gestures, drag, layout, the animation engine) loads as a
@@ -61,6 +62,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         <OnzeZonnebanken />
         <Producten />
         <OverOns />
+        <Contact />
         {footer}
       </main>
 

@@ -1,5 +1,68 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Contactformulier instellen
+
+Het formulier onderaan de site verstuurt e-mail via [Resend](https://resend.com).
+Zonder de instellingen hieronder werkt het formulier **niet**: een bezoeker krijgt
+dan netjes de melding dat versturen niet lukt, met het telefoonnummer erbij. Hij
+krijgt nooit een "verstuurd"-melding terwijl er in werkelijkheid niets aankomt.
+
+### Stap 1: Account en sleutel
+
+1. Maak een gratis account op [resend.com](https://resend.com) met **timothyvansas@gmail.com**.
+2. Ga naar **API Keys → Create API Key**, geef hem een naam (bv. "Ever Sun site").
+3. Kopieer de sleutel. Hij begint met `re_` en is daarna nooit meer op te vragen,
+   dus bewaar hem goed. Kwijt? Maak gewoon een nieuwe aan.
+
+### Stap 2: Sleutel in het project
+
+Maak in de projectmap een bestand `.env.local` (zie `.env.example` als voorbeeld):
+
+```
+RESEND_API_KEY=re_jouw_sleutel_hier
+CONTACT_TO_EMAIL=timothyvansas@gmail.com
+CONTACT_FROM_EMAIL=onboarding@resend.dev
+```
+
+Herstart daarna `npm run dev`, want omgevingsvariabelen worden alleen bij het
+opstarten ingelezen.
+
+`.env.local` staat in `.gitignore` en komt dus nooit in git of op GitHub terecht.
+Dat is de bedoeling: een API-sleutel hoort niet in de broncode.
+
+### Stap 3: Testen
+
+Vul het formulier in op de site. De mail komt binnen op **timothyvansas@gmail.com**.
+Klik je in je mailprogramma op "Beantwoorden", dan gaat het antwoord rechtstreeks
+naar de bezoeker, niet naar het afzenderdomein.
+
+> **Let op tijdens de testfase:** het afzenderadres `onboarding@resend.dev` is van
+> Resend zelf. Daarmee kun je alleen mailen naar het adres waarmee je het account
+> hebt aangemaakt. Naar een ander adres sturen mislukt totdat stap 4 klaar is.
+> Dat is geen fout in de site.
+
+### Stap 4: Live zetten op het eigen domein
+
+1. In Resend: **Domains → Add Domain** → `eversun-assen.nl`.
+2. Resend toont een paar DNS-records (SPF en DKIM). Die moeten bij de partij waar
+   het domein geregistreerd staat in het DNS-beheer worden gezet. Ze bewijzen aan
+   Gmail en Outlook dat deze server namens dit domein mag mailen. Zonder die
+   records belandt de mail in de spammap.
+3. Zodra Resend het domein als "verified" toont, pas je de twee regels aan:
+
+```
+CONTACT_TO_EMAIL=info@eversun-assen.nl
+CONTACT_FROM_EMAIL=Ever Sun website <site@eversun-assen.nl>
+```
+
+Meer is er niet nodig, de code verandert niet mee.
+
+### Waar de instellingen live moeten staan
+
+`.env.local` werkt alleen op deze computer. Wanneer de site online gezet wordt
+(bv. via Vercel), moeten dezelfde drie variabelen in het dashboard van die
+hostingpartij worden ingevuld onder *Environment Variables*.
+
 ## Getting Started
 
 First, run the development server:

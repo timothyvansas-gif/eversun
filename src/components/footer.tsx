@@ -1,13 +1,9 @@
-import Image from "next/image";
-import facebookIcon from "@/images/socials/social-facebook.svg";
-import instagramIcon from "@/images/socials/social-instagram.svg";
 import FooterCredit from "@/components/footer-credit";
 
 export default function Footer() {
   return (
     <footer
-      id="contact"
-      className="w-full bg-black py-6 sm:py-10 scroll-mt-20 lg:scroll-mt-10"
+      className="w-full bg-black py-6 sm:py-10"
       style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
     >
       <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between">
@@ -17,39 +13,6 @@ export default function Footer() {
             &nbsp; – &nbsp;<FooterCredit />
           </span>
         </p>
-
-        <div className="hidden sm:flex items-center gap-2">
-          <a
-            href="https://www.facebook.com/eversun.assen/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1 opacity-60 hover:opacity-100 transition-opacity"
-            aria-label="Facebook"
-          >
-            <Image
-              src={facebookIcon}
-              alt="Facebook"
-              width={24}
-              height={24}
-              className="brightness-0 invert"
-            />
-          </a>
-          <a
-            href="https://www.instagram.com/ever_sun_assen/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1 opacity-60 hover:opacity-100 transition-opacity"
-            aria-label="Instagram"
-          >
-            <Image
-              src={instagramIcon}
-              alt="Instagram"
-              width={24}
-              height={24}
-              className="brightness-0 invert"
-            />
-          </a>
-        </div>
       </div>
     </footer>
   );
