@@ -77,6 +77,9 @@ export default function ZonnebankMedia({
         </span>
       )}
       {data.desktopVideo && (
+        // duration-[1283ms] matches the toggle clip's one-way length (2.566667s / 2,
+        // confirmed with ffprobe across all four renders) so the button fades in step
+        // with the video instead of finishing early or lagging behind it.
         <button
           type="button"
           onClick={onVideoToggle}
@@ -88,7 +91,7 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-[background-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 ${
+          className={`absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-[background-color,box-shadow,transform] duration-[1283ms] ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 ${
             isVideoActive && !isVideoLoading
               ? "bg-black shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
               : "bg-white"
@@ -101,7 +104,7 @@ export default function ZonnebankMedia({
             aria-hidden="true"
           />
           <span
-            className={`absolute flex items-center justify-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute flex items-center justify-center transition-[opacity,transform] duration-[1283ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               isVideoActive || isVideoLoading
                 ? "scale-75 rotate-45 opacity-0"
                 : "scale-100 rotate-0 opacity-100"
@@ -111,7 +114,7 @@ export default function ZonnebankMedia({
             <Image src={sunIcon} alt="" width={22} height={22} />
           </span>
           <span
-            className={`absolute flex items-center justify-center transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            className={`absolute flex items-center justify-center transition-[opacity,transform] duration-[1283ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
               isVideoActive && !isVideoLoading
                 ? "scale-100 rotate-0 opacity-100"
                 : "scale-75 -rotate-45 opacity-0"
