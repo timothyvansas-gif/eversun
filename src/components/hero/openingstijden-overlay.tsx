@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
-import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
+import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
@@ -24,9 +24,8 @@ function AppointmentButton() {
       style={{
         minHeight: "48px",
         borderRadius: "9999px",
-        background: "#E15E1D",
-        transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
-        boxShadow: hovered ? SHADOW_HOVER : SHADOW_DEFAULT,
+        background: "#f35b04",
+        transition: "transform 0.2s ease",
       }}
       onMouseEnter={(e) => {
         if (!window.matchMedia("(hover: hover)").matches) return;

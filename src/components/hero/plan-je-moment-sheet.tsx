@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
-import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
+import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { Backdrop } from "@/components/ui/backdrop";
@@ -41,9 +41,8 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
         alignItems: "center",
         minHeight: "48px",
         borderRadius: "9999px",
-        background: "#E15E1D",
-        transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
-        boxShadow: hovered ? SHADOW_HOVER : SHADOW_DEFAULT,
+        background: "#f35b04",
+        transition: "transform 0.2s ease",
       }}
       onMouseEnter={(e) => {
         if (!window.matchMedia("(hover: hover)").matches) return;
@@ -163,16 +162,26 @@ export default function PlanJeMomentSheet({
                 <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
               <div className="px-6 pt-8">
-                <div className="mb-8">
-                  <h2 className="card-title text-zinc-900">Plan je moment</h2>
-                  <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
-                    Toe aan een moment voor jezelf? Kom lekker langs aan de Kloekhorststraat 4A in Assen
-                  </p>
-                </div>
+                <div className="bg-white rounded-2xl px-6 py-6">
+                  <div className="mb-8">
+                    <h2 className="card-title text-zinc-900">Plan je moment</h2>
+                    <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
+                      Toe aan een moment voor jezelf? Kom lekker langs aan de{" "}
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ink/60 underline decoration-dotted"
+                      >
+                        Kloekhorststraat 4A in Assen
+                      </a>
+                    </p>
+                  </div>
 
-                <div className="grid gap-y-4" style={{ gridTemplateColumns: "1fr max-content 1fr" }}>
-                  <WhatsAppButton whatsappUrl={whatsappUrl} />
-                  <PhoneButton />
+                  <div className="grid gap-y-4" style={{ gridTemplateColumns: "1fr max-content 1fr" }}>
+                    <WhatsAppButton whatsappUrl={whatsappUrl} />
+                    <PhoneButton />
+                  </div>
                 </div>
               </div>
             </m.div>

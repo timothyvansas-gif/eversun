@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { m } from "framer-motion";
-import { SHADOW_DEFAULT, SHADOW_HOVER, SHADOW_EASE, BLOB_SIZE } from "@/components/hero/button-constants";
+import { BLOB_SIZE } from "@/components/hero/button-constants";
 
 const baseStyle: React.CSSProperties = {
   display: "flex",
@@ -20,7 +20,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
       <button
-        className="w-[200px] sm:w-[224px] min-h-[52px] sm:min-h-[56px] lg:min-h-[48px] px-0 sm:px-3 font-sans font-medium text-[15px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
+        className="w-[172px] sm:w-[200px] min-h-[48px] sm:min-h-[56px] lg:min-h-[48px] px-0 sm:px-2 font-sans font-medium text-[14px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
         onMouseEnter={(e) => {
           if (!window.matchMedia("(hover: hover)").matches) return;
           const rect = e.currentTarget.getBoundingClientRect();
@@ -37,9 +37,8 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
         }}
         style={{
           ...baseStyle,
-          transition: `box-shadow ${SHADOW_EASE}, transform 0.2s ease`,
-          background: "#E15E1D",
-          boxShadow: primaryHovered ? SHADOW_HOVER : SHADOW_DEFAULT,
+          transition: "transform 0.2s ease",
+          background: "#f35b04",
         }}
       >
         <m.span
