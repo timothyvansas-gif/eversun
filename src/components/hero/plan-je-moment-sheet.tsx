@@ -6,7 +6,6 @@ import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
 import { BLOB_SIZE } from "@/components/hero/button-constants";
-import { getStudioStatus } from "@/lib/studio-status";
 import { getReviews } from "@/lib/reviews";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -106,27 +105,6 @@ function PhoneButton() {
   );
 }
 
-function OpeningStatus() {
-  const { isOpen, label } = getStudioStatus();
-
-  return (
-    <div className="mt-6 px-6 flex items-center justify-start gap-3">
-      <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
-        {isOpen ? (
-          <>
-            <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
-            <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
-            <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#4FA800]" />
-          </>
-        ) : (
-          <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-accent" />
-        )}
-      </span>
-      <p className="font-sans text-[14px] text-ink/60 leading-none">{label}</p>
-    </div>
-  );
-}
-
 // The three short reviews. Long quotes are left to the hero's dock: here they
 // would push the buttons out of reach and make the sheet a different height
 // every time it opens.
@@ -142,7 +120,7 @@ function Review() {
   );
 
   return (
-    <div className="px-6 pb-2 mt-6">
+    <div className="mt-8">
       <div className="flex items-center gap-4">
         <Image
           src={review.avatar}
@@ -249,14 +227,9 @@ export default function PlanJeMomentSheet({
                     <WhatsAppButton whatsappUrl={whatsappUrl} />
                     <PhoneButton />
                   </div>
-                </div>
 
-                {/* The rule spans the white card's full width; the status and
-                    review carry the same px-6 as the card's inside, so every
-                    line of text starts on one edge. */}
-                <OpeningStatus />
-                <div className="mt-6 h-px bg-ink/[0.06]" />
-                <Review />
+                  <Review />
+                </div>
               </div>
             </m.div>
           </div>
