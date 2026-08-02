@@ -153,7 +153,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 >
                   In onze zonnestudio draait het gewoon om jou.
                   <br />
-                  Kom binnen, ga twintig minuten liggen en denk lekker nergens aan.
+                  Twintig minuten voor jezelf, zonder dat er iets van je gevraagd wordt.
                 </m.p>
 
                 <m.p
@@ -164,7 +164,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   custom={0.6}
                   style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
-                  In onze zonnestudio draait het gewoon om jou. Kom binnen, ga twintig minuten liggen en denk lekker nergens aan.
+                  In onze zonnestudio draait het gewoon om jou. Twintig minuten voor jezelf, zonder dat er iets van je gevraagd wordt.
                 </m.p>
               </div>
 
