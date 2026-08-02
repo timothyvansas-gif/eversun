@@ -153,7 +153,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 >
                   Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio
                   <br />
-                  en geniet van rust, persoonlijk advies en alle aandacht voor je huid.
+                  en geniet van rust en persoonlijk advies.
                 </m.p>
 
                 <m.p
@@ -164,7 +164,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   custom={0.6}
                   style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
-                  Plan jouw moment in onze zonnestudio en geniet van rust, persoonlijk advies en aandacht voor je huid.
+                  Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio en geniet van rust en persoonlijk advies.
                 </m.p>
               </div>
 
