@@ -5,6 +5,7 @@ import Image from "next/image";
 import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
+import { stackedSheetHeight } from "./sheet-stack";
 import heroImage from "@/images/hero-woman.webp";
 
 import dynamic from "next/dynamic";
@@ -19,6 +20,18 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   const [isPlanJeMomentOpen, setIsPlanJeMomentOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const statusButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Measured the moment the second sheet opens, while the first is still at
+  // rest: how tall "Plan je moment" has to be to leave a shoulder of the
+  // openingstijden sheet in view. The sheets are content-sized, so this cannot
+  // be a viewport percentage — on a tall phone that would swallow the sheet
+  // behind entirely.
+  const openingstijdenPanelRef = useRef<HTMLDivElement>(null);
+  const [stackedMinHeight, setStackedMinHeight] = useState<number | undefined>();
+  const openPlanJeMomentStacked = () => {
+    setStackedMinHeight(stackedSheetHeight(openingstijdenPanelRef.current));
+    setIsPlanJeMomentOpen(true);
+  };
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -151,9 +164,15 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
           statusButtonRef={statusButtonRef}
         />
       </div>
+      {/* The two stack: "Plan je moment" opens over the openingstijden sheet
+          and closing it returns you there, rather than dropping you back on
+          the page. */}
       <OpeningstijdenOverlay
         isOpen={isOpeningstijdenOpen}
         onClose={() => setIsOpeningstijdenOpen(false)}
+        onPlanJeMoment={openPlanJeMomentStacked}
+        isBehind={isPlanJeMomentOpen}
+        panelRef={openingstijdenPanelRef}
       />
       <AfspraakOverlay
         isOpen={isAfspraakOpen}
@@ -162,6 +181,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       <PlanJeMomentSheet
         isOpen={isPlanJeMomentOpen}
         onClose={() => setIsPlanJeMomentOpen(false)}
+        stackedMinHeight={isOpeningstijdenOpen ? stackedMinHeight : undefined}
       />
     </section>
   );

@@ -188,10 +188,19 @@ export default function PlanJeMomentSheet({
   isOpen,
   onClose,
   whatsappUrl = DEFAULT_WHATSAPP_URL,
+  stackedMinHeight,
 }: {
   isOpen: boolean;
   onClose: () => void;
   whatsappUrl?: string;
+  /**
+   * Floor height in pixels while this sheet stacks on another one, from
+   * `stackedSheetHeight`. Content-sized, the sheet would leave most of the one
+   * behind it in view and the two would read as competing panels. The extra
+   * height is split above and below the card, so it lands as air rather than
+   * as a gap.
+   */
+  stackedMinHeight?: number;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -215,7 +224,10 @@ export default function PlanJeMomentSheet({
     <AnimatePresence>
       {isOpen && (
         <>
-          <Backdrop onClick={onClose} className="z-50 md:hidden" scrollLock />
+          {/* z-[60], not z-50: this sheet can open on top of the openingstijden
+              sheet, and the stack order should not depend on which of the two
+              happens to render later in the DOM. */}
+          <Backdrop onClick={onClose} className="z-[60] md:hidden" scrollLock />
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none md:hidden">
             <m.div
@@ -223,7 +235,7 @@ export default function PlanJeMomentSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Plan je moment"
-              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50"
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-[60] flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -234,12 +246,18 @@ export default function PlanJeMomentSheet({
               onDragEnd={(_, info) => {
                 if (info.offset.y > 80 || info.velocity.y > 400) onClose();
               }}
-              style={{ paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.25rem))" }}
+              style={{
+                paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.25rem))",
+                // Capped at 90svh: on a short screen the sheet behind is taller
+                // than the viewport already, and matching it would push this
+                // one's own top off the screen along with its drag handle.
+                minHeight: stackedMinHeight ? `min(${stackedMinHeight}px, 90svh)` : undefined,
+              }}
             >
               <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
                 <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
-              <div className="px-6 pt-8">
+              <div className="px-6 pt-8 flex-1 flex flex-col justify-center">
                 <div className="bg-white rounded-2xl px-6 py-6">
                   <div className="mb-5">
                     <h2 className="card-title text-zinc-900">Plan je moment</h2>

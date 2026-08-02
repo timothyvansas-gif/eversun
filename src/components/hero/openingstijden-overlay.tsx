@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
@@ -10,31 +10,41 @@ import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
+import { BEHIND_SCALE, BEHIND_LIFT } from "@/components/hero/sheet-stack";
 
-function AppointmentButton() {
+const WHATSAPP_URL =
+  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
+
+/**
+ * Opens the "Plan je moment" sheet on top of this one when the caller passes a
+ * handler. Without one it stays what it was, a direct WhatsApp link, so the
+ * overlay keeps working wherever nothing is stacked on top of it.
+ */
+function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
   const [hovered, setHovered] = useState(false);
   const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
-  return (
-    <a
-      href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
-      style={{
-        minHeight: "48px",
-        borderRadius: "9999px",
-        background: "var(--color-accent)",
-        transition: "transform 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        if (!window.matchMedia("(hover: hover)").matches) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-        setHovered(true);
-      }}
-      onMouseLeave={() => setHovered(false)}
-    >
+  const className =
+    "mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
+  const style = {
+    minHeight: "48px",
+    borderRadius: "9999px",
+    background: "var(--color-accent)",
+    transition: "transform 0.2s ease",
+  } as const;
+
+  const hover = {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+      if (!window.matchMedia("(hover: hover)").matches) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      setHovered(true);
+    },
+    onMouseLeave: () => setHovered(false),
+  };
+
+  const content = (
+    <>
       <m.span
         aria-hidden
         className="absolute rounded-full bg-[#111] pointer-events-none"
@@ -49,7 +59,21 @@ function AppointmentButton() {
         transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       />
       <span className="relative z-10">Plan je moment</span>
-    </a>
+    </>
+  );
+
+  if (!onPlanJeMoment) {
+    return (
+      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={className} style={style} {...hover}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button type="button" onClick={onPlanJeMoment} className={`${className} cursor-pointer`} style={style} {...hover}>
+      {content}
+    </button>
   );
 }
 
@@ -126,19 +150,30 @@ function RouteButton() {
 export default function OpeningstijdenOverlay({
   isOpen,
   onClose,
+  onPlanJeMoment,
+  isBehind = false,
+  panelRef,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  /** Opens the "Plan je moment" sheet over this one instead of WhatsApp. */
+  onPlanJeMoment?: () => void;
+  /** True while another sheet covers this one. */
+  isBehind?: boolean;
+  /** The mobile sheet itself, so a sheet stacking on top can size against it. */
+  panelRef?: RefObject<HTMLDivElement | null>;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  useFocusTrap(overlayRef, isOpen, onClose);
+  // The trap is handed to the sheet on top: two traps on the same window would
+  // both answer Escape, closing this one along with it, and fight over Tab.
+  useFocusTrap(overlayRef, isOpen && !isBehind, onClose);
   useScrollLock(isOpen);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isBehind) return;
     overlayRef.current?.focus({ preventScroll: true });
-  }, [isOpen]);
+  }, [isOpen, isBehind]);
 
   return (
     <AnimatePresence>
@@ -147,25 +182,35 @@ export default function OpeningstijdenOverlay({
           {/* Backdrop — dims hero content */}
           <Backdrop onClick={onClose} className="z-50" scrollLock />
 
-          <div ref={overlayRef} tabIndex={-1} className="outline-none">
+          <div ref={overlayRef} tabIndex={-1} className="outline-none" inert={isBehind}>
           {/* Mobile: Bottom Sheet */}
           <m.div
+            ref={panelRef}
             data-lenis-prevent
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"
             className="md:hidden fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50"
             initial={{ y: "100%" }}
-            animate={{ y: 0 }}
+            // Sinks back when a sheet stacks on top: scaled from its bottom
+            // edge, so it stays anchored to the screen edge and only its
+            // shoulders show behind the sheet in front.
+            animate={{ y: isBehind ? BEHIND_LIFT : 0, scale: isBehind ? BEHIND_SCALE : 1 }}
             exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
             transition={{ type: "spring", damping: 40, stiffness: 300 }}
             drag="y"
+            // No dragging what you cannot reach: the sheet in front owns the
+            // gesture while it is open.
+            dragListener={!isBehind}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.5 }}
             onDragEnd={(_, info) => {
               if (info.offset.y > 80 || info.velocity.y > 400) onClose();
             }}
-            style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+            style={{
+              paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
+              transformOrigin: "bottom center",
+            }}
           >
             <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
               <div className="w-10 h-1 rounded-full bg-ink/20" />
@@ -178,7 +223,7 @@ export default function OpeningstijdenOverlay({
               <div className="bg-white rounded-2xl px-6 py-4">
                 <HoursTable />
               </div>
-              <AppointmentButton />
+              <AppointmentButton onPlanJeMoment={onPlanJeMoment} />
               <RouteButton />
             </div>
           </m.div>
