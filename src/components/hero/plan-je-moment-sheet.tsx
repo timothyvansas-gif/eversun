@@ -192,7 +192,7 @@ export default function PlanJeMomentSheet({
               </div>
               <div className="px-6 pt-8">
                 <div className="bg-white rounded-2xl px-6 py-6">
-                  <div className="mb-8">
+                  <div className="mb-5">
                     <h2 className="card-title text-zinc-900">Plan je moment</h2>
                     <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
                       Toe aan een moment voor jezelf? Kom lekker langs aan de{" "}
