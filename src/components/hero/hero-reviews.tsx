@@ -4,16 +4,12 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import type { StaticImageData } from "next/image";
 import { m, AnimatePresence, useReducedMotion, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
-import reviewer1 from "@/images/people/reviewer-1.webp";
-import reviewer2 from "@/images/people/reviewer-2.webp";
-import reviewer3 from "@/images/people/reviewer-3.webp";
-import reviewer4 from "@/images/people/reviewer-4.webp";
-import reviewer5 from "@/images/people/reviewer-5.webp";
 import StarIcon from "@/components/ui/star-icon";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { REVIEWS } from "@/lib/reviews";
 
 // Order is left to right; the last one ends up nearest the rating figure.
-const reviewers = [reviewer1, reviewer4, reviewer2, reviewer5, reviewer3];
+const reviewers = REVIEWS.map((review) => review.avatar);
 
 // On load every avatar sits stacked behind the last one (the top of the z-stack,
 // on the right); the rest then glide out to the left into place with an elastic
@@ -59,13 +55,10 @@ const TOP_Z = 10;
 
 const QUOTE_WIDTH = 400;
 
-const tooltips: Record<number, { quote: string; name: string }> = {
-  0: { quote: "Schoon en vriendelijk personeel", name: "Diana Boonstra" },
-  1: { quote: "Wat een heerlijk schone en moderne studio is Ever Sun. Fijn in het centrum van Assen & parkeren voor de deur (gratis op zondag). Vriendelijk ontvangst en goede kwaliteit zonnebank met allemaal opties om naar eigen smaak in te stellen (ik had de medium sterke bank). Hier kom ik vaker!", name: "Koosje van Goinga" },
-  2: { quote: "Hier ga je altijd vrolijk en getint de deur uit!", name: "Jackelien Beikes" },
-  3: { quote: "Hele nette en fijne zonnestudio! Aardig personeel dus zeker de moeite waard om heen te gaan.", name: "Celine Ashley van Zanen" },
-  4: { quote: "Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.", name: "Willeke Veenstra" },
-};
+// Keyed by avatar position, which is the order of REVIEWS itself.
+const tooltips: Record<number, { quote: string; name: string }> = Object.fromEntries(
+  REVIEWS.map((review, i) => [i, { quote: review.quote, name: review.name }]),
+);
 
 function DockAvatar({
   img,

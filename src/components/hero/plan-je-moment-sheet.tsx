@@ -5,9 +5,9 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
-import reviewer3 from "@/images/people/reviewer-3.webp";
 import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { getStudioStatus } from "@/lib/studio-status";
+import { getReviews } from "@/lib/reviews";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -127,19 +127,32 @@ function OpeningStatus() {
   );
 }
 
+// The three short reviews. Long quotes are left to the hero's dock: here they
+// would push the buttons out of reach and make the sheet a different height
+// every time it opens.
+const SHEET_REVIEWS = getReviews(["willeke", "celine", "jackelien"]);
+
 function Review() {
+  // Drawn once per mount, and the sheet's contents only mount while it is open,
+  // so every opening shows a different voice. Picking during render is safe
+  // because the portal only renders after mount — the server never sees this,
+  // so there is no markup to mismatch on hydration.
+  const [review] = useState(
+    () => SHEET_REVIEWS[Math.floor(Math.random() * SHEET_REVIEWS.length)],
+  );
+
   return (
     <div className="px-6 pb-2 mt-6">
       <div className="flex items-center gap-4">
         <Image
-          src={reviewer3}
-          alt="Willeke Veenstra"
+          src={review.avatar}
+          alt={review.name}
           width={44}
           height={44}
           className="w-11 h-11 rounded-full object-cover shrink-0"
         />
         <div>
-          <p className="font-sans text-[14px] font-medium text-ink">Willeke Veenstra</p>
+          <p className="font-sans text-[14px] font-medium text-ink">{review.name}</p>
           <div className="flex gap-0.5 mt-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <StarIcon key={i} size={14} />
@@ -147,9 +160,7 @@ function Review() {
           </div>
         </div>
       </div>
-      <p className="mt-3 font-sans text-[14px] text-ink/60 leading-[22px]">
-        Mooie zonnestudio, vriendelijk personeel. Prachtig bruiningsresultaat en het ziet er brandschoon uit.
-      </p>
+      <p className="mt-3 font-sans text-[14px] text-ink/60 leading-[22px]">{review.quote}</p>
     </div>
   );
 }
