@@ -1,33 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { m } from "framer-motion";
-import { BLOB_SIZE } from "@/components/hero/button-constants";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 
+// No `gap`: CtaArrow carries its own margin and only unfolds on hover, so a
+// standing gap would push the label off-centre while the arrow is collapsed.
 const baseStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  gap: "8px",
   borderRadius: "9999px",
 };
 
 
 export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
-  const [primaryHovered, setPrimaryHovered] = useState(false);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+      {/* Width is content-driven from sm up so the button widens as the arrow
+          unfolds, the way the outline pills do. Mobile keeps its fixed width:
+          there is no hover there, so there is nothing to grow into. */}
       <button
-        className="w-[172px] sm:w-[200px] min-h-[48px] sm:min-h-[56px] lg:min-h-[48px] px-0 sm:px-2 font-sans font-medium text-[14px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200 relative overflow-hidden"
-        onMouseEnter={(e) => {
-          if (!window.matchMedia("(hover: hover)").matches) return;
-          const rect = e.currentTarget.getBoundingClientRect();
-          setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-          setPrimaryHovered(true);
-        }}
-        onMouseLeave={() => setPrimaryHovered(false)}
+        className="group/cta w-[172px] px-0 sm:w-auto sm:px-10 min-h-[48px] sm:min-h-[56px] lg:min-h-[48px] font-sans font-medium text-[14px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -41,20 +33,10 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           background: "#f35b04",
         }}
       >
-        <m.span
-          aria-hidden
-          className="absolute rounded-full bg-[#111] pointer-events-none"
-          style={{
-            width: BLOB_SIZE,
-            height: BLOB_SIZE,
-            left: origin.x - BLOB_SIZE / 2,
-            top: origin.y - BLOB_SIZE / 2,
-          }}
-          initial={false}
-          animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
-          transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
-        />
-        <span className="relative z-10">Plan je moment</span>
+        <span>Plan je moment</span>
+        {/* currentColor, so the arrow takes the label's colour and the orange
+            fill stays put throughout. */}
+        <CtaArrow />
       </button>
     </div>
   );
