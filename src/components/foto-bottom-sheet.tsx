@@ -141,7 +141,7 @@ export default function FotoBottomSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Binnenkijken bij Ever Sun"
-              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 h-[94svh] flex flex-col"
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 max-h-[94dvh] flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -184,7 +184,7 @@ export default function FotoBottomSheet({
               </div>
               <div
                 ref={gridRef}
-                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto"
+                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto min-h-0"
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
