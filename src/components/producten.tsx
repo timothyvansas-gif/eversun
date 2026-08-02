@@ -44,7 +44,7 @@ function PlanMomentButton() {
         // and the outline pill from md up, matching the one under the
         // zonnebanken. The md: colours land after the base utilities in
         // Tailwind's order, so they win from that breakpoint on.
-        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 md:border md:border-line md:bg-transparent md:font-normal md:text-zinc-900 md:transition-[transform,border-color] md:hover:border-[#312019]`}
+        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 md:border md:border-line md:bg-transparent md:text-zinc-900 md:transition-[transform,border-color] md:hover:border-[#312019]`}
       >
         Plan je moment
         <CtaArrow />

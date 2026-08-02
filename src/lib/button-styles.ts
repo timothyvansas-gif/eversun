@@ -7,7 +7,7 @@
  * consumer's className.
  */
 export const BTN_PILL =
-  "group/cta inline-flex items-center text-zinc-900 text-[15px] font-normal font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150";
+  "group/cta inline-flex items-center text-zinc-900 text-[15px] font-medium font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150";
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its
