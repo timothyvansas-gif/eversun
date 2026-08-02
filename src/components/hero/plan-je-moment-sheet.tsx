@@ -110,7 +110,7 @@ function OpeningStatus() {
   const { isOpen, label } = getStudioStatus();
 
   return (
-    <div className="mb-6 flex items-center justify-start gap-3">
+    <div className="mt-6 px-6 flex items-center justify-start gap-3">
       <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
         {isOpen ? (
           <>
@@ -129,7 +129,7 @@ function OpeningStatus() {
 
 function Review() {
   return (
-    <div className="px-6 pb-2 mt-8">
+    <div className="px-6 pb-2 mt-6">
       <div className="flex items-center gap-4">
         <Image
           src={reviewer3}
@@ -229,14 +229,17 @@ export default function PlanJeMomentSheet({
                     </p>
                   </div>
 
-                  <OpeningStatus />
-
                   <div className="grid gap-y-4" style={{ gridTemplateColumns: "1fr max-content 1fr" }}>
                     <WhatsAppButton whatsappUrl={whatsappUrl} />
                     <PhoneButton />
                   </div>
                 </div>
 
+                {/* The rule spans the white card's full width; the status and
+                    review carry the same px-6 as the card's inside, so every
+                    line of text starts on one edge. */}
+                <OpeningStatus />
+                <div className="mt-6 h-px bg-ink/[0.06]" />
                 <Review />
               </div>
             </m.div>
