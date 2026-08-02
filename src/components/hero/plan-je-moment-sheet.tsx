@@ -110,14 +110,47 @@ function PhoneButton() {
 // every time it opens.
 const SHEET_REVIEWS = getReviews(["willeke", "celine", "jackelien"]);
 
+// Where the rotation left off, remembered across visits.
+const ROTATION_KEY = "eversun:sheet-review";
+
+/**
+ * The next review in line, not a random one: independent draws from three
+ * options repeat about a third of the time, which reads as "it is broken"
+ * rather than as chance. The first visit starts somewhere random, so two
+ * people do not open the sheet on the same face.
+ *
+ * Storage can be unavailable (private mode, blocked cookies), in which case
+ * this falls back to a random pick rather than failing.
+ */
+function nextReviewIndex(): number {
+  try {
+    const stored = window.localStorage.getItem(ROTATION_KEY);
+    const previous = stored === null ? Number.NaN : Number.parseInt(stored, 10);
+    if (!Number.isInteger(previous)) throw new Error("no rotation yet");
+    return (previous + 1) % SHEET_REVIEWS.length;
+  } catch {
+    return Math.floor(Math.random() * SHEET_REVIEWS.length);
+  }
+}
+
 function Review() {
-  // Drawn once per mount, and the sheet's contents only mount while it is open,
-  // so every opening shows a different voice. Picking during render is safe
+  // Chosen once per mount, and the sheet's contents only mount while it is
+  // open, so every opening moves the rotation on. Reading during render is safe
   // because the portal only renders after mount — the server never sees this,
   // so there is no markup to mismatch on hydration.
-  const [review] = useState(
-    () => SHEET_REVIEWS[Math.floor(Math.random() * SHEET_REVIEWS.length)],
-  );
+  const [index] = useState(nextReviewIndex);
+  const review = SHEET_REVIEWS[index];
+
+  // Written from an effect, not from the initialiser: React can call an
+  // initialiser twice, and storing the index that is actually on screen keeps
+  // that harmless.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ROTATION_KEY, String(index));
+    } catch {
+      // Storage unavailable; the next opening falls back to a random pick.
+    }
+  }, [index]);
 
   return (
     <div className="mt-8">
