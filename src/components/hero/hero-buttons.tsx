@@ -30,7 +30,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
         style={{
           ...baseStyle,
           transition: "transform 0.2s ease",
-          background: "#f35b04",
+          background: "var(--color-accent)",
         }}
       >
         <span>Plan je moment</span>

@@ -107,15 +107,35 @@ export function FloatingField({
         </label>
       </div>
 
-      {/* Reserved height, so a validation message never nudges the layout. */}
-      <p
-        id={errorId}
-        className={`mt-1.5 min-h-[24px] font-sans text-[15px] leading-[24px] text-[#A6371A] transition-opacity duration-150 ${
-          invalid ? "opacity-100" : "opacity-0"
+      {/* The message unfolds rather than sitting in permanently reserved space:
+          three standing 24px gaps cost more rhythm on a phone than the occasional
+          shift costs stability. 0fr→1fr is the one way to ease a box open to a
+          height nobody has measured — `height: auto` does not interpolate, and
+          max-height guesswork either clips a long message or slurs the timing.
+          Where grid-template-rows will not animate the row simply snaps open,
+          which is what prefers-reduced-motion asks for anyway. */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none ${
+          invalid ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        {error ?? " "}
-      </p>
+        {/* overflow-hidden does double duty: it clips the collapsed message, and
+            it zeroes the grid item's automatic minimum size, without which the
+            row refuses to shrink below its content height. The gap above the
+            message lives on the paragraph inside, not here — padding sits
+            outside the content box, so on the grid item itself it would survive
+            the collapse and leave a permanent 6px sliver. */}
+        <div className="overflow-hidden">
+          <p
+            id={errorId}
+            className={`pt-1.5 font-sans text-[15px] leading-[24px] text-[#A6371A] transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+              invalid ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {error ?? " "}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

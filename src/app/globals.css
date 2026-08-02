@@ -43,7 +43,9 @@ body {
   --color-ink: #1a1a1a;
   --color-ink-strong: #1f1f1e;
   --color-muted: #94825c;
-  --color-accent: #e15e1d;
+  /* The one orange: buttons, status dot, pin, review stars, hero rules. There
+     used to be a second, duller #e15e1d on the dot and the pin. */
+  --color-accent: #f35b04;
   --color-line: #d5be9c;
   --width-bento-primary: 853px;
 }

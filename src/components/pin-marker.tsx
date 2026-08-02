@@ -24,8 +24,8 @@ export default function PinMarker() {
       {/* The Ovals (Inlined to prevent hydration errors) */}
       <div className="relative z-0 mt-[-5px] shrink-0">
         <svg width="47" height="9" viewBox="0 0 47 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="23.25" cy="4.5" rx="23.25" ry="4.5" fill="#E15E1D" fillOpacity="0.3"/>
-          <ellipse cx="23.2503" cy="4.5" rx="10.3333" ry="2" fill="#E15E1D"/>
+          <ellipse cx="23.25" cy="4.5" rx="23.25" ry="4.5" fill="var(--color-accent)" fillOpacity="0.3"/>
+          <ellipse cx="23.2503" cy="4.5" rx="10.3333" ry="2" fill="var(--color-accent)"/>
         </svg>
       </div>
     </div>

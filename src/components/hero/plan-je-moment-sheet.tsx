@@ -43,7 +43,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
         alignItems: "center",
         minHeight: "48px",
         borderRadius: "9999px",
-        background: "#f35b04",
+        background: "var(--color-accent)",
         transition: "transform 0.2s ease",
       }}
       onMouseEnter={(e) => {

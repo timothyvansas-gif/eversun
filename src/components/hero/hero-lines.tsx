@@ -16,7 +16,7 @@ export default function HeroLines({ play }: { play: boolean }) {
     >
       <m.path
         d="M1 6.56622C56.3941 3.06094 112.187 1.20107 168 1"
-        stroke="#f35b04"
+        stroke="var(--color-accent)"
         strokeLinecap="round"
         strokeLinejoin="round"
         className="[stroke-width:1.25] md:[stroke-width:3] lg:[stroke-width:1.75]"
@@ -26,7 +26,7 @@ export default function HeroLines({ play }: { play: boolean }) {
       />
       <m.path
         d="M32.1309 8.63371C68.2143 6.92799 104.462 6.13378 140.695 6.25107"
-        stroke="#f35b04"
+        stroke="var(--color-accent)"
         strokeLinecap="round"
         strokeLinejoin="round"
         className="[stroke-width:1.25] md:[stroke-width:3] lg:[stroke-width:1.75] translate-y-[1px] md:translate-y-[4px] lg:translate-y-[2px]"

@@ -82,7 +82,7 @@ function ContactDetails() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-[#f35b04]"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
             >
               <Image
                 src={social.icon}
@@ -111,7 +111,7 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       // pill shrinking when the text swaps to the shorter "Versturen…", and
       // sits low enough to leave the arrow its full travel. Re-measure it if
       // the label changes.
-      className="group/cta relative flex w-[172px] min-h-[48px] cursor-pointer items-center justify-center rounded-full bg-[#f35b04] px-0 font-sans text-[14px] font-medium text-surface-page transition-transform duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto sm:min-w-[204px] sm:min-h-[56px] sm:px-10 md:text-[16px] lg:min-h-[48px]"
+      className="group/cta relative flex w-[172px] min-h-[48px] cursor-pointer items-center justify-center rounded-full bg-accent px-0 font-sans text-[14px] font-medium text-surface-page transition-transform duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto sm:min-w-[204px] sm:min-h-[56px] sm:px-10 md:text-[16px] lg:min-h-[48px]"
     >
       <span className="flex items-center gap-2.5">
         {isSubmitting && (
@@ -178,7 +178,7 @@ function SuccessPanel({ onReset }: { onReset: () => void }) {
           lopsided, spindly tick inside a circle this size. */}
       <span
         aria-hidden
-        className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f35b04] text-surface-page"
+        className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-surface-page"
       >
         <svg
           width="20"
@@ -232,7 +232,12 @@ function ContactForm() {
       }}
       className="w-full"
     >
-      <fieldset disabled={isSubmitting} className="grid grid-cols-1 gap-x-5 gap-y-1 sm:grid-cols-2">
+      {/* gap-y is the whole resting rhythm now that the error slots collapse to
+          nothing, where it used to be a 4px seam on top of 30px of reserved
+          space. From sm the fields sit two across, so gap-y matches gap-x and
+          the grid reads as one even mesh rather than rows and columns pulling
+          against each other. */}
+      <fieldset disabled={isSubmitting} className="grid grid-cols-1 gap-x-5 gap-y-3.5 sm:grid-cols-2 sm:gap-y-5">
         <FloatingField
           id={CONTACT_FIELD_IDS.name}
           name="name"
@@ -297,7 +302,7 @@ function ContactForm() {
         </div>
       </fieldset>
 
-      <div className="mt-3">
+      <div className="mt-4 sm:mt-5">
         <SubmitButton isSubmitting={isSubmitting} />
       </div>
 
@@ -329,7 +334,18 @@ export default function Contact() {
               what the visitor came for, so it sits above the address block
               instead of below it. From lg up the three blocks are placed
               explicitly into two columns, restoring the side-by-side layout. */}
-          <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start lg:gap-x-10 lg:gap-y-9 xl:gap-x-20 xl:gap-y-12">
+          {/* lg:gap-y follows the form's tightened rhythm, but stays a step
+              above the 28px the details block uses between its own rows —
+              undercut that and "E-mail" reads as a fourth line of the intro
+              paragraph instead of the start of a new block.
+              grid-rows-[auto_1fr] is what makes that number the number you see.
+              The form spans both rows and is the taller column, so with two
+              content-sized rows the surplus height splits between them and half
+              of it lands under the intro paragraph, on top of the gap. Pinning
+              row 1 to its content sends all of the slack to row 2, where
+              items-start parks the details block at the top and the leftover
+              falls harmlessly below it. */}
+          <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-10 lg:gap-y-8 xl:gap-x-20">
             {/* Heading */}
             <div className="lg:col-start-1 lg:row-start-1">
               <h2 className="font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-ink-strong xl:tracking-[-0.015em]">
