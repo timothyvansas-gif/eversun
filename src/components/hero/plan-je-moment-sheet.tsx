@@ -196,9 +196,9 @@ export default function PlanJeMomentSheet({
   /**
    * Floor height in pixels while this sheet stacks on another one, from
    * `stackedSheetHeight`. Content-sized, the sheet would leave most of the one
-   * behind it in view and the two would read as competing panels. The extra
-   * height is split above and below the card, so it lands as air rather than
-   * as a gap.
+   * behind it in view and the two would read as competing panels. The card
+   * keeps its usual distance from the top edge, so the extra height lands
+   * below it and the sheet opens the same way it does on its own.
    */
   stackedMinHeight?: number;
 }) {
@@ -235,7 +235,7 @@ export default function PlanJeMomentSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Plan je moment"
-              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-[60] flex flex-col"
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-[60]"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
@@ -257,7 +257,7 @@ export default function PlanJeMomentSheet({
               <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
                 <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
-              <div className="px-6 pt-8 flex-1 flex flex-col justify-center">
+              <div className="px-6 pt-8">
                 <div className="bg-white rounded-2xl px-6 py-6">
                   <div className="mb-5">
                     <h2 className="card-title text-zinc-900">Plan je moment</h2>
