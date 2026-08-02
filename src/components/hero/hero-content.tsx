@@ -151,9 +151,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   custom={0.6}
                   style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
-                  Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio
+                  In onze zonnestudio draait het gewoon om jou.
                   <br />
-                  en geniet van rust en persoonlijk advies.
+                  Kom binnen, ga twintig minuten liggen en denk lekker nergens aan.
                 </m.p>
 
                 <m.p
@@ -164,7 +164,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   custom={0.6}
                   style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
-                  Toe aan een moment voor jezelf? Plan jouw bezoek aan onze zonnestudio en geniet van rust en persoonlijk advies.
+                  In onze zonnestudio draait het gewoon om jou. Kom binnen, ga twintig minuten liggen en denk lekker nergens aan.
                 </m.p>
               </div>
 
