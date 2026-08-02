@@ -7,6 +7,7 @@ import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
 import reviewer3 from "@/images/people/reviewer-3.webp";
 import { BLOB_SIZE } from "@/components/hero/button-constants";
+import { getStudioStatus } from "@/lib/studio-status";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -102,6 +103,27 @@ function PhoneButton() {
         <span className="whitespace-nowrap">Via Telefoon</span>
       </span>
     </a>
+  );
+}
+
+function OpeningStatus() {
+  const { isOpen, label } = getStudioStatus();
+
+  return (
+    <div className="mt-8 flex items-center justify-start gap-3">
+      <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
+        {isOpen ? (
+          <>
+            <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
+            <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
+            <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#4FA800]" />
+          </>
+        ) : (
+          <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-accent" />
+        )}
+      </span>
+      <p className="font-sans text-[14px] text-ink/60 leading-none">{label}</p>
+    </div>
   );
 }
 
@@ -211,6 +233,8 @@ export default function PlanJeMomentSheet({
                     <WhatsAppButton whatsappUrl={whatsappUrl} />
                     <PhoneButton />
                   </div>
+
+                  <OpeningStatus />
                 </div>
 
                 <Review />
