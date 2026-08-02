@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
-import { BTN_PILL } from "@/lib/button-styles";
+import { BTN_PILL_ACCENT } from "@/lib/button-styles";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
@@ -40,7 +40,11 @@ function PlanMomentButton() {
     <>
       <button
         onClick={handleClick}
-        className={`${BTN_PILL} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
+        // Filled on mobile, where it is the full-width close of the section,
+        // and the outline pill from md up, matching the one under the
+        // zonnebanken. The md: colours land after the base utilities in
+        // Tailwind's order, so they win from that breakpoint on.
+        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 md:border md:border-line md:bg-transparent md:font-normal md:text-zinc-900 md:transition-[transform,border-color] md:hover:border-[#312019]`}
       >
         Plan je moment
         <CtaArrow />

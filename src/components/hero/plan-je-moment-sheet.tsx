@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
-import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { getReviews } from "@/lib/reviews";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -27,14 +26,12 @@ function PhoneIcon() {
 }
 
 function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
-  const [hovered, setHovered] = useState(false);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      // The orange holds on hover, like every other accent button.
       className="w-full font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
       style={{
         display: "grid",
@@ -46,27 +43,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
         background: "var(--color-accent)",
         transition: "transform 0.2s ease",
       }}
-      onMouseEnter={(e) => {
-        if (!window.matchMedia("(hover: hover)").matches) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-        setHovered(true);
-      }}
-      onMouseLeave={() => setHovered(false)}
     >
-      <m.span
-        aria-hidden
-        className="absolute rounded-full bg-[#111] pointer-events-none"
-        style={{
-          width: BLOB_SIZE,
-          height: BLOB_SIZE,
-          left: origin.x - BLOB_SIZE / 2,
-          top: origin.y - BLOB_SIZE / 2,
-        }}
-        initial={false}
-        animate={{ scale: hovered ? 1 : 0 }}
-        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      />
       <span className="relative z-10 col-start-2 flex items-center gap-3">
         <span className="inline-flex w-[18px] h-[18px] items-center justify-center shrink-0">
           <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />

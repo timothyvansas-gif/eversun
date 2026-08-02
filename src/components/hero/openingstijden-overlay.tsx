@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
-import { BLOB_SIZE } from "@/components/hero/button-constants";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
@@ -21,11 +20,9 @@ const WHATSAPP_URL =
  * overlay keeps working wherever nothing is stacked on top of it.
  */
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
-  const [hovered, setHovered] = useState(false);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-
+  // The orange holds on hover, like every other accent button.
   const className =
-    "mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
+    "group/cta mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
@@ -33,45 +30,23 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
     transition: "transform 0.2s ease",
   } as const;
 
-  const hover = {
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      if (!window.matchMedia("(hover: hover)").matches) return;
-      const rect = e.currentTarget.getBoundingClientRect();
-      setOrigin({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-      setHovered(true);
-    },
-    onMouseLeave: () => setHovered(false),
-  };
-
   const content = (
     <>
-      <m.span
-        aria-hidden
-        className="absolute rounded-full bg-[#111] pointer-events-none"
-        style={{
-          width: BLOB_SIZE,
-          height: BLOB_SIZE,
-          left: origin.x - BLOB_SIZE / 2,
-          top: origin.y - BLOB_SIZE / 2,
-        }}
-        initial={false}
-        animate={{ scale: hovered ? 1 : 0 }}
-        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      />
       <span className="relative z-10">Plan je moment</span>
+      <CtaArrow />
     </>
   );
 
   if (!onPlanJeMoment) {
     return (
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={className} style={style} {...hover}>
+      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={className} style={style}>
         {content}
       </a>
     );
   }
 
   return (
-    <button type="button" onClick={onPlanJeMoment} className={`${className} cursor-pointer`} style={style} {...hover}>
+    <button type="button" onClick={onPlanJeMoment} className={`${className} cursor-pointer`} style={style}>
       {content}
     </button>
   );

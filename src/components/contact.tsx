@@ -9,6 +9,7 @@ import instagramIcon from "@/images/socials/social-instagram.svg";
 import { FloatingField } from "@/components/ui/floating-field";
 import { useContactForm } from "@/hooks/use-contact-form";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
+import { BTN_PILL_ACCENT } from "@/lib/button-styles";
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w";
@@ -99,19 +100,17 @@ function ContactDetails() {
   );
 }
 
-/** Same pill as the hero CTA — sizing, type scale and arrow hover all mirror it. */
+/** The section CTA pill, same size and type scale as the one under producten. */
 function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
   return (
     <button
       type="submit"
       disabled={isSubmitting}
       // Width is content-driven from sm up so the button widens as the arrow
-      // unfolds. Mobile keeps its fixed width: no hover there, nothing to grow
-      // into. The 204px floor is this label's own resting width — it stops the
-      // pill shrinking when the text swaps to the shorter "Versturen…", and
-      // sits low enough to leave the arrow its full travel. Re-measure it if
-      // the label changes.
-      className="group/cta relative flex w-[172px] min-h-[48px] cursor-pointer items-center justify-center rounded-full bg-accent px-0 font-sans text-[14px] font-medium text-surface-page transition-transform duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto sm:min-w-[204px] sm:min-h-[56px] sm:px-10 md:text-[16px] lg:min-h-[48px]"
+      // unfolds. The min-width floor is this label's own resting width: it
+      // stops the pill shrinking when the text swaps to the shorter
+      // "Versturen…". Re-measure it if the label changes.
+      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto sm:min-w-[186px] md:py-[10px]`}
     >
       <span className="flex items-center gap-2.5">
         {isSubmitting && (
