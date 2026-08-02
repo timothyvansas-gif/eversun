@@ -106,13 +106,16 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
     <button
       type="submit"
       disabled={isSubmitting}
-      // Width is content-driven from sm up so the button widens as the arrow
-      // unfolds. The min-width floor is this label's own resting width: it
-      // stops the pill shrinking when the text swaps to the shorter
-      // "Versturen…". Re-measure it if the label changes.
-      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto sm:min-w-[186px] md:py-[10px]`}
+      // Width is content-driven from sm up, so the pill grows to the right as
+      // the arrow unfolds and the label stays where it is. A floor on the
+      // button instead of the label would centre that slack around the text,
+      // and the arrow would drag the label left on hover.
+      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
-      <span className="flex items-center gap-2.5">
+      {/* 114px is this label's own resting width, so the pill keeps its size
+          when the text swaps to the shorter "Versturen…" (108px including the
+          spinner). Re-measure it if the label changes. */}
+      <span className="flex min-w-[114px] items-center justify-center gap-2.5">
         {isSubmitting && (
           <span
             aria-hidden
