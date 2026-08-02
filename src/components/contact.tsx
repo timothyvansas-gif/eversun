@@ -354,7 +354,7 @@ export default function Contact() {
                 we horen graag van je
               </h3>
 
-              <p className="mt-5 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+              <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
                 Vraag over een bank, een product, of gewoon benieuwd wat bij jouw huid past? Stuur
                 een bericht, we denken graag met je mee.
               </p>
