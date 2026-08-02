@@ -107,7 +107,7 @@ function PhoneButton() {
 
 function Review() {
   return (
-    <div className="px-6 pb-2">
+    <div className="px-6 pb-2 mt-8">
       <div className="flex items-center gap-4">
         <Image
           src={reviewer3}
@@ -191,9 +191,7 @@ export default function PlanJeMomentSheet({
                 <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
               <div className="px-6 pt-8">
-                <Review />
-
-                <div className="bg-white rounded-2xl px-6 py-6 mt-3">
+                <div className="bg-white rounded-2xl px-6 py-6">
                   <div className="mb-8">
                     <h2 className="card-title text-zinc-900">Plan je moment</h2>
                     <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
@@ -214,6 +212,8 @@ export default function PlanJeMomentSheet({
                     <PhoneButton />
                   </div>
                 </div>
+
+                <Review />
               </div>
             </m.div>
           </div>
