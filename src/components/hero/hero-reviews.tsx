@@ -50,7 +50,12 @@ const SCALES = [SIZE_REST, SIZE_NEIGHBOUR, SIZE_PEAK, SIZE_NEIGHBOUR, SIZE_REST]
 const NUDGES = [0, NUDGE, 0, -NUDGE, 0];
 const LIFTS = [0, -3, -8, -3, 0];
 
-const DOCK_SPRING = { mass: 0.3, stiffness: 260, damping: 22 } as const;
+// Roughly critically damped: no wobble, but heavy enough that the wave eases
+// in rather than snapping to its peak the moment the pointer lands.
+const DOCK_SPRING = { mass: 0.55, stiffness: 170, damping: 20 } as const;
+
+// Rank of the avatar under the cursor. Stays well under the quote panel's 20.
+const TOP_Z = 10;
 
 const QUOTE_WIDTH = 400;
 
@@ -66,7 +71,6 @@ function DockAvatar({
   img,
   index,
   mouseX,
-  isActive,
   reduce,
   onActivate,
   onDeactivate,
@@ -75,7 +79,6 @@ function DockAvatar({
   img: StaticImageData;
   index: number;
   mouseX: MotionValue<number>;
-  isActive: boolean;
   reduce: boolean | null;
   onActivate: () => void;
   onDeactivate: () => void;
@@ -96,13 +99,22 @@ function DockAvatar({
   const nudge = useSpring(useTransform(centreDistance, CURVE, NUDGES), DOCK_SPRING);
   const lift = useSpring(useTransform(centreDistance, CURVE, LIFTS), DOCK_SPRING);
 
+  // Stacking follows the same distance the size does, so an avatar rises
+  // through the pile as it grows. Keying it to the active index instead made it
+  // jump the whole stack in one frame, while its scale was still on the way up.
+  // Neighbours swap rank at the midpoint between them, where they are the same
+  // size and the swap does not read.
+  const zIndex = useTransform(centreDistance, (d) =>
+    Math.max(1, Math.round(TOP_Z - Math.abs(d) / STACK_STEP)),
+  );
+
   const tooltip = tooltips[index];
 
   return (
     <m.div
       ref={ref}
       className="relative"
-      style={{ zIndex: isActive ? 10 : index }}
+      style={reduce ? { zIndex: index } : { zIndex }}
       // No onMouseEnter: which avatar is active is derived from the cursor in
       // the row below, the same value the magnification reads. Hit-testing the
       // 56px boxes disagreed with it, because they overlap by 16px while the
@@ -190,7 +202,6 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
               img={img}
               index={i}
               mouseX={mouseX}
-              isActive={activeIndex === i}
               reduce={reduce}
               onActivate={() => setActiveIndex(i)}
               onDeactivate={() => setActiveIndex(null)}
@@ -215,18 +226,21 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
                 width: QUOTE_WIDTH,
                 zIndex: 20,
               }}
-              initial={{ y: 8, x: activeIndex * STACK_STEP }}
-              animate={{ y: 0, x: activeIndex * STACK_STEP }}
-              exit={{ y: 8 }}
-              transition={{ type: "spring", stiffness: 300, damping: 26 }}
+              // The fade is safe again now the row shares one panel: there is
+              // never a second quote to cross over during the change.
+              initial={{ opacity: 0, y: 8, x: activeIndex * STACK_STEP }}
+              animate={{ opacity: 1, y: 0, x: activeIndex * STACK_STEP }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 26,
+                opacity: { duration: 0.22, ease: "easeOut" },
+              }}
             >
               <div
                 style={{
                   padding: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: 4,
                   borderRadius: 16,
                   border: "1px solid #111",
                   background: "rgba(0, 0, 0, 0.85)",
@@ -234,17 +248,33 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
                   backdropFilter: "blur(2px)",
                 }}
               >
-                <div className="flex" style={{ gap: 4, marginBottom: 8 }}>
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <StarIcon key={s} size={16} />
-                  ))}
-                </div>
-                <span className="font-sans text-[15px] leading-[24px] text-white/90">
-                  {active.quote}
-                </span>
-                <span className="font-sans text-[13px] text-white/50" style={{ marginTop: 12 }}>
-                  {active.name}
-                </span>
+                {/* Keyed on the index, so crossing from one avatar to the next
+                    remounts the text and eases it in instead of swapping the
+                    words mid-glide. */}
+                <m.div
+                  key={activeIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: 4,
+                  }}
+                >
+                  <div className="flex" style={{ gap: 4, marginBottom: 8 }}>
+                    {Array.from({ length: 5 }).map((_, s) => (
+                      <StarIcon key={s} size={16} />
+                    ))}
+                  </div>
+                  <span className="font-sans text-[15px] leading-[24px] text-white/90">
+                    {active.quote}
+                  </span>
+                  <span className="font-sans text-[13px] text-white/50" style={{ marginTop: 12 }}>
+                    {active.name}
+                  </span>
+                </m.div>
               </div>
             </m.div>
           )}
