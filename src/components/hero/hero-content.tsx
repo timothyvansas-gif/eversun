@@ -114,7 +114,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
         </m.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-12 lg:block">
+        <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-6 lg:block">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-14 lg:mb-0">
             <div className="translate-y-4 lg:translate-y-0">
