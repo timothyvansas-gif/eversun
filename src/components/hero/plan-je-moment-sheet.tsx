@@ -110,7 +110,7 @@ function OpeningStatus() {
   const { isOpen, label } = getStudioStatus();
 
   return (
-    <div className="mt-8 flex items-center justify-start gap-3">
+    <div className="mb-6 flex items-center justify-start gap-3">
       <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
         {isOpen ? (
           <>
@@ -229,12 +229,12 @@ export default function PlanJeMomentSheet({
                     </p>
                   </div>
 
+                  <OpeningStatus />
+
                   <div className="grid gap-y-4" style={{ gridTemplateColumns: "1fr max-content 1fr" }}>
                     <WhatsAppButton whatsappUrl={whatsappUrl} />
                     <PhoneButton />
                   </div>
-
-                  <OpeningStatus />
                 </div>
 
                 <Review />
