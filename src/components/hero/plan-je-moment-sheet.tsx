@@ -130,7 +130,7 @@ function Review() {
   }, [index]);
 
   return (
-    <div className="mt-8">
+    <div>
       <div className="flex items-center gap-4">
         <Image
           src={review.avatar}
@@ -255,6 +255,8 @@ export default function PlanJeMomentSheet({
                     <WhatsAppButton whatsappUrl={whatsappUrl} />
                     <PhoneButton />
                   </div>
+
+                  <div className="h-px bg-surface-page mt-8 mb-6" />
 
                   <Review />
                 </div>
