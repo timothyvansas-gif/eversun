@@ -37,7 +37,15 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
 
   return (
     <>
-      <button ref={ref} onClick={onOpen} data-status-button className={`relative flex flex-row items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"} cursor-pointer group`}>
+      <button
+        ref={ref}
+        onClick={onOpen}
+        data-status-button
+        // The visible text drops to an icon on narrow phones (see below), so the
+        // accessible name has to carry the affordance on every width.
+        aria-label={`${label} — bekijk alle openingstijden`}
+        className={`relative flex flex-row items-center ${isOpen ? "gap-4 md:gap-[18px]" : "gap-3 md:gap-[14px]"} cursor-pointer group`}
+      >
         <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
           {isOpen ? (
             <>
@@ -51,17 +59,36 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
         </span>
 
         {/* Text group holds the hover underline, so it starts at the first
-            letter (left-0 here) rather than at the pulsing dot. */}
-        <span key={label} className="relative flex items-center gap-3 md:gap-[14px]">
-          <span data-status-text className="font-sans font-normal text-[15px] leading-none" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+            letter (left-0 here) rather than at the pulsing dot.
+
+            Measured: the full row needs 329px on one line — the longest label
+            ("Dinsdag open om 10:00u", Sunday evening) is 177px,
+            "Openingstijden" another 107px, plus the dot, gaps and dash.
+            Viewports leave (width - 48px) of padding-free room, so it fits
+            from ~377px up: comfortable on a 393px iPhone 16, 8px short on a
+            375px SE, which is what split the sentence across two lines.
+            Below 390px the word is therefore dropped and the clock icon
+            carries the affordance on its own. The status text itself, which
+            is the actual message, is never abbreviated.
+
+            flex-wrap plus nowrap on each chunk is the backstop for anything
+            the media query cannot predict (larger default font size, a longer
+            label later): the row then breaks between chunks instead of
+            splitting a sentence down the middle. */}
+        <span key={label} className="relative flex flex-wrap items-center gap-x-2 gap-y-1 md:gap-x-[14px]">
+          <span data-status-text className="font-sans font-normal text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
             {label}
           </span>
 
-          <span data-status-dash className="font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
+          <span data-status-dash className="hidden min-[390px]:inline font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
 
-          <span data-status-times className="flex items-center gap-2" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-            <Image src={clock} alt="" width={16} height={16} className="hidden md:block shrink-0" />
-            <span className="font-sans font-normal text-[15px] leading-none">
+          <span data-status-times className="flex items-center gap-2 whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+            {/* Below 390px the icon replaces the dropped word; between 390 and
+                md the word is back and the icon would only cost the 24px that
+                makes the line fit, so it steps aside there and returns on
+                desktop. */}
+            <Image src={clock} alt="" width={16} height={16} className="block min-[390px]:hidden md:block shrink-0" />
+            <span className="hidden min-[390px]:inline font-sans font-normal text-[15px] leading-none">
               <span className="md:hidden">Openingstijden</span>
               <span className="hidden md:inline">Alle openingstijden</span>
             </span>
