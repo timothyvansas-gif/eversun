@@ -29,7 +29,7 @@ export default function HeroLines({ play }: { play: boolean }) {
         stroke="var(--color-accent)"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[stroke-width:1] md:[stroke-width:1.75] translate-y-[-1px] md:translate-y-[4px]"
+        className="[stroke-width:1] md:[stroke-width:1.75] translate-y-[-1px] md:translate-y-[2px]"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={play ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
         transition={{ duration: 0.5, delay: play ? 0.45 : 0, ease }}
