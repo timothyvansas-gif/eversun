@@ -53,8 +53,13 @@ const LIFTS = [0, -3, -8, -3, 0];
 // in rather than snapping to its peak the moment the pointer lands.
 const DOCK_SPRING = { mass: 0.55, stiffness: 170, damping: 20 } as const;
 
-// Rank of the avatar under the cursor. Stays well under the quote panel's 20.
+// How far the avatar under the cursor is lifted above its resting rank, and how
+// far from it that lift has faded to nothing. Two steps is wide enough to cover
+// the pair the wave actually swells and narrow enough to leave the rest of the
+// row in its resting order. A lifted rank tops out at TOP_Z + the row's length,
+// which stays well under the quote panel's 20.
 const TOP_Z = 10;
+const Z_REACH = 2 * STACK_STEP;
 
 const QUOTE_WIDTH = 400;
 
@@ -100,9 +105,19 @@ function DockAvatar({
   // jump the whole stack in one frame, while its scale was still on the way up.
   // Neighbours swap rank at the midpoint between them, where they are the same
   // size and the swap does not read.
-  const zIndex = useTransform(centreDistance, (d) =>
-    Math.max(1, Math.round(TOP_Z - Math.abs(d) / STACK_STEP)),
-  );
+  //
+  // The lift is added on top of the resting order rather than replacing it. A
+  // bare distance ranking is symmetric around the cursor, while at rest the row
+  // reads right-over-left (every avatar sits at the same rank, so DOM order
+  // decides). The two only agreed with the pointer at the right-hand end: on the
+  // first avatar all three pairs inverted at once, flipping overlaps between
+  // avatars the pointer was nowhere near. Seeding with `index` keeps that
+  // resting order, and the lift dies out within Z_REACH so only the avatars
+  // actually under the wave are re-ranked.
+  const zIndex = useTransform(centreDistance, (d) => {
+    const lift = Math.round(TOP_Z * (1 - Math.abs(d) / Z_REACH));
+    return index + 1 + Math.max(0, lift);
+  });
 
   const tooltip = tooltips[index];
 
