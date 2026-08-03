@@ -13,10 +13,10 @@ const reviewers = REVIEWS.map((review) => review.avatar);
 
 // On load every avatar sits stacked behind the last one (the top of the z-stack,
 // on the right); the rest then glide out to the left into place with an elastic
-// bounce. STACK_STEP = 56px avatar − 24px (-space-x-6) overlap, which is also
+// bounce. STACK_STEP = 56px avatar − 16px (-space-x-4) overlap, which is also
 // the centre-to-centre spacing the dock curve is calibrated against, so it has
 // to be changed in step with that class.
-const STACK_STEP = 32;
+const STACK_STEP = 40;
 const ENTRANCE_DELAY = 1.4; // wait for the review row to finish fading in
 const ENTRANCE_STAGGER = 0.1;
 const ANCHOR = reviewers.length - 1;
@@ -26,9 +26,12 @@ const ANCHOR = reviewers.length - 1;
 // neighbours swell a little less, and the far ones stay at rest. The middle
 // stops at ±STACK_STEP are what make it a curve instead of a triangle.
 const AVATAR = 56; // the rendered box; scale is expressed against it
-const SIZE_REST = 44;
-const SIZE_NEIGHBOUR = 52;
-const SIZE_PEAK = 68;
+// Rest matches the hero CTAs' 56px height, which is also the box, so an avatar
+// at rest sits at scale 1 and renders at its natural size. The swell keeps its
+// old +8/+24 reach, so the magnification feels the same as before.
+const SIZE_REST = 56;
+const SIZE_NEIGHBOUR = 64;
+const SIZE_PEAK = 80;
 const REACH = 110; // how far from an avatar the wave still registers
 const NUDGE = 10; // how far a neighbour is pushed aside to make room
 
@@ -174,7 +177,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
       <div className="relative">
         {/* Photo stack */}
         <div
-          className="flex -space-x-6"
+          className="flex -space-x-4"
           onMouseMove={(e) => {
             if (!canHover) return;
             mouseX.set(e.clientX);
