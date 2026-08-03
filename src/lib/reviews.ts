@@ -8,7 +8,6 @@
  */
 
 import type { StaticImageData } from "next/image";
-import reviewer1 from "@/images/people/reviewer-1.webp";
 import reviewer2 from "@/images/people/reviewer-2.webp";
 import reviewer3 from "@/images/people/reviewer-3.webp";
 import reviewer4 from "@/images/people/reviewer-4.webp";
@@ -23,12 +22,6 @@ export type Review = {
 };
 
 export const REVIEWS: Review[] = [
-  {
-    id: "diana",
-    name: "Diana Boonstra",
-    quote: "Schoon en vriendelijk personeel",
-    avatar: reviewer1,
-  },
   {
     id: "koosje",
     name: "Koosje van Goinga",
