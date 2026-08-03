@@ -55,7 +55,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
 function AddressInfo() {
   return (
     <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted md:no-underline">06 25306491</a>
+      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
     </p>
   );
 }

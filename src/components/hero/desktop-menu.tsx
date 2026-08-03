@@ -121,7 +121,7 @@ export default function DesktopMenu({
               <p className="text-[16px] leading-[24px] font-medium text-white/55">Kloekhorststraat 4a Assen</p>
               <a
                 href="tel:0625306491"
-                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-white/55 underline decoration-dotted transition-colors hover:text-white/85 focus-visible:text-white/85 focus-visible:outline-none"
+                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-white/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-white/85 focus-visible:text-white/85 focus-visible:outline-none"
               >
                 06 25306491
               </a>

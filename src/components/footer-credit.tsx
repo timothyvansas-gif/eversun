@@ -54,7 +54,7 @@ export default function FooterCredit() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="underline decoration-dotted underline-offset-2 hover:text-white focus-visible:[outline:none]! focus-visible:text-white rounded-sm transition-colors cursor-pointer"
+        className="underline decoration-dotted underline-offset-6 hover:text-white focus-visible:[outline:none]! focus-visible:text-white rounded-sm transition-colors cursor-pointer"
       >
         Realisatie
       </button>
@@ -96,7 +96,7 @@ export default function FooterCredit() {
                 </span>
                 <a
                   href={`mailto:${atob(EMAIL_B64)}?subject=${encodeURIComponent("Ik wil ook een gave website")}`}
-                  className="inline-block mt-2.5 text-[15px] font-sans underline underline-offset-2 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#046ADF] rounded-sm transition-opacity"
+                  className="inline-block mt-2.5 text-[15px] font-sans underline underline-offset-6 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#046ADF] rounded-sm transition-opacity"
                   style={{ color: "#046ADF" }}
                 >
                   Contact

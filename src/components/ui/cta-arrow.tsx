@@ -18,7 +18,7 @@ export function CtaArrow({ always = false }: { always?: boolean }) {
       }
     >
       <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
       </svg>
     </span>
   );

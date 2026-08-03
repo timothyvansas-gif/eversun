@@ -189,7 +189,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           </p>
           <a 
             href="tel:0625306491" 
-            className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted"
+            className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted underline-offset-6"
           >
             06 25306491
           </a>

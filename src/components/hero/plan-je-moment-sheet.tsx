@@ -244,7 +244,7 @@ export default function PlanJeMomentSheet({
                         href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-ink/60 underline decoration-dotted"
+                        className="text-ink/60 underline decoration-dotted underline-offset-6"
                       >
                         Kloekhorststraat 4A in Assen
                       </a>
