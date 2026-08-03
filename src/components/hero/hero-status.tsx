@@ -61,15 +61,20 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
         {/* Text group holds the hover underline, so it starts at the first
             letter (left-0 here) rather than at the pulsing dot.
 
-            Measured: the full row needs 329px on one line — the longest label
-            ("Dinsdag open om 10:00u", Sunday evening) is 177px,
-            "Openingstijden" another 107px, plus the dot, gaps and dash.
-            Viewports leave (width - 48px) of padding-free room, so it fits
-            from ~377px up: comfortable on a 393px iPhone 16, 8px short on a
-            375px SE, which is what split the sentence across two lines.
-            Below 390px the word is therefore dropped and the clock icon
-            carries the affordance on its own. The status text itself, which
-            is the actual message, is never abbreviated.
+            Three widths for the trailing link, measured against the longest
+            label ("Dinsdag open om 10:00u", Sunday evening, 177px). Viewports
+            leave (width - 48px) of padding-free room:
+
+              "Alle openingstijden"  md and up, where there is room to spare
+              "Tijden"      288px total → fits from ~336px, so every phone in
+                            use: 327px of room on a 375px SE, 345px on a 393px
+                            iPhone 16
+              icon only     222px total → the 320px fallback
+
+            "Openingstijden" in full needs 351px and only fits from ~399px up,
+            which is what split the sentence across two lines on a 375px SE.
+            The status text itself, which is the actual message, is never
+            abbreviated.
 
             flex-wrap plus nowrap on each chunk is the backstop for anything
             the media query cannot predict (larger default font size, a longer
@@ -80,16 +85,12 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
             {label}
           </span>
 
-          <span data-status-dash className="hidden min-[390px]:inline font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
+          <span data-status-dash className="font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
 
           <span data-status-times className="flex items-center gap-2 whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-            {/* Below 390px the icon replaces the dropped word; between 390 and
-                md the word is back and the icon would only cost the 24px that
-                makes the line fit, so it steps aside there and returns on
-                desktop. */}
-            <Image src={clock} alt="" width={16} height={16} className="block min-[390px]:hidden md:block shrink-0" />
-            <span className="hidden min-[390px]:inline font-sans font-normal text-[15px] leading-none">
-              <span className="md:hidden">Openingstijden</span>
+            <Image src={clock} alt="" width={16} height={16} className="block shrink-0" />
+            <span className="hidden min-[340px]:inline font-sans font-normal text-[15px] leading-none">
+              <span className="md:hidden">Tijden</span>
               <span className="hidden md:inline">Alle openingstijden</span>
             </span>
           </span>
