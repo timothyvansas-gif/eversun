@@ -144,7 +144,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 </m.h1>
 
                 <m.p
-                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px]"
+                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px] lg:leading-[34px]"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"

@@ -40,13 +40,15 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
       </button>
 
       {/* Desktop-only: no fill, ever — only the border opacity and the arrow
-          reveal change on hover. */}
+          reveal change on hover. Layout comes from justify/items-center +
+          rounded-full classes, not baseStyle — that object's display:"flex"
+          would override the `hidden` class below lg (inline style always
+          beats a class), showing the button on mobile too. */}
       <button
-        className="group/cta hidden lg:flex px-10 min-h-[48px] font-sans font-medium text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
+        className="group/cta hidden lg:flex justify-center items-center rounded-full px-10 min-h-[48px] font-sans font-medium text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
         onClick={() => {
           document.getElementById("waarom")?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
-        style={baseStyle}
       >
         <span>Ontdek</span>
         <CtaArrow />
