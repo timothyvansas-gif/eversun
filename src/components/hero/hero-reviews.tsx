@@ -136,7 +136,7 @@ function DockAvatar({
     >
       <m.div style={reduce ? undefined : { x: nudge }}>
         <m.div
-          className="w-[56px] h-[56px] rounded-full overflow-hidden ring-1 ring-white/40"
+          className="w-[56px] h-[56px] rounded-full overflow-hidden"
           style={reduce ? undefined : { scale, y: lift }}
         >
           <Image
