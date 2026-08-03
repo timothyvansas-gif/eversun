@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { m } from "framer-motion";
 import Image from "next/image";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
@@ -17,6 +17,7 @@ interface MobileMenuProps {
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { scrollToNav } = useScrollNav();
   const [canShare, setCanShare] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Feature-detect after mount to avoid a hydration mismatch — the Web Share
@@ -29,9 +30,27 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   // enough: wheel/touch input over the fixed menu chains straight to the
   // viewport in Chromium. Blocking the input events themselves is reliable on
   // iOS (momentum) and Android alike, and causes no layout shift.
+  //
+  // The panel is exempt, but only while it actually overflows — on a short
+  // viewport it becomes its own scroller and swallowing the gesture would
+  // strand the footer below the fold. When everything fits there is nothing to
+  // scroll, so the block stays total and iOS cannot rubber-band the page.
+  // `overscroll-contain` on the panel stops a scroll that reaches the end from
+  // chaining onward.
   useEffect(() => {
     if (!isOpen) return;
-    const prevent = (e: Event) => e.preventDefault();
+    const prevent = (e: Event) => {
+      const panel = panelRef.current;
+      if (
+        panel &&
+        panel.scrollHeight > panel.clientHeight &&
+        e.target instanceof Node &&
+        panel.contains(e.target)
+      ) {
+        return;
+      }
+      e.preventDefault();
+    };
     document.addEventListener("touchmove", prevent, { passive: false });
     document.addEventListener("wheel", prevent, { passive: false });
     document.documentElement.style.overflow = "hidden";
@@ -76,6 +95,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     // the panel re-enables them for itself.
     <div className="fixed inset-0 z-[200] overflow-x-clip pointer-events-none lg:hidden">
       <m.div
+        ref={panelRef}
         data-lenis-prevent
         initial={{ x: "100%" }}
         animate={{ x: isOpen ? "0%" : "100%" }}
@@ -83,12 +103,23 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
-        className="absolute top-0 right-0 w-[95%] h-full bg-black p-8 flex flex-col pointer-events-auto"
+        // The vertical rhythm is keyed to viewport height, not fixed: the panel
+        // is exactly one screen tall and the nav alone used to eat 461px of it,
+        // so on anything shorter than roughly 700px the footer was pushed past
+        // the bottom edge and the phone number was clipped away. The clamps let
+        // a tall phone keep the roomy spacing and a short one give the space
+        // back, floors included so it never collapses into a cramped list.
+        //
+        // Bottom padding is the single source of the breathing room under the
+        // phone number — the footer adds none — and carries the iOS home
+        // indicator, which sits on top of the panel and would otherwise crowd
+        // the link on exactly the phones that have one.
+        className="absolute top-0 right-0 w-[95%] h-full bg-black px-8 pt-8 pb-[calc(env(safe-area-inset-bottom)+clamp(1.5rem,7.5vh,4rem))] flex flex-col overflow-y-auto overscroll-contain pointer-events-auto"
         aria-hidden={!isOpen}
         inert={!isOpen}
       >
         {/* Top Bar: Social Icons + Close */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between mb-[clamp(1.5rem,4.5vh,3rem)] shrink-0">
           <div className="flex items-center gap-2">
             <a
               href="https://www.facebook.com/eversun.assen/"
@@ -147,7 +178,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
   
         {/* Navigation Items */}
-        <nav className="flex flex-col gap-8">
+        <nav className="flex flex-col gap-[clamp(0.875rem,2.6vh,2rem)] shrink-0">
           {NAV_ITEMS.map((item) => (
             <a 
               key={item} 
@@ -180,7 +211,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </nav>
   
         {/* Footer Info */}
-        <div className="mt-auto pt-4 pb-8 flex flex-col gap-1">
+        <div className="mt-auto pt-6 shrink-0 flex flex-col gap-1">
           <p className="text-surface-page/60 text-sm font-medium">
             Ever Sun Zonnestudio
           </p>
