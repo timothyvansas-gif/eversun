@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { CloseButton } from "@/components/ui/close-button";
-import timothyPhoto from "@/images/timothy.webp";
+import timothyPhoto from "@/images/timothy-editorial.webp";
 
 // base64 of the address. atob() is decoded at runtime and is not
 // constant-folded by the bundler, so the plaintext email never appears in
