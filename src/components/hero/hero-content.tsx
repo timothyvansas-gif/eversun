@@ -132,7 +132,14 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   initial="hidden"
                   animate="visible"
                   custom={0.3}
-                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(32px,7.5vw,88px)] leading-[clamp(40px,10vw,94px)] lg:text-[68px] lg:leading-[1.2] 2xl:text-[68px] 2xl:leading-[1.2]"
+                  // The clamp floors used to be 32px/40px, which pinned the
+                  // title flat below 427px and pushed it onto three lines on a
+                  // 375px phone. The fluid 7.5vw already tracks the width the
+                  // title needs — "Een gouden gloed die blijft," is 11.6x the
+                  // font size, against (viewport - 48px) of room — so lowering
+                  // the floors lets it govern down to 320px and the line breaks
+                  // on the comma instead. Only widths below 427px change.
+                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[68px] lg:leading-[1.2] 2xl:text-[68px] 2xl:leading-[1.2]"
                   style={{ marginLeft: "-3px", color: "#ffffff" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
