@@ -38,6 +38,19 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
             fill stays put throughout. */}
         <CtaArrow />
       </button>
+
+      {/* Desktop-only: no fill, ever — only the border opacity and the arrow
+          reveal change on hover. */}
+      <button
+        className="group/cta hidden lg:flex px-10 min-h-[48px] font-sans font-medium text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
+        onClick={() => {
+          document.getElementById("waarom")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+        style={baseStyle}
+      >
+        <span>Ontdek</span>
+        <CtaArrow />
+      </button>
     </div>
   );
 }
