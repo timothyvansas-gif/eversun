@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Alice } from "next/font/google";
+import { Inter, PT_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
 
@@ -8,7 +8,7 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const alice = Alice({
+const alice = PT_Serif({
   weight: "400",
   variable: "--font-alice",
   subsets: ["latin"],
