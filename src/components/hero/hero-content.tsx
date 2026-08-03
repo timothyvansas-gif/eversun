@@ -176,7 +176,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
               </div>
 
               <m.div
-                className="mt-6 md:mt-8 lg:mt-9 flex flex-row items-center justify-between w-full gap-6"
+                className="mt-6 md:mt-8 lg:mt-11 flex flex-row items-center justify-between w-full gap-6"
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
