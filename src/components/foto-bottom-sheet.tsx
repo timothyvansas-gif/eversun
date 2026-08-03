@@ -16,7 +16,22 @@ import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
 
-export const sheetPhotos = [dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img];
+// Placeholder set, so the four dummies just cycle. The length is a multiple of
+// LG_SPANS' cycle, which is what keeps the last row of the desktop grid full.
+export const sheetPhotos = [
+  dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img, dummy3Img,
+  dummy4Img, dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img,
+];
+
+// Column spans on the desktop grid, repeating every seven tiles: a wide one
+// beside a single, then three singles, then a single beside a wide. Every row
+// adds up to the full three columns, so the mosaic never leaves a hole and no
+// tile has to be reordered to fill one.
+//
+// Rows are all the same height — the variety comes from the wide tiles, not
+// from differing row heights. The singles carry the aspect ratio and so set
+// that height; a wide tile is left to stretch into it.
+const LG_SPANS = [2, 1, 1, 1, 1, 1, 2];
 
 export default function FotoBottomSheet({
   isOpen,
@@ -184,22 +199,38 @@ export default function FotoBottomSheet({
               </div>
               <div
                 ref={gridRef}
-                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 gap-4 content-start overflow-y-auto min-h-0"
+                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start overflow-y-auto min-h-0"
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                {sheetPhotos.map((photo, i) => (
-                  <div key={i} className="relative w-full shrink-0 pb-[56.04%]">
-                    <Image
-                      src={photo}
-                      alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
-                      fill
-                      placeholder="blur"
-                      className="object-cover rounded-[12px]"
-                      sizes="(max-width: 767px) 100vw, 600px"
-                    />
-                  </div>
-                ))}
+                {sheetPhotos.map((photo, i) => {
+                  const wide = LG_SPANS[i % LG_SPANS.length] === 2;
+                  return (
+                    <div
+                      key={i}
+                      // One aspect utility per breakpoint, never two competing
+                      // at the same one: which of a pair wins comes down to the
+                      // order Tailwind emits them, not the order they are
+                      // written here.
+                      className={`relative w-full shrink-0 aspect-[16/9] ${
+                        wide ? "lg:col-span-2 lg:aspect-auto" : "lg:aspect-[5/6]"
+                      }`}
+                    >
+                      <Image
+                        src={photo}
+                        alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
+                        fill
+                        placeholder="blur"
+                        className="object-cover rounded-[12px]"
+                        sizes={
+                          wide
+                            ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 66vw"
+                            : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </m.div>
           </div>
