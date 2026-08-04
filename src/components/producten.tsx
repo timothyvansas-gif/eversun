@@ -74,9 +74,9 @@ function ProductCardItem({ product }: { product: Product }) {
 
         {/* Text */}
         <div className="flex flex-col gap-[6px] flex-1" style={{ padding: "16px 24px 24px" }}>
-          <h4 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
+          <h3 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
             {product.name}
-          </h4>
+          </h3>
           <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
             {product.description}
           </p>
@@ -250,9 +250,12 @@ export default function Producten() {
                 <h2 className="text-ink-strong text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   Devoted Creations producten
                 </h2>
-                <h3 className="text-muted text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                {/* Second line of the heading, not a subsection: as an <h3> it
+                    announced a level of hierarchy that is not there. Same
+                    pattern as onze-zonnebanken. */}
+                <p className="text-muted text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
                   voor jouw perfecte kleur
-                </h3>
+                </p>
               </div>
               <p className="text-muted text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Ontdek ons aanbod van hoogwaardige producten. Speciaal geselecteerd voor een optimaal resultaat.

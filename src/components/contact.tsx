@@ -353,9 +353,10 @@ export default function Contact() {
               <h2 className="font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-ink-strong xl:tracking-[-0.015em]">
                 Even contact?
               </h2>
-              <h3 className="mt-1 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-muted xl:tracking-[-0.015em]">
+              {/* Second line of the heading, not a subsection — see producten. */}
+              <p className="mt-1 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-muted xl:tracking-[-0.015em]">
                 we horen graag van je
-              </h3>
+              </p>
 
               <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
                 Vraag over een bank, een product, of gewoon benieuwd wat bij jouw huid past? Stuur

@@ -64,9 +64,10 @@ export default function OverOns() {
                 <h2 className="text-white text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   De zonnestralen
                 </h2>
-                <h3 className="text-[#808080] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                {/* Second line of the heading, not a subsection — see producten. */}
+                <p className="text-[#808080] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
                   van Ever Sun
-                </h3>
+                </p>
               </div>
               <p className="text-[#818181] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Maak kennis met de zonnestralen die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
@@ -108,9 +109,9 @@ export default function OverOns() {
 
                 {/* Text Area */}
                 <div className="flex flex-col gap-[10px] pr-4">
-                  <h4 className="text-white text-[20px] font-medium tracking-[-0.27px] font-display">
+                  <h3 className="text-white text-[20px] font-medium tracking-[-0.27px] font-display">
                     {member.name}
-                  </h4>
+                  </h3>
                   <p className="text-[#888888] text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
                     {member.description}
                   </p>
