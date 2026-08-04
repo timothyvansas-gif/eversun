@@ -146,7 +146,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   // font size, against (viewport - 48px) of room — so lowering
                   // the floors lets it govern down to 320px and the line breaks
                   // on the comma instead. Only widths below 427px change.
-                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[66px] lg:leading-[1.2] 2xl:text-[66px] 2xl:leading-[1.2]"
+                  className="font-alice font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[68px] lg:leading-[1.2] 2xl:text-[68px] 2xl:leading-[1.2]"
                   style={{ marginLeft: "-3px", color: "#ffffff" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -158,7 +158,7 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                 </m.h1>
 
                 <m.p
-                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[17px] leading-[25px] md:leading-[30px] lg:leading-[28px]"
+                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px] lg:leading-[30px]"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
