@@ -33,6 +33,14 @@ export default function SmoothScrollInit() {
       return;
     }
 
+    // Lenis eases every wheel gesture (lerp 0.12), which is exactly the motion
+    // someone asking for reduced motion wants gone. The CSS block in globals
+    // cannot reach it — this is a JS rAF loop, not a transition. Bailing here
+    // also keeps the lenis/gsap chunk off their wire entirely.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     let cancelled = false;
     let cleanup: (() => void) | undefined;
 
