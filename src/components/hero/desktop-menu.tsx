@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "framer-motion";
 import Image from "next/image";
 import { NAV_ITEMS } from "@/lib/nav-items";
 import { resolveNavTarget, useScrollNav } from "@/hooks/use-scroll-nav";
+import { quietFocus } from "@/lib/quiet-focus";
 import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
@@ -49,17 +50,9 @@ export default function DesktopMenu({
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       onClose();
-      // Return focus to the toggle so keyboard/SR users keep their place, but
-      // mark it "quiet" so the ring doesn't flash on this programmatic return.
-      // The marker clears on the next real interaction, so Tab focus still rings.
-      const el = triggerRef.current;
-      if (el) {
-        el.setAttribute("data-quiet-focus", "");
-        el.focus({ preventScroll: true });
-        const clear = () => el.removeAttribute("data-quiet-focus");
-        el.addEventListener("blur", clear, { once: true });
-        el.addEventListener("keydown", clear, { once: true });
-      }
+      // Return focus to the toggle so keyboard/SR users keep their place,
+      // without flashing a ring on a focus they did not ask for.
+      if (triggerRef.current) quietFocus(triggerRef.current);
     };
     window.addEventListener("keydown", onKey);
     window.addEventListener("wheel", onClose, { passive: true, once: true });
@@ -97,7 +90,7 @@ export default function DesktopMenu({
                 key={label}
                 href={resolveNavTarget(label)}
                 onClick={(e) => handleNav(e, label)}
-                className="py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white focus-visible:outline-none"
+                className="py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white"
               >
                 {label}
               </a>
@@ -110,7 +103,7 @@ export default function DesktopMenu({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white focus-visible:outline-none"
+              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white"
             >
               WhatsApp
               <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
@@ -121,7 +114,7 @@ export default function DesktopMenu({
               <p className="text-[16px] leading-[24px] font-medium text-white/55">Kloekhorststraat 4a Assen</p>
               <a
                 href="tel:0625306491"
-                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-white/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-white/85 focus-visible:text-white/85 focus-visible:outline-none"
+                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-white/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-white/85 focus-visible:text-white/85"
               >
                 06 25306491
               </a>
@@ -133,7 +126,7 @@ export default function DesktopMenu({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="-ml-2 rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
+                className="-ml-2 rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
               >
                 <Image src={facebookIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
               </a>
@@ -142,7 +135,7 @@ export default function DesktopMenu({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none"
+                className="rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
               >
                 <Image src={instagramIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
               </a>
