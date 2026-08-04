@@ -76,7 +76,7 @@ export default function PhotoCard() {
             />
           </button>
           <button
-            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-semibold text-zinc-500 cursor-pointer rounded-full border border-[#ece2d2] bg-surface-page px-[14px] py-1.5"
+            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium text-zinc-500 cursor-pointer rounded-full border border-[#ece2d2] bg-surface-page px-[14px] py-1.5"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
@@ -92,7 +92,7 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            className="hidden md:flex items-center gap-2 text-sm font-semibold text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-zinc-500 transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
+            className="hidden md:flex items-center gap-2 text-sm font-medium text-zinc-500 whitespace-nowrap ml-4 cursor-pointer rounded-full border border-[#ece2d2] hover:border-zinc-500 transition-colors duration-150  px-[20px] py-[10px] translate-y-[10px]"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >

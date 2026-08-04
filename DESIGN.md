@@ -12,16 +12,16 @@
 | Font     | Variabele          | Gebruik              |
 |----------|--------------------|----------------------|
 | Figtree  | `--font-display`   | Titels, headings     |
-| Manrope  | `--font-sans`      | Body, labels, UI     |
+| Inter    | `--font-sans`      | Body, labels, UI     |
 
 ### Stijlen
 
 | Naam           | Font    | Gewicht   | Grootte | Line-height | Letter-spacing |
 |----------------|---------|-----------|---------|-------------|----------------|
 | Sectie titel   | Figtree | Semibold  | 48px    | auto        | -1.5%          |
-| Sectie body    | Manrope | Medium    | 20px    | 32px        | -2px           |
+| Sectie body    | Inter   | Medium    | 20px    | 32px        | -2px           |
 | Card titel     | Figtree | Semibold  | 24px    | auto        | -1.5%          |
-| Card body      | Manrope | Regular   | 15px    | 24px        | -1%            |
+| Card body      | Inter   | Regular   | 15px    | 24px        | -1%            |
 
 CSS classes: `.card-title`, `.card-body` (gedefinieerd in `globals.css`)
 
