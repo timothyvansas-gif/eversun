@@ -1,6 +1,7 @@
 "use client";
 
 import { CtaArrow } from "@/components/ui/cta-arrow";
+import { scrollBehavior } from "@/lib/animate-scroll";
 
 // No `gap`: CtaArrow carries its own margin and only unfolds on hover, so a
 // standing gap would push the label off-centre while the arrow is collapsed.
@@ -47,7 +48,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
       <button
         className="group/cta hidden lg:flex justify-center items-center rounded-full px-10 min-h-[56px] font-sans font-medium text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
         onClick={() => {
-          document.getElementById("waarom")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          document.getElementById("waarom")?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
         }}
       >
         <span>Ontdek</span>

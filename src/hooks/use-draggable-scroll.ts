@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { scrollBehavior } from "@/lib/animate-scroll";
 
 export function useDraggableScroll() {
   const ref = useRef<HTMLDivElement>(null);
@@ -32,7 +33,7 @@ export function useDraggableScroll() {
       const gap = parseFloat(window.getComputedStyle(slider).gap) || 0;
       const itemStep = firstChild.offsetWidth + gap;
       const nearest = Math.round(slider.scrollLeft / itemStep) * itemStep;
-      slider.scrollTo({ left: nearest, behavior: "smooth" });
+      slider.scrollTo({ left: nearest, behavior: scrollBehavior() });
       setTimeout(() => {
         slider.style.scrollSnapType = "x proximity";
       }, 500);

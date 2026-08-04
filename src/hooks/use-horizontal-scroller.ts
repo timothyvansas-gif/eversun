@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useDraggableScroll } from "@/hooks/use-draggable-scroll";
+import { scrollBehavior } from "@/lib/animate-scroll";
 
 const CARD_WIDTH = 411;
 const GAP = 24;
@@ -39,16 +40,16 @@ export function useHorizontalScroller() {
     const slider = scrollRef.current;
     if (!slider) return;
     if (isAtEnd) {
-      slider.scrollTo({ left: 0, behavior: "smooth" });
+      slider.scrollTo({ left: 0, behavior: scrollBehavior() });
     } else {
-      slider.scrollBy({ left: (CARD_WIDTH + GAP) * 2, behavior: "smooth" });
+      slider.scrollBy({ left: (CARD_WIDTH + GAP) * 2, behavior: scrollBehavior() });
     }
   }, [isAtEnd, scrollRef]);
 
   const scrollPrev = useCallback(() => {
     const slider = scrollRef.current;
     if (!slider) return;
-    slider.scrollBy({ left: -(CARD_WIDTH + GAP) * 2, behavior: "smooth" });
+    slider.scrollBy({ left: -(CARD_WIDTH + GAP) * 2, behavior: scrollBehavior() });
   }, [scrollRef]);
 
   return { scrollRef, canScroll, isAtEnd, isAtStart, scrollNext, scrollPrev };

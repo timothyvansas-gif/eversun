@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { m, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
 import { stackedSheetHeight } from "./sheet-stack";
 import heroImage from "@/images/hero-woman.webp";
@@ -103,6 +104,14 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
   const y = useTransform(parallaxProgress, [0, 1], ["0%", "5%"]);
   const scale = useTransform(parallaxProgress, [0, 1], [1, 1.05]);
 
+  // The parallax is driven by MotionValues, so `MotionConfig reducedMotion` in
+  // page-layout never sees it: that switch acts on animated props, and these are
+  // values the scroll writes directly. Dropping the style leaves the photo
+  // static and takes the permanent `will-change` off the layer with it — there
+  // is no longer a transform coming for the compositor to prepare for.
+  const shouldReduceMotion = useReducedMotion();
+  const layerStyle = shouldReduceMotion ? undefined : { y, scale, willChange: "transform" };
+
   return (
     <section
       ref={containerRef}
@@ -111,7 +120,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
       <div className="absolute inset-0">
         <m.div
           className="absolute inset-x-0 overflow-hidden top-0 h-full md:top-[-6%] md:h-[106%]"
-          style={{ y, scale, willChange: "transform" }}
+          style={layerStyle}
         >
           <Image
             src={heroImage}

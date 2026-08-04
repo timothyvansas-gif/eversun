@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { animateScrollTo, prefersAnimatedScroll } from "@/lib/animate-scroll";
+import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
@@ -154,7 +154,7 @@ function SuccessPanel({ onReset }: { onReset: () => void }) {
           // abrupt here. scroll-margin has to be applied by hand on this path.
           animateScrollTo(window.scrollY + rect.top - offset);
         } else {
-          panel.scrollIntoView({ behavior: "smooth", block: "start" });
+          panel.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
         }
       }
 

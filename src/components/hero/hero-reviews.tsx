@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import type { StaticImageData } from "next/image";
-import { m, AnimatePresence, useReducedMotion, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { m, AnimatePresence, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import StarIcon from "@/components/ui/star-icon";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { REVIEWS } from "@/lib/reviews";

@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, forwardRef } from "react";
 import { m, Variants } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { StickyCardContext } from "./sticky-card-context";
 
@@ -22,6 +23,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     const [isMounted, setIsMounted] = useState(false);
     const isMobile = useMediaQuery(MOBILE_QUERY);
     const [isCovered, setIsCovered] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
       setIsMounted(true);
@@ -31,8 +33,13 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
     // cosmetic — so gsap + ScrollTrigger (and the layout-reading refresh) load
     // lazily here instead of in the initial bundle. Desktop and the last card
     // never load gsap at all.
+    //
+    // Nor does anyone who asked for reduced motion: this is scroll-coupled
+    // scaling, the most literal reading of "motion I did not ask for", and being
+    // purely cosmetic there is nothing to replace it with. The cards keep their
+    // sticky stacking, they just stop shrinking as the next one covers them.
     useEffect(() => {
-      if (!isMounted || !isMobile || index === total - 1) return;
+      if (!isMounted || !isMobile || shouldReduceMotion || index === total - 1) return;
       const container = containerRef.current;
       const scaling = scalingRef.current;
       if (!container || !scaling) return;
@@ -79,7 +86,7 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
         cancelled = true;
         cleanup?.();
       };
-    }, [isMounted, isMobile, index, total, offsetTop]);
+    }, [isMounted, isMobile, shouldReduceMotion, index, total, offsetTop]);
 
     return (
       <div
@@ -96,7 +103,8 @@ const StickyCardWrapper = forwardRef<HTMLDivElement, Props>(
       >
         <div
           ref={scalingRef}
-          className="origin-top w-full will-change-transform"
+          // will-change only where a transform is actually coming (see above).
+          className={`origin-top w-full ${shouldReduceMotion ? "" : "will-change-transform"}`}
         >
           <m.div
             variants={variants}

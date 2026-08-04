@@ -6,7 +6,7 @@
  * scroll — otherwise the animation visibly lags behind and "glides" into place
  * after arrival.
  */
-import { animateScrollTo, prefersAnimatedScroll } from "@/lib/animate-scroll";
+import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
 
 export const PROGRAMMATIC_SCROLL_EVENT = "eversun:programmatic-scroll";
 
@@ -15,6 +15,6 @@ export function scrollToTop() {
   if (prefersAnimatedScroll()) {
     animateScrollTo(0);
   } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }
 }

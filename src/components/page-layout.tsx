@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { LazyMotion } from "framer-motion";
+import { LazyMotion, MotionConfig } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
@@ -27,16 +28,29 @@ const loadMotionFeatures = () =>
 
 const PUSH_TRANSITION = "margin-left 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
+// `reducedMotion="user"` is the one switch that reaches every `m.*` on the page.
+// framer-motion then drops transform and layout animations whenever the OS asks
+// for less motion, while opacity and colour keep animating — so the hero still
+// arrives, the bento cards still appear and the sheets still read as covering
+// the page; nothing travels to get there. Every component keeps its own
+// durations and easing, because the switch changes which properties animate,
+// not how long they take.
+//
+// Effects driven by a MotionValue or a ScrollTrigger never pass through it and
+// are gated where they are created (hero parallax, sticky cards, advies-card).
+
 // `footer` is rendered by the server page and passed in as a slot, so the
 // static Footer stays a server component instead of being pulled into this
 // client bundle.
 export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <LazyMotion features={loadMotionFeatures} strict>
+    <MotionConfig reducedMotion="user">
     <div className="relative bg-black min-h-screen">
       {/* First tabbable on the page, so the keyboard route to the content does
           not run through the header and the whole menu. Hidden until focused. */}
@@ -54,7 +68,10 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
       <main
         style={{
           marginLeft: isMenuOpen ? "-95%" : "0%",
-          transition: PUSH_TRANSITION,
+          // The push is the largest single movement on the site — the whole page
+          // travelling 95% of the viewport. Under reduced motion the menu simply
+          // takes its place; the page is where it needs to be either way.
+          transition: shouldReduceMotion ? "none" : PUSH_TRANSITION,
           width: "100%",
         }}
         className="min-h-screen flex flex-col items-center relative z-10"
@@ -85,6 +102,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         style={BACKDROP_SCRIM}
       />
     </div>
+    </MotionConfig>
     </LazyMotion>
   );
 }

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { m, AnimatePresence, useMotionValue, useTransform, animate, useInView } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import manAdvies from "@/images/people/man-advies.webp";
 import meisjeRood from "@/images/people/meisje-rood-advies.webp";
 import vrouwOuder from "@/images/people/vrouw-ouder-advies.webp";
@@ -38,6 +39,7 @@ export default function AdviesCard() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useMediaQuery("(max-width: 1279px)");
   const [started, setStarted] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const isInView = useInView(containerRef, {
     once: false,
@@ -59,8 +61,18 @@ export default function AdviesCard() {
   }, [isInView, isMobile]);
 
   useEffect(() => {
+    // The slideshow advances itself every 4.5s and then starts over, which is
+    // the longest-running motion on the page. Under reduced motion it does not
+    // run at all: the thumbnails below are already the control, so the photo
+    // changes when the visitor asks for it. The ring stops being a countdown and
+    // simply sits closed around the active thumbnail, marking which one shows.
+    if (shouldReduceMotion) {
+      progress.set(1);
+      return;
+    }
+
     if (!started) return;
-    
+
     progress.set(0);
     const ctrl = animate(progress, 1, {
       duration: DURATION,
@@ -68,7 +80,7 @@ export default function AdviesCard() {
       onComplete: () => setActive((p) => (p + 1) % SLIDES.length),
     });
     return () => ctrl.stop();
-  }, [active, progress, started]);
+  }, [active, progress, started, shouldReduceMotion]);
 
   const first = (active + 1) % SLIDES.length;
   const second = (active + 2) % SLIDES.length;

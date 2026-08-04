@@ -60,18 +60,27 @@ body {
 }
 
 
-@media (prefers-reduced-motion: reduce) {
+/* Reduced motion is handled where the motion lives, not with a blanket kill.
+   The rule that used to sit here zeroed every transition and animation on the
+   page, which had it backwards twice over.
 
-  *,
-  ::before,
-  ::after {
-    animation-delay: -1ms !important;
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    background-attachment: initial !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
+   It took out the wrong things: hover, focus and validation feedback are colour
+   changes over 150ms with nothing moving, and they are exactly what a visitor
+   who asked for less motion still needs to follow the interface.
+
+   And it could not touch the right things: the hero entrance, the parallax, the
+   bento reveal, the sheets and the menu all animate in JS (framer-motion, gsap),
+   where no stylesheet reaches them. Those are gated at the source now —
+   `MotionConfig reducedMotion="user"` in page-layout for the declarative ones,
+   an explicit check in the components that drive a MotionValue or a
+   ScrollTrigger by hand.
+
+   What CSS still owns is the page's own scrolling. Anchor jumps and the
+   `scroll-mt-*` offsets land instantly; programmatic scrolls pass their
+   behaviour in explicitly (see lib/animate-scroll). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 

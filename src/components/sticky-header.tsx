@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
@@ -14,6 +15,7 @@ export default function StickyHeader({
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,7 +54,11 @@ export default function StickyHeader({
       style={{
         marginLeft: isMenuOpen ? "-95%" : "0%",
         transform: isShown ? "translateY(0)" : "translateY(-100%)",
-        transitionProperty: "transform, margin-left",
+        // Both movements are position changes the visitor did not ask for — the
+        // bar arriving on scroll, and the menu pushing it aside. Under reduced
+        // motion it is simply there or not; `pointer-events-none` and the
+        // off-screen transform already handle the rest.
+        transitionProperty: shouldReduceMotion ? "none" : "transform, margin-left",
         transitionDuration: "800ms",
         transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
       }}

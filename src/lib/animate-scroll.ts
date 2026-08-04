@@ -11,6 +11,23 @@
 const easeInOutCubic = (t: number) =>
   t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
+/** Has the visitor asked their OS for less motion? */
+export function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/**
+ * `behavior` for a native `scrollTo` / `scrollBy` / `scrollIntoView` call.
+ *
+ * The CSS `scroll-behavior` property cannot switch these off: an explicit
+ * `behavior` in the options object outranks it, so a `prefers-reduced-motion`
+ * stylesheet rule leaves every one of them animating. Passing the behaviour in
+ * is the only thing the browser honours (WCAG 2.3.3).
+ */
+export function scrollBehavior(): ScrollBehavior {
+  return prefersReducedMotion() ? "auto" : "smooth";
+}
+
 let rafId: number | null = null;
 
 function cancelAnimation() {
@@ -33,7 +50,7 @@ export function animateScrollTo(targetY: number) {
   if (distance === 0) return;
 
   // WCAG 2.3.3: no scroll animation for users who prefer reduced motion.
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (prefersReducedMotion()) {
     window.scrollTo(0, target);
     return;
   }

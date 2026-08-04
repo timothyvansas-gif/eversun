@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CloseButton } from "@/components/ui/close-button";
 import timothyPhoto from "@/images/timothy-editorial.webp";
 

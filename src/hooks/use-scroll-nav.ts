@@ -1,4 +1,4 @@
-import { animateScrollTo, prefersAnimatedScroll } from "@/lib/animate-scroll";
+import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
 
 const SECTION_MAP: Record<string, string> = {
   Studio: "#waarom",
@@ -28,7 +28,7 @@ export function useScrollNav() {
       } else {
         // Desktop: offsets live on the targets as `scroll-mt-*` classes; the
         // browser applies them automatically for scrollIntoView and #anchors.
-        element.scrollIntoView({ behavior: "smooth" });
+        element.scrollIntoView({ behavior: scrollBehavior() });
       }
     };
 
