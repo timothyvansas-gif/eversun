@@ -42,7 +42,10 @@ body {
   --color-surface-page: #faf4ec;
   --color-ink: #1a1a1a;
   --color-ink-strong: #1f1f1e;
-  --color-muted: #94825c;
+  /* Darkened from #94825c, which cleared only 3.4:1 on the page surface and
+     failed 1.4.3 on every background it sits on (page, white cards, product
+     tags). Same hue, lower luminance: 4.99:1 at worst. */
+  --color-muted: #76684a;
   /* The one orange: buttons, status dot, pin, review stars, hero rules. There
      used to be a second, duller #e15e1d on the dot and the pin. */
   --color-accent: #f35b04;
