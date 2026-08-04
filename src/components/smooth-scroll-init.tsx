@@ -61,6 +61,14 @@ export default function SmoothScrollInit() {
       const lenis = new Lenis({
         smoothWheel: true,
         lerp: 0.12,
+        // Lenis watches `content` with a ResizeObserver to keep its scroll
+        // limit current, and defaults that to <html> — which this page pins to
+        // the viewport (`h-full`), so its observed box never changes and the
+        // limit goes stale the moment the document grows. That is how the
+        // contact form's error messages used to cut the last ~60px off the
+        // footer: the page got taller, Lenis did not notice, and the wheel
+        // stopped short. <body> is the box that actually grows here.
+        content: document.body,
       });
 
       lenis.on("scroll", ScrollTrigger.update);
