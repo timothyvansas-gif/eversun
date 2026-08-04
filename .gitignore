@@ -38,6 +38,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude code — local settings and the scratch worktrees it creates for
+# background tasks. Nothing in here belongs to the project.
+.claude/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
