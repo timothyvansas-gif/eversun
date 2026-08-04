@@ -128,6 +128,13 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
                   same layout as before. */}
               <div className="w-fit">
                 <m.h1
+                  // Skip-link target. Not <main>: that starts at y=0 with the
+                  // hero's own status and menu buttons first inside it, so
+                  // jumping there skipped nothing and moved nothing. Landing on
+                  // the heading puts the next Tab on "Plan je moment" and gives
+                  // screen readers the title to announce.
+                  id="hoofdinhoud"
+                  tabIndex={-1}
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"

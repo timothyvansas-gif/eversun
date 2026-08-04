@@ -52,10 +52,6 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
       <StickyHeader onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
 
       <main
-        id="hoofdinhoud"
-        // tabIndex -1 so the skip link moves focus here, not just the scroll
-        // position — without it the next Tab lands back at the top of the page.
-        tabIndex={-1}
         style={{
           marginLeft: isMenuOpen ? "-95%" : "0%",
           transition: PUSH_TRANSITION,
