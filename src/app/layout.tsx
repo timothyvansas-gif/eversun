@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, PT_Serif } from "next/font/google";
+import { Manrope, PT_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
 
-const inter = Inter({
-  variable: "--font-inter",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -83,7 +83,7 @@ export default function RootLayout({
     <html
       lang="nl"
       translate="no"
-      className={`${inter.variable} ${alice.variable} h-full antialiased`}
+      className={`${manrope.variable} ${alice.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
