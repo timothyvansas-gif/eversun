@@ -66,9 +66,9 @@ function ProductCardItem({ product }: { product: Product }) {
           <ProductImage src={product.image} alt={product.name} />
           <div className="absolute bottom-6 left-6 md:bottom-6 md:left-6 flex gap-[4px]">
             {product.sachetPrice && (
-              <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px]" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>Sachet {product.sachetPrice}</span>
+              <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">Sachet {product.sachetPrice}</span>
             )}
-            <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px]" style={{ backgroundColor: "#FDC43F", color: "#111111" }}>{product.containerLabel} {product.containerPrice}</span>
+            <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">{product.containerLabel} {product.containerPrice}</span>
           </div>
         </div>
 

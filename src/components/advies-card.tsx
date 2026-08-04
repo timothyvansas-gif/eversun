@@ -127,7 +127,7 @@ export default function AdviesCard() {
               cy={RING / 2}
               r={R}
               fill="none"
-              stroke="#FDC43F"
+              stroke="var(--color-brand)"
               strokeWidth={STROKE}
               strokeDasharray={CIRC}
               strokeDashoffset={dashOffset}

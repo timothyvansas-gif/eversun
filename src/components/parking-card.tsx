@@ -101,7 +101,7 @@ export default function ParkingCard() {
       {/* Gradient fade overlay in container space — independent of canvas scale */}
       <div
         className="max-xl:block hidden absolute inset-0 pointer-events-none z-[1]"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, #fdc43f 100%)" }}
+        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 40%, transparent 30%, var(--color-brand) 100%)" }}
       />
 
       {/* Unscaled text overlay for mobile consistency - adjusted margin to match PhotoCard */}
