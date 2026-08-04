@@ -32,7 +32,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       target="_blank"
       rel="noopener noreferrer"
       // The orange holds on hover, like every other accent button.
-      className="w-full font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
+      className="w-full font-sans font-semibold text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
@@ -60,7 +60,7 @@ function PhoneButton() {
   return (
     <a
       href="tel:+31625306491"
-      className="w-full font-sans font-medium text-[15px] text-ink rounded-full border active:scale-[0.98] transition-[transform,border-color] duration-200"
+      className="w-full font-sans font-semibold text-[15px] text-ink rounded-full border active:scale-[0.98] transition-[transform,border-color] duration-200"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",

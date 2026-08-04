@@ -22,7 +22,7 @@ const WHATSAPP_URL =
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
   // The orange holds on hover, like every other accent button.
   const className =
-    "group/cta mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
+    "group/cta mt-7 flex w-full items-center justify-center font-sans font-semibold text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
@@ -111,7 +111,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
+      className="group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-semibold text-[15px] text-ink rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
       style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
       onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
       onMouseLeave={() => setHovered(false)}
