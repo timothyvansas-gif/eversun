@@ -38,11 +38,24 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   return (
     <LazyMotion features={loadMotionFeatures} strict>
     <div className="relative bg-black min-h-screen">
+      {/* First tabbable on the page, so the keyboard route to the content does
+          not run through the header and the whole menu. Hidden until focused. */}
+      <a
+        href="#hoofdinhoud"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-surface-page focus:px-5 focus:py-3 focus:font-sans focus:text-[15px] focus:font-medium focus:text-ink"
+      >
+        Naar hoofdinhoud
+      </a>
+
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <StickyHeader onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
 
       <main
+        id="hoofdinhoud"
+        // tabIndex -1 so the skip link moves focus here, not just the scroll
+        // position — without it the next Tab lands back at the top of the page.
+        tabIndex={-1}
         style={{
           marginLeft: isMenuOpen ? "-95%" : "0%",
           transition: PUSH_TRANSITION,
