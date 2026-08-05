@@ -7,7 +7,7 @@ import { m, AnimatePresence, useMotionValue, useSpring, useTransform, type Motio
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import StarIcon from "@/components/ui/star-icon";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { REVIEWS } from "@/lib/reviews";
+import { REVIEWS, REVIEW_SUMMARY } from "@/lib/reviews";
 
 // Order is left to right; the last one ends up nearest the rating figure.
 const reviewers = REVIEWS.map((review) => review.avatar);
@@ -312,7 +312,8 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
       {/* Text Container */}
       <div className="h-[40px] flex items-center">
         <span className="font-sans font-normal text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-          <span className="font-normal">4.9</span>/5 <span className="opacity-50">-</span> 176 reviews
+          <span className="font-normal">{REVIEW_SUMMARY.rating}</span>/{REVIEW_SUMMARY.outOf}{" "}
+          <span className="opacity-50">-</span> {REVIEW_SUMMARY.count} reviews
         </span>
       </div>
     </div>

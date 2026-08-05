@@ -8,9 +8,14 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const alice = PT_Serif({
+// The display face. It used to be loaded under the variable `--font-alice`,
+// after a font the project no longer uses — three names (alice, display,
+// PT_Serif) for one typeface, and DESIGN.md documented a fourth that was never
+// here. Named for what it is; `--font-display` in globals.css is the semantic
+// alias components should reach for.
+const ptSerif = PT_Serif({
   weight: "400",
-  variable: "--font-alice",
+  variable: "--font-serif",
   subsets: ["latin"],
 });
 
@@ -83,7 +88,7 @@ export default function RootLayout({
     <html
       lang="nl"
       translate="no"
-      className={`${inter.variable} ${alice.variable} h-full antialiased`}
+      className={`${inter.variable} ${ptSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

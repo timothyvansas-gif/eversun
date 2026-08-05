@@ -12,12 +12,16 @@ export const alt = "Ever Sun — Zonnestudio Assen";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// The brand serif used on the site. Satori needs TTF (not woff2), so request
-// Google Fonts with a legacy UA. Falls back to the default font on failure.
-async function loadAliceFont(): Promise<ArrayBuffer | null> {
+// The display serif the site actually uses — PT Serif, same as layout.tsx.
+// This used to fetch Alice, a face the site left behind, so every shared link
+// rendered its card in a typeface that appears nowhere on the page.
+//
+// Satori needs TTF (not woff2), so request Google Fonts with a legacy UA.
+// Falls back to the default font on failure.
+async function loadDisplayFont(): Promise<ArrayBuffer | null> {
   try {
     const css = await fetch(
-      "https://fonts.googleapis.com/css2?family=Alice&display=swap",
+      "https://fonts.googleapis.com/css2?family=PT+Serif&display=swap",
       { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1)" } },
     ).then((r) => r.text());
     const url = css.match(/src:\s*url\((https:[^)]+\.ttf)\)/)?.[1];
@@ -36,7 +40,7 @@ export default async function Image() {
     "utf8",
   ).replaceAll('fill="#111111"', 'fill="#FAF4EC"');
   const logoDataUri = `data:image/svg+xml;base64,${Buffer.from(logoSvg).toString("base64")}`;
-  const alice = await loadAliceFont();
+  const displayFont = await loadDisplayFont();
 
   return new ImageResponse(
     (
@@ -94,8 +98,8 @@ export default async function Image() {
     ),
     {
       ...size,
-      fonts: alice
-        ? [{ name: "Alice", data: alice, style: "normal" as const, weight: 400 as const }]
+      fonts: displayFont
+        ? [{ name: "PT Serif", data: displayFont, style: "normal" as const, weight: 400 as const }]
         : undefined,
     },
   );

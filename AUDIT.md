@@ -1,7 +1,7 @@
 # Ever Sun — Technische audit
 
 **Datum:** 4 augustus 2026 · **Basis:** commit `9007632` · **Scope:** `src/`
-**Bijgewerkt:** 5 augustus 2026 — tien bevindingen opgelost, zie [Opgelost](#opgelost).
+**Bijgewerkt:** 5 augustus 2026 — twaalf bevindingen opgelost, zie [Opgelost](#opgelost).
 
 Code-level audit: accessibility, performance, theming, responsive gedrag en implementatie-integriteit. Geen UX-critique.
 
@@ -16,23 +16,25 @@ Code-level audit: accessibility, performance, theming, responsive gedrag en impl
 | 1 | Accessibility | 2/4 | **3/4** | Eén AA-schending over: de primaire CTA haalt 3.05:1 (#2). Modal, semantiek, sheet-contrast en reduced motion zijn geregeld |
 | 2 | Performance | 3/4 | **4/4** | Videopreload en de layout-animatie van de pagina-push zijn weg |
 | 3 | Responsive Design | 3/4 | **4/4** | Fluid systeem, en elk icoonvlak haalt nu 44×44 |
-| 4 | Theming | 2/4 | 2/4 | 62 hard-coded hex; `DESIGN.md` beschrijft een ander systeem dan de code |
-| 5 | Implementation Integrity | 2/4 | 2/4 | 3 van 4 "teamleden" zijn placeholders met lorem-tekst |
-| **Totaal** | | **12/20** | **15/20** | **Good — address weak dimensions** |
+| 4 | Theming | 2/4 | **3/4** | 62 hard-coded hex; `DESIGN.md` klopt nu wel met de code |
+| 5 | Implementation Integrity | 2/4 | **3/4** | Team en galerij zijn nog placeholders — bewust, pre-productie |
+| **Totaal** | | **12/20** | **17/20** | **Good — address weak dimensions** |
 
 De score meet meetbare failures, niet vakmanschap. De codekwaliteit ligt aantoonbaar hoog — zie [Positieve bevindingen](#positieve-bevindingen). Wat de score nog drukt is bijna volledig contentblokkade (team, galerij) plus één kleurbeslissing die nooit is doorgerekend.
 
-Accessibility staat op 3 en niet hoger omdat de primaire CTA sitebreed onder de norm blijft; dat is één beslissing, geen reeks fouten. Theming en Integrity bewegen pas als er echte content en een kloppende `DESIGN.md` liggen.
+Accessibility staat op 3 en niet hoger omdat de primaire CTA sitebreed onder de norm blijft; dat is één beslissing, geen reeks fouten. Theming blijft op 3 door de 62 losse hex-waarden. Integrity komt op 4 zodra team en galerij echte content hebben — daar hoeft geen code voor om.
 
 ## Verdict implementatie-integriteit
 
-**Fail, door content — niet door code.** Het systeem is coherent en productspecifiek: gedeelde tokens, gedeelde class-libs (`button-styles`, `carousel`), één breakpoint-bron, commentaar dat *waarom* vastlegt in plaats van *wat*. Wat het laat vallen: placeholdercontent staat in de productie-render, en `DESIGN.md` beschrijft een ander systeem dan de code bouwt.
+**Pass op de bouw, open op de content.** Het systeem is coherent en productspecifiek: gedeelde tokens, gedeelde class-libs (`button-styles`, `carousel`), één breakpoint-bron, commentaar dat *waarom* vastlegt in plaats van *wat*. `DESIGN.md` beschrijft sinds deze ronde ook echt wat de code doet.
+
+Wat open blijft is geen bouwfout: team en galerij draaien op placeholders. De site staat nog niet live, dus dat is scaffolding — maar het is wel de laatste horde voor productie.
 
 ---
 
 ## Bevindingen
 
-Severity: **P0** blokkerend · **P1** fix vóór release · **P2** volgende ronde · **P3** als er tijd is.
+Severity: **P1** fix vóór release · **P2** volgende ronde · **P3** als er tijd is. Wat op content wacht staat apart onder [Release gate](#release-gate--wacht-op-content).
 
 ### Opgelost
 
@@ -48,6 +50,8 @@ Severity: **P0** blokkerend · **P1** fix vóór release · **P2** volgende rond
 | 13 | Pagina-push animeerde `margin-left` | 5 aug |
 | 16 | 10,4 MB dode assets | 5 aug |
 | 17 | Icoonknoppen onder de 44pt | 5 aug |
+| 10 | `DESIGN.md` beschreef een ander systeem | 5 aug |
+| 19 | Reviewcijfer hard in de JSX | 5 aug |
 
 Details per stuk hieronder.
 
@@ -99,6 +103,20 @@ Geverifieerd: vier kaarten op `metadata` na scrollen, alleen de gehoverde kaart 
 
 Verwijderd: `src/images/banken/*-closed.png` (4), `src/images/timothy.{png,webp}`, en `public/{file,globe,next,vercel,window}.svg` uit de Next-scaffold.
 
+#### 10. `DESIGN.md` beschreef een ander systeem
+
+`DESIGN.md`, `layout.tsx`, `globals.css`, `hero-content.tsx`, `opengraph-image.tsx`
+
+Het doc noemde **Figtree** als display-font. De code laadt **PT Serif** — en deed dat onder de variabelenaam `alice`, met `--font-alice` twee keer aan zichzelf gealiast in `globals.css` en een losse `font-alice` utility op precies één element. Vier namen voor één lettertype, waarvan er één in het doc stond en nergens in de code voorkwam.
+
+Bij het opruimen bleek waar die naam vandaan kwam, en dat het meer was dan een naamkwestie: **`opengraph-image.tsx` haalde daadwerkelijk Alice op van Google Fonts** — met het commentaar "the brand serif used on the site" erboven. Elke gedeelde link liet dus een sharecard zien in een letter die nergens op de site staat. Nu PT Serif, gecontroleerd door de kaart te renderen.
+
+Verder gelijkgetrokken: alle 7 tokens in plaats van 2, de bento als flex-verhoudingen in plaats van vaste px (en in de volgorde die de code aanhoudt — advies staat op positie 3, niet 4), gap 12/16px en radius 12px in plaats van 16/8, plus secties over motion en toegankelijkheid die er nog niet waren.
+
+#### 19. Reviewcijfer hard in de JSX
+
+`lib/reviews.ts`, `hero-reviews.tsx` — `4.9/5 - 176 reviews` stond in de opmaak. Staat nu als `REVIEW_SUMMARY` naast de quotes die het samenvat, met een `checked`-datum erbij: beide komen van dezelfde Google-listing en verouderen samen.
+
 #### 17. Icoonknoppen onder de 44pt
 
 `button-styles.ts` (nieuwe `TAP_TARGET`), `hero-content.tsx`, `sticky-header.tsx`, `mobile-menu.tsx`
@@ -121,16 +139,25 @@ Geverifieerd met Playwright onder beide mediastates. Zonder voorkeur: elke gemet
 
 ---
 
-### P0
+### Release gate — wacht op content
 
-#### 1. Fictieve medewerkers op een live bedrijfssite
+De site staat nog niet live. Onderstaande twee zijn dus bewuste scaffolding, geen fouten in de bouw: de code eromheen is af en heeft geen wijziging nodig zodra het materiaal er is. Ze staan hier omdat ze **niet mee mogen naar productie**.
 
-- **Locatie:** `src/components/over-ons.tsx:22-36`
-- **Categorie:** Implementation Integrity
+#### 1. Drie van de vier teamleden zijn placeholders
 
-Sofie, Chloe en Yara bestaan niet. Alle drie dragen dezelfde tekst — `"Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk."` — en Sofie en Yara delen dezelfde foto (`team-dummy.webp`). De bezoeker denkt personeel te ontmoeten. Bij een lokale ondernemer is dat een geloofwaardigheidsrisico, geen cosmetisch detail.
+`src/components/over-ons.tsx:12-37` · Implementation Integrity
 
-**Fix:** echte namen, foto's en teksten, of de sectie terugbrengen tot alleen Aisha tot die er zijn. Vraagt assets van de klant.
+Sofie, Chloe en Yara bestaan niet. Alle drie dragen dezelfde regel — `"Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk."` — en Sofie en Yara delen dezelfde foto (`team-dummy.webp`). Alleen Aisha is echt.
+
+**Nodig:** namen, foto's en teksten. Alternatief tot die er zijn: de sectie terugbrengen tot Aisha.
+
+#### 7. Galerij toont 14 foto's die 4 foto's zijn
+
+`src/components/foto-bottom-sheet.tsx:21-24,144,182` · Implementation Integrity
+
+`src/images/impressie/` bevat vier bestanden, alle vier `dummy*.webp`. Die worden 3,5× herhaald tot veertien items, het label telt ze op als `14 foto's`, en de alt-teksten nummeren door tot "Impressie Ever Sun zonnestudio 14".
+
+**Nodig:** echte studiofoto's. De lijst en de telling volgen dan vanzelf.
 
 ---
 
@@ -161,10 +188,6 @@ Sofie, Chloe en Yara bestaan niet. Alle drie dragen dezelfde tekst — `"Hier ga
 
 62 hex-literals in `src/components` + `src/lib`. Daarvan dupliceren `#FAF4EC` (5×) en `#1F1F1E` (5×) bestaande tokens, en de foutkleur `#A6371A` (4×) heeft er geen. **Fix:** `--color-error` en `--color-error-surface` toevoegen, duplicaten door de bestaande tokens routeren — zoals commit `628c466` al deed voor het brand-geel.
 
-#### 10. `DESIGN.md` beschrijft een ander systeem
-
-Het doc noemt **Figtree** als display-font; de code laadt **PT_Serif**, onder de variabelenaam `alice` en `--font-alice` — drie namen voor één font. Het doc noemt 2 tokens, de code heeft er 7. De bento-tabel geeft vaste px (853/411/535/302) waar de code flex-ratio's gebruikt. Wie het doc volgt bouwt het verkeerde ding. **Fix:** doc gelijktrekken, fontvariabele hernoemen naar wat ze is.
-
 #### 14. Outline-pill randcontrast
 
 `button-styles.ts:11` — `border-line` (`#D5BE9C`) op `#FAF4EC` = **1.65:1**, terwijl de rand de enige begrenzing van de knop is. WCAG 1.4.11 vraagt 3:1.
@@ -178,7 +201,6 @@ Het doc noemt **Figtree** als display-font; de code laadt **PT_Serif**, onder de
 ### P3
 
 - **18. `will-change: transform` permanent.** `hero/index.tsx` — blijft staan als de hero uit beeld is. Sinds `a312c6e` valt hij weg bij reduced motion; daarbuiten nog altijd permanent.
-- **19. Statische reviewclaim.** `4.9/5 - 176 reviews` staat hard in `hero-reviews.tsx:301`. De vier quotes zelf staan netjes in `lib/reviews.ts`; het cijfer veroudert stil.
 
 ---
 
@@ -202,12 +224,11 @@ Het doc noemt **Figtree** als display-font; de code laadt **PT_Serif**, onder de
 
 Wat er nog ligt, in volgorde:
 
-1. **P0** — echte content voor team en galerij (1, 7). Vraagt assets van de klant; alles eromheen is af.
+1. **Release gate** — echte content voor team en galerij (1, 7). Vraagt assets van de klant; alles eromheen is af.
 2. **P1** — accent doorrekenen naar 4.5:1 als knopvlak (2). De enige AA-schending die over is, en hij staat op de drie conversiepunten.
 3. **P2** — error-token en duplicaten naar bestaande tokens (9), randcontrast van de outline-pill (14).
 4. **P2** — pauzeknop of langere interval op de advies-carrousel (15).
-5. **P2** — `DESIGN.md` gelijktrekken met de code (10).
-6. **P3** — `will-change`, statische reviewclaim (18, 19).
+5. **P3** — `will-change` staat permanent op de hero-laag (18).
 
 ## Opnieuw draaien
 

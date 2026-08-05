@@ -55,8 +55,9 @@ body {
 
 @theme inline {
   --font-sans: var(--font-inter);
-  --font-display: var(--font-alice);
-  --font-alice: var(--font-alice);
+  /* PT Serif, loaded as --font-serif in layout.tsx. `font-display` is the only
+     utility components should use for it; there is no second alias any more. */
+  --font-display: var(--font-serif);
 }
 
 

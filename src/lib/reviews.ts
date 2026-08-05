@@ -13,6 +13,21 @@ import reviewer3 from "@/images/people/reviewer-3.webp";
 import reviewer4 from "@/images/people/reviewer-4.webp";
 import reviewer5 from "@/images/people/reviewer-5.webp";
 
+/**
+ * The headline figure the hero shows beside the avatar dock.
+ *
+ * Here rather than inline in the JSX, next to the quotes it summarises: both
+ * come off the same Google listing, so they go stale together and should be
+ * updated in one sitting. `checked` records when someone last compared it
+ * against the listing — the number carries no expiry of its own.
+ */
+export const REVIEW_SUMMARY = {
+  rating: "4.9",
+  outOf: "5",
+  count: 176,
+  checked: "2026-08-05",
+} as const;
+
 export type Review = {
   /** Stable handle, so a consumer can pick a subset without matching on text. */
   id: string;
