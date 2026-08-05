@@ -3,7 +3,11 @@ import type { NextConfig } from "next";
 const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["192.168.2.66", "192.168.2.*", "localhost:3000"],
+  // LAN origins allowed to pull dev assets, for checking the site on a real
+  // phone. Without a match Next serves the HTML but 403s every /_next chunk,
+  // so the page loads dead. These are DHCP ranges, hence the wildcards — add
+  // the network you are on rather than a single lease.
+  allowedDevOrigins: ["192.168.2.*", "10.30.*", "localhost:3000"],
   images: {
     formats: isProd ? ["image/avif", "image/webp"] : ["image/webp"],
     qualities: [75, 80, 90],
