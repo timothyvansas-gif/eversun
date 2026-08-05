@@ -113,10 +113,35 @@ export default function HeroSection({
   // The parallax is driven by MotionValues, so `MotionConfig reducedMotion` in
   // page-layout never sees it: that switch acts on animated props, and these are
   // values the scroll writes directly. Dropping the style leaves the photo
-  // static and takes the permanent `will-change` off the layer with it — there
-  // is no longer a transform coming for the compositor to prepare for.
+  // static, and with it the compositor layer below.
   const shouldReduceMotion = useReducedMotion();
-  const layerStyle = shouldReduceMotion ? undefined : { y, scale, willChange: "transform" };
+
+  // `will-change` earns its layer only while the hero is on screen. It used to
+  // be set unconditionally, which pinned a full-viewport GPU texture — around
+  // 20 MB at 1440x900 on a 2x display — for the life of the tab, long after the
+  // hero had scrolled away and its transform had stopped changing.
+  //
+  // framer-motion will not do this for us: measured, it leaves will-change at
+  // `auto` even while these MotionValues are actively writing a transform, so
+  // the hint has to be ours. The 300px margin turns the layer on before the
+  // hero is reachable and lets it go well after, keeping the create/destroy
+  // away from the edge of the viewport where it could show as a hitch.
+  const [isHeroInView, setIsHeroInView] = useState(true);
+  useEffect(() => {
+    const section = containerRef.current;
+    if (!section || shouldReduceMotion || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsHeroInView(entry.isIntersecting),
+      { rootMargin: "300px 0px" },
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [shouldReduceMotion]);
+
+  const layerStyle = shouldReduceMotion
+    ? undefined
+    : { y, scale, willChange: isHeroInView ? "transform" : "auto" };
 
   return (
     <section

@@ -1,7 +1,7 @@
 # Ever Sun — Technische audit
 
 **Datum:** 4 augustus 2026 · **Basis:** commit `9007632` · **Scope:** `src/`
-**Bijgewerkt:** 5 augustus 2026 — dertien bevindingen opgelost, zie [Opgelost](#opgelost).
+**Bijgewerkt:** 5 augustus 2026 — veertien bevindingen opgelost, zie [Opgelost](#opgelost).
 
 Code-level audit: accessibility, performance, theming, responsive gedrag en implementatie-integriteit. Geen UX-critique.
 
@@ -34,7 +34,7 @@ Wat open blijft is geen bouwfout: team en galerij draaien op placeholders. De si
 
 ## Bevindingen
 
-Severity: **P1** fix vóór release · **P2** volgende ronde · **P3** als er tijd is. Wat op content wacht staat apart onder [Release gate](#release-gate--wacht-op-content).
+Severity: **P1** fix vóór release · **P2** volgende ronde. Wat op content wacht staat apart onder [Release gate](#release-gate--wacht-op-content).
 
 ### Opgelost
 
@@ -53,6 +53,7 @@ Severity: **P1** fix vóór release · **P2** volgende ronde · **P3** als er ti
 | 10 | `DESIGN.md` beschreef een ander systeem | 5 aug |
 | 19 | Reviewcijfer hard in de JSX | 5 aug |
 | 20 | Intro over-ons haalde 4,23:1 — **gemist in de eerste ronde** | 5 aug |
+| 18 | `will-change` stond permanent op de hero-laag | 5 aug |
 
 Details per stuk hieronder.
 
@@ -117,6 +118,18 @@ Verder gelijkgetrokken: alle 7 tokens in plaats van 2, de bento als flex-verhoud
 #### 19. Reviewcijfer hard in de JSX
 
 `lib/reviews.ts`, `hero-reviews.tsx` — `4.9/5 - 176 reviews` stond in de opmaak. Staat nu als `REVIEW_SUMMARY` naast de quotes die het samenvat, met een `checked`-datum erbij: beide komen van dezelfde Google-listing en verouderen samen.
+
+#### 18. `will-change` stond permanent op de hero-laag
+
+`src/components/hero/index.tsx`
+
+`will-change: transform` stond onvoorwaardelijk op de parallaxlaag. Die hint promoveert het element naar een eigen compositorlaag — bij 1440×900 op een 2x-scherm zo'n 20 MB GPU-textuur — en die bleef vastzitten zolang de tab open was, ook lang nadat de hero uit beeld was en zijn transform niet meer veranderde. De spec bedoelt `will-change` voor een verandering die op het punt staat te gebeuren, niet als basisinstelling.
+
+Eerst gemeten of framer-motion het zelf regelt: **nee**. Zonder de expliciete hint blijft `will-change` op `auto` terwijl de MotionValues actief een transform schrijven — dan verlies je de promotie precies waar je hem nodig hebt. De hint moet dus van ons komen.
+
+Nu aan een `IntersectionObserver` gehangen met 300px marge, zodat de laag ontstaat vóórdat de hero bereikbaar is en pas ruim daarna wordt losgelaten — het aanmaken en opruimen valt zo weg van de viewportrand, waar het als hapering zou kunnen lezen.
+
+Gemeten: `transform` bovenaan, `auto` zodra de hero weg is, weer `transform` bij terugscrollen. Bij reduced motion blijft de hele stijl weg, dus daar staat hij altijd op `auto`.
 
 #### 20. Intro van "De zonnestralen" haalde 4,23:1
 
@@ -207,12 +220,6 @@ Sofie, Chloe en Yara bestaan niet. Alle drie dragen dezelfde regel — `"Hier ga
 
 ---
 
-### P3
-
-- **18. `will-change: transform` permanent.** `hero/index.tsx` — blijft staan als de hero uit beeld is. Sinds `a312c6e` valt hij weg bij reduced motion; daarbuiten nog altijd permanent.
-
----
-
 ## Patronen
 
 - **Contrast was het enige systematische a11y-gat.** Geen toeval: `--color-muted` is aantoonbaar doorgerekend (`globals.css:45-47` documenteert 4.99:1), maar `--color-accent` als knopvlak en de `ink/40`–`ink/60`-alfa's zijn dat nooit geweest. De alfa-tekst is opgeruimd (6); accent staat nog open (2) en is daarmee het laatste restant van dit patroon.
@@ -237,7 +244,6 @@ Wat er nog ligt, in volgorde:
 2. **P1** — accent doorrekenen naar 4.5:1 als knopvlak (2). De enige AA-schending die over is, en hij staat op de drie conversiepunten.
 3. **P2** — error-token en duplicaten naar bestaande tokens (9), randcontrast van de outline-pill (14).
 4. **P2** — pauzeknop of langere interval op de advies-carrousel (15).
-5. **P3** — `will-change` staat permanent op de hero-laag (18).
 
 ## Opnieuw draaien
 
