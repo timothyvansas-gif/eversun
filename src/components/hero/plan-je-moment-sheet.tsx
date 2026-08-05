@@ -10,6 +10,7 @@ import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { Backdrop } from "@/components/ui/backdrop";
+import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { stackDepthForDrag, scrimOpacityForDrag, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 function PhoneIcon() {
@@ -55,23 +56,20 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
   );
 }
 
+// Same edge as every other outline button, from the one constant. The subgrid
+// stays inline: it is what lines this icon up with the WhatsApp button above.
 function PhoneButton() {
-  const [hovered, setHovered] = useState(false);
-
   return (
     <a
       href="tel:+31625306491"
-      className="w-full font-sans font-medium text-[15px] text-ink rounded-full border active:scale-[0.98] transition-[transform,border-color] duration-200"
+      className={`w-full font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
         gridColumn: "1 / -1",
         alignItems: "center",
         minHeight: "48px",
-        borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)",
       }}
-      onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
-      onMouseLeave={() => setHovered(false)}
     >
       <span className="col-start-2 flex items-center gap-3">
         <span className="inline-flex w-[18px] h-[18px] items-center justify-center shrink-0">

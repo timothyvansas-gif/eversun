@@ -6,8 +6,21 @@
  * Pair with `group/cta` and add per-use sizing (w-full, justify, py) in the
  * consumer's className.
  */
+/**
+ * The outline's edge: resting colour and hover, nothing else. Its own constant
+ * because the outline button is not always this pill — the sheets build theirs
+ * on a subgrid to line the icons up, the photo card sits one on top of an
+ * image — and they still have to read as the same button.
+ *
+ * Colour only, on purpose. The transition stays with the consumer: this pill
+ * moves its border alone, the sheet buttons move a border and a press-scale
+ * together, and two `transition-property` utilities on one element resolve by
+ * stylesheet order rather than by intent.
+ */
+export const BTN_OUTLINE_BORDER = "border border-line hover:border-[#312019]";
+
 export const BTN_PILL =
-  "group/cta inline-flex items-center text-zinc-900 text-[15px] font-medium font-sans tracking-[-0.01em] border border-line rounded-full px-[18px] cursor-pointer hover:border-[#312019] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150";
+  `group/cta inline-flex items-center text-zinc-900 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its

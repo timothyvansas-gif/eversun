@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { m, AnimatePresence, animate, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
@@ -10,6 +10,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const WHATSAPP_URL =
@@ -101,24 +102,20 @@ function HoursTable() {
   );
 }
 
+// The edge comes from BTN_OUTLINE_BORDER, like every other outline button. That
+// also retires the hover state this button used to keep in React: a JS hover
+// sticks when the tab loses focus — which this link does on every click, it
+// opens Maps in a new tab — so it needed a window blur listener to let go
+// again. Tailwind's hover variant is already behind `(hover: hover)`, so the
+// touch case that the matchMedia guard was for is covered too.
 function RouteButton() {
-  const [hovered, setHovered] = useState(false);
-
-  useEffect(() => {
-    const reset = () => setHovered(false);
-    window.addEventListener("blur", reset);
-    return () => window.removeEventListener("blur", reset);
-  }, []);
-
   return (
     <a
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className="group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full border px-8 active:scale-[0.98] transition-[transform,border-color] duration-200"
-      style={{ minHeight: "48px", borderColor: hovered ? "#1F1F1E" : "rgba(26,26,26,0.2)" }}
-      onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHovered(true); }}
-      onMouseLeave={() => setHovered(false)}
+      className={`group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      style={{ minHeight: "48px" }}
     >
       Route naar Ever Sun
       <CtaArrow />
