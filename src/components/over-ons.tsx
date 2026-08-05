@@ -69,7 +69,12 @@ export default function OverOns() {
                   van Ever Sun
                 </p>
               </div>
-              <p className="text-[#818181] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              {/* #888888, the same grey the member descriptions use below. It
+                  was #818181, which measures 4.23:1 on this section's
+                  background and misses 1.4.3 at 15px; this one clears at
+                  4.65:1. Two greys doing one job was also how the miss went
+                  unnoticed. */}
+              <p className="text-[#888888] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Maak kennis met de zonnestralen die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>

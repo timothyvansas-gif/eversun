@@ -1,7 +1,7 @@
 # Ever Sun — Technische audit
 
 **Datum:** 4 augustus 2026 · **Basis:** commit `9007632` · **Scope:** `src/`
-**Bijgewerkt:** 5 augustus 2026 — twaalf bevindingen opgelost, zie [Opgelost](#opgelost).
+**Bijgewerkt:** 5 augustus 2026 — dertien bevindingen opgelost, zie [Opgelost](#opgelost).
 
 Code-level audit: accessibility, performance, theming, responsive gedrag en implementatie-integriteit. Geen UX-critique.
 
@@ -52,6 +52,7 @@ Severity: **P1** fix vóór release · **P2** volgende ronde · **P3** als er ti
 | 17 | Icoonknoppen onder de 44pt | 5 aug |
 | 10 | `DESIGN.md` beschreef een ander systeem | 5 aug |
 | 19 | Reviewcijfer hard in de JSX | 5 aug |
+| 20 | Intro over-ons haalde 4,23:1 — **gemist in de eerste ronde** | 5 aug |
 
 Details per stuk hieronder.
 
@@ -116,6 +117,14 @@ Verder gelijkgetrokken: alle 7 tokens in plaats van 2, de bento als flex-verhoud
 #### 19. Reviewcijfer hard in de JSX
 
 `lib/reviews.ts`, `hero-reviews.tsx` — `4.9/5 - 176 reviews` stond in de opmaak. Staat nu als `REVIEW_SUMMARY` naast de quotes die het samenvat, met een `checked`-datum erbij: beide komen van dezelfde Google-listing en verouderen samen.
+
+#### 20. Intro van "De zonnestralen" haalde 4,23:1
+
+`src/components/over-ons.tsx:72`
+
+Niet gevonden bij de audit zelf, maar bij het uitzoeken van de 62 hex-literals (bevinding 9). De introtekst stond op `#818181` tegen `#1F1F1E`: **4,23:1** bij 15px, onder de 4,5 van 1.4.3. De contrastberekening in ronde één had de waarde wel doorgerekend, maar hij is niet als eigen bevinding in de lijst beland — een echte AA-schending die daardoor twee rondes bleef staan.
+
+De beschrijvingen van de teamleden eronder gebruikten al `#888888` (4,65:1) voor precies dezelfde rol. Nu allebei die waarde: contrast opgelost én één grijs minder in groep D van bevinding 9. Gemeten in een verse browser: 4,65:1 op beide.
 
 #### 17. Icoonknoppen onder de 44pt
 
