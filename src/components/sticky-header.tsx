@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import Logo from "@/components/logo";
 import { MOBILE_MENU_ID } from "@/lib/nav-items";
+import { TAP_TARGET } from "@/lib/button-styles";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
@@ -77,7 +78,7 @@ export default function StickyHeader({
         <button
           onClick={scrollToTop}
           aria-label="Naar begin van de pagina"
-          className="cursor-pointer active:scale-95 transition-transform duration-200"
+          className={`inline-flex items-center ${TAP_TARGET} cursor-pointer active:scale-95 transition-transform duration-200`}
         >
           <Logo
             className="h-8 w-auto"
@@ -91,7 +92,7 @@ export default function StickyHeader({
           aria-label={isMenuOpen ? "Menu sluiten" : "Menu openen"}
           aria-expanded={isMenuOpen}
           aria-controls={MOBILE_MENU_ID}
-          className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
+          className={`flex flex-col items-end gap-[5px] p-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200`}
         >
           <HamburgerIcon />
         </button>

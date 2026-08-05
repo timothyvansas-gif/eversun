@@ -10,6 +10,7 @@ import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
 import { MOBILE_MENU_ID, NAV_ITEMS } from "@/lib/nav-items";
+import { TAP_TARGET } from "@/lib/button-styles";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -161,7 +162,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               href="https://www.facebook.com/eversun.assen/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-surface-page active:opacity-60 transition-opacity"
+              className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
               aria-label="Facebook"
             >
               <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
@@ -170,7 +171,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               href="https://www.instagram.com/ever_sun_assen/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-surface-page active:opacity-60 transition-opacity"
+              className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
               aria-label="Instagram"
             >
               <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
@@ -179,7 +180,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               <button
                 onClick={handleShare}
                 aria-label="Pagina delen"
-                className="p-2 text-surface-page active:opacity-60 transition-opacity"
+                className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
               >
                 <svg
                   width="24"

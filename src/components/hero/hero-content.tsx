@@ -10,6 +10,7 @@ import HeroLines from "./hero-lines";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { MOBILE_MENU_ID } from "@/lib/nav-items";
+import { TAP_TARGET } from "@/lib/button-styles";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
 const fadeUp = {
@@ -101,7 +102,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
           <button
             onClick={scrollToTop}
             aria-label="Naar begin van de pagina"
-            className="cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm"
+            className={`inline-flex items-center ${TAP_TARGET} cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm`}
           >
             <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={34 / 42} textOffsetX={-10} />
           </button>
@@ -110,7 +111,10 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
             aria-label={isMenuOpen ? "Menu sluiten" : "Menu openen"}
             aria-expanded={isMenuOpen}
             aria-controls={MOBILE_MENU_ID}
-            className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200 rounded-sm"
+            // items-end keeps the rules against the button's right edge, so the
+            // extra width TAP_TARGET adds falls on the left and -mr-2 still
+            // lines the icon up with the content column.
+            className={`flex flex-col items-end gap-[5px] p-2 -mr-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200 rounded-sm`}
           >
             <HamburgerIcon />
           </button>

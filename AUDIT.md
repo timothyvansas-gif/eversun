@@ -1,7 +1,7 @@
 # Ever Sun — Technische audit
 
 **Datum:** 4 augustus 2026 · **Basis:** commit `9007632` · **Scope:** `src/`
-**Bijgewerkt:** 5 augustus 2026 — negen bevindingen opgelost, zie [Opgelost](#opgelost).
+**Bijgewerkt:** 5 augustus 2026 — tien bevindingen opgelost, zie [Opgelost](#opgelost).
 
 Code-level audit: accessibility, performance, theming, responsive gedrag en implementatie-integriteit. Geen UX-critique.
 
@@ -15,10 +15,10 @@ Code-level audit: accessibility, performance, theming, responsive gedrag en impl
 |---|-----------|-----------|----|---------------|
 | 1 | Accessibility | 2/4 | **3/4** | Eén AA-schending over: de primaire CTA haalt 3.05:1 (#2). Modal, semantiek, sheet-contrast en reduced motion zijn geregeld |
 | 2 | Performance | 3/4 | **4/4** | Videopreload en de layout-animatie van de pagina-push zijn weg |
-| 3 | Responsive Design | 3/4 | 3/4 | Sterk fluid systeem; hamburger + social-links ~40×40px |
+| 3 | Responsive Design | 3/4 | **4/4** | Fluid systeem, en elk icoonvlak haalt nu 44×44 |
 | 4 | Theming | 2/4 | 2/4 | 62 hard-coded hex; `DESIGN.md` beschrijft een ander systeem dan de code |
 | 5 | Implementation Integrity | 2/4 | 2/4 | 3 van 4 "teamleden" zijn placeholders met lorem-tekst |
-| **Totaal** | | **12/20** | **14/20** | **Good — address weak dimensions** |
+| **Totaal** | | **12/20** | **15/20** | **Good — address weak dimensions** |
 
 De score meet meetbare failures, niet vakmanschap. De codekwaliteit ligt aantoonbaar hoog — zie [Positieve bevindingen](#positieve-bevindingen). Wat de score nog drukt is bijna volledig contentblokkade (team, galerij) plus één kleurbeslissing die nooit is doorgerekend.
 
@@ -47,6 +47,7 @@ Severity: **P0** blokkerend · **P1** fix vóór release · **P2** volgende rond
 | 12 | `aria-expanded` loog op beide hamburgers | 5 aug |
 | 13 | Pagina-push animeerde `margin-left` | 5 aug |
 | 16 | 10,4 MB dode assets | 5 aug |
+| 17 | Icoonknoppen onder de 44pt | 5 aug |
 
 Details per stuk hieronder.
 
@@ -97,6 +98,16 @@ Geverifieerd: vier kaarten op `metadata` na scrollen, alleen de gehoverde kaart 
 #### 16. Dode assets — 10,4 MB
 
 Verwijderd: `src/images/banken/*-closed.png` (4), `src/images/timothy.{png,webp}`, en `public/{file,globe,next,vercel,window}.svg` uit de Next-scaffold.
+
+#### 17. Icoonknoppen onder de 44pt
+
+`button-styles.ts` (nieuwe `TAP_TARGET`), `hero-content.tsx`, `sticky-header.tsx`, `mobile-menu.tsx`
+
+Gemeten voor: hamburgers 40×31, sticky logo 118×32, social-links 40×40. Alles haalde WCAG 2.5.8 — de twee kleinste (status 256×23, telefoonlink 292×20) via de spacing-uitzondering, nagerekend op 40px en 129px tot de dichtstbijzijnde andere target. Dit ging dus om de duim, niet om de norm.
+
+Padding alleen komt er niet: de drie hamburgerlijnen zijn samen 14,5px hoog, dus zelfs `p-3` blijft op 39 steken. `TAP_TARGET` zet daarom een expliciete `min-h/min-w-[44px]` met `justify-center`, zodat het getekende icoon zijn maat én zijn plek houdt en alleen de doos eromheen groeit. Op de hero-hamburger vangt de bestaande `-mr-2` de extra breedte op — `items-end` duwt die naar links, dus de rechterrand verschuift niet.
+
+Na: alles 44×44 of meer, hamburgerlijnen nog altijd 24×1,5 / 16×1,5 / 24×1,5 met rechterrand op 351px.
 
 #### 4. `prefers-reduced-motion` dekte de grote bewegingen niet
 
@@ -166,7 +177,6 @@ Het doc noemt **Figtree** als display-font; de code laadt **PT_Serif**, onder de
 
 ### P3
 
-- **17. Touch targets ~40×40px.** Hamburger in `hero-content.tsx:111` en `sticky-header.tsx:79`, social-links in `mobile-menu.tsx:128`. Haalt WCAG 2.5.8 (24px), blijft onder de 44pt van Apple HIG — op de meest getikte knop van de site.
 - **18. `will-change: transform` permanent.** `hero/index.tsx` — blijft staan als de hero uit beeld is. Sinds `a312c6e` valt hij weg bij reduced motion; daarbuiten nog altijd permanent.
 - **19. Statische reviewclaim.** `4.9/5 - 176 reviews` staat hard in `hero-reviews.tsx:301`. De vier quotes zelf staan netjes in `lib/reviews.ts`; het cijfer veroudert stil.
 
@@ -197,7 +207,7 @@ Wat er nog ligt, in volgorde:
 3. **P2** — error-token en duplicaten naar bestaande tokens (9), randcontrast van de outline-pill (14).
 4. **P2** — pauzeknop of langere interval op de advies-carrousel (15).
 5. **P2** — `DESIGN.md` gelijktrekken met de code (10).
-6. **P3** — touch targets, `will-change`, statische reviewclaim (17, 18, 19).
+6. **P3** — `will-change`, statische reviewclaim (18, 19).
 
 ## Opnieuw draaien
 
