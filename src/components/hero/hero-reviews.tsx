@@ -170,12 +170,19 @@ function DockAvatar({
           className="w-[56px] h-[56px] rounded-full overflow-hidden"
           style={reduce ? undefined : { scale, y: lift }}
         >
+          {/* w-full h-full, not the width/height attributes alone: the reset
+              gives images `height: auto`, which overrides the attribute and
+              lets a non-square source keep its own ratio. One reviewer's photo
+              is 64x77, so it rendered 56x67 inside a 56px circle — 11px of it
+              cropped off the bottom while the other four sat centred, and that
+              face hung higher in the row than its neighbours. Filling the box
+              hands the crop to object-cover, where it belongs. */}
           <Image
             src={img}
             alt={tooltip?.name ?? `Reviewer ${index + 1}`}
             width={56}
             height={56}
-            className="object-cover"
+            className="object-cover w-full h-full"
           />
         </m.div>
       </m.div>

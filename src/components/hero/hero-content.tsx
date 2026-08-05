@@ -34,13 +34,14 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
   const desktopToggleRef = useRef<HTMLButtonElement>(null);
 
   // The title underlines wait for the review avatars to finish gliding into
-  // place (HeroReviews fires onSettled). Fallback timer covers the cases where
-  // the avatars never signal — reduced motion, or the desktop-only stack being
-  // display:none on mobile — so the underlines always draw.
+  // place (HeroReviews fires onSettled). The timer is the backstop for a cue
+  // that may never come — reduced motion skips the glide entirely — so the
+  // underlines draw either way, on whichever comes first.
   const [reviewsSettled, setReviewsSettled] = useState(false);
   useEffect(() => {
-    // HeroReviews (the real settle cue) is desktop-only, so mobile always
-    // rides this fallback — give it a shorter wait than desktop's.
+    // The avatar row is desktop-only. It still mounts on mobile (display:none
+    // does not stop framer animating), but nobody is watching it there, so the
+    // underlines need not wait out its full entrance.
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
     const t = setTimeout(() => setReviewsSettled(true), isDesktop ? 3200 : 1800);
     return () => clearTimeout(t);
@@ -66,29 +67,41 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
           transition={{ duration: 0.8, delay: 0.2 }}
           className="hidden lg:flex items-center justify-between"
         >
-          <Logo className="h-[52px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
-
-          <div className="flex items-center gap-6">
+          {/* Status sits with the logo, not opposite it: both say who is
+              speaking and whether the studio is open right now, and the left
+              column is where the gradient is deepest — the one place on this
+              photo where 15px text keeps its footing. */}
+          <div className="flex items-center gap-5">
+            {/* -mr-[8.5px] cancels the empty box the wordmark leaves inside its
+                own SVG: the N ends 8.5px short of the artboard's right edge, so
+                the flex gap alone put 28.5px of air after the logo against 20px
+                after the rule. The margin hands spacing back to the one gap
+                value, and both sides then measure what they look. */}
+            <Logo className="h-[52px] w-auto -mr-[8.5px]" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
+            {/* 18px, which is the cap height of the N in the wordmark beside it
+                — measured off the rendered logo, not guessed. The N's centre
+                sits within 0.1px of the logo box's, so the row's items-center
+                lines the rule up with the letter without a nudge. */}
+            <span aria-hidden="true" className="h-[18px] w-px shrink-0 bg-white/40" />
             <HeroStatus onOpen={onOpenOpeningstijden} />
-            <span aria-hidden="true" className="h-4 w-px shrink-0 bg-white/40" />
+          </div>
 
-            <div className="relative">
-              <button
-                ref={desktopToggleRef}
-                onClick={() => setDesktopMenuOpen((o) => !o)}
-                aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
-                aria-haspopup="true"
-                aria-expanded={desktopMenuOpen}
-                aria-controls="hero-desktop-menu"
-                className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
-              >
-                <span className="flex flex-col items-end gap-[5px]">
-                  <HamburgerIcon open={desktopMenuOpen} />
-                </span>
-                Menu
-              </button>
-              <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} triggerRef={desktopToggleRef} />
-            </div>
+          <div className="relative">
+            <button
+              ref={desktopToggleRef}
+              onClick={() => setDesktopMenuOpen((o) => !o)}
+              aria-label={desktopMenuOpen ? "Menu sluiten" : "Menu openen"}
+              aria-haspopup="true"
+              aria-expanded={desktopMenuOpen}
+              aria-controls="hero-desktop-menu"
+              className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
+            >
+              <span className="flex flex-col items-end gap-[5px]">
+                <HamburgerIcon open={desktopMenuOpen} />
+              </span>
+              Menu
+            </button>
+            <DesktopMenu open={desktopMenuOpen} onClose={() => setDesktopMenuOpen(false)} triggerRef={desktopToggleRef} />
           </div>
         </m.div>
 
