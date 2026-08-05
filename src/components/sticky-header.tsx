@@ -3,15 +3,19 @@
 import { useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import Logo from "@/components/logo";
+import { MOBILE_MENU_ID } from "@/lib/nav-items";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
 export default function StickyHeader({
   onOpenMenu,
   isMenuOpen,
+  inert = false,
 }: {
   onOpenMenu: () => void;
   isMenuOpen: boolean;
+  /** True while the mobile menu owns the screen; see page-layout. */
+  inert?: boolean;
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -51,14 +55,17 @@ export default function StickyHeader({
 
   return (
     <header
+      inert={inert}
       style={{
-        marginLeft: isMenuOpen ? "-95%" : "0%",
-        transform: isShown ? "translateY(0)" : "translateY(-100%)",
-        // Both movements are position changes the visitor did not ask for — the
-        // bar arriving on scroll, and the menu pushing it aside. Under reduced
-        // motion it is simply there or not; `pointer-events-none` and the
-        // off-screen transform already handle the rest.
-        transitionProperty: shouldReduceMotion ? "none" : "transform, margin-left",
+        // Both movements on one property: the reveal on Y, the menu push on X.
+        // The push used to be a margin-left animation, which laid out and
+        // painted the bar on every frame alongside the page doing the same.
+        transform: `translateX(${isMenuOpen ? "-95%" : "0"}) translateY(${isShown ? "0" : "-100%"})`,
+        // Neither is a movement the visitor asked for — the bar arriving on
+        // scroll, and the menu shoving it aside. Under reduced motion it is
+        // simply there or not; `pointer-events-none` and the off-screen offset
+        // already handle the rest.
+        transitionProperty: shouldReduceMotion ? "none" : "transform",
         transitionDuration: "800ms",
         transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
       }}
@@ -81,7 +88,9 @@ export default function StickyHeader({
 
         <button
           onClick={onOpenMenu}
-          aria-label="Menu openen"
+          aria-label={isMenuOpen ? "Menu sluiten" : "Menu openen"}
+          aria-expanded={isMenuOpen}
+          aria-controls={MOBILE_MENU_ID}
           className="flex flex-col items-end gap-[5px] p-2 cursor-pointer active:scale-90 transition-transform duration-200"
         >
           <HamburgerIcon />

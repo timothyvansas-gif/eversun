@@ -1,23 +1,55 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { m } from "framer-motion";
 import Image from "next/image";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { quietFocus } from "@/lib/quiet-focus";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
-import { NAV_ITEMS } from "@/lib/nav-items";
+import { MOBILE_MENU_ID, NAV_ITEMS } from "@/lib/nav-items";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  /** The hamburger that opened the menu, captured before <main> went inert. */
+  returnFocusRef?: RefObject<HTMLElement | null>;
 }
 
-export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMenuProps) {
   const { scrollToNav } = useScrollNav();
   const [canShare, setCanShare] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // The same trap the hero overlays use. This panel claimed `aria-modal="true"`
+  // while Tab walked straight out of it into the page behind — which is pushed
+  // 95% off-screen, so focus went somewhere nobody could see. The trap also
+  // brings Escape and hands focus back to whichever hamburger opened it.
+  // `inert` on <main> and the sticky header (see page-layout) closes the other
+  // half: pointer and AT cannot reach the background either.
+  useFocusTrap(panelRef, isOpen, onClose);
+
+  // Focus in on open, back to the hamburger on close. This effect is declared
+  // after useFocusTrap, so its cleanup runs first and lands on <body> (the trap
+  // captured that, because <main> was already inert by then) — a no-op we then
+  // correct. By the time this runs React has lifted `inert` again, so the
+  // button can actually take focus.
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (isOpen) {
+      wasOpenRef.current = true;
+      panelRef.current?.focus({ preventScroll: true });
+      return;
+    }
+
+    if (!wasOpenRef.current) return;
+    wasOpenRef.current = false;
+
+    const trigger = returnFocusRef?.current;
+    if (trigger?.isConnected) quietFocus(trigger);
+  }, [isOpen, returnFocusRef]);
 
   useEffect(() => {
     // Feature-detect after mount to avoid a hydration mismatch — the Web Share
@@ -100,9 +132,13 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         initial={{ x: "100%" }}
         animate={{ x: isOpen ? "0%" : "100%" }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        id={MOBILE_MENU_ID}
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
+        // Focus target on open, so the dialog is where the keyboard lands and
+        // the trap has something inside itself to hold on to.
+        tabIndex={-1}
         // The vertical rhythm is keyed to viewport height, not fixed: the panel
         // is exactly one screen tall and the nav alone used to eat 461px of it,
         // so on anything shorter than roughly 700px the footer was pushed past

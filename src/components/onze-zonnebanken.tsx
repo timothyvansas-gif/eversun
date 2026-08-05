@@ -88,7 +88,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
   const {
     cardRef,
     videoRef,
-    shouldLoadVideo,
+    videoPreload,
+    handleCardPointerEnter,
     isVideoReady,
     isVideoActive,
     isVideoLoading,
@@ -104,12 +105,15 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     <CardWrapper>
       <div
         ref={cardRef}
+        // Pointer over the card upgrades the clip from metadata to a full
+        // fetch, so the toggle is ready by the time the cursor reaches it.
+        onPointerEnter={handleCardPointerEnter}
         className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]"
       >
         <ZonnebankMedia
           data={data}
           videoRef={videoRef}
-          shouldLoadVideo={shouldLoadVideo}
+          videoPreload={videoPreload}
           isVideoReady={isVideoReady}
           isVideoActive={isVideoActive}
           isVideoLoading={isVideoLoading}

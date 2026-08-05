@@ -52,10 +52,13 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
   );
 }
 
+// text-muted rather than ink/60: that alpha blend measures 4.44:1 on the sheet
+// surface, just under 1.4.3, and it carried the phone link with it. The token is
+// the same role in the palette and clears at 4.99:1.
 function AddressInfo() {
   return (
-    <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
+    <p className="font-sans text-[15px] text-muted leading-[24px] mt-[6px]">
+      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-muted underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
     </p>
   );
 }

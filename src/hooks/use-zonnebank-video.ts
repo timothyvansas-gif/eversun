@@ -23,10 +23,22 @@ function isAbortError(error: unknown) {
 
 type PlaybackTarget = "dark" | "light" | null;
 
+/**
+ * How much of the clip the browser may fetch ahead of being asked.
+ *
+ * The desktop toggle clips are 4.4–4.9 MB each and there are four cards, so
+ * `auto` on approach meant roughly 18 MB pulled down for a control most
+ * visitors never touch. `metadata` costs a header and a first frame — enough to
+ * reveal the video layer — and the full fetch waits for a hover, which is the
+ * gesture that precedes the click.
+ */
+type PreloadLevel = "none" | "metadata" | "auto";
+
 export type ZonnebankVideoControls = {
   cardRef: RefObject<HTMLDivElement | null>;
   videoRef: RefObject<HTMLVideoElement | null>;
-  shouldLoadVideo: boolean;
+  videoPreload: PreloadLevel;
+  handleCardPointerEnter: () => void;
   isVideoReady: boolean;
   isVideoActive: boolean;
   isVideoLoading: boolean;
@@ -50,10 +62,23 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   const playRequestIdRef = useRef(0);
   const playPromisePendingRef = useRef(false);
   const isVideoReadyRef = useRef(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const preloadRef = useRef<PreloadLevel>("none");
+  const [videoPreload, setVideoPreload] = useState<PreloadLevel>("none");
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isVideoActive, setIsVideoActive] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
+
+  // Written to the element as well as to state: the element is what the browser
+  // acts on, and it has to change in the same tick as the `load()` beside it
+  // rather than waiting for a render.
+  const raisePreload = (level: PreloadLevel) => {
+    if (preloadRef.current === level) return false;
+    preloadRef.current = level;
+    setVideoPreload(level);
+    const video = videoRef.current;
+    if (video) video.preload = level;
+    return true;
+  };
 
   useEffect(() => {
     const card = cardRef.current;
@@ -63,8 +88,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       const video = videoRef.current;
       if (!video) return;
 
-      video.preload = "auto";
-      setShouldLoadVideo(true);
+      raisePreload("metadata");
       video.load();
     };
 
@@ -230,11 +254,9 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     playbackTargetRef.current = target;
     setIsVideoLoading(true);
 
-    const shouldStartLoading = !shouldLoadVideo;
-    if (shouldStartLoading) {
-      video.preload = "auto";
-      setShouldLoadVideo(true);
-    }
+    // Touch never hovers, so for those visitors this tap is the first request
+    // for the full clip.
+    raisePreload("auto");
 
     if (target === "light" && video.currentTime <= 0.03) {
       playbackTargetRef.current = null;
@@ -264,6 +286,16 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // click, before anything has buffered — claims the gesture and lets Safari
     // start as soon as the first frames arrive.
     attemptPlayback();
+  };
+
+  // Hovering the card is the reliable tell that the toggle is about to be
+  // clicked, and it buys the fetch a head start on the click. `load()` is safe
+  // here: the guard in raisePreload means this only ever runs once, before
+  // anything has played, so there is no playback position to reset.
+  const handleCardPointerEnter = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (raisePreload("auto")) video.load();
   };
 
   const handleVideoToggle = () => {
@@ -357,7 +389,8 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   return {
     cardRef,
     videoRef,
-    shouldLoadVideo,
+    videoPreload,
+    handleCardPointerEnter,
     isVideoReady,
     isVideoActive,
     isVideoLoading,

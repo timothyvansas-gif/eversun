@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { LazyMotion, MotionConfig } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -26,7 +26,7 @@ const Contact = dynamic(() => import("@/components/contact"));
 const loadMotionFeatures = () =>
   import("framer-motion").then((mod) => mod.domMax);
 
-const PUSH_TRANSITION = "margin-left 800ms cubic-bezier(0.16, 1, 0.3, 1)";
+const PUSH_TRANSITION = "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
 // `reducedMotion="user"` is the one switch that reaches every `m.*` on the page.
 // framer-motion then drops transform and layout animations whenever the OS asks
@@ -46,7 +46,16 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  // Which hamburger opened the menu, so closing can hand focus back to it.
+  // Captured here, on the click, rather than left to the focus trap's own
+  // activeElement snapshot: by the time that effect runs <main> is already
+  // inert, and the browser has moved focus off the button to <body>.
+  const menuTriggerRef = useRef<HTMLElement | null>(null);
+
+  const toggleMenu = () => {
+    if (!isMenuOpen) menuTriggerRef.current = document.activeElement as HTMLElement | null;
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <LazyMotion features={loadMotionFeatures} strict>
@@ -61,13 +70,33 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         Naar hoofdinhoud
       </a>
 
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <MobileMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        returnFocusRef={menuTriggerRef}
+      />
 
-      <StickyHeader onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
+      {/* Both go inert while the menu is open: the panel declares
+          `aria-modal="true"`, and that has to be true of the page as well or
+          Tab and the screen reader keep reaching content shoved 95% off-screen.
+          The header sits outside <main>, so it needs saying twice. */}
+      <StickyHeader onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} inert={isMenuOpen} />
 
       <main
+        inert={isMenuOpen}
         style={{
-          marginLeft: isMenuOpen ? "-95%" : "0%",
+          // `none` when closed, not `translateX(0)`: any transform value other
+          // than none makes this element the containing block for every
+          // `position: fixed` descendant, and the openingstijden overlay is
+          // fixed and still renders inside <main> (the other sheets portal to
+          // <body>). Keeping the transform off at rest means that only holds
+          // while the menu is open — where the page behind is inert anyway, so
+          // no overlay can be opened into it. Portal any new fixed overlay in
+          // here, or it will position against <main> during the push.
+          //
+          // Worth the constraint: margin-left animated layout and paint for the
+          // whole page across 800ms, where transform stays on the compositor.
+          transform: isMenuOpen ? "translateX(-95%)" : "none",
           // The push is the largest single movement on the site — the whole page
           // travelling 95% of the viewport. Under reduced motion the menu simply
           // takes its place; the page is where it needs to be either way.
@@ -77,7 +106,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         className="min-h-screen flex flex-col items-center relative z-10"
       >
         <div className="w-full bg-surface-page lg:p-3 lg:[&>*]:rounded-[24px] lg:[&>*]:overflow-hidden">
-          <HeroSection onOpenMenu={toggleMenu} />
+          <HeroSection onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
         </div>
         <div
           className="relative z-10 w-full flex flex-col items-center bg-surface-page "

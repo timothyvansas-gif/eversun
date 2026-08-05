@@ -15,7 +15,13 @@ const OpeningstijdenOverlay = dynamic(() => import("./openingstijden-overlay"));
 const AfspraakOverlay = dynamic(() => import("./afspraak-overlay"));
 const PlanJeMomentSheet = dynamic(() => import("./plan-je-moment-sheet"));
 
-export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) {
+export default function HeroSection({
+  onOpenMenu,
+  isMenuOpen,
+}: {
+  onOpenMenu: () => void;
+  isMenuOpen: boolean;
+}) {
   const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
   const [isAfspraakOpen, setIsAfspraakOpen] = useState(false);
   const [isPlanJeMomentOpen, setIsPlanJeMomentOpen] = useState(false);
@@ -167,6 +173,7 @@ export default function HeroSection({ onOpenMenu }: { onOpenMenu: () => void }) 
 
         <HeroContent
           onOpenMenu={onOpenMenu}
+          isMenuOpen={isMenuOpen}
           onOpenOpeningstijden={() => setIsOpeningstijdenOpen(true)}
           onOpenAfspraak={() => setIsAfspraakOpen(true)}
           onOpenPlanJeMoment={() => setIsPlanJeMomentOpen(true)}

@@ -63,9 +63,14 @@ export function buildContactEmail(values: ContactValues): ContactEmail {
     "Antwoorden op deze mail gaat rechtstreeks naar de afzender.",
   ].join("\n");
 
+  // Literal hex rather than the CSS tokens: mail clients get no stylesheet, so
+  // every value has to travel inline. These are the same colours globals.css
+  // defines — #76684a is --color-muted (it replaced #94825c, which only cleared
+  // 3.4:1), #faf4ec is --color-surface-page, #1f1f1e is --color-ink-strong.
+  // Keep them in step by hand.
   const html = `
     <div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#1f1f1e;">
-      <p style="margin:0 0 20px;color:#94825c;font-size:13px;">
+      <p style="margin:0 0 20px;color:#76684a;font-size:13px;">
         Nieuw bericht via het contactformulier op eversun-assen.nl
       </p>
       <p style="margin:0 0 4px;"><strong>Naam:</strong> ${escapeHtml(name)}</p>
@@ -73,7 +78,7 @@ export function buildContactEmail(values: ContactValues): ContactEmail {
       <div style="padding:16px 20px;background:#faf4ec;border-radius:12px;white-space:pre-wrap;">${escapeHtml(
         message,
       )}</div>
-      <p style="margin:20px 0 0;color:#94825c;font-size:13px;">
+      <p style="margin:20px 0 0;color:#76684a;font-size:13px;">
         Antwoorden op deze mail gaat rechtstreeks naar de afzender.
       </p>
     </div>

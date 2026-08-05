@@ -79,6 +79,8 @@ function DockAvatar({
   reduce,
   onActivate,
   onDeactivate,
+  onToggle,
+  isActive,
   onSettled,
 }: {
   img: StaticImageData;
@@ -87,12 +89,14 @@ function DockAvatar({
   reduce: boolean | null;
   onActivate: () => void;
   onDeactivate: () => void;
+  onToggle: () => void;
+  isActive: boolean;
   onSettled?: () => void;
 }) {
   // Measured on the outer element, which the dock never displaces. Measuring
   // the moving element instead would feed its own offset back into the
   // distance and make the row oscillate.
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
 
   const centreDistance = useTransform(mouseX, (x: number) => {
     const bounds = ref.current?.getBoundingClientRect();
@@ -126,9 +130,10 @@ function DockAvatar({
   const tooltip = tooltips[index];
 
   return (
-    <m.div
+    <m.button
       ref={ref}
-      className="relative"
+      type="button"
+      className="relative cursor-pointer"
       style={reduce ? { zIndex: index } : { zIndex }}
       // No onMouseEnter: which avatar is active is derived from the cursor in
       // the row below, the same value the magnification reads. Hit-testing the
@@ -146,8 +151,12 @@ function DockAvatar({
         mouseX.set(Number.POSITIVE_INFINITY);
         onDeactivate();
       }}
-      tabIndex={0}
-      role="button"
+      // A real button, not a div wearing role="button". It used to announce
+      // itself as a button and then do nothing on Enter — the quote was
+      // pointer-only. Now the key does what the hover does, and the panel is
+      // what aria-expanded refers to.
+      onClick={onToggle}
+      aria-expanded={isActive}
       aria-label={tooltip ? `Review van ${tooltip.name}: ${tooltip.quote}` : undefined}
       initial={{ x: reduce ? 0 : (ANCHOR - index) * STACK_STEP }}
       animate={{ x: 0 }}
@@ -170,7 +179,7 @@ function DockAvatar({
           />
         </m.div>
       </m.div>
-    </m.div>
+    </m.button>
   );
 }
 
@@ -220,6 +229,10 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
               reduce={reduce}
               onActivate={() => setActiveIndex(i)}
               onDeactivate={() => setActiveIndex(null)}
+              // Click/Enter on the avatar that is already showing puts the quote
+              // away again, so the keyboard can close what it opened.
+              onToggle={() => setActiveIndex((prev) => (prev === i ? null : i))}
+              isActive={activeIndex === i}
               onSettled={onSettled}
             />
           ))}

@@ -9,6 +9,7 @@ import DesktopMenu from "./desktop-menu";
 import HeroLines from "./hero-lines";
 import Logo from "@/components/logo";
 import HamburgerIcon from "@/components/hamburger-icon";
+import { MOBILE_MENU_ID } from "@/lib/nav-items";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
 const fadeUp = {
@@ -25,7 +26,7 @@ const fadeUp = {
 };
 
 
-export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAfspraak, onOpenPlanJeMoment, statusButtonRef }: { onOpenMenu: () => void; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
+export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijden, onOpenAfspraak, onOpenPlanJeMoment, statusButtonRef }: { onOpenMenu: () => void; isMenuOpen: boolean; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   // Desktop menu is a hero-scoped dropdown (see DesktopMenu), independent of the
   // mobile slide-in/push flow that `onOpenMenu` drives.
   const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
@@ -106,8 +107,9 @@ export default function HeroContent({ onOpenMenu, onOpenOpeningstijden, onOpenAf
           </button>
           <button
             onClick={onOpenMenu}
-            aria-label="Menu openen"
-            aria-expanded={false}
+            aria-label={isMenuOpen ? "Menu sluiten" : "Menu openen"}
+            aria-expanded={isMenuOpen}
+            aria-controls={MOBILE_MENU_ID}
             className="flex flex-col items-end gap-[5px] p-2 -mr-2 cursor-pointer active:scale-90 transition-transform duration-200 rounded-sm"
           >
             <HamburgerIcon />

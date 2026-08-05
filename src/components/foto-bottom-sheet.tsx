@@ -137,12 +137,15 @@ export default function FotoBottomSheet({
                     <h2 className="font-display text-[20px] md:text-[24px] font-medium text-ink tracking-[-0.01em]">
                       Binnenkijken bij Ever Sun
                     </h2>
-                    <span className="font-sans text-[15px] text-ink/40 tracking-[-0.01em] whitespace-nowrap">
+                    {/* ink/40 measured 2.47:1 here — the count is real
+                        information, not decoration, so it takes the same
+                        secondary token as the line below it. */}
+                    <span className="font-sans text-[15px] text-muted tracking-[-0.01em] whitespace-nowrap">
                       {`${sheetPhotos.length} foto's`}
                     </span>
                   </div>
-                  <p className="font-sans text-[15px] text-ink/60 leading-[24px] mt-1">
-                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-ink/60 underline decoration-dotted underline-offset-6">06 25306491</a>
+                  <p className="font-sans text-[15px] text-muted leading-[24px] mt-1">
+                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-muted underline decoration-dotted underline-offset-6">06 25306491</a>
                   </p>
                 </div>
                 <div className="hidden md:flex items-center gap-3 shrink-0">

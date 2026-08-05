@@ -10,7 +10,7 @@ import sunsetIcon from "@/images/zonsondergang.svg";
 export default function ZonnebankMedia({
   data,
   videoRef,
-  shouldLoadVideo,
+  videoPreload,
   isVideoReady,
   isVideoActive,
   isVideoLoading,
@@ -23,7 +23,7 @@ export default function ZonnebankMedia({
 }: {
   data: Zonnebank;
   videoRef: RefObject<HTMLVideoElement | null>;
-  shouldLoadVideo: boolean;
+  videoPreload: "none" | "metadata" | "auto";
   isVideoReady: boolean;
   isVideoActive: boolean;
   isVideoLoading: boolean;
@@ -50,7 +50,7 @@ export default function ZonnebankMedia({
             ref={videoRef}
             muted
             playsInline
-            preload={shouldLoadVideo ? "auto" : "none"}
+            preload={videoPreload}
             disablePictureInPicture
             aria-hidden="true"
             onLoadedData={onVideoLoadedData}
