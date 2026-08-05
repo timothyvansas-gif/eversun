@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, animate, useMotionValue, type MotionValue } from "framer-motion";
 import whatsappIcon from "@/images/whatsapp.svg";
 import { getReviews } from "@/lib/reviews";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { Backdrop } from "@/components/ui/backdrop";
+import { stackDepthForDrag, scrimOpacityForDrag, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 function PhoneIcon() {
   return (
@@ -168,10 +169,17 @@ export default function PlanJeMomentSheet({
   onClose,
   whatsappUrl = DEFAULT_WHATSAPP_URL,
   stackedMinHeight,
+  stackDepth,
 }: {
   isOpen: boolean;
   onClose: () => void;
   whatsappUrl?: string;
+  /**
+   * How deep in the stack the sheet behind this one sits, written while this
+   * sheet is dragged: pulling it down gives the sheet behind its size back on
+   * the way, so the two read as one stack rather than as a lid over a panel.
+   */
+  stackDepth?: MotionValue<number>;
   /**
    * Floor height in pixels while this sheet stacks on another one, from
    * `stackedSheetHeight`. Content-sized, the sheet would leave most of the one
@@ -183,6 +191,14 @@ export default function PlanJeMomentSheet({
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+
+  // This sheet's own scrim, handed to the Backdrop so the drag can dim it. One
+  // value with three writers that never overlap: the fade-in on open, the drag
+  // while the sheet is up, the fade-out on close. Left alone — no sheet behind,
+  // or reduced motion — it is the plain in-and-out it always was.
+  const scrimOpacity = useMotionValue(1);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const dragHeightRef = useRef(0);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -206,10 +222,11 @@ export default function PlanJeMomentSheet({
           {/* z-[60], not z-50: this sheet can open on top of the openingstijden
               sheet, and the stack order should not depend on which of the two
               happens to render later in the DOM. */}
-          <Backdrop onClick={onClose} className="z-[60] md:hidden" scrollLock />
+          <Backdrop onClick={onClose} className="z-[60] md:hidden" scrollLock opacity={scrimOpacity} />
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none md:hidden">
             <m.div
+              ref={panelRef}
               data-lenis-prevent
               role="dialog"
               aria-modal="true"
@@ -218,12 +235,33 @@ export default function PlanJeMomentSheet({
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
-              transition={{ type: "spring", damping: 40, stiffness: 300 }}
+              transition={STACK_SPRING}
               drag="y"
               dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.5 }}
+              dragElastic={{ top: 0, bottom: DRAG_ELASTIC }}
+              // Measured once per drag, not per frame: reading a box mid-gesture
+              // forces the layout the drag is busy writing.
+              onDragStart={() => {
+                dragHeightRef.current = panelRef.current?.offsetHeight ?? 0;
+              }}
+              onDrag={(_, info) => {
+                if (!stackDepth) return;
+                stackDepth.set(stackDepthForDrag(info.offset.y));
+                // Two scrims at full strength are 94% black. This one thins out
+                // as its own sheet leaves — leaving it up while the sheet behind
+                // grows would light that sheet as if it were still covered.
+                scrimOpacity.set(scrimOpacityForDrag(info.offset.y, dragHeightRef.current));
+              }}
               onDragEnd={(_, info) => {
-                if (info.offset.y > 80 || info.velocity.y > 400) onClose();
+                if (info.offset.y > 80 || info.velocity.y > 400) {
+                  onClose();
+                  return;
+                }
+                // Let go halfway and the sheet behind sinks back with this one,
+                // on the same spring, rather than snapping back on release.
+                if (!stackDepth) return;
+                animate(stackDepth, 1, STACK_SPRING);
+                animate(scrimOpacity, 1, STACK_SPRING);
               }}
               style={{
                 paddingBottom: "max(2rem, calc(env(safe-area-inset-bottom) + 1.25rem))",

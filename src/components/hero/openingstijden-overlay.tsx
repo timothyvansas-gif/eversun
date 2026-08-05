@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, animate, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
@@ -9,7 +9,8 @@ import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
-import { BEHIND_SCALE, BEHIND_LIFT } from "@/components/hero/sheet-stack";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const WHATSAPP_URL =
   "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
@@ -131,6 +132,7 @@ export default function OpeningstijdenOverlay({
   onPlanJeMoment,
   isBehind = false,
   panelRef,
+  stackDepth,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -140,8 +142,37 @@ export default function OpeningstijdenOverlay({
   isBehind?: boolean;
   /** The mobile sheet itself, so a sheet stacking on top can size against it. */
   panelRef?: RefObject<HTMLDivElement | null>;
+  /**
+   * How deep in the stack this sheet sits: 1 fully behind, 0 at its own size.
+   * Driven by the drag of the sheet in front, so pulling that one down hands
+   * this one its size back a bit at a time instead of at the moment it closes.
+   */
+  stackDepth?: MotionValue<number>;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Without a caller driving the depth there is no drag to follow, so it falls
+  // back to the plain in/out on `isBehind` — the sheet works the same wherever
+  // nothing stacks on it.
+  const shouldReduceMotion = useReducedMotion();
+  const ownDepth = useMotionValue(0);
+  const depth = stackDepth ?? ownDepth;
+  const behindY = useTransform(depth, [0, 1], [0, BEHIND_LIFT]);
+  const behindScale = useTransform(depth, [0, 1], [1, BEHIND_SCALE]);
+
+  useEffect(() => {
+    if (stackDepth) return;
+    const sunk = isBehind ? 1 : 0;
+    // A hand-written value, so `MotionConfig reducedMotion` never sees it. The
+    // sheet still sinks — that is where it belongs while another covers it —
+    // it just does not travel there.
+    if (shouldReduceMotion) {
+      ownDepth.set(sunk);
+      return;
+    }
+    const controls = animate(ownDepth, sunk, STACK_SPRING);
+    return () => controls.stop();
+  }, [stackDepth, ownDepth, isBehind, shouldReduceMotion]);
 
   // The trap is handed to the sheet on top: two traps on the same window would
   // both answer Escape, closing this one along with it, and fight over Tab.
@@ -161,49 +192,55 @@ export default function OpeningstijdenOverlay({
           <Backdrop onClick={onClose} className="z-50" scrollLock />
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none" inert={isBehind}>
-          {/* Mobile: Bottom Sheet */}
+          {/* Mobile: Bottom Sheet.
+              Two elements, because two transforms have to live side by side:
+              the outer one sinks the sheet back into the stack, the inner one
+              slides it in, out and under the finger. On one element the drag
+              would fight the sink, and framer would drop whichever wrote last. */}
           <m.div
-            ref={panelRef}
-            data-lenis-prevent
-            role="dialog"
-            aria-modal="true"
-            aria-label="Openingstijden"
-            className="md:hidden fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50"
-            initial={{ y: "100%" }}
             // Sinks back when a sheet stacks on top: scaled from its bottom
             // edge, so it stays anchored to the screen edge and only its
             // shoulders show behind the sheet in front.
-            animate={{ y: isBehind ? BEHIND_LIFT : 0, scale: isBehind ? BEHIND_SCALE : 1 }}
-            exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
-            transition={{ type: "spring", damping: 40, stiffness: 300 }}
-            drag="y"
-            // No dragging what you cannot reach: the sheet in front owns the
-            // gesture while it is open.
-            dragListener={!isBehind}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0, bottom: 0.5 }}
-            onDragEnd={(_, info) => {
-              if (info.offset.y > 80 || info.velocity.y > 400) onClose();
-            }}
-            style={{
-              paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
-              transformOrigin: "bottom center",
-            }}
+            className="md:hidden fixed bottom-0 inset-x-0 z-50"
+            style={{ y: behindY, scale: behindScale, transformOrigin: "bottom center" }}
           >
-            <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
-              <div className="w-10 h-1 rounded-full bg-ink/20" />
-            </div>
-            <div className="px-6 pt-5">
-              <div className="mb-[22px]">
-                <h2 className="card-title text-zinc-900">Openingstijden</h2>
-                <AddressInfo />
+            <m.div
+              ref={panelRef}
+              data-lenis-prevent
+              role="dialog"
+              aria-modal="true"
+              aria-label="Openingstijden"
+              className="bg-surface-page rounded-t-[20px]"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
+              transition={STACK_SPRING}
+              drag="y"
+              // No dragging what you cannot reach: the sheet in front owns the
+              // gesture while it is open.
+              dragListener={!isBehind}
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0, bottom: DRAG_ELASTIC }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 80 || info.velocity.y > 400) onClose();
+              }}
+              style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+            >
+              <div className="flex justify-center pt-3 cursor-grab active:cursor-grabbing">
+                <div className="w-10 h-1 rounded-full bg-ink/20" />
               </div>
-              <div className="bg-white rounded-2xl px-6 py-4">
-                <HoursTable />
+              <div className="px-6 pt-5">
+                <div className="mb-[22px]">
+                  <h2 className="card-title text-zinc-900">Openingstijden</h2>
+                  <AddressInfo />
+                </div>
+                <div className="bg-white rounded-2xl px-6 py-4">
+                  <HoursTable />
+                </div>
+                <AppointmentButton onPlanJeMoment={onPlanJeMoment} />
+                <RouteButton />
               </div>
-              <AppointmentButton onPlanJeMoment={onPlanJeMoment} />
-              <RouteButton />
-            </div>
+            </m.div>
           </m.div>
 
           {/* Desktop: Modal */}

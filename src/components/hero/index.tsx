@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { m, useScroll, useSpring, useTransform } from "framer-motion";
+import { m, animate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { PROGRAMMATIC_SCROLL_EVENT } from "@/lib/scroll-to-top";
-import { stackedSheetHeight } from "./sheet-stack";
+import { stackedSheetHeight, STACK_SPRING } from "./sheet-stack";
 import heroImage from "@/images/hero-woman.webp";
 
 import dynamic from "next/dynamic";
@@ -39,6 +39,7 @@ export default function HeroSection({
     setStackedMinHeight(stackedSheetHeight(openingstijdenPanelRef.current));
     setIsPlanJeMomentOpen(true);
   };
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -115,6 +116,27 @@ export default function HeroSection({
   // values the scroll writes directly. Dropping the style leaves the photo
   // static, and with it the compositor layer below.
   const shouldReduceMotion = useReducedMotion();
+
+  // Shared between the two sheets: 1 while the openingstijden sheet is fully
+  // behind, 0 at its own size. Opening and closing spring it between the two,
+  // and the drag on the sheet in front writes to it in between — so pulling
+  // that sheet down grows the one behind along with the gesture instead of
+  // waiting for the close. A motion value rather than state: it is written
+  // every frame of a drag, which no render should have to keep up with.
+  //
+  // Which is why the reduced-motion gate is here too: the same switch that
+  // misses the parallax misses this. Sunk is a position, not a movement, so it
+  // is still set — it just arrives there, and the drag stops driving it.
+  const stackDepth = useMotionValue(0);
+  useEffect(() => {
+    const sunk = isPlanJeMomentOpen ? 1 : 0;
+    if (shouldReduceMotion) {
+      stackDepth.set(sunk);
+      return;
+    }
+    const controls = animate(stackDepth, sunk, STACK_SPRING);
+    return () => controls.stop();
+  }, [isPlanJeMomentOpen, stackDepth, shouldReduceMotion]);
 
   // `will-change` earns its layer only while the hero is on screen. It used to
   // be set unconditionally, which pinned a full-viewport GPU texture — around
@@ -214,6 +236,7 @@ export default function HeroSection({
         onPlanJeMoment={openPlanJeMomentStacked}
         isBehind={isPlanJeMomentOpen}
         panelRef={openingstijdenPanelRef}
+        stackDepth={stackDepth}
       />
       <AfspraakOverlay
         isOpen={isAfspraakOpen}
@@ -223,6 +246,10 @@ export default function HeroSection({
         isOpen={isPlanJeMomentOpen}
         onClose={() => setIsPlanJeMomentOpen(false)}
         stackedMinHeight={isOpeningstijdenOpen ? stackedMinHeight : undefined}
+        // Only handed over when there is a sheet behind to grow, and when
+        // motion is welcome: gesture-linked scaling is the most literal reading
+        // of "movement I did not ask for", the same call the bento cards make.
+        stackDepth={isOpeningstijdenOpen && !shouldReduceMotion ? stackDepth : undefined}
       />
     </section>
   );
