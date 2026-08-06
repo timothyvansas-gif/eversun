@@ -96,7 +96,7 @@ export default function FooterCredit() {
                   Product/UX designer
                 </span>
                 <a
-                  href={`mailto:${atob(EMAIL_B64)}?subject=${encodeURIComponent("Ik wil ook een gave website")}`}
+                  href={`mailto:${atob(EMAIL_B64)}?subject=${encodeURIComponent("Ik wil ook een website die converteert")}`}
                   className="inline-block mt-2.5 text-[15px] font-sans underline underline-offset-6 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#046ADF] rounded-sm transition-opacity"
                   style={{ color: "#046ADF" }}
                 >
