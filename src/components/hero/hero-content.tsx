@@ -133,7 +133,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
           </button>
         </m.div>
 
-        <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-6 lg:block">
+        <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-6 2xl:bottom-16 lg:block">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
           <div className="mb-14 lg:mb-0">
             <div className="translate-y-4 lg:translate-y-0">
@@ -165,7 +165,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   // font size, against (viewport - 48px) of room — so lowering
                   // the floors lets it govern down to 320px and the line breaks
                   // on the comma instead. Only widths below 427px change.
-                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[68px] lg:leading-[1.2] 2xl:text-[68px] 2xl:leading-[1.2]"
+                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[64px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2]"
                   style={{ marginLeft: "-3px", color: "#ffffff" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -177,7 +177,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                 </m.h1>
 
                 <m.p
-                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] leading-[25px] md:leading-[30px] lg:leading-[30px]"
+                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] 2xl:text-[24px] leading-[25px] md:leading-[30px] lg:leading-[30px] 2xl:leading-[40px]"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
