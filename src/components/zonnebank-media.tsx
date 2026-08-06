@@ -91,12 +91,28 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] transition-[background-color,box-shadow,transform] duration-[1283ms] ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 ${
-            isVideoActive && !isVideoLoading
-              ? "bg-black shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
-              : "bg-white"
-          }`}
+          className="group absolute bottom-4 right-4 z-10 flex size-12 cursor-pointer touch-manipulation items-center justify-center active:scale-95"
         >
+          {/* Circle only — the icons below sit outside it, as siblings, so
+              they never inherit its hover scale. The scale grow gets its own
+              fast timing on this span; background/shadow keep the 1283ms
+              tied to the video crossfade below. */}
+          <span
+            aria-hidden="true"
+            className={`absolute inset-0 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] scale-100 group-hover:scale-110 ${
+              isVideoActive && !isVideoLoading
+                ? "bg-black shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
+                : "bg-white"
+            }`}
+            style={{
+              // Tailwind v4's scale-* utilities set the standalone CSS `scale`
+              // property, not `transform` — listing `transform` here left the
+              // hover grow untransitioned (it jumped straight to 110%).
+              transitionProperty: "background-color, box-shadow, scale",
+              transitionDuration: "1283ms, 1283ms, 300ms",
+              transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1), cubic-bezier(0.22,1,0.36,1), ease-out",
+            }}
+          />
           <span
             className={`absolute size-5 rounded-full border-2 border-black/20 border-t-black transition-opacity duration-150 ${
               isVideoLoading ? "animate-spin opacity-100" : "opacity-0"
