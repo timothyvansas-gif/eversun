@@ -50,7 +50,6 @@ body {
      used to be a second, duller #e15e1d on the dot and the pin. */
   --color-accent: #f35b04;
   --color-line: #d5be9c;
-  --width-bento-primary: 853px;
 }
 
 @theme inline {
