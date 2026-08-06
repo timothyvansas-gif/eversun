@@ -105,7 +105,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         }}
         className="min-h-screen flex flex-col items-center relative z-10"
       >
-        <div className="w-full bg-surface-page lg:p-3 lg:[&>*]:rounded-[24px] lg:[&>*]:overflow-hidden">
+        <div className="w-full bg-surface-page lg:pb-12 lg:[&>*]:rounded-b-[24px] lg:[&>*]:overflow-hidden">
           <HeroSection onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
         </div>
         <div
