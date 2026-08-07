@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import facebookIcon from "@/images/socials/social-facebook.svg";
@@ -10,6 +11,8 @@ import { FloatingField } from "@/components/ui/floating-field";
 import { useContactForm } from "@/hooks/use-contact-form";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
 import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+
+const OpeningstijdenOverlay = dynamic(() => import("@/components/hero/openingstijden-overlay"));
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w";
@@ -43,60 +46,77 @@ const DETAIL_LINK =
   "underline decoration-line decoration-1 underline-offset-6 hover:decoration-ink-strong transition-colors duration-150";
 
 function ContactDetails() {
+  const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
+
   // Two columns at every width. Stacked, the four blocks run well past the
   // bottom of the form and leave a lopsided hole in the desktop layout; on
   // mobile they turn the tail of the page into a long ribbon of single lines.
   return (
-    <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-8">
-      {/* Full width until sm: at 15px the address measures ~160px, which does
-          not fit a half column on a 375px phone and would break mid-address. */}
-      <DetailBlock label="E-mail" className="col-span-2 sm:col-span-1">
-        <a href="mailto:info@eversun-assen.nl" className={DETAIL_LINK}>
-          info@eversun-assen.nl
-        </a>
-      </DetailBlock>
+    <>
+      <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-8">
+        {/* Full width until sm: at 15px the address measures ~160px, which does
+            not fit a half column on a 375px phone and would break mid-address. */}
+        <DetailBlock label="E-mail" className="col-span-2 sm:col-span-1">
+          <a href="mailto:info@eversun-assen.nl" className={DETAIL_LINK}>
+            info@eversun-assen.nl
+          </a>
+        </DetailBlock>
 
-      <DetailBlock label="Telefoon">
-        <a href="tel:+31625306491" className={DETAIL_LINK}>
-          06 25 30 64 91
-        </a>
-      </DetailBlock>
+        <DetailBlock label="Telefoon">
+          <a href="tel:+31625306491" className={DETAIL_LINK}>
+            06 25 30 64 91
+          </a>
+        </DetailBlock>
 
-      <DetailBlock label="Adres">
-        <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK}>
-          Kloekhorststraat 4a
-          <br />
-          9401 BD Assen
-        </a>
-      </DetailBlock>
+        <DetailBlock label="Adres">
+          <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK}>
+            Kloekhorststraat 4a
+            <br />
+            9401 BD Assen
+          </a>
+          {" - "}
+          <button
+            type="button"
+            onClick={() => setIsOpeningstijdenOpen(true)}
+            className={`${DETAIL_LINK} cursor-pointer`}
+          >
+            Openingstijden
+          </button>
+        </DetailBlock>
 
-      {/* Hidden on mobile: the slide-in menu already carries the social links
-          there, and dropping this block also clears the lone item that was
-          left dangling on the last grid row. */}
-      <div className="hidden sm:block">
-        <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">Volg ons</p>
-        <div className="mt-2 flex items-center gap-2">
-          {SOCIALS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
-            >
-              <Image
-                src={social.icon}
-                alt=""
-                width={18}
-                height={18}
-                className="h-[18px] w-[18px] brightness-0 invert"
-              />
-            </a>
-          ))}
+        {/* Hidden on mobile: the slide-in menu already carries the social links
+            there, and dropping this block also clears the lone item that was
+            left dangling on the last grid row. */}
+        <div className="hidden sm:block">
+          <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">Volg ons</p>
+          <div className="mt-2 flex items-center gap-2">
+            {SOCIALS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
+              >
+                <Image
+                  src={social.icon}
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="h-[18px] w-[18px] brightness-0 invert"
+                />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      <OpeningstijdenOverlay
+        isOpen={isOpeningstijdenOpen}
+        onClose={() => setIsOpeningstijdenOpen(false)}
+      />
+    </>
   );
 }
 
