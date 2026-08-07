@@ -46,77 +46,60 @@ const DETAIL_LINK =
   "underline decoration-line decoration-1 underline-offset-6 hover:decoration-ink-strong transition-colors duration-150";
 
 function ContactDetails() {
-  const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
-
   // Two columns at every width. Stacked, the four blocks run well past the
   // bottom of the form and leave a lopsided hole in the desktop layout; on
   // mobile they turn the tail of the page into a long ribbon of single lines.
   return (
-    <>
-      <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-8">
-        {/* Full width until sm: at 15px the address measures ~160px, which does
-            not fit a half column on a 375px phone and would break mid-address. */}
-        <DetailBlock label="E-mail" className="col-span-2 sm:col-span-1">
-          <a href="mailto:info@eversun-assen.nl" className={DETAIL_LINK}>
-            info@eversun-assen.nl
-          </a>
-        </DetailBlock>
+    <div className="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-8">
+      {/* Full width until sm: at 15px the address measures ~160px, which does
+          not fit a half column on a 375px phone and would break mid-address. */}
+      <DetailBlock label="E-mail" className="col-span-2 sm:col-span-1">
+        <a href="mailto:info@eversun-assen.nl" className={DETAIL_LINK}>
+          info@eversun-assen.nl
+        </a>
+      </DetailBlock>
 
-        <DetailBlock label="Telefoon">
-          <a href="tel:+31625306491" className={DETAIL_LINK}>
-            06 25 30 64 91
-          </a>
-        </DetailBlock>
+      <DetailBlock label="Telefoon">
+        <a href="tel:+31625306491" className={DETAIL_LINK}>
+          06 25 30 64 91
+        </a>
+      </DetailBlock>
 
-        <DetailBlock label="Adres">
-          <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK}>
-            Kloekhorststraat 4a
-            <br />
-            9401 BD Assen
-          </a>
-          {" - "}
-          <button
-            type="button"
-            onClick={() => setIsOpeningstijdenOpen(true)}
-            className={`${DETAIL_LINK} cursor-pointer`}
-          >
-            Openingstijden
-          </button>
-        </DetailBlock>
+      <DetailBlock label="Adres">
+        <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK}>
+          Kloekhorststraat 4a
+          <br />
+          9401 BD Assen
+        </a>
+      </DetailBlock>
 
-        {/* Hidden on mobile: the slide-in menu already carries the social links
-            there, and dropping this block also clears the lone item that was
-            left dangling on the last grid row. */}
-        <div className="hidden sm:block">
-          <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">Volg ons</p>
-          <div className="mt-2 flex items-center gap-2">
-            {SOCIALS.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
-              >
-                <Image
-                  src={social.icon}
-                  alt=""
-                  width={18}
-                  height={18}
-                  className="h-[18px] w-[18px] brightness-0 invert"
-                />
-              </a>
-            ))}
-          </div>
+      {/* Hidden on mobile: the slide-in menu already carries the social links
+          there, and dropping this block also clears the lone item that was
+          left dangling on the last grid row. */}
+      <div className="hidden sm:block">
+        <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">Volg ons</p>
+        <div className="mt-2 flex items-center gap-2">
+          {SOCIALS.map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.label}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
+            >
+              <Image
+                src={social.icon}
+                alt=""
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px] brightness-0 invert"
+              />
+            </a>
+          ))}
         </div>
       </div>
-
-      <OpeningstijdenOverlay
-        isOpen={isOpeningstijdenOpen}
-        onClose={() => setIsOpeningstijdenOpen(false)}
-      />
-    </>
+    </div>
   );
 }
 
@@ -342,6 +325,8 @@ function ContactForm() {
 }
 
 export default function Contact() {
+  const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
+
   return (
     <section className="relative w-full bg-white py-16 xl:py-24">
       <div
@@ -380,7 +365,15 @@ export default function Contact() {
 
               <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
                 Vraag over een bank, een product, of gewoon benieuwd wat bij jouw huid past? Stuur
-                een bericht, we denken graag met je mee.
+                een bericht, of loop langs tijdens onze{" "}
+                <button
+                  type="button"
+                  onClick={() => setIsOpeningstijdenOpen(true)}
+                  className={`${DETAIL_LINK} cursor-pointer text-muted`}
+                >
+                  openingstijden
+                </button>
+                .
               </p>
 
             </div>
@@ -397,6 +390,11 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      <OpeningstijdenOverlay
+        isOpen={isOpeningstijdenOpen}
+        onClose={() => setIsOpeningstijdenOpen(false)}
+      />
     </section>
   );
 }
