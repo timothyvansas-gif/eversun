@@ -167,7 +167,11 @@ function DockAvatar({
     >
       <m.div style={reduce ? undefined : { x: nudge }}>
         <m.div
-          className="w-[56px] h-[56px] rounded-full overflow-hidden"
+          className={`w-[56px] h-[56px] rounded-full overflow-hidden transition-shadow duration-200 ${
+            isActive
+              ? "shadow-[0_0_0_1px_rgba(255,255,255,0.8)]"
+              : "shadow-[0_0_0_1px_rgba(255,255,255,0.5)]"
+          }`}
           style={reduce ? undefined : { scale, y: lift }}
         >
           {/* w-full h-full, not the width/height attributes alone: the reset
