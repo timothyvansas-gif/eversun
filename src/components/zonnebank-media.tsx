@@ -58,7 +58,7 @@ export default function ZonnebankMedia({
             onPlaying={onVideoPlaying}
             onWaiting={onVideoWaiting}
             onError={onVideoError}
-            className={`absolute inset-0 h-full w-full object-cover object-bottom ${
+            className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-300 ${
               isVideoReady ? "opacity-100" : "opacity-0"
             }`}
           >

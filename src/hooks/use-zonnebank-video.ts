@@ -290,12 +290,19 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
   // Hovering the card is the reliable tell that the toggle is about to be
   // clicked, and it buys the fetch a head start on the click. `load()` is safe
-  // here: the guard in raisePreload means this only ever runs once, before
-  // anything has played, so there is no playback position to reset.
+  // pre-reveal: the guard in raisePreload means this only ever runs once, and
+  // nothing has played yet, so there is no playback position to reset.
+  //
+  // Once the card has already revealed a frame (the IntersectionObserver's
+  // metadata preload got there first), calling load() would still fire —
+  // load() unconditionally drops readyState back to HAVE_NOTHING, blanking
+  // the frame that's already on screen for a beat while it re-fetches. That
+  // was the first-hover flicker. The full fetch isn't lost by skipping it:
+  // attemptPlayback()'s video.play() on click pulls in the rest regardless.
   const handleCardPointerEnter = () => {
     const video = videoRef.current;
     if (!video) return;
-    if (raisePreload("auto")) video.load();
+    if (raisePreload("auto") && !isVideoReadyRef.current) video.load();
   };
 
   const handleVideoToggle = () => {
