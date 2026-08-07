@@ -352,7 +352,7 @@ export default function Contact() {
               row 1 to its content sends all of the slack to row 2, where
               items-start parks the details block at the top and the leftover
               falls harmlessly below it. */}
-          <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-10 lg:gap-y-8 xl:gap-x-20">
+          <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-10 lg:gap-y-8 xl:gap-x-20">
             {/* Heading */}
             <div className="lg:col-start-1 lg:row-start-1">
               <h2 className="font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-ink-strong xl:tracking-[-0.015em]">
@@ -369,11 +369,10 @@ export default function Contact() {
                 <button
                   type="button"
                   onClick={() => setIsOpeningstijdenOpen(true)}
-                  className={`${DETAIL_LINK} cursor-pointer text-muted`}
+                  className={`${DETAIL_LINK} inline cursor-pointer text-muted`}
                 >
-                  openingstijden
+                  openingstijden.
                 </button>
-                .
               </p>
 
             </div>
