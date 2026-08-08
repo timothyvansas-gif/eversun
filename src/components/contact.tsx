@@ -390,8 +390,8 @@ export default function Contact() {
               </p>
 
               <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
-                Vraag over een bank, een product, of gewoon benieuwd wat bij jouw huid past? Stuur
-                een bericht, of loop langs tijdens onze{" "}
+                Vraag over een bank of een product? Stuur een bericht, of loop langs tijdens
+                onze{" "}
                 <button
                   type="button"
                   onClick={() => setIsOpeningstijdenOpen(true)}
