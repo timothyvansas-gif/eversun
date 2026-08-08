@@ -29,8 +29,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
     badge: "2 banken",
     tag: "Populair",
     description: [
-      "Rood Beauty Light biedt de ultieme combinatie van een diepe, egale bruining en intensieve, hoogwaardige huidverzorging.",
-      "Stem de bank via 'Personal Sunstyle' af op jouw huid: kies intensive voor maximale kracht, medium voor natuurlijk of sensitive voor mild.",
+      "Het rode Beauty Light stimuleert de doorbloeding van je huid, zodat je kleur dieper wordt en je huid verzorgd blijft.",
+      "Met Personal Sunstyle stel je de intensiteit zelf in: sensitive als je huid rustig wil beginnen, medium of intensive voor meer kracht.",
     ],
     minuten: "20 min",
     prijs: "€ 18,00",
@@ -43,8 +43,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline 770 Medium zonnebad",
     title: "Ergoline 770 medium",
     description: [
-      "Een vertrouwde en geliefde krachtpatser die garant staat voor een consistent, onberispelijk en egaal bruiningsresultaat.",
-      "Deze bank focust op pure performance. De ideale keuze voor de ervaren zonner die gaat voor een krachtige, betrouwbare sessie zonder poespas.",
+      "Het Dynamic Power systeem houdt de intensiteit je hele sessie constant, zo wordt je kleur overal even egaal opgebouwd.",
+      "48 lampen en verder geen extra's. Fijn als je al weet hoe je huid reageert en gewoon een stevige, betrouwbare sessie wil.",
     ],
     minuten: "20 min",
     prijs: "€ 14,00",
@@ -59,8 +59,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
     title: "Ergoline Blue Vision",
     badge: "2 banken",
     description: [
-      "Activerend blauw licht stimuleert de zuurstofopname in je huid. Dit zorgt voor een direct zichtbaar en dieper bruiningsresultaat.",
-      "Kies via het display jouw intensiteit: intensive voor de donkerste teint, medium voor opbouw of sensitive voor milde huidactivatie.",
+      "Het blauwe licht activeert de pigmentcellen in je huid al voor het zonnen.\nJe kleur komt daardoor sneller en dieper op gang.",
+      "120 blauwe LEDs doen dat werk. Kies op het display sensitive, medium of intensive, net wat je huid vandaag aankan.",
     ],
     minuten: "20 min",
     prijs: "€ 19,50",
@@ -74,8 +74,8 @@ export const ZONNEBANKEN: Zonnebank[] = [
     alt: "Ergoline Affinity 600 zonnebad",
     title: "Ergoline 600 light",
     description: [
-      "Een toegankelijke en comfortabele klassieker die zorgt voor een betrouwbare, mooie en gelijkmatige bruining.",
-      "Dankzij de ergonomische vormgeving en de verfrissende koeling geniet je van een ontspannen sessie met een natuurlijk resultaat als einddoel.",
+      "De rustigste bank van de vier. Fijn als je net begint of je huid liever langzaam laat wennen aan de zon.",
+      "Verstelbare ligvlakken en armsteunen, plus ventilatie die de temperatuur aangenaam houdt. Je stapt er ontspannen weer uit.",
     ],
     minuten: "20 min",
     prijs: "€ 12,00",

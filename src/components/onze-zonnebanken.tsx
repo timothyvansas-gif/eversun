@@ -137,7 +137,17 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             key={i}
             className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""}`}
           >
-            {paragraph}
+            {/* A \n in the copy is a desktop-only break: the <br> is display:none
+                below xl, where the sentences read better as one flowing block.
+                The leading space keeps them apart on mobile and collapses at the
+                start of the broken line on desktop. */}
+            {paragraph.split("\n").map((sentence, j) => (
+              <span key={j}>
+                {j > 0 && <br className="hidden xl:inline" />}
+                {j > 0 && " "}
+                {sentence}
+              </span>
+            ))}
           </p>
         ))}
         <AfspraakButton
