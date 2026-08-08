@@ -3,16 +3,20 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { animate, useMotionValue } from "framer-motion";
 import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
 import { FloatingField } from "@/components/ui/floating-field";
 import { useContactForm } from "@/hooks/use-contact-form";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
 import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { stackedSheetHeight, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const OpeningstijdenOverlay = dynamic(() => import("@/components/hero/openingstijden-overlay"));
+const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w";
@@ -326,6 +330,28 @@ function ContactForm() {
 
 export default function Contact() {
   const [isOpeningstijdenOpen, setIsOpeningstijdenOpen] = useState(false);
+  const [isPlanJeMomentOpen, setIsPlanJeMomentOpen] = useState(false);
+
+  // Same stacking as the hero: "Plan je moment" opens over the openingstijden
+  // sheet instead of the WhatsApp fallback, and closing it returns you there.
+  const openingstijdenPanelRef = useRef<HTMLDivElement>(null);
+  const [stackedMinHeight, setStackedMinHeight] = useState<number | undefined>();
+  const openPlanJeMomentStacked = () => {
+    setStackedMinHeight(stackedSheetHeight(openingstijdenPanelRef.current));
+    setIsPlanJeMomentOpen(true);
+  };
+
+  const shouldReduceMotion = useReducedMotion();
+  const stackDepth = useMotionValue(0);
+  useEffect(() => {
+    const sunk = isPlanJeMomentOpen ? 1 : 0;
+    if (shouldReduceMotion) {
+      stackDepth.set(sunk);
+      return;
+    }
+    const controls = animate(stackDepth, sunk, STACK_SPRING);
+    return () => controls.stop();
+  }, [isPlanJeMomentOpen, stackDepth, shouldReduceMotion]);
 
   return (
     <section className="relative w-full bg-white py-16 xl:py-24">
@@ -393,6 +419,16 @@ export default function Contact() {
       <OpeningstijdenOverlay
         isOpen={isOpeningstijdenOpen}
         onClose={() => setIsOpeningstijdenOpen(false)}
+        onPlanJeMoment={openPlanJeMomentStacked}
+        isBehind={isPlanJeMomentOpen}
+        panelRef={openingstijdenPanelRef}
+        stackDepth={stackDepth}
+      />
+      <PlanJeMomentSheet
+        isOpen={isPlanJeMomentOpen}
+        onClose={() => setIsPlanJeMomentOpen(false)}
+        stackedMinHeight={isOpeningstijdenOpen ? stackedMinHeight : undefined}
+        stackDepth={isOpeningstijdenOpen && !shouldReduceMotion ? stackDepth : undefined}
       />
     </section>
   );

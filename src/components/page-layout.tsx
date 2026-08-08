@@ -87,12 +87,10 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         style={{
           // `none` when closed, not `translateX(0)`: any transform value other
           // than none makes this element the containing block for every
-          // `position: fixed` descendant, and the openingstijden overlay is
-          // fixed and still renders inside <main> (the other sheets portal to
-          // <body>). Keeping the transform off at rest means that only holds
-          // while the menu is open — where the page behind is inert anyway, so
-          // no overlay can be opened into it. Portal any new fixed overlay in
-          // here, or it will position against <main> during the push.
+          // `position: fixed` descendant. All overlay sheets portal to <body>
+          // now, so none live inside <main> — keep it that way, or a new one
+          // would position against <main> during the push instead of the
+          // viewport.
           //
           // Worth the constraint: margin-left animated layout and paint for the
           // whole page across 800ms, where transform stays on the compositor.

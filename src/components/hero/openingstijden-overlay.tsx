@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import { m, AnimatePresence, animate, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { getStudioStatus } from "@/lib/studio-status";
 import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
@@ -147,6 +148,12 @@ export default function OpeningstijdenOverlay({
   stackDepth?: MotionValue<number>;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Without a caller driving the depth there is no drag to follow, so it falls
   // back to the plain in/out on `isBehind` — the sheet works the same wherever
@@ -181,12 +188,18 @@ export default function OpeningstijdenOverlay({
     overlayRef.current?.focus({ preventScroll: true });
   }, [isOpen, isBehind]);
 
-  return (
+  if (!mounted) return null;
+
+  // Portalled to <body>, like plan-je-moment-sheet: rendered inline it sits
+  // inside <main>, which has its own z-index and so its own stacking context —
+  // no z-index in here could then ever clear the sticky header, which sits
+  // outside <main> at the root. z-[55] is still below plan-je-moment-sheet's
+  // z-[60], so that one stacks above this when the two are open together.
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop — dims hero content */}
-          <Backdrop onClick={onClose} className="z-50" scrollLock />
+          <Backdrop onClick={onClose} className="z-[55]" scrollLock />
 
           <div ref={overlayRef} tabIndex={-1} className="outline-none" inert={isBehind}>
           {/* Mobile: Bottom Sheet.
@@ -198,7 +211,7 @@ export default function OpeningstijdenOverlay({
             // Sinks back when a sheet stacks on top: scaled from its bottom
             // edge, so it stays anchored to the screen edge and only its
             // shoulders show behind the sheet in front.
-            className="md:hidden fixed bottom-0 inset-x-0 z-50"
+            className="md:hidden fixed bottom-0 inset-x-0 z-[55]"
             style={{ y: behindY, scale: behindScale, transformOrigin: "bottom center" }}
           >
             <m.div
@@ -246,7 +259,7 @@ export default function OpeningstijdenOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Openingstijden"
-            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-50 w-[400px]"
+            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-[55] w-[400px]"
             initial={{ opacity: 0, scale: 0.88, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
@@ -267,6 +280,7 @@ export default function OpeningstijdenOverlay({
           </div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
