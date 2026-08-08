@@ -306,7 +306,7 @@ export default function Producten() {
 
           <div className="mt-4 xl:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-7 md:gap-8">
             <p className="text-muted text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
-              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15ml sachets zijn geschikt voor éénmalig gebruik.
+              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15 ml sachets zijn geschikt voor eenmalig gebruik.
             </p>
             <PlanMomentButton />
           </div>

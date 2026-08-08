@@ -386,7 +386,7 @@ export default function Contact() {
               </h2>
               {/* Second line of the heading, not a subsection — see producten. */}
               <p className="mt-1 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-muted xl:tracking-[-0.015em]">
-                we horen graag van je
+                We horen graag van je
               </p>
 
               <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
