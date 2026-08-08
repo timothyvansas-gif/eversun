@@ -63,6 +63,70 @@ Meer is er niet nodig, de code verandert niet mee.
 (bv. via Vercel), moeten dezelfde drie variabelen in het dashboard van die
 hostingpartij worden ingevuld onder *Environment Variables*.
 
+## Planomgeving instellen
+
+De planomgeving (medewerkers plannen afspraken per bank, achter een login) draait op
+[Supabase](https://supabase.com): dat is een Postgres-database met inlogbeheer
+erbovenop.
+
+### Stap 1: Sleutels in `.env.local`
+
+In het Supabase-dashboard: **Project Settings → API Keys**. Zet in `.env.local`
+(zie `.env.example`):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://jouwproject.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+Herstart daarna `npm run dev`; omgevingsvariabelen worden alleen bij het
+opstarten ingelezen.
+
+> De publieke sleutel mág in de browser staan. Hij opent niets uit zichzelf: wat
+> iemand mag zien, bepalen de databaseregels (Row Level Security). De geheime
+> sleutel (`SUPABASE_SECRET_KEY`) is het tegenovergestelde — die stapt overal
+> langs. Die hoort alleen in `.env.local` en in het Vercel-dashboard, nooit in
+> een `NEXT_PUBLIC_`-variabele en nooit in een berichtje.
+
+### Stap 2: De CLI aan het project koppelen
+
+De Supabase CLI staat al in `devDependencies`; los installeren hoeft niet.
+
+```bash
+npx supabase login
+```
+
+Daarna koppelen aan het juiste project. De `project-ref` is het stuk uit de URL
+van het dashboard (`https://supabase.com/dashboard/project/<project-ref>`):
+
+```bash
+npx supabase link --project-ref <project-ref>
+```
+
+### Stap 3: Databasewijzigingen
+
+Alle wijzigingen aan de database gaan via migratiebestanden in
+`supabase/migrations/`. Nooit met de hand klikken in het dashboard: dan staat de
+live database anders dan wat er in git zit, en weet niemand meer wat de waarheid
+is.
+
+```bash
+# nieuw migratiebestand aanmaken
+npx supabase migration new beschrijvende_naam
+
+# naar de gekoppelde database sturen
+npx supabase db push
+```
+
+Omdat het project aan GitHub gekoppeld is, draait Supabase nieuwe migraties zelf
+bij een push naar `main`. `db push` is er voor het testen vooraf.
+
+### Stap 4: Live zetten
+
+Dezelfde drie variabelen moeten in het Vercel-dashboard onder *Environment
+Variables*. Zonder die waarden werkt de site gewoon door; alleen de
+planomgeving meldt dan dat hij niet beschikbaar is.
+
 ## Getting Started
 
 First, run the development server:
