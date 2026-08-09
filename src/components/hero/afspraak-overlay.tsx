@@ -85,11 +85,15 @@ export default function AfspraakOverlay({
                 />
               </div>
 
+              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-4 text-center">
+                Of klik hieronder om via dit scherm een afspraak te maken.
+              </p>
+
               <a
                 href={WHATSAPP_BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-[#111111]`}
+                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-2 hover:bg-[#111111]`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
