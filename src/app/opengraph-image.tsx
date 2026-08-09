@@ -52,7 +52,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #000000 0%, #171310 100%)",
+          background: "linear-gradient(135deg, #111111 0%, #171310 100%)",
           gap: 36,
         }}
       >

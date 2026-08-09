@@ -1,7 +1,42 @@
 @import "tailwindcss";
 
+/* Ahead of every rule that uses these tokens (html/body's background-color
+   below included): Tailwind's build resolves var() against source order, not
+   just cascade order, so a rule using --color-void above this block would
+   fold to black instead of #111111. */
+@theme {
+  --color-brand: #fdc43f;
+  --color-surface-page: #faf4ec;
+  --color-ink: #1a1a1a;
+  --color-ink-strong: #1f1f1e;
+  /* Darkened from #94825c, which cleared only 3.4:1 on the page surface and
+     failed 1.4.3 on every background it sits on (page, white cards, product
+     tags). Same hue, lower luminance: 4.99:1 at worst. */
+  --color-muted: #76684a;
+  /* The one orange: buttons, status dot, pin, review stars, hero rules. There
+     used to be a second, duller #e15e1d on the dot and the pin. */
+  --color-accent: #f35b04;
+  --color-line: #d5be9c;
+  /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
+     to match the page's cream/gold palette. */
+  --color-hero-ink: #f5f1e8;
+  /* Off-white for the nav layer (sticky header, menus, footer) — neutral,
+     since those sit on flat black/near-black, not the warm photo. */
+  --color-nav-ink: #ededec;
+  /* Page/chrome black — #111111, not pure #000000, so dark surfaces (sticky
+     header, menus, footer, hero fallback) keep a hint of lift. */
+  --color-void: #111111;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  /* PT Serif, loaded as --font-serif in layout.tsx. `font-display` is the only
+     utility components should use for it; there is no second alias any more. */
+  --font-display: var(--font-serif);
+}
+
 html {
-  background-color: #000000;
+  background-color: var(--color-void);
   overflow-x: clip;
   /* Reserve the scrollbar gutter so the page doesn't shift right when a modal
      locks scroll (overflow:hidden) and the classic scrollbar disappears.
@@ -33,36 +68,8 @@ html {
 }
 
 body {
-  background-color: #000000;
+  background-color: var(--color-void);
   overflow-x: clip;
-}
-
-@theme {
-  --color-brand: #fdc43f;
-  --color-surface-page: #faf4ec;
-  --color-ink: #1a1a1a;
-  --color-ink-strong: #1f1f1e;
-  /* Darkened from #94825c, which cleared only 3.4:1 on the page surface and
-     failed 1.4.3 on every background it sits on (page, white cards, product
-     tags). Same hue, lower luminance: 4.99:1 at worst. */
-  --color-muted: #76684a;
-  /* The one orange: buttons, status dot, pin, review stars, hero rules. There
-     used to be a second, duller #e15e1d on the dot and the pin. */
-  --color-accent: #f35b04;
-  --color-line: #d5be9c;
-  /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
-     to match the page's cream/gold palette. */
-  --color-hero-ink: #f5f1e8;
-  /* Off-white for the nav layer (sticky header, menus, footer) — neutral,
-     since those sit on flat black/near-black, not the warm photo. */
-  --color-nav-ink: #ededec;
-}
-
-@theme inline {
-  --font-sans: var(--font-inter);
-  /* PT Serif, loaded as --font-serif in layout.tsx. `font-display` is the only
-     utility components should use for it; there is no second alias any more. */
-  --font-display: var(--font-serif);
 }
 
 

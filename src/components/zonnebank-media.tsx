@@ -101,7 +101,7 @@ export default function ZonnebankMedia({
             aria-hidden="true"
             className={`absolute inset-0 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] scale-100 group-hover:scale-110 ${
               isVideoActive && !isVideoLoading
-                ? "bg-black shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
+                ? "bg-void shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
                 : "bg-white"
             }`}
             style={{

@@ -77,7 +77,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   return (
     <LazyMotion features={loadMotionFeatures} strict>
     <MotionConfig reducedMotion="user">
-    <div className="relative bg-black min-h-screen">
+    <div className="relative bg-void min-h-screen">
       {/* First tabbable on the page, so the keyboard route to the content does
           not run through the header and the whole menu. Hidden until focused. */}
       <a
