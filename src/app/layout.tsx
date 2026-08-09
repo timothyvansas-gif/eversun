@@ -41,7 +41,7 @@ const jsonLd = {
 export const metadata: Metadata = {
   title: "Ever Sun | Zonnebank & Zonnestudio Assen",
   description:
-    "Zonnestudio Ever Sun in Assen — professionele zonnebanken Ergoline en top producten voor de perfecte bruining zoals Black Velvet. Kloekhorststraat 4a, open di t/m zo.",
+    "Ergoline zonnebanken in Assen, vanaf €12 per sessie van 20 min. Persoonlijk huidadvies, parkeren voor de deur en doordeweeks open tot 21.00 uur.",
   metadataBase: new URL(BASE_URL),
   alternates: {
     canonical: "/",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ever Sun | Zonnebank & Zonnestudio Assen",
     description:
-      "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
+      "Ergoline zonnebanken, persoonlijk huidadvies en een sessie die om jou draait. Kloekhorststraat 4a, Assen.",
     url: BASE_URL,
     siteName: "Ever Sun",
     locale: "nl_NL",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ever Sun | Zonnebank & Zonnestudio Assen",
     description:
-      "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
+      "Ergoline zonnebanken, persoonlijk huidadvies en een sessie die om jou draait. Kloekhorststraat 4a, Assen.",
   },
   appleWebApp: {
     capable: true,
