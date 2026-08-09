@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The Cloudflare build artifacts. `next build` output is ignored above by
+    // default, but the opennext/wrangler equivalents are not — and linting
+    // bundled vendor code buried thousands of generated-code complaints under
+    // which any real finding in `src` was invisible.
+    ".open-next/**",
+    ".wrangler/**",
   ]),
 ]);
 
