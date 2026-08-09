@@ -251,15 +251,15 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
   
         {/* Footer Info */}
         <div className="mt-auto pt-6 shrink-0 flex flex-col gap-1">
-          <p className="text-nav-ink/60 text-sm font-medium">
+          <p className="text-nav-ink/65 text-sm font-medium">
             Ever Sun Zonnestudio
           </p>
-          <p className="text-nav-ink/60 text-sm font-medium mb-2">
+          <p className="text-nav-ink/65 text-sm font-medium mb-2">
             Kloekhorststraat 4a Assen
           </p>
           <a
             href="tel:0625306491"
-            className="text-nav-ink/60 text-sm font-medium active:text-nav-ink underline decoration-dotted underline-offset-6"
+            className="text-nav-ink/65 text-sm font-medium active:text-nav-ink underline decoration-dotted underline-offset-6"
           >
             06 25306491
           </a>

@@ -108,11 +108,11 @@ export default function DesktopMenu({
             </a>
 
             <div className="mt-1 flex flex-col gap-0.5">
-              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/55">Ever Sun Zonnestudio</p>
-              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/55">Kloekhorststraat 4a Assen</p>
+              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/65">Ever Sun Zonnestudio</p>
+              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/65">Kloekhorststraat 4a Assen</p>
               <a
                 href="tel:0625306491"
-                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-nav-ink/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-nav-ink/85 focus-visible:text-nav-ink/85"
+                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-nav-ink/65 underline decoration-dotted underline-offset-6 transition-colors hover:text-nav-ink/85 focus-visible:text-nav-ink/85"
               >
                 06 25306491
               </a>
