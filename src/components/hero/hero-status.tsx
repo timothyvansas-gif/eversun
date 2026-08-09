@@ -83,13 +83,13 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
           label later): the row then breaks between chunks instead of
           splitting a sentence down the middle. */}
       <span key={label} className="relative flex flex-wrap items-center gap-x-2 gap-y-1 md:gap-x-[14px]">
-        <span data-status-text className="font-sans font-normal text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+        <span data-status-text className="font-sans font-normal text-[15px] leading-none whitespace-nowrap text-hero-ink/85">
           {label}
         </span>
 
-        <span data-status-dash className="font-sans text-[15px]" style={{ color: "rgba(255, 255, 255, 0.85)" }}>-</span>
+        <span data-status-dash className="font-sans text-[15px] text-hero-ink/85">-</span>
 
-        <span data-status-times className="flex items-center gap-2 whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+        <span data-status-times className="flex items-center gap-2 whitespace-nowrap text-hero-ink/85">
           <Image src={clock} alt="" width={16} height={16} className="block shrink-0" />
           <span className="hidden min-[340px]:inline font-sans font-normal text-[15px] leading-none">
             Tijden

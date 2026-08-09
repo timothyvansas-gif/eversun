@@ -50,6 +50,12 @@ body {
      used to be a second, duller #e15e1d on the dot and the pin. */
   --color-accent: #f35b04;
   --color-line: #d5be9c;
+  /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
+     to match the page's cream/gold palette. */
+  --color-hero-ink: #f5f1e8;
+  /* Off-white for the nav layer (sticky header, menus, footer) — neutral,
+     since those sit on flat black/near-black, not the warm photo. */
+  --color-nav-ink: #ededec;
 }
 
 @theme inline {
@@ -131,7 +137,7 @@ body {
   }
 
   .nav-link.light {
-    @apply text-surface-page;
+    @apply text-hero-ink/75;
   }
 
   .nav-link.light::after {

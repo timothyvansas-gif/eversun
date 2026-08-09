@@ -322,7 +322,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
 
       {/* Text Container */}
       <div className="h-[40px] flex items-center">
-        <span className="font-sans font-normal text-[15px] leading-none whitespace-nowrap" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
+        <span className="font-sans font-normal text-[15px] leading-none whitespace-nowrap text-hero-ink/85">
           <span className="font-normal">{REVIEW_SUMMARY.rating}</span>/{REVIEW_SUMMARY.outOf}{" "}
           <span className="opacity-50">-</span> {REVIEW_SUMMARY.count} reviews
         </span>

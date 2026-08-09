@@ -82,8 +82,8 @@ export default function StickyHeader({
         >
           <Logo
             className="h-8 w-auto"
-            textColor="#FFFFFF"
-            iconColor="#FAF4EC"
+            textColor="var(--color-nav-ink)"
+            iconColor="var(--color-nav-ink)"
           />
         </button>
 
@@ -94,7 +94,7 @@ export default function StickyHeader({
           aria-controls={MOBILE_MENU_ID}
           className={`flex flex-col items-end gap-[5px] p-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200`}
         >
-          <HamburgerIcon />
+          <HamburgerIcon colorClassName="bg-nav-ink" />
         </button>
       </div>
     </header>

@@ -163,25 +163,25 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               href="https://www.facebook.com/eversun.assen/"
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
+              className={`inline-flex items-center p-2 ${TAP_TARGET} text-nav-ink active:opacity-60 transition-opacity`}
               aria-label="Facebook"
             >
-              <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+              <Image src={facebookIcon} alt="Facebook" width={24} height={24} className="w-6 h-6" style={{ filter: "brightness(0) invert(93%)" }} />
             </a>
             <a
               href="https://www.instagram.com/ever_sun_assen/"
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
+              className={`inline-flex items-center p-2 ${TAP_TARGET} text-nav-ink active:opacity-60 transition-opacity`}
               aria-label="Instagram"
             >
-              <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6 brightness-0 invert" />
+              <Image src={instagramIcon} alt="Instagram" width={24} height={24} className="w-6 h-6" style={{ filter: "brightness(0) invert(93%)" }} />
             </a>
             {canShare && (
               <button
                 onClick={handleShare}
                 aria-label="Pagina delen"
-                className={`inline-flex items-center p-2 ${TAP_TARGET} text-surface-page active:opacity-60 transition-opacity`}
+                className={`inline-flex items-center p-2 ${TAP_TARGET} text-nav-ink active:opacity-60 transition-opacity`}
               >
                 <svg
                   width="24"
@@ -206,7 +206,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
           <button
             onClick={onClose}
             aria-label="Menu sluiten"
-            className="p-2 text-surface-page active:scale-90 transition-transform"
+            className="p-2 text-nav-ink active:scale-90 transition-transform"
           >
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -222,20 +222,20 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               key={item} 
               href={`#${item.toLowerCase().replace(" ", "-")}`} 
               onClick={(e) => handleNavClick(e, item)}
-              className="text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
+              className="text-[28px] font-semibold text-nav-ink tracking-tight active:opacity-60 transition-opacity"
             >
               {item}
             </a>
           ))}
-          
-          <div className="h-[1px] bg-surface-page/10 w-full my-2" />
-          
-          <a 
+
+          <div className="h-[1px] bg-nav-ink/10 w-full my-2" />
+
+          <a
             href={WHATSAPP_BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}
-            className="flex items-center gap-3 text-[28px] font-semibold text-surface-page tracking-tight active:opacity-60 transition-opacity"
+            className="flex items-center gap-3 text-[28px] font-semibold text-nav-ink tracking-tight active:opacity-60 transition-opacity"
           >
             WhatsApp
             <Image
@@ -243,22 +243,23 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
               alt=""
               width={24}
               height={24}
-              className="w-6 h-6 brightness-0 invert"
+              className="w-6 h-6"
+              style={{ filter: "brightness(0) invert(93%)" }}
             />
           </a>
         </nav>
   
         {/* Footer Info */}
         <div className="mt-auto pt-6 shrink-0 flex flex-col gap-1">
-          <p className="text-surface-page/60 text-sm font-medium">
+          <p className="text-nav-ink/60 text-sm font-medium">
             Ever Sun Zonnestudio
           </p>
-          <p className="text-surface-page/60 text-sm font-medium mb-2">
+          <p className="text-nav-ink/60 text-sm font-medium mb-2">
             Kloekhorststraat 4a Assen
           </p>
-          <a 
-            href="tel:0625306491" 
-            className="text-surface-page/60 text-sm font-medium active:text-surface-page underline decoration-dotted underline-offset-6"
+          <a
+            href="tel:0625306491"
+            className="text-nav-ink/60 text-sm font-medium active:text-nav-ink underline decoration-dotted underline-offset-6"
           >
             06 25306491
           </a>

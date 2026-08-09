@@ -77,7 +77,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                 the flex gap alone put 28.5px of air after the logo against 20px
                 after the rule. The margin hands spacing back to the one gap
                 value, and both sides then measure what they look. */}
-            <Logo className="h-[52px] w-auto -mr-[8.5px]" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
+            <Logo className="h-[52px] w-auto -mr-[8.5px]" textColor="var(--color-hero-ink)" iconColor="var(--color-hero-ink)" iconOpacity={0.8} iconScale={44 / 52} textOffsetX={-8} />
             {/* 18px, which is the cap height of the N in the wordmark beside it
                 — measured off the rendered logo, not guessed. The N's centre
                 sits within 0.1px of the logo box's, so the row's items-center
@@ -94,10 +94,10 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
               aria-haspopup="true"
               aria-expanded={desktopMenuOpen}
               aria-controls="hero-desktop-menu"
-              className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "[&::after]:[transform:scaleX(0)]!" : ""}`}
+              className={`nav-link light cursor-pointer relative z-[60] lg:!pr-0 lg:[&::after]:right-0 ${desktopMenuOpen ? "text-white! [&::after]:[transform:scaleX(0)]!" : ""}`}
             >
               <span className="flex flex-col items-end gap-[5px]">
-                <HamburgerIcon open={desktopMenuOpen} />
+                <HamburgerIcon open={desktopMenuOpen} colorClassName="bg-current" />
               </span>
               Menu
             </button>
@@ -117,7 +117,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
             aria-label="Naar begin van de pagina"
             className={`inline-flex items-center ${TAP_TARGET} cursor-pointer active:scale-95 transition-transform duration-200 rounded-sm`}
           >
-            <Logo className="h-[42px] w-auto" textColor="#FFFFFF" iconColor="#FAF4EC" iconOpacity={0.8} iconScale={34 / 42} textOffsetX={-10} />
+            <Logo className="h-[42px] w-auto" textColor="var(--color-hero-ink)" iconColor="var(--color-hero-ink)" iconOpacity={0.8} iconScale={34 / 42} textOffsetX={-10} />
           </button>
           <button
             onClick={onOpenMenu}
@@ -129,7 +129,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
             // lines the icon up with the content column.
             className={`flex flex-col items-end gap-[5px] p-2 -mr-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200 rounded-sm`}
           >
-            <HamburgerIcon />
+            <HamburgerIcon colorClassName="bg-hero-ink" />
           </button>
         </m.div>
 
@@ -165,8 +165,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   // font size, against (viewport - 48px) of room — so lowering
                   // the floors lets it govern down to 320px and the line breaks
                   // on the comma instead. Only widths below 427px change.
-                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[64px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2]"
-                  style={{ marginLeft: "-3px", color: "#ffffff" }}
+                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[64px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2] text-hero-ink"
+                  style={{ marginLeft: "-3px" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
                   begint bij{" "}
@@ -177,12 +177,11 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                 </m.h1>
 
                 <m.p
-                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] 2xl:text-[24px] leading-[25px] md:leading-[30px] lg:leading-[30px] 2xl:leading-[40px]"
+                  className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] 2xl:text-[24px] leading-[25px] md:leading-[30px] lg:leading-[30px] 2xl:leading-[40px] text-hero-ink/75"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
                   custom={0.6}
-                  style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
                   In onze zonnestudio draait het gewoon om jou.
                   <br />
@@ -190,12 +189,11 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                 </m.p>
 
                 <m.p
-                  className="lg:hidden block w-0 min-w-full mt-2 md:mt-3 font-sans font-normal text-[15px] md:text-[20px] leading-[24px] md:leading-[30px]"
+                  className="lg:hidden block w-0 min-w-full mt-2 md:mt-3 font-sans font-normal text-[15px] md:text-[20px] leading-[24px] md:leading-[30px] text-hero-ink/75"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
                   custom={0.6}
-                  style={{ color: "rgba(255, 255, 255, 0.75)" }}
                 >
                   In onze zonnestudio draait het gewoon om jou. Twintig minuten voor jezelf, zonder dat er iets van je gevraagd wordt.
                 </m.p>

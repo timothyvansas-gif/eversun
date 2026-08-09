@@ -88,31 +88,31 @@ export default function DesktopMenu({
                 key={label}
                 href={resolveNavTarget(label)}
                 onClick={(e) => handleNav(e, label)}
-                className="py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white"
+                className="py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-all duration-200 hover:translate-x-1 hover:text-nav-ink focus-visible:translate-x-1 focus-visible:text-nav-ink"
               >
                 {label}
               </a>
             ))}
 
-            <div className="my-3 h-px w-full bg-white/10" />
+            <div className="my-3 h-px w-full bg-nav-ink/10" />
 
             <a
               href={WHATSAPP_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-white/85 transition-all duration-200 hover:translate-x-1 hover:text-white focus-visible:translate-x-1 focus-visible:text-white"
+              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-all duration-200 hover:translate-x-1 hover:text-nav-ink focus-visible:translate-x-1 focus-visible:text-nav-ink"
             >
               WhatsApp
-              <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
+              <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5" style={{ filter: "brightness(0) invert(93%)" }} />
             </a>
 
             <div className="mt-1 flex flex-col gap-0.5">
-              <p className="text-[16px] leading-[24px] font-medium text-white/55">Ever Sun Zonnestudio</p>
-              <p className="text-[16px] leading-[24px] font-medium text-white/55">Kloekhorststraat 4a Assen</p>
+              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/55">Ever Sun Zonnestudio</p>
+              <p className="text-[16px] leading-[24px] font-medium text-nav-ink/55">Kloekhorststraat 4a Assen</p>
               <a
                 href="tel:0625306491"
-                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-white/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-white/85 focus-visible:text-white/85"
+                className="mt-1 w-fit text-[16px] leading-[24px] font-medium text-nav-ink/55 underline decoration-dotted underline-offset-6 transition-colors hover:text-nav-ink/85 focus-visible:text-nav-ink/85"
               >
                 06 25306491
               </a>
@@ -124,18 +124,18 @@ export default function DesktopMenu({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="-ml-2 rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                className="-ml-2 rounded-sm p-2 text-nav-ink/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
               >
-                <Image src={facebookIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
+                <Image src={facebookIcon} alt="" width={20} height={20} className="h-5 w-5" style={{ filter: "brightness(0) invert(93%)" }} />
               </a>
               <a
                 href="https://www.instagram.com/ever_sun_assen/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="rounded-sm p-2 text-white/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+                className="rounded-sm p-2 text-nav-ink/70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
               >
-                <Image src={instagramIcon} alt="" width={20} height={20} className="h-5 w-5 brightness-0 invert" />
+                <Image src={instagramIcon} alt="" width={20} height={20} className="h-5 w-5" style={{ filter: "brightness(0) invert(93%)" }} />
               </a>
             </div>
           </nav>

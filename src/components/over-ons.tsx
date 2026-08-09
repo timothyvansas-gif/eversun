@@ -61,7 +61,7 @@ export default function OverOns() {
           <div id="over-ons" className="mb-9 xl:mb-14 scroll-mt-20 lg:scroll-mt-10">
             <div className="flex flex-col xl:flex-row xl:justify-between xl:items-end gap-3 xl:gap-6">
               <div>
-                <h2 className="text-white text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
+                <h2 className="text-nav-ink text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display">
                   De zonnestralen
                 </h2>
                 {/* Second line of the heading, not a subsection — see producten. */}
@@ -114,7 +114,7 @@ export default function OverOns() {
 
                 {/* Text Area */}
                 <div className="flex flex-col gap-[10px] pr-4">
-                  <h3 className="text-white text-[20px] font-medium tracking-[-0.27px] font-display">
+                  <h3 className="text-nav-ink text-[20px] font-medium tracking-[-0.27px] font-display">
                     {member.name}
                   </h3>
                   <p className="text-[#888888] text-[15px] leading-[24px] tracking-[-0.01em] font-sans">

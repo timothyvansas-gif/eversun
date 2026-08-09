@@ -20,7 +20,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           unfolds, the way the outline pills do. Mobile keeps its fixed width:
           there is no hover there, so there is nothing to grow into. */}
       <button
-        className="group/cta w-[172px] px-0 sm:w-auto sm:px-10 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-surface-page cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="group/cta w-[172px] px-0 sm:w-auto sm:px-10 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
