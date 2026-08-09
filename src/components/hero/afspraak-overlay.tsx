@@ -96,7 +96,7 @@ export default function AfspraakOverlay({
                 Open WhatsApp
               </a>
 
-              <div className="mt-6 text-center">
+              <div className="mt-6 pt-6 border-t border-line/50 text-center">
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
