@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { LazyMotion, MotionConfig } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { DESKTOP_NAV_QUERY } from "@/lib/breakpoints";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
@@ -56,6 +58,21 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
     if (!isMenuOpen) menuTriggerRef.current = document.activeElement as HTMLElement | null;
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // The mobile menu (and the inert/scrim/push it drives) has no desktop
+  // equivalent: MobileMenu's panel is `lg:hidden`, but isMenuOpen itself isn't
+  // breakpoint-aware. Crossing into desktop mid-open — resize, rotate, an
+  // external monitor — otherwise leaves <main> permanently inert behind an
+  // invisible scrim, with no visible menu left to close it.
+  const isDesktopNav = useMediaQuery(DESKTOP_NAV_QUERY);
+  useEffect(() => {
+    // Syncing to an external signal (the media query), not deriving from
+    // props/state React already has — the effect-body exception the rule allows.
+    if (isDesktopNav && isMenuOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsMenuOpen(false);
+    }
+  }, [isDesktopNav, isMenuOpen]);
 
   return (
     <LazyMotion features={loadMotionFeatures} strict>
