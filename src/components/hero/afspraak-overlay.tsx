@@ -86,7 +86,7 @@ export default function AfspraakOverlay({
               </div>
 
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-4 text-center">
-                Of klik hieronder om via dit scherm een afspraak te maken.
+                Of gewoon vanaf dit scherm.
               </p>
 
               <a
