@@ -72,7 +72,7 @@ export default function AfspraakOverlay({
 
               <h2 className="card-title text-zinc-900 text-center">Plan je zonsessie</h2>
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
-                Scan om ons via WhatsApp een appje te sturen.
+                Scan de QR-code om vanaf je eigen telefoon een afspraak te maken.
               </p>
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-6">
@@ -93,7 +93,7 @@ export default function AfspraakOverlay({
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
-                Via WhatsApp
+                Open WhatsApp
               </a>
 
               <div className="mt-4 text-center">
