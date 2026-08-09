@@ -39,7 +39,7 @@ const jsonLd = {
 };
 
 export const metadata: Metadata = {
-  title: "Ever Sun | Zonnestudio Assen",
+  title: "Ever Sun | Zonnebank & Zonnestudio Assen",
   description:
     "Zonnestudio Ever Sun in Assen — professionele zonnebanken Ergoline en top producten voor de perfecte bruining zoals Black Velvet. Kloekhorststraat 4a, open di t/m zo.",
   metadataBase: new URL(BASE_URL),
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Ever Sun | Zonnestudio Assen",
+    title: "Ever Sun | Zonnebank & Zonnestudio Assen",
     description:
       "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
     url: BASE_URL,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ever Sun | Zonnestudio Assen",
+    title: "Ever Sun | Zonnebank & Zonnestudio Assen",
     description:
       "Professionele zonnestudio in Assen. Topmerken, deskundig advies en luxe cabines.",
   },
