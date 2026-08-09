@@ -13,9 +13,7 @@ import { Backdrop } from "@/components/ui/backdrop";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
-
-const WHATSAPP_URL =
-  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
+import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 
 /**
  * Opens the "Plan je moment" sheet on top of this one when the caller passes a
@@ -42,7 +40,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
 
   if (!onPlanJeMoment) {
     return (
-      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+      <a href={WHATSAPP_BOOKING_URL} target="_blank" rel="noopener noreferrer" className={className} style={style}>
         {content}
       </a>
     );

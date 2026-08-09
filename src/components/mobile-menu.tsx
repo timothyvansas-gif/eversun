@@ -10,6 +10,7 @@ import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
 import { MOBILE_MENU_ID, NAV_ITEMS } from "@/lib/nav-items";
+import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { TAP_TARGET } from "@/lib/button-styles";
 
 interface MobileMenuProps {
@@ -230,7 +231,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
           <div className="h-[1px] bg-surface-page/10 w-full my-2" />
           
           <a 
-            href="https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken"
+            href={WHATSAPP_BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}

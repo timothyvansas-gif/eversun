@@ -9,9 +9,7 @@ import { quietFocus } from "@/lib/quiet-focus";
 import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
-
-const WHATSAPP_URL =
-  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
+import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 
 /**
  * Desktop-only navigation dropdown that unfolds from under the hero's Menu
@@ -99,7 +97,7 @@ export default function DesktopMenu({
             <div className="my-3 h-px w-full bg-white/10" />
 
             <a
-              href={WHATSAPP_URL}
+              href={WHATSAPP_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}

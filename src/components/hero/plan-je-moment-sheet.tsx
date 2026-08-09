@@ -11,6 +11,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { Backdrop } from "@/components/ui/backdrop";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { stackDepthForDrag, scrimOpacityForDrag, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 function PhoneIcon() {
@@ -159,13 +160,10 @@ function Review() {
   );
 }
 
-const DEFAULT_WHATSAPP_URL =
-  "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%0Aik%20wil%20graag%20een%20zonsessie%20boeken";
-
 export default function PlanJeMomentSheet({
   isOpen,
   onClose,
-  whatsappUrl = DEFAULT_WHATSAPP_URL,
+  whatsappUrl = WHATSAPP_BOOKING_URL,
   stackedMinHeight,
   stackDepth,
 }: {

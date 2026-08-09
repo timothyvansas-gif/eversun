@@ -6,10 +6,13 @@ import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import qrCode from "@/images/qr-code-ever-sun.svg";
+import whatsappIcon from "@/images/whatsapp.svg";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
+import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 
 export default function AfspraakOverlay({
   isOpen,
@@ -77,12 +80,23 @@ export default function AfspraakOverlay({
                 />
               </div>
 
-              <h2 className="card-title text-zinc-900 mt-8 text-center">Plan je zonsessie</h2>
+              <h2 className="card-title text-zinc-900 mt-6 text-center">Plan je zonsessie</h2>
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
-                Scan de QR-code om direct via<br />WhatsApp een afspraak te maken.
+                Scan de QR-code, of boek direct:
               </p>
 
-              <div className="mt-5 pt-5 border-t border-[#f6ecde] text-center">
+              <a
+                href={WHATSAPP_BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-[#111111]`}
+                style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
+              >
+                <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
+                Via WhatsApp
+              </a>
+
+              <div className="mt-4 text-center">
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
