@@ -67,10 +67,15 @@ export default function AfspraakOverlay({
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
             transition={{ type: "spring", damping: 14, stiffness: 260 }}
           >
-            <div className="relative px-8 pb-8 pt-14">
+            <div className="relative px-8 pb-8 pt-8">
               <CloseButton onClick={onClose} className="absolute top-4 right-4" />
 
-              <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto">
+              <h2 className="card-title text-zinc-900 text-center">Plan je zonsessie</h2>
+              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
+                Scan de QR-code, of boek direct:
+              </p>
+
+              <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-6">
                 <Image
                   src={qrCode}
                   alt="QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
@@ -79,11 +84,6 @@ export default function AfspraakOverlay({
                   className="w-full h-auto rounded-[8px]"
                 />
               </div>
-
-              <h2 className="card-title text-zinc-900 mt-6 text-center">Plan je zonsessie</h2>
-              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
-                Scan de QR-code, of boek direct:
-              </p>
 
               <a
                 href={WHATSAPP_BOOKING_URL}
