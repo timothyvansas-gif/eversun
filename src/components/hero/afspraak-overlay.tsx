@@ -67,7 +67,7 @@ export default function AfspraakOverlay({
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
             transition={{ type: "spring", damping: 14, stiffness: 260 }}
           >
-            <div className="relative px-8 pb-8 pt-8">
+            <div className="relative px-8 pb-6 pt-8">
               <CloseButton onClick={onClose} className="absolute top-4 right-4" />
 
               <h2 className="card-title text-zinc-900 text-center">Plan je zonsessie</h2>
@@ -93,7 +93,7 @@ export default function AfspraakOverlay({
                 href={WHATSAPP_BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-2 hover:bg-[#111111]`}
+                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-[#111111]`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
