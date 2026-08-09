@@ -140,17 +140,15 @@ function Review() {
           className="w-11 h-11 rounded-full object-cover shrink-0"
         />
         <div>
-          {/* leading-none, so the line box hugs the capitals. On the default
-              21px leading the dead space above the name has no counterpart
-              under the stars, and the whole block reads ~2px below the centre
-              of the photo even though the boxes line up exactly. The 5px puts
-              the gap between name and stars back where it was. */}
-          <p className="font-sans text-[14px] font-medium text-ink leading-none">{review.name}</p>
-          <div className="flex gap-0.5 mt-[5px]">
+          <div className="flex gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <StarIcon key={i} size={14} />
             ))}
           </div>
+          {/* leading-none, so the line box hugs the capitals. The 7px is the
+              5px that puts the gap between stars and name back where it was,
+              plus 2px asked for on top. */}
+          <p className="font-sans text-[14px] font-medium text-ink leading-none mt-[7px]">{review.name}</p>
         </div>
       </div>
       {/* text-muted, not ink/60: that blend measures 4.48:1 on the white card,
