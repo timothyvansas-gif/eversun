@@ -1,0 +1,11 @@
+# Template for local Cloudflare Workers preview (`npm run cf:preview`).
+# Kopieer naar `.dev.vars` en vul dezelfde waarden in als `.env.local` —
+# wrangler leest dit bestand apart, los van Next's eigen `.env.local`.
+# `.dev.vars` staat in .gitignore.
+#
+# Voor de live Worker gaan dezelfde variabelen via secrets, niet via dit
+# bestand: `npx wrangler secret put RESEND_API_KEY` (en zo voor de andere twee).
+
+RESEND_API_KEY=
+CONTACT_TO_EMAIL=timothyvansas@gmail.com
+CONTACT_FROM_EMAIL=onboarding@resend.dev
