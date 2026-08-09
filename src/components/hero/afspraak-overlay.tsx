@@ -75,7 +75,7 @@ export default function AfspraakOverlay({
                 Scan de QR-code om vanaf je eigen telefoon een afspraak te maken.
               </p>
 
-              <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-6">
+              <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-4">
                 <Image
                   src={qrCode}
                   alt="QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
@@ -96,7 +96,7 @@ export default function AfspraakOverlay({
                 Open WhatsApp
               </a>
 
-              <div className="mt-4 text-center">
+              <div className="mt-6 text-center">
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
