@@ -115,7 +115,7 @@ export default function FotoBottomSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Binnenkijken bij Ever Sun"
-              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 max-h-[96dvh] flex flex-col"
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 max-h-[95dvh] flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
