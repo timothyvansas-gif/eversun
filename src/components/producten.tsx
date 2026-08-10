@@ -94,6 +94,17 @@ function ProductCardItem({ product }: { product: Product }) {
         setIsPointerInside(false);
         setIsPointerDismissed(false);
       }}
+      onClick={(event) => {
+        if (!window.matchMedia(MOBILE_QUERY).matches) return;
+        setIsKeyboardAction(event.detail === 0);
+
+        if (isExpanded) {
+          closeDetails();
+        } else {
+          setIsPinnedOpen(true);
+          setIsPointerDismissed(false);
+        }
+      }}
       onKeyDown={(event) => {
         if (event.key === "Escape" && isExpanded) {
           event.preventDefault();
@@ -114,14 +125,14 @@ function ProductCardItem({ product }: { product: Product }) {
         }
       }}
     >
-      <div className="product-card-surface flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
+      <div className="product-card-surface flex flex-col bg-transparent rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
         {/* Verloop in plaats van een vlakke vulling: bovenin de diepste tint,
             naar beneden oplopend naar de warme paginakleur. Blijft binnen het
             zandpalet, zodat een productfoto met transparante achtergrond in een
             ruimte lijkt te staan in plaats van op een vlak. */}
         <div
-          className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative"
+          className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[464px] overflow-hidden relative"
           style={{ background: "linear-gradient(180deg, #EBDCC5 0%, #F2E9DA 55%, #F6F0E7 100%)" }}
         >
           <ProductImage src={product.image} alt={product.name} />
@@ -135,14 +146,29 @@ function ProductCardItem({ product }: { product: Product }) {
 
         {/* Text */}
         <div
-          className={`product-info-panel flex flex-col gap-[6px] ${product.hoverDescription ? "flex-1 md:flex-none md:h-[165px]" : "flex-1"}`}
-          style={{ padding: "16px 24px 24px" }}
+          className={`product-info-panel flex flex-col gap-[6px] rounded-[12px] px-6 pt-4 pb-6 md:pt-6 md:pb-8 ${product.hoverDescription ? "h-[209px] min-[360px]:h-[187px] md:h-[181px] flex-none" : "flex-1"}`}
         >
           <div className="product-moving-copy flex flex-col gap-[6px]">
             <div className="product-primary-copy flex flex-col gap-[6px]">
-              <h3 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
-                {product.name}
-              </h3>
+              <div className="flex items-center gap-3">
+                <h3 className="min-w-0 text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
+                  {product.name}
+                </h3>
+                <svg
+                  aria-hidden="true"
+                  className="ml-auto size-5 shrink-0 text-zinc-500 md:hidden"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="10" cy="10" r="7.5" />
+                  <path d="M10 9v5" />
+                  <path d="M10 6.25h.01" />
+                </svg>
+              </div>
               <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
                 {product.description}
               </p>
@@ -373,11 +399,11 @@ export default function Producten() {
               ))}
             </div>
 
-            {/* Overlay nav buttons — desktop only, vertically centered on the card image (h-480px) */}
+            {/* Overlay nav buttons — desktop only, vertically centered on the 464px card image. */}
             {canScroll && (
               <>
                 <div
-                  className={`hidden xl:block absolute left-0 top-[240px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute left-0 top-[232px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
@@ -387,7 +413,7 @@ export default function Producten() {
                   />
                 </div>
                 <div
-                  className={`hidden xl:block absolute right-0 top-[240px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute right-0 top-[232px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
