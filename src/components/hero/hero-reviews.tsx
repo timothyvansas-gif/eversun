@@ -321,7 +321,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
       </div>
 
       {/* Text Container */}
-      <div className="flex flex-col items-start gap-1.5">
+      <div className="flex flex-col items-start gap-2">
         <div className="flex" style={{ gap: 2 }}>
           {Array.from({ length: 5 }).map((_, s) => (
             <StarIcon key={s} size={14} />
