@@ -62,9 +62,16 @@ function ProductCardItem({ product }: { product: Product }) {
     <div className={`${CAROUSEL_CARD_CLASS} select-none flex flex-col`}>
       <div className="flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
-        <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
+        {/* Verloop in plaats van een vlakke vulling: bovenin de diepste tint,
+            naar beneden oplopend naar de warme paginakleur. Blijft binnen het
+            zandpalet, zodat een productfoto met transparante achtergrond in een
+            ruimte lijkt te staan in plaats van op een vlak. */}
+        <div
+          className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative"
+          style={{ background: "linear-gradient(180deg, #EBDCC5 0%, #F2E9DA 55%, #F6F0E7 100%)" }}
+        >
           <ProductImage src={product.image} alt={product.name} />
-          <div className="absolute bottom-6 left-6 md:bottom-6 md:left-6 flex gap-[4px]">
+          <div className="absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">Sachet {product.sachetPrice}</span>
             )}
@@ -104,7 +111,7 @@ function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
       {!loaded && (
         <div
           className="absolute inset-0 animate-pulse"
-          style={{ background: "linear-gradient(90deg, #F0EAE0 25%, #E8DDD0 50%, #F0EAE0 75%)", backgroundSize: "200% 100%" }}
+          style={{ background: "linear-gradient(90deg, #F2E9DA 25%, #E8DAC1 50%, #F2E9DA 75%)", backgroundSize: "200% 100%" }}
         />
       )}
       <Image
