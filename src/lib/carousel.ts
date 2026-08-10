@@ -27,10 +27,10 @@ export const CAROUSEL_BLEED_STYLE: CSSProperties = {
   scrollPaddingLeft: BLEED_GUTTER,
 };
 
-/** The scroll track: horizontal, snap on desktop, draggable, gap 16/24px. */
+/** The scroll track: free horizontal scrolling, draggable, gap 16/24px. */
 export const CAROUSEL_TRACK_CLASS =
-  "draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity pb-4";
+  "draggable-scroll flex overflow-x-auto gap-4 md:gap-6 pb-4";
 
-/** A card shell's width + snap sizing. Append flex/gap/etc. per section. */
+/** A card shell's responsive width. Append flex/gap/etc. per section. */
 export const CAROUSEL_CARD_CLASS =
-  "w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0 md:snap-start";
+  "w-[clamp(260px,85vw,310px)] md:w-[411px] shrink-0";

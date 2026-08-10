@@ -61,6 +61,10 @@ export default function SmoothScrollInit() {
       const lenis = new Lenis({
         smoothWheel: true,
         lerp: 0.12,
+        // Nested interactions such as the horizontal carousels deliberately
+        // cancel their wheel event. Do not reinterpret that same event as a
+        // vertical page scroll after it bubbles up to Lenis.
+        virtualScroll: ({ event }) => !event.defaultPrevented,
         // Lenis watches `content` with a ResizeObserver to keep its scroll
         // limit current, and defaults that to <html> — which this page pins to
         // the viewport (`h-full`), so its observed box never changes and the
