@@ -58,20 +58,74 @@ function PlanMomentButton() {
 type Product = (typeof products)[number];
 
 function ProductCardItem({ product }: { product: Product }) {
+  const [isPointerInside, setIsPointerInside] = useState(false);
+  const [isPinnedOpen, setIsPinnedOpen] = useState(false);
+  const [isPointerDismissed, setIsPointerDismissed] = useState(false);
+  const [isKeyboardAction, setIsKeyboardAction] = useState(false);
+  const isPointerExpanded = isPointerInside && !isPointerDismissed;
+  const isExpanded = isPinnedOpen || isPointerExpanded;
+  const descriptionId = `product-details-${product.id}`;
+
+  const closeDetails = () => {
+    setIsPinnedOpen(false);
+    setIsPointerDismissed(true);
+  };
+
   return (
-    <div className={`${CAROUSEL_CARD_CLASS} select-none flex flex-col`}>
-      <div className="flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
+    <div
+      className={`${CAROUSEL_CARD_CLASS} product-card select-none flex flex-col`}
+      data-has-hover-description={Boolean(product.hoverDescription)}
+      data-expanded={isExpanded}
+      data-pointer-expanded={isPointerExpanded}
+      data-keyboard-action={isKeyboardAction}
+      tabIndex={0}
+      role="button"
+      aria-expanded={isExpanded}
+      aria-controls={descriptionId}
+      aria-label={`${isExpanded ? "Verberg" : "Toon"} meer informatie over ${product.name}`}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(true);
+        setIsPointerDismissed(false);
+        setIsKeyboardAction(false);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(false);
+        setIsPointerDismissed(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && isExpanded) {
+          event.preventDefault();
+          setIsKeyboardAction(true);
+          closeDetails();
+          return;
+        }
+
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        setIsKeyboardAction(true);
+
+        if (isExpanded) {
+          closeDetails();
+        } else {
+          setIsPinnedOpen(true);
+          setIsPointerDismissed(false);
+        }
+      }}
+    >
+      <div className="product-card-surface flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
         {/* Verloop in plaats van een vlakke vulling: bovenin de diepste tint,
             naar beneden oplopend naar de warme paginakleur. Blijft binnen het
             zandpalet, zodat een productfoto met transparante achtergrond in een
             ruimte lijkt te staan in plaats van op een vlak. */}
         <div
-          className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative"
+          className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative"
           style={{ background: "linear-gradient(180deg, #EBDCC5 0%, #F2E9DA 55%, #F6F0E7 100%)" }}
         >
           <ProductImage src={product.image} alt={product.name} />
-          <div className="absolute bottom-6 left-6 flex gap-[4px]">
+          <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">Sachet {product.sachetPrice}</span>
             )}
@@ -80,14 +134,30 @@ function ProductCardItem({ product }: { product: Product }) {
         </div>
 
         {/* Text */}
-        <div className="flex flex-col gap-[6px] flex-1" style={{ padding: "16px 24px 24px" }}>
-          <h3 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
-            {product.name}
-          </h3>
-          <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
-            {product.description}
-          </p>
-          <div className="flex flex-wrap gap-[6px] mt-auto pt-3">
+        <div
+          className={`product-info-panel flex flex-col gap-[6px] ${product.hoverDescription ? "flex-1 md:flex-none md:h-[165px]" : "flex-1"}`}
+          style={{ padding: "16px 24px 24px" }}
+        >
+          <div className="product-moving-copy flex flex-col gap-[6px]">
+            <div className="product-primary-copy flex flex-col gap-[6px]">
+              <h3 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
+                {product.name}
+              </h3>
+              <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
+                {product.description}
+              </p>
+            </div>
+            {product.hoverDescription && (
+              <p
+                id={descriptionId}
+                aria-hidden={!isExpanded}
+                className="product-hover-description text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans"
+              >
+                {product.hoverDescription}
+              </p>
+            )}
+          </div>
+          <div className="product-category-labels flex flex-wrap gap-[6px] mt-auto pt-3">
             {product.labels.map((label) => (
               <span
                 key={label}
@@ -139,6 +209,7 @@ const products = [
     id: 9,
     name: "Coco Creamsicle",
     description: "Romige moisturizer met sinaasappelolie die je huid zacht houdt tussen sessies door.",
+    hoverDescription: "Bacuri- en monoiboter smelten in je huid, hyaluronzuur houdt het vocht vast. Maracujaolie en cafeïne-extract maken 'm fijn voor een huid die strak aanvoelt na het zonnen.",
     image: imgCocoCreamsicle,
     labels: ["Moisturizer", "Vitamine C"],
     containerLabel: "Fles",
@@ -148,6 +219,7 @@ const products = [
     id: 11,
     name: "Enchanted Emerald",
     description: "Frambozenextract en cactuswater voor dagelijkse hydratatie en een frisse glow.",
+    hoverDescription: "Vegan collageen en probiotica werken aan je huidbarrière, elektrolyten uit cactuswater hydrateren 24 uur. Zonder parabenen en sulfaten, dus ook fijn bij een gevoelige huid.",
     image: imgEnchantedEmerald,
     labels: ["Dagverzorging", "Antioxidanten"],
     containerLabel: "Fles",
@@ -157,6 +229,7 @@ const products = [
     id: 6,
     name: "Him Surf",
     description: "Beschermt je tatoeages en trekt snel in. Versterkt je kleur zonder bronzer.",
+    hoverDescription: "Kokoswater en duindoornbes vullen je huid met elektrolyten, kleurcorrectors houden rode tinten weg. Lichte formule die niet vet aanvoelt en de geur van het zonnen neutraliseert.",
     image: imgHimSurf,
     labels: ["Voor hem", "Beschermt tattoos"],
     sachetPrice: "4,99",
@@ -167,6 +240,7 @@ const products = [
     id: 4,
     name: "Bronze Butter",
     description: "Zes boters en vegan collageen. Je huid blijft zacht, de kleur komt van jezelf.",
+    hoverDescription: "Monoi, cupuaçu, mango, cacao, shea en wortel: een luchtige boter voor wie snel een droge, trekkende huid heeft. Matrixyl en copperpeptiden helpen je huid stevig te houden.",
     image: imgBronzeButter,
     labels: ["Zonder bronzer", "Hydraterend"],
     sachetPrice: "4,99",
@@ -174,9 +248,21 @@ const products = [
     containerPrice: "44,99",
   },
   {
+    id: 2,
+    name: "White 2 Bronze Coconut",
+    description: "Directe bronzer op kokoswater. Anti oranje technologie houdt de kleur natuurlijk.",
+    hoverDescription: "Blue Tansy houdt oranje tinten weg, kokosolie en cactuswater verzachten ondertussen. Je ziet meteen kleur en de DHA werkt de uren erna verder door.",
+    image: imgWhiteBronzeCoconut,
+    labels: ["Directe kleur", "Anti oranje"],
+    sachetPrice: "4,99",
+    containerLabel: "Fles",
+    containerPrice: "49,99",
+  },
+  {
     id: 10,
     name: "Barefoot Beachwood",
     description: "Aftersun met cacayolie en kokosmelk. Kalmeert je huid na het zonnen.",
+    hoverDescription: "Wilgenbast en komkommer halen de warmte uit je huid, aloë en avocado versterken de barrière. Trekt snel in en houdt je kleur een dag lang op z'n plek.",
     image: imgBarefootBeachwood,
     labels: ["Aftersun", "Hele dag hydratatie"],
     containerLabel: "Fles",
@@ -186,6 +272,7 @@ const products = [
     id: 3,
     name: "Black Crown",
     description: "Zware bronzer met DHA. Direct resultaat dat de dagen erna nog dieper wordt.",
+    hoverDescription: "Naast de bronzers zitten er verstevigende peptiden in en stoffen die je eigen pigmentaanmaak op gang helpen. De kleur zet door tot uren na je sessie.",
     image: imgBlackCrown,
     labels: ["Voor gevorderden", "Zeer donker"],
     sachetPrice: "8,50",
@@ -196,6 +283,7 @@ const products = [
     id: 1,
     name: "Dare to be Dark",
     description: "Milde formule met komkommer en groene klei. Fijn als je huid snel reageert.",
+    hoverDescription: "Geen bronzer, geen parfum, geen olie: alleen activatoren die je eigen kleur aanzetten. Groene thee en kleurcorrectors halen rode ondertonen eruit.",
     image: imgDareToBeDark,
     labels: ["Gevoelige huid", "Parfumvrij"],
     sachetPrice: "4,99",
@@ -206,6 +294,7 @@ const products = [
     id: 5,
     name: "Him Jet",
     description: "Truffelextract en zwarte kombucha. Diep resultaat vanaf de eerste sessie.",
+    hoverDescription: "Drievoudige bronzer met een auto-darkening complex, terwijl de AHA's uit kombucha je huid verfijnen. Trekt niet vet weg en ruikt naar amber en sandelhout.",
     image: imgHimJet,
     labels: ["Voor hem", "Diepe bronzer"],
     sachetPrice: "5,49",
@@ -213,19 +302,10 @@ const products = [
     containerPrice: "34,99",
   },
   {
-    id: 2,
-    name: "White 2 Bronze Coconut",
-    description: "Directe bronzer op kokoswater. Anti oranje technologie houdt de kleur natuurlijk.",
-    image: imgWhiteBronzeCoconut,
-    labels: ["Directe kleur", "Anti oranje"],
-    sachetPrice: "4,99",
-    containerLabel: "Fles",
-    containerPrice: "49,99",
-  },
-  {
     id: 7,
     name: "Sun Honey",
     description: "Honing en agave binden vocht, ceramiden herstellen je huidbarrière.",
+    hoverDescription: "Niacinamide en peptiden maken je huid ontvankelijker, fijn als je kleur al een tijdje stilstaat. Diamantpoeder zorgt voor die lichtreflecterende glans.",
     image: imgSunHoney,
     labels: ["Zonder bronzer", "Gouden glans"],
     sachetPrice: "8,49",
@@ -236,6 +316,7 @@ const products = [
     id: 8,
     name: "Vault",
     description: "Ingekapselde DHA komt langzaam vrij, zo blijft je kleur dagen egaal.",
+    hoverDescription: "Color lock-agenten zetten je kleur vast als een fixeerspray, de airbrush-blend maakt de overgangen egaal. Vegan collageen en copperpeptiden verzorgen je huid ondertussen.",
     image: imgVault,
     labels: ["Kleurbehoud", "Anti oranje"],
     sachetPrice: "12,99",

@@ -29,7 +29,7 @@ export const CAROUSEL_BLEED_STYLE: CSSProperties = {
 
 /** The scroll track: horizontal, snap on desktop, draggable, gap 16/24px. */
 export const CAROUSEL_TRACK_CLASS =
-  "draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity md:cursor-grab pb-4";
+  "draggable-scroll flex overflow-x-auto gap-4 md:gap-6 md:snap-x md:snap-proximity pb-4";
 
 /** A card shell's width + snap sizing. Append flex/gap/etc. per section. */
 export const CAROUSEL_CARD_CLASS =
