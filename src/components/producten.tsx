@@ -118,8 +118,15 @@ function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
         src={src}
         alt={alt}
         fill
-        className={`object-cover object-center transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-        sizes="(max-width: 768px) 220px, 280px"
+        // Op mobiel is de kaart smaller maar het beeld even hoog, waardoor het
+        // product er kleiner uitziet dan op desktop. Eén set bestanden voor
+        // beide, dus de correctie zit hier. Vanaf de onderrand schalen, niet
+        // vanuit het midden: dan groeit de fles omhoog en blijft de strook voor
+        // de prijslabels vrij.
+        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[4%] md:scale-100 md:translate-y-0 transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        // De kaart is 310 px breed op mobiel en 260 op desktop; met de schaal
+        // erbij vraagt mobiel dus het grootste beeld van de twee.
+        sizes="(max-width: 768px) 340px, 280px"
         draggable={false}
         onLoad={() => setLoaded(true)}
       />
