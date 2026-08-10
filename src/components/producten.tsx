@@ -253,7 +253,7 @@ const products = [
   },
   {
     id: 6,
-    name: "Him Surf",
+    name: "H.I.M. Surf",
     description: "Beschermt je tatoeages en trekt snel in. Versterkt je kleur zonder bronzer.",
     hoverDescription: "Kokoswater en duindoornbes vullen je huid met elektrolyten, kleurcorrectors houden rode tinten weg. Lichte formule die niet vet aanvoelt en de geur van het zonnen neutraliseert.",
     image: imgHimSurf,
@@ -318,7 +318,7 @@ const products = [
   },
   {
     id: 5,
-    name: "Him Jet",
+    name: "H.I.M. Jet",
     description: "Truffelextract en zwarte kombucha. Diep resultaat vanaf de eerste sessie.",
     hoverDescription: "Drievoudige bronzer met een auto-darkening complex, terwijl de AHA's uit kombucha je huid verfijnen. Trekt niet vet weg en ruikt naar amber en sandelhout.",
     image: imgHimJet,
