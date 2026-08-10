@@ -219,7 +219,7 @@ function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
         // beide, dus de correctie zit hier. Vanaf de onderrand schalen, niet
         // vanuit het midden: dan groeit de fles omhoog en blijft de strook voor
         // de prijslabels vrij.
-        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[4%] md:scale-100 md:translate-y-0 transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[4%] md:scale-100 md:translate-y-[8px] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
         // De kaart is 310 px breed op mobiel en 260 op desktop; met de schaal
         // erbij vraagt mobiel dus het grootste beeld van de twee.
         sizes="(max-width: 768px) 340px, 280px"
