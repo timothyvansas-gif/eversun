@@ -325,6 +325,9 @@ const products = [
     description: "Zware bronzer met DHA. Direct resultaat dat de dagen erna nog dieper wordt.",
     hoverDescription: "Naast de bronzers zitten er verstevigende peptiden in en stoffen die je eigen pigmentaanmaak op gang helpen. De kleur zet door tot uren na je sessie.",
     image: imgBlackCrown,
+    // Slanke, hoge fles: op de gedeelde bodemlijn oogt hij hoger in de kaart
+    // dan de bredere flacons ernaast. Iets omlaag om dat te compenseren.
+    imageNudgeY: "10px",
     labels: ["Voor gevorderden", "Zeer donker"],
     sachetPrice: "8,50",
     containerLabel: "Fles",
