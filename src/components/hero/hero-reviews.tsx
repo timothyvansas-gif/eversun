@@ -321,17 +321,10 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
       </div>
 
       {/* Text Container */}
-      <div className="flex flex-col items-start gap-2">
-        <div className="flex" style={{ gap: 2 }}>
-          {Array.from({ length: 5 }).map((_, s) => (
-            <StarIcon key={s} size={14} />
-          ))}
-        </div>
-        <span className="font-sans font-normal text-[15px] leading-none whitespace-nowrap text-hero-ink/85">
-          <span className="font-normal">{REVIEW_SUMMARY.rating}</span>/{REVIEW_SUMMARY.outOf}{" "}
-          <span className="opacity-50">-</span> {REVIEW_SUMMARY.count} reviews
-        </span>
-      </div>
+      <span className="font-sans font-normal text-[15px] leading-none whitespace-nowrap text-hero-ink/85">
+        <span className="font-normal">{REVIEW_SUMMARY.rating}</span>/{REVIEW_SUMMARY.outOf}{" "}
+        <span className="opacity-50">-</span> {REVIEW_SUMMARY.count} reviews
+      </span>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
+import { switchSound } from "@/lib/sound";
 
 // Play at native speed. Above 2x Safari stops presenting anything but
 // keyframes — the clip used to run at 4x and Safari painted a single frame,
@@ -82,9 +83,20 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card || window.matchMedia(MOBILE_QUERY).matches) return;
+    if (!card) return;
 
-    const prepareVideo = () => {
+    const isMobile = window.matchMedia(MOBILE_QUERY).matches;
+
+    const prepareCard = () => {
+      // Touch has no hover to prime on, so the sound is fetched on approach for
+      // every viewport. It is a fraction of the video's weight, and a click
+      // that has to wait for the file lands after the gesture that asked for it.
+      switchSound.preload();
+
+      // The video stays desktop-only on approach: four clips at 4.4–4.9 MB is
+      // not something to pull down over mobile data for an optional control.
+      if (isMobile) return;
+
       const video = videoRef.current;
       if (!video) return;
 
@@ -93,7 +105,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     };
 
     if (!("IntersectionObserver" in window)) {
-      const fallbackTimer = globalThis.setTimeout(prepareVideo, 0);
+      const fallbackTimer = globalThis.setTimeout(prepareCard, 0);
       return () => globalThis.clearTimeout(fallbackTimer);
     }
 
@@ -101,7 +113,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       ([entry]) => {
         if (!entry.isIntersecting) return;
 
-        prepareVideo();
+        prepareCard();
         observer.disconnect();
       },
       { rootMargin: "600px 0px" },
@@ -306,6 +318,11 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   };
 
   const handleVideoToggle = () => {
+    // Straight away, not after the clip starts: the click is the gesture the
+    // browser grants playback on, and the toggle can wait several hundred ms
+    // for video to buffer. A switch that clicks late reads as a lag.
+    switchSound.play();
+
     const nextActiveState = !isVideoActiveRef.current;
     isVideoActiveRef.current = nextActiveState;
     setIsVideoActive(nextActiveState);

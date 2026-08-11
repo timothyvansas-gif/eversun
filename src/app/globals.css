@@ -106,6 +106,148 @@ body {
     @apply text-[15px] font-normal leading-6 tracking-[-0.01em];
   }
 
+  .product-hover-description {
+    display: none;
+  }
+
+  .product-card:focus-visible {
+    outline: 2px solid var(--color-ink-strong);
+    outline-offset: 3px;
+    border-radius: 12px;
+  }
+
+  .product-card {
+    --product-reveal-distance: 142px;
+    --product-detail-offset: 105px;
+  }
+
+  @media (max-width: 359px) {
+    .product-card {
+      --product-detail-offset: 127px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .product-card {
+      --product-reveal-distance: 120px;
+      --product-detail-offset: 83px;
+    }
+  }
+
+  .product-card[data-expanded="true"] .product-hover-description {
+    display: block;
+  }
+
+  /* Product detail reveal. The information area stays anchored to the bottom.
+     A same-colour extension slides from behind its top edge, so it reads as one
+     continuous white surface instead of two stacked panels. */
+    .product-card[data-has-hover-description="true"] .product-info-panel {
+      position: relative;
+      z-index: 10;
+      background: #ffffff;
+    }
+
+    .product-card[data-has-hover-description="true"] .product-info-panel::before {
+      position: absolute;
+      z-index: -1;
+      top: calc(var(--product-reveal-distance) * -1);
+      right: 0;
+      left: 0;
+      height: var(--product-reveal-distance);
+      background: #ffffff;
+      border-radius: 12px 12px 0 0;
+      content: "";
+      transform: translateY(var(--product-reveal-distance));
+      transition: transform 360ms cubic-bezier(0.33, 1, 0.68, 1);
+      will-change: transform;
+    }
+
+    /* The hover copy is part of the same moving content stack as the primary
+       copy. In the resting state it sits behind the fixed white footer below;
+       no opacity, blur or character-level clipping is involved. */
+    .product-card[data-has-hover-description="true"] .product-moving-copy {
+      position: relative;
+      z-index: 1;
+      transition: transform 360ms cubic-bezier(0.33, 1, 0.68, 1);
+      will-change: transform;
+    }
+
+    .product-card[data-has-hover-description="true"] .product-info-panel::after {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 71px;
+      background: #ffffff;
+      content: "";
+    }
+
+    .product-card[data-has-hover-description="true"] .product-category-labels {
+      position: absolute;
+      z-index: 3;
+      right: 24px;
+      bottom: 24px;
+      left: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .product-card[data-has-hover-description="true"] .product-info-panel::after {
+        height: 79px;
+      }
+
+      .product-card[data-has-hover-description="true"] .product-category-labels {
+        bottom: 32px;
+      }
+
+    }
+
+    .product-card[data-has-hover-description="true"] .product-price-labels {
+      z-index: 20;
+      transition: transform 360ms cubic-bezier(0.33, 1, 0.68, 1);
+      will-change: transform;
+    }
+
+    .product-card[data-has-hover-description="true"] .product-hover-description {
+      position: absolute;
+      top: var(--product-detail-offset);
+      right: 0;
+      left: 0;
+      display: block;
+      pointer-events: none;
+    }
+
+    .product-card[data-has-hover-description="true"][data-expanded="true"] .product-info-panel::before {
+      transform: translateY(0);
+      transition-duration: 440ms;
+    }
+
+    .product-card[data-has-hover-description="true"][data-expanded="true"] .product-moving-copy,
+    .product-card[data-has-hover-description="true"][data-expanded="true"] .product-price-labels {
+      transform: translateY(calc(var(--product-reveal-distance) * -1));
+      transition-duration: 440ms;
+    }
+
+    .product-card[data-pointer-expanded="true"] .product-info-panel::before,
+    .product-card[data-pointer-expanded="true"] .product-moving-copy,
+    .product-card[data-pointer-expanded="true"] .product-price-labels {
+      transition-delay: 100ms;
+    }
+
+    .product-card[data-keyboard-action="true"] .product-info-panel::before,
+    .product-card[data-keyboard-action="true"] .product-moving-copy,
+    .product-card[data-keyboard-action="true"] .product-price-labels {
+      transition: none;
+    }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card[data-has-hover-description="true"] .product-info-panel::before,
+    .product-card[data-has-hover-description="true"] .product-moving-copy,
+    .product-card[data-has-hover-description="true"] .product-price-labels {
+      transition: none;
+    }
+  }
+
   /* Hydration-safe sticky positioning for cards */
   .sticky-card {
     @media (max-width: 1023px) {
@@ -210,7 +352,4 @@ body {
     display: none;
   }
 
-  .draggable-scroll.active-drag {
-    cursor: grabbing !important;
-  }
 }

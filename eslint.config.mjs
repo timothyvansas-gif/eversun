@@ -18,6 +18,9 @@ const eslintConfig = defineConfig([
     // which any real finding in `src` was invisible.
     ".open-next/**",
     ".wrangler/**",
+    // Losse Node-scripts voor beeldbewerking, buiten de build om en niet in de
+    // repo. Ze draaien op CommonJS, wat de TypeScript-regels hier afkeuren.
+    ".claude/**",
   ]),
 ]);
 

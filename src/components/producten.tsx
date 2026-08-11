@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from "next/image";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
@@ -23,6 +23,24 @@ import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.we
 
 const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
 const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
+
+// Cyclorama: de naadloze doorloop van achterwand naar vloer uit een productstudio.
+// Vier lagen, van voor naar achter. De horizon zit rond 70%, net onder de voet
+// van de fles, zodat het product op de vloer staat in plaats van ervoor te zweven.
+const PRODUCT_BACKDROP = [
+  // 1. Contactschaduw: smalle, brede ellips onder de fles. Zonder deze laag
+  //    blijft het product los van de vloer hangen.
+  "radial-gradient(ellipse 40% 6% at 50% 74%, rgba(122, 96, 61, 0.16) 0%, rgba(122, 96, 61, 0) 72%)",
+  // 2. Lichtpool van de key light, met zijn hart op de horizon. Dit is wat de
+  //    knik van wand naar vloer leesbaar maakt zonder er een lijn te trekken.
+  "radial-gradient(ellipse 72% 46% at 50% 66%, rgba(255, 250, 240, 0.72) 0%, rgba(255, 250, 240, 0) 76%)",
+  // 3. Vloervlak: vanaf de horizon loopt het naar de voorgrond weer iets terug.
+  //    Licht dat wegvalt richting de kijker; zonder dit leest de onderhelft als
+  //    een tweede wand.
+  "linear-gradient(180deg, rgba(190, 162, 118, 0) 68%, rgba(190, 162, 118, 0.06) 88%, rgba(190, 162, 118, 0.10) 100%)",
+  // 4. Achterwand, de diepste tint bovenin en oplopend naar de horizon.
+  "linear-gradient(180deg, #EEE1CD 0%, #F2E8D8 42%, #F6F0E6 70%, #F4ECE0 100%)",
+].join(", ");
 
 function PlanMomentButton() {
   const [qrOpen, setQrOpen] = useState(false);
@@ -58,13 +76,85 @@ function PlanMomentButton() {
 type Product = (typeof products)[number];
 
 function ProductCardItem({ product }: { product: Product }) {
+  const [isPointerInside, setIsPointerInside] = useState(false);
+  const [isPinnedOpen, setIsPinnedOpen] = useState(false);
+  const [isPointerDismissed, setIsPointerDismissed] = useState(false);
+  const [isKeyboardAction, setIsKeyboardAction] = useState(false);
+  const isPointerExpanded = isPointerInside && !isPointerDismissed;
+  const isExpanded = isPinnedOpen || isPointerExpanded;
+  const descriptionId = `product-details-${product.id}`;
+
+  const closeDetails = () => {
+    setIsPinnedOpen(false);
+    setIsPointerDismissed(true);
+  };
+
   return (
-    <div className={`${CAROUSEL_CARD_CLASS} select-none flex flex-col`}>
-      <div className="flex flex-col bg-white rounded-[12px] overflow-hidden flex-1">
+    <div
+      className={`${CAROUSEL_CARD_CLASS} product-card select-none flex flex-col`}
+      data-has-hover-description={Boolean(product.hoverDescription)}
+      data-expanded={isExpanded}
+      data-pointer-expanded={isPointerExpanded}
+      data-keyboard-action={isKeyboardAction}
+      tabIndex={0}
+      role="button"
+      aria-expanded={isExpanded}
+      aria-controls={descriptionId}
+      aria-label={`${isExpanded ? "Verberg" : "Toon"} meer informatie over ${product.name}`}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(true);
+        setIsPointerDismissed(false);
+        setIsKeyboardAction(false);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(false);
+        setIsPointerDismissed(false);
+      }}
+      onClick={(event) => {
+        if (!window.matchMedia(MOBILE_QUERY).matches) return;
+        setIsKeyboardAction(event.detail === 0);
+
+        if (isExpanded) {
+          closeDetails();
+        } else {
+          setIsPinnedOpen(true);
+          setIsPointerDismissed(false);
+        }
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && isExpanded) {
+          event.preventDefault();
+          setIsKeyboardAction(true);
+          closeDetails();
+          return;
+        }
+
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        setIsKeyboardAction(true);
+
+        if (isExpanded) {
+          closeDetails();
+        } else {
+          setIsPinnedOpen(true);
+          setIsPointerDismissed(false);
+        }
+      }}
+    >
+      <div className="product-card-surface flex flex-col bg-transparent rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
-        <div className="w-full aspect-[4/5] md:aspect-auto md:h-[480px] overflow-hidden relative bg-[#F0EAE0]">
-          <ProductImage src={product.image} alt={product.name} />
-          <div className="absolute bottom-6 left-6 md:bottom-6 md:left-6 flex gap-[4px]">
+        {/* Studio-backdrop in plaats van een vlakke vulling: wand die in een
+            vloertje overloopt. Blijft binnen het zandpalet, zodat een productfoto
+            met transparante achtergrond in een ruimte lijkt te staan in plaats
+            van op een vlak. Opbouw staat bij PRODUCT_BACKDROP. */}
+        <div
+          className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[464px] overflow-hidden relative"
+          style={{ background: PRODUCT_BACKDROP }}
+        >
+          <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
+          <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">Sachet {product.sachetPrice}</span>
             )}
@@ -73,14 +163,45 @@ function ProductCardItem({ product }: { product: Product }) {
         </div>
 
         {/* Text */}
-        <div className="flex flex-col gap-[6px] flex-1" style={{ padding: "16px 24px 24px" }}>
-          <h3 className="text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
-            {product.name}
-          </h3>
-          <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
-            {product.description}
-          </p>
-          <div className="flex flex-wrap gap-[6px] mt-auto pt-3">
+        <div
+          className={`product-info-panel flex flex-col gap-[6px] rounded-[12px] px-6 pt-4 pb-6 md:pt-6 md:pb-8 ${product.hoverDescription ? "h-[209px] min-[360px]:h-[187px] md:h-[181px] flex-none" : "flex-1"}`}
+        >
+          <div className="product-moving-copy flex flex-col gap-[6px]">
+            <div className="product-primary-copy flex flex-col gap-[6px]">
+              <div className="flex items-center gap-3">
+                <h3 className="min-w-0 text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
+                  {product.name}
+                </h3>
+                <svg
+                  aria-hidden="true"
+                  className="ml-auto size-5 shrink-0 text-zinc-500 md:hidden"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="10" cy="10" r="7.5" />
+                  <path d="M10 9v5" />
+                  <path d="M10 6.25h.01" />
+                </svg>
+              </div>
+              <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
+                {product.description}
+              </p>
+            </div>
+            {product.hoverDescription && (
+              <p
+                id={descriptionId}
+                aria-hidden={!isExpanded}
+                className="product-hover-description text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans"
+              >
+                {product.hoverDescription}
+              </p>
+            )}
+          </div>
+          <div className="product-category-labels flex flex-wrap gap-[6px] mt-auto pt-3">
             {product.labels.map((label) => (
               <span
                 key={label}
@@ -97,22 +218,31 @@ function ProductCardItem({ product }: { product: Product }) {
   );
 }
 
-function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
+function ProductImage({ src, alt, nudgeY }: { src: StaticImageData; alt: string; nudgeY?: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
     <>
       {!loaded && (
         <div
           className="absolute inset-0 animate-pulse"
-          style={{ background: "linear-gradient(90deg, #F0EAE0 25%, #E8DDD0 50%, #F0EAE0 75%)", backgroundSize: "200% 100%" }}
+          style={{ background: "linear-gradient(90deg, #F2E9DA 25%, #E8DAC1 50%, #F2E9DA 75%)", backgroundSize: "200% 100%" }}
         />
       )}
       <Image
         src={src}
         alt={alt}
         fill
-        className={`object-cover object-center transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-        sizes="(max-width: 768px) 220px, 280px"
+        // Op mobiel is de kaart smaller maar het beeld even hoog, waardoor het
+        // product er kleiner uitziet dan op desktop. Eén set bestanden voor
+        // beide, dus de correctie zit hier. Vanaf de onderrand schalen, niet
+        // vanuit het midden: dan groeit de fles omhoog en blijft de strook voor
+        // de prijslabels vrij. --nudge-y corrigeert per product de bodemlijn:
+        // de fotografen kadreerden niet elke fles even hoog in het frame.
+        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[calc(4%_+_var(--nudge-y))] md:scale-100 md:translate-y-[calc(8px_+_var(--nudge-y))] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        style={{ "--nudge-y": nudgeY ?? "0px" } as CSSProperties}
+        // De kaart is 310 px breed op mobiel en 260 op desktop; met de schaal
+        // erbij vraagt mobiel dus het grootste beeld van de twee.
+        sizes="(max-width: 768px) 340px, 280px"
         draggable={false}
         onLoad={() => setLoaded(true)}
       />
@@ -125,55 +255,43 @@ const products = [
     id: 9,
     name: "Coco Creamsicle",
     description: "Romige moisturizer met sinaasappelolie die je huid zacht houdt tussen sessies door.",
+    hoverDescription: "Bacuri- en monoiboter smelten in je huid, hyaluronzuur houdt het vocht vast. Maracujaolie en cafeïne-extract maken 'm fijn voor een huid die strak aanvoelt na het zonnen.",
     image: imgCocoCreamsicle,
     labels: ["Moisturizer", "Vitamine C"],
     containerLabel: "Fles",
     containerPrice: "24,99",
   },
   {
-    id: 1,
-    name: "Dare to be Dark",
-    description: "Milde formule met komkommer en groene klei. Fijn als je huid snel reageert.",
-    image: imgDareToBeDark,
-    labels: ["Gevoelige huid", "Parfumvrij"],
+    id: 11,
+    name: "Enchanted Emerald",
+    description: "Frambozenextract en cactuswater voor dagelijkse hydratatie en een frisse glow.",
+    hoverDescription: "Vegan collageen en probiotica werken aan je huidbarrière, elektrolyten uit cactuswater hydrateren 24 uur. Zonder parabenen en sulfaten, dus ook fijn bij een gevoelige huid.",
+    image: imgEnchantedEmerald,
+    // Fles staat hoger in het frame dan de rest; omlaag zodat de voet op
+    // dezelfde bodemlijn valt.
+    imageNudgeY: "10px",
+    labels: ["Dagverzorging", "Antioxidanten"],
+    containerLabel: "Fles",
+    containerPrice: "24,99",
+  },
+  {
+    id: 6,
+    name: "H.I.M. Surf",
+    description: "Beschermt je tatoeages en trekt snel in. Versterkt je kleur zonder bronzer.",
+    hoverDescription: "Kokoswater en duindoornbes vullen je huid met elektrolyten, kleurcorrectors houden rode tinten weg. Lichte formule die niet vet aanvoelt en de geur van het zonnen neutraliseert.",
+    image: imgHimSurf,
+    // Tube is lager gekadreerd dan de rest; omhoog naar dezelfde bodemlijn.
+    imageNudgeY: "-10px",
+    labels: ["Voor hem", "Beschermt tattoos"],
     sachetPrice: "4,99",
-    containerLabel: "Fles",
-    containerPrice: "29,99",
-  },
-  {
-    id: 3,
-    name: "Black Crown",
-    description: "Zware bronzer met DHA. Direct resultaat dat de dagen erna nog dieper wordt.",
-    image: imgBlackCrown,
-    labels: ["Voor gevorderden", "Zeer donker"],
-    sachetPrice: "8,50",
-    containerLabel: "Fles",
-    containerPrice: "84,99",
-  },
-  {
-    id: 5,
-    name: "Him Jet",
-    description: "Truffelextract en zwarte kombucha. Diep resultaat vanaf de eerste sessie.",
-    image: imgHimJet,
-    labels: ["Voor hem", "Diepe bronzer"],
-    sachetPrice: "5,49",
     containerLabel: "Tube",
-    containerPrice: "34,99",
-  },
-  {
-    id: 2,
-    name: "White 2 Bronze Coconut",
-    description: "Directe bronzer op kokoswater. Anti oranje technologie houdt de kleur natuurlijk.",
-    image: imgWhiteBronzeCoconut,
-    labels: ["Directe kleur", "Anti oranje"],
-    sachetPrice: "4,99",
-    containerLabel: "Fles",
-    containerPrice: "49,99",
+    containerPrice: "29,99",
   },
   {
     id: 4,
     name: "Bronze Butter",
     description: "Zes boters en vegan collageen. Je huid blijft zacht, de kleur komt van jezelf.",
+    hoverDescription: "Monoi, cupuaçu, mango, cacao, shea en wortel: een luchtige boter voor wie snel een droge, trekkende huid heeft. Matrixyl en copperpeptiden helpen je huid stevig te houden.",
     image: imgBronzeButter,
     labels: ["Zonder bronzer", "Hydraterend"],
     sachetPrice: "4,99",
@@ -181,19 +299,64 @@ const products = [
     containerPrice: "44,99",
   },
   {
-    id: 6,
-    name: "Him Surf",
-    description: "Beschermt je tatoeages en trekt snel in. Versterkt je kleur zonder bronzer.",
-    image: imgHimSurf,
-    labels: ["Voor hem", "Beschermt tattoos"],
+    id: 2,
+    name: "White 2 Bronze Coconut",
+    description: "Directe bronzer op kokoswater. Anti oranje technologie houdt de kleur natuurlijk.",
+    hoverDescription: "Blue Tansy houdt oranje tinten weg, kokosolie en cactuswater verzachten ondertussen. Je ziet meteen kleur en de DHA werkt de uren erna verder door.",
+    image: imgWhiteBronzeCoconut,
+    labels: ["Directe kleur", "Anti oranje"],
     sachetPrice: "4,99",
-    containerLabel: "Tube",
+    containerLabel: "Fles",
+    containerPrice: "49,99",
+  },
+  {
+    id: 10,
+    name: "Barefoot Beachwood",
+    description: "Aftersun met cacayolie en kokosmelk. Kalmeert je huid na het zonnen.",
+    hoverDescription: "Wilgenbast en komkommer halen de warmte uit je huid, aloë en avocado versterken de barrière. Trekt snel in en houdt je kleur een dag lang op z'n plek.",
+    image: imgBarefootBeachwood,
+    labels: ["Aftersun", "Hele dag hydratatie"],
+    containerLabel: "Fles",
+    containerPrice: "24,99",
+  },
+  {
+    id: 3,
+    name: "Black Crown",
+    description: "Zware bronzer met DHA. Direct resultaat dat de dagen erna nog dieper wordt.",
+    hoverDescription: "Naast de bronzers zitten er verstevigende peptiden in en stoffen die je eigen pigmentaanmaak op gang helpen. De kleur zet door tot uren na je sessie.",
+    image: imgBlackCrown,
+    labels: ["Voor gevorderden", "Zeer donker"],
+    sachetPrice: "8,50",
+    containerLabel: "Fles",
+    containerPrice: "84,99",
+  },
+  {
+    id: 1,
+    name: "Dare to be Dark",
+    description: "Milde formule met komkommer en groene klei. Fijn als je huid snel reageert.",
+    hoverDescription: "Geen bronzer, geen parfum, geen olie: alleen activatoren die je eigen kleur aanzetten. Groene thee en kleurcorrectors halen rode ondertonen eruit.",
+    image: imgDareToBeDark,
+    labels: ["Gevoelige huid", "Parfumvrij"],
+    sachetPrice: "4,99",
+    containerLabel: "Fles",
     containerPrice: "29,99",
+  },
+  {
+    id: 5,
+    name: "H.I.M. Jet",
+    description: "Truffelextract en zwarte kombucha. Diep resultaat vanaf de eerste sessie.",
+    hoverDescription: "Drievoudige bronzer met een auto-darkening complex, terwijl de AHA's uit kombucha je huid verfijnen. Trekt niet vet weg en ruikt naar amber en sandelhout.",
+    image: imgHimJet,
+    labels: ["Voor hem", "Diepe bronzer"],
+    sachetPrice: "5,49",
+    containerLabel: "Tube",
+    containerPrice: "34,99",
   },
   {
     id: 7,
     name: "Sun Honey",
     description: "Honing en agave binden vocht, ceramiden herstellen je huidbarrière.",
+    hoverDescription: "Niacinamide en peptiden maken je huid ontvankelijker, fijn als je kleur al een tijdje stilstaat. Diamantpoeder zorgt voor die lichtreflecterende glans.",
     image: imgSunHoney,
     labels: ["Zonder bronzer", "Gouden glans"],
     sachetPrice: "8,49",
@@ -204,29 +367,12 @@ const products = [
     id: 8,
     name: "Vault",
     description: "Ingekapselde DHA komt langzaam vrij, zo blijft je kleur dagen egaal.",
+    hoverDescription: "Color lock-agenten zetten je kleur vast als een fixeerspray, de airbrush-blend maakt de overgangen egaal. Vegan collageen en copperpeptiden verzorgen je huid ondertussen.",
     image: imgVault,
     labels: ["Kleurbehoud", "Anti oranje"],
     sachetPrice: "12,99",
     containerLabel: "Fles",
     containerPrice: "134,99",
-  },
-  {
-    id: 10,
-    name: "Barefoot Beachwood",
-    description: "Aftersun met cacayolie en kokosmelk. Kalmeert je huid na het zonnen.",
-    image: imgBarefootBeachwood,
-    labels: ["Aftersun", "Hele dag hydratatie"],
-    containerLabel: "Fles",
-    containerPrice: "24,99",
-  },
-  {
-    id: 11,
-    name: "Enchanted Emerald",
-    description: "Frambozenextract en cactuswater voor dagelijkse hydratatie en een frisse glow.",
-    image: imgEnchantedEmerald,
-    labels: ["Dagverzorging", "Antioxidanten"],
-    containerLabel: "Fles",
-    containerPrice: "24,99",
   },
 ];
 
@@ -278,11 +424,11 @@ export default function Producten() {
               ))}
             </div>
 
-            {/* Overlay nav buttons — desktop only, vertically centered on the card image (h-480px) */}
+            {/* Overlay nav buttons — desktop only, vertically centered on the 464px card image. */}
             {canScroll && (
               <>
                 <div
-                  className={`hidden xl:block absolute left-0 top-[240px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute left-0 top-[232px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
@@ -292,7 +438,7 @@ export default function Producten() {
                   />
                 </div>
                 <div
-                  className={`hidden xl:block absolute right-0 top-[240px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute right-0 top-[232px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
