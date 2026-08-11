@@ -57,6 +57,34 @@ html {
   outline: none;
 }
 
+/* Focus ring for elements whose ring the surrounding box would cut off: a
+   rounded overflow-hidden wrapper, or a scroll track (overflow-x-auto clips
+   the block axis too, which is why a card in one loses the ring along its top
+   edge but keeps it at the bottom, where the track has padding).
+
+   Pulling the ring inward with a negative outline-offset does not fix it.
+   These elements are filled edge to edge by a positioned child — an
+   <Image fill>, a card's image panel — and positioned descendants paint above
+   their ancestor's own outline, so an inset ring just hides behind the photo.
+
+   Hence a pseudo-element, which a z-index can lift above that child. The
+   element must be positioned, and it must sit outside @layer so it beats the
+   unlayered *:focus-visible above; a layered rule would lose to it no matter
+   how specific. Tune per use via the three custom properties. */
+.focus-ring-clipped:focus-visible {
+  outline: none;
+}
+
+.focus-ring-clipped:focus-visible::after {
+  position: absolute;
+  z-index: var(--focus-ring-z, 1);
+  inset: var(--focus-ring-inset, 2px);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--focus-ring-radius, 6px);
+  content: "";
+  pointer-events: none;
+}
+
 /* Rounded focus ring for elements without their own radius. In @layer base so
    any rounded-* utility or inline radius still wins. */
 @layer base {
@@ -110,15 +138,24 @@ body {
     display: none;
   }
 
-  .product-card:focus-visible {
-    outline: 2px solid var(--color-ink-strong);
-    outline-offset: 3px;
-    border-radius: 12px;
-  }
-
+  /* There used to be a .product-card:focus-visible rule here asking for a dark
+     ink ring at a 3px outward offset. It never rendered: this block is inside
+     @layer components, and the unlayered *:focus-visible near the top of this
+     file beats anything layered regardless of specificity, so the card always
+     drew the accent ring — and the track clipped its top edge. The card opts
+     into .focus-ring-clipped now (see that rule, also unlayered) and tunes it
+     below. */
   .product-card {
     --product-reveal-distance: 142px;
     --product-detail-offset: 105px;
+    /* Flush with the card's rounded surface rather than inset, and above both
+       the info panel (z-10) and the price labels (z-20). */
+    --focus-ring-inset: 0px;
+    --focus-ring-radius: 12px;
+    --focus-ring-z: 30;
+    /* Anchors the ring pseudo-element. Every absolutely positioned descendant
+       already has a nearer positioned ancestor, so nothing else re-anchors. */
+    position: relative;
   }
 
   @media (max-width: 359px) {

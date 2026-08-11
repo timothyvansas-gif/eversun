@@ -91,7 +91,7 @@ function ProductCardItem({ product }: { product: Product }) {
 
   return (
     <div
-      className={`${CAROUSEL_CARD_CLASS} product-card select-none flex flex-col`}
+      className={`${CAROUSEL_CARD_CLASS} product-card focus-ring-clipped select-none flex flex-col`}
       data-has-hover-description={Boolean(product.hoverDescription)}
       data-expanded={isExpanded}
       data-pointer-expanded={isPointerExpanded}
@@ -430,9 +430,15 @@ export default function Producten() {
 
           {/* Scroll Container */}
           <div className="relative">
+            {/* No tabIndex on the track, unlike the one in over-ons. A
+                scrollable region only needs to be its own tab stop when it
+                holds nothing focusable; here every card is a tab stop of its
+                own and tabbing through them scrolls the track natively. The
+                extra stop only added a focus ring around the whole strip
+                before the same ring appeared on the first card. The region
+                landmark and its name stay — those cost no tab stop. */}
             <div
               ref={scrollRef}
-              tabIndex={0}
               role="region"
               aria-label="Producten carrousel"
               className={CAROUSEL_TRACK_CLASS}

@@ -36,9 +36,13 @@ export default function PhotoCard() {
         onPointerEnter={preloadAll}
         onFocusCapture={preloadAll}
       >
+        {/* The three photo buttons below carry focus-ring-clipped: they run
+            edge to edge inside this rounded, clipping grid, so the site's
+            outward focus ring would be cut off. See globals.css. The "Meer"
+            pill sits 12px inside the clip and keeps the normal ring. */}
         <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
           <button
-            className="relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
+            className="focus-ring-clipped relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
@@ -51,7 +55,7 @@ export default function PhotoCard() {
             />
           </button>
           <button
-            className="relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
+            className="focus-ring-clipped relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
@@ -64,7 +68,7 @@ export default function PhotoCard() {
             />
           </button>
           <button
-            className="relative w-full h-full md:hidden cursor-pointer"
+            className="focus-ring-clipped relative w-full h-full md:hidden cursor-pointer"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >

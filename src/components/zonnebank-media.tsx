@@ -91,7 +91,7 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className="group absolute bottom-4 right-4 z-10 flex size-12 cursor-pointer touch-manipulation items-center justify-center active:scale-95"
+          className="group absolute bottom-4 right-4 z-10 flex size-12 cursor-pointer touch-manipulation items-center justify-center rounded-full active:scale-95"
         >
           {/* Circle only — the icons below sit outside it, as siblings, so
               they never inherit its hover scale. The scale grow gets its own

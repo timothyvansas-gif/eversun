@@ -133,7 +133,11 @@ function DockAvatar({
     <m.button
       ref={ref}
       type="button"
-      className="relative cursor-pointer"
+      // Focus ring lives on the scaled avatar below, not here: this button's
+      // own box stays at 56px while the dock magnification grows the avatar
+      // past it, so an outline on the button gets swallowed by the now-larger
+      // photo and only its uncovered sliver shows.
+      className="group relative cursor-pointer rounded-full outline-none"
       style={reduce ? { zIndex: index } : { zIndex }}
       // No onMouseEnter: which avatar is active is derived from the cursor in
       // the row below, the same value the magnification reads. Hit-testing the
@@ -167,7 +171,7 @@ function DockAvatar({
     >
       <m.div style={reduce ? undefined : { x: nudge }}>
         <m.div
-          className={`w-[56px] h-[56px] rounded-full overflow-hidden transition-shadow duration-200 ${
+          className={`w-[56px] h-[56px] rounded-full overflow-hidden transition-shadow duration-200 group-focus-visible:shadow-[0_0_0_2px_var(--color-accent)] ${
             isActive
               ? "shadow-[0_0_0_1px_rgba(255,255,255,0.8)]"
               : "shadow-[0_0_0_1px_rgba(255,255,255,0.5)]"
