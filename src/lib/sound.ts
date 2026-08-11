@@ -48,6 +48,7 @@ export function createSoundPlayer(
 ): SoundPlayer {
   let audio: AudioLike | null = null;
   let resolved = false;
+  let preloaded = false;
 
   const ensureAudio = () => {
     if (resolved) return audio;
@@ -62,11 +63,23 @@ export function createSoundPlayer(
 
   return {
     preload() {
+      // Eén keer, en niet bij elke aanraking. load() zet readyState terug naar
+      // HAVE_NOTHING en start de resource-selectie opnieuw, dus een tweede
+      // aanroep gooit weg wat er al binnen was. Op touch hangt dit aan
+      // pointerdown — die vuurt ook bij het slepen van de carrousel — en dan
+      // moest de play() erna opnieuw ophalen en decoderen. Het geluid kwam
+      // daardoor pas als het paneel al openstond.
+      if (preloaded) return;
+      preloaded = true;
       ensureAudio()?.load();
     },
     play() {
       const element = ensureAudio();
       if (!element) return;
+
+      // Spelen haalt het bestand net zo goed binnen. Zonder dit zou een
+      // pointerdown daarna alsnog load() aanroepen en het geluid afkappen.
+      preloaded = true;
 
       // Rewind first: without this a second toggle inside the sound's own
       // length is a no-op, because the element is already playing.
