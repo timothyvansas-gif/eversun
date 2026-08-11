@@ -228,10 +228,14 @@ body {
       transition-duration: 440ms;
     }
 
+    /* Hover-intent: de kaarten staan in een carrousel, dus de muis passeert er
+       vaak een paar op weg naar een andere. Openen wacht daarom even af of de
+       cursor blijft staan. Alleen bij openen — bij het verlaten valt
+       data-pointer-expanded weg, dus die regel geldt dan niet en sluit direct. */
     .product-card[data-pointer-expanded="true"] .product-info-panel::before,
     .product-card[data-pointer-expanded="true"] .product-moving-copy,
     .product-card[data-pointer-expanded="true"] .product-price-labels {
-      transition-delay: 100ms;
+      transition-delay: 200ms;
     }
 
     .product-card[data-keyboard-action="true"] .product-info-panel::before,
