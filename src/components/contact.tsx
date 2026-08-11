@@ -117,7 +117,7 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       // the arrow unfolds and the label stays where it is. A floor on the
       // button instead of the label would centre that slack around the text,
       // and the arrow would drag the label left on hover.
-      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:bg-[#C9906F] disabled:active:scale-100 sm:w-auto md:py-[10px]`}
+      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
