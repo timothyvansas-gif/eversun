@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from "next/image";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
@@ -23,6 +23,24 @@ import imgEnchantedEmerald from "@/images/producten/eversun-enchanted-emerald.we
 
 const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
 const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
+
+// Cyclorama: de naadloze doorloop van achterwand naar vloer uit een productstudio.
+// Vier lagen, van voor naar achter. De horizon zit rond 70%, net onder de voet
+// van de fles, zodat het product op de vloer staat in plaats van ervoor te zweven.
+const PRODUCT_BACKDROP = [
+  // 1. Contactschaduw: smalle, brede ellips onder de fles. Zonder deze laag
+  //    blijft het product los van de vloer hangen.
+  "radial-gradient(ellipse 40% 6% at 50% 74%, rgba(122, 96, 61, 0.16) 0%, rgba(122, 96, 61, 0) 72%)",
+  // 2. Lichtpool van de key light, met zijn hart op de horizon. Dit is wat de
+  //    knik van wand naar vloer leesbaar maakt zonder er een lijn te trekken.
+  "radial-gradient(ellipse 72% 46% at 50% 66%, rgba(255, 250, 240, 0.72) 0%, rgba(255, 250, 240, 0) 76%)",
+  // 3. Vloervlak: vanaf de horizon loopt het naar de voorgrond weer iets terug.
+  //    Licht dat wegvalt richting de kijker; zonder dit leest de onderhelft als
+  //    een tweede wand.
+  "linear-gradient(180deg, rgba(190, 162, 118, 0) 68%, rgba(190, 162, 118, 0.06) 88%, rgba(190, 162, 118, 0.10) 100%)",
+  // 4. Achterwand, de diepste tint bovenin en oplopend naar de horizon.
+  "linear-gradient(180deg, #EEE1CD 0%, #F2E8D8 42%, #F6F0E6 70%, #F4ECE0 100%)",
+].join(", ");
 
 function PlanMomentButton() {
   const [qrOpen, setQrOpen] = useState(false);
@@ -127,15 +145,15 @@ function ProductCardItem({ product }: { product: Product }) {
     >
       <div className="product-card-surface flex flex-col bg-transparent rounded-[12px] overflow-hidden flex-1">
         {/* Image */}
-        {/* Verloop in plaats van een vlakke vulling: bovenin de diepste tint,
-            naar beneden oplopend naar de warme paginakleur. Blijft binnen het
-            zandpalet, zodat een productfoto met transparante achtergrond in een
-            ruimte lijkt te staan in plaats van op een vlak. */}
+        {/* Studio-backdrop in plaats van een vlakke vulling: wand die in een
+            vloertje overloopt. Blijft binnen het zandpalet, zodat een productfoto
+            met transparante achtergrond in een ruimte lijkt te staan in plaats
+            van op een vlak. Opbouw staat bij PRODUCT_BACKDROP. */}
         <div
           className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[464px] overflow-hidden relative"
-          style={{ background: "linear-gradient(180deg, #EBDCC5 0%, #F2E9DA 55%, #F6F0E7 100%)" }}
+          style={{ background: PRODUCT_BACKDROP }}
         >
-          <ProductImage src={product.image} alt={product.name} />
+          <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
           <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#111111]">Sachet {product.sachetPrice}</span>
@@ -200,7 +218,7 @@ function ProductCardItem({ product }: { product: Product }) {
   );
 }
 
-function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
+function ProductImage({ src, alt, nudgeY }: { src: StaticImageData; alt: string; nudgeY?: string }) {
   const [loaded, setLoaded] = useState(false);
   return (
     <>
@@ -218,8 +236,10 @@ function ProductImage({ src, alt }: { src: StaticImageData; alt: string }) {
         // product er kleiner uitziet dan op desktop. Eén set bestanden voor
         // beide, dus de correctie zit hier. Vanaf de onderrand schalen, niet
         // vanuit het midden: dan groeit de fles omhoog en blijft de strook voor
-        // de prijslabels vrij.
-        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[4%] md:scale-100 md:translate-y-[8px] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        // de prijslabels vrij. --nudge-y corrigeert per product de bodemlijn:
+        // de fotografen kadreerden niet elke fles even hoog in het frame.
+        className={`object-cover object-center origin-bottom scale-[1.08] translate-y-[calc(4%_+_var(--nudge-y))] md:scale-100 md:translate-y-[calc(8px_+_var(--nudge-y))] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+        style={{ "--nudge-y": nudgeY ?? "0px" } as CSSProperties}
         // De kaart is 310 px breed op mobiel en 260 op desktop; met de schaal
         // erbij vraagt mobiel dus het grootste beeld van de twee.
         sizes="(max-width: 768px) 340px, 280px"
@@ -247,6 +267,9 @@ const products = [
     description: "Frambozenextract en cactuswater voor dagelijkse hydratatie en een frisse glow.",
     hoverDescription: "Vegan collageen en probiotica werken aan je huidbarrière, elektrolyten uit cactuswater hydrateren 24 uur. Zonder parabenen en sulfaten, dus ook fijn bij een gevoelige huid.",
     image: imgEnchantedEmerald,
+    // Fles staat hoger in het frame dan de rest; omlaag zodat de voet op
+    // dezelfde bodemlijn valt.
+    imageNudgeY: "10px",
     labels: ["Dagverzorging", "Antioxidanten"],
     containerLabel: "Fles",
     containerPrice: "24,99",
@@ -257,6 +280,8 @@ const products = [
     description: "Beschermt je tatoeages en trekt snel in. Versterkt je kleur zonder bronzer.",
     hoverDescription: "Kokoswater en duindoornbes vullen je huid met elektrolyten, kleurcorrectors houden rode tinten weg. Lichte formule die niet vet aanvoelt en de geur van het zonnen neutraliseert.",
     image: imgHimSurf,
+    // Tube is lager gekadreerd dan de rest; omhoog naar dezelfde bodemlijn.
+    imageNudgeY: "-10px",
     labels: ["Voor hem", "Beschermt tattoos"],
     sachetPrice: "4,99",
     containerLabel: "Tube",
