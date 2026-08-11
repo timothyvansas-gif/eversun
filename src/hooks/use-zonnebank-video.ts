@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { switchSound } from "@/lib/sound";
+import { toggleSound } from "@/lib/sound";
 
 // Play at native speed. Above 2x Safari stops presenting anything but
 // keyframes — the clip used to run at 4x and Safari painted a single frame,
@@ -91,7 +91,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       // Touch has no hover to prime on, so the sound is fetched on approach for
       // every viewport. It is a fraction of the video's weight, and a click
       // that has to wait for the file lands after the gesture that asked for it.
-      switchSound.preload();
+      toggleSound.preload();
 
       // The video stays desktop-only on approach: four clips at 4.4–4.9 MB is
       // not something to pull down over mobile data for an optional control.
@@ -321,7 +321,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // Straight away, not after the clip starts: the click is the gesture the
     // browser grants playback on, and the toggle can wait several hundred ms
     // for video to buffer. A switch that clicks late reads as a lag.
-    switchSound.play();
+    toggleSound.play();
 
     const nextActiveState = !isVideoActiveRef.current;
     isVideoActiveRef.current = nextActiveState;

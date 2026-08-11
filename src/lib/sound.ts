@@ -82,5 +82,5 @@ export function createSoundPlayer(
   };
 }
 
-/** Foley switch click behind the light/dark toggle on the zonnebank cards. */
-export const switchSound = createSoundPlayer("/sounds/foley-switch.wav");
+/** Foley tick behind the light/dark toggle on the zonnebank cards. */
+export const toggleSound = createSoundPlayer("/sounds/foley-tick.wav");
