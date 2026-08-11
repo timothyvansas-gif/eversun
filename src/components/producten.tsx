@@ -360,6 +360,9 @@ const products = [
     description: "Truffelextract en zwarte kombucha. Diep resultaat vanaf de eerste sessie.",
     hoverDescription: "Drievoudige bronzer met een auto-darkening complex, terwijl de AHA's uit kombucha je huid verfijnen. Trekt niet vet weg en ruikt naar amber en sandelhout.",
     image: imgHimJet,
+    // Korte tube die hoog in het frame is gekadreerd; iets omlaag om aan te
+    // sluiten bij de flessen ernaast.
+    imageNudgeY: "10px",
     labels: ["Voor hem", "Diepe bronzer"],
     sachetPrice: "5,49",
     containerLabel: "Tube",
@@ -382,6 +385,9 @@ const products = [
     description: "Ingekapselde DHA komt langzaam vrij, zo blijft je kleur dagen egaal.",
     hoverDescription: "Color lock-agenten zetten je kleur vast als een fixeerspray, de airbrush-blend maakt de overgangen egaal. Vegan collageen en copperpeptiden verzorgen je huid ondertussen.",
     image: imgVault,
+    // Brede, gedrongen fles: op de gedeelde bodemlijn oogt hij hoger in de
+    // kaart dan de slanke flacons ernaast. Iets omlaag om dat te compenseren.
+    imageNudgeY: "10px",
     labels: ["Kleurbehoud", "Anti oranje"],
     sachetPrice: "12,99",
     containerLabel: "Fles",
