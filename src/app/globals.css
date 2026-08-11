@@ -406,13 +406,60 @@ body {
     opacity: 0.5;
   }
 
-  /* Browsers tint autofilled fields blue by default. Paint over only that UA
-     tint so autofill keeps the exact same resting surface as a normal field. */
+  /* A zero-visual animation turns the browser-only :autofill state into a DOM
+     event. The contact form uses that signal to advance to its one empty field
+     after an intentional autofill, without reacting to normal typing. */
+  @keyframes ff-autofill-start {
+    from {}
+    to {}
+  }
+
+  .ff-input:autofill {
+    animation: ff-autofill-start 1ms;
+  }
+
+  /* Browsers add their own autofill tint (yellow in Safari, blue in Chrome).
+     Cover the UA paint and clip its background so the field keeps the exact
+     same resting surface everywhere, including iOS browser shells. */
+  .ff-input:autofill,
+  .ff-input:autofill:hover,
+  .ff-input:autofill:focus,
+  .ff-input:autofill:active {
+    box-shadow: 0 0 0 1000px var(--color-surface-page) inset !important;
+    background-color: var(--color-surface-page) !important;
+    background-clip: text !important;
+    color: var(--color-ink-strong) !important;
+    caret-color: var(--color-ink-strong);
+  }
+
   .ff-input:-webkit-autofill,
   .ff-input:-webkit-autofill:hover,
-  .ff-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--color-surface-page) inset;
-    -webkit-text-fill-color: var(--color-ink-strong);
+  .ff-input:-webkit-autofill:focus,
+  .ff-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-surface-page) inset !important;
+    box-shadow: 0 0 0 1000px var(--color-surface-page) inset !important;
+    background-color: var(--color-surface-page) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: var(--color-ink-strong) !important;
+    transition: background-color 9999s ease-out 0s;
+    caret-color: var(--color-ink-strong);
+  }
+
+  /* Chrome on iOS implements autofill in injected JavaScript and marks the
+     controls with chrome-autofilled instead of matching :autofill. */
+  .ff-input[chrome-autofilled],
+  .ff-input[chrome-autofilled]:hover,
+  .ff-input[chrome-autofilled]:focus,
+  .ff-input[chrome-autofilled]:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-surface-page) inset !important;
+    box-shadow: 0 0 0 1000px var(--color-surface-page) inset !important;
+    background-color: var(--color-surface-page) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: var(--color-ink-strong) !important;
+    color: var(--color-ink-strong) !important;
+    transition: background-color 9999s ease-out 0s;
     caret-color: var(--color-ink-strong);
   }
 

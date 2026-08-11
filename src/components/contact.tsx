@@ -232,9 +232,32 @@ function ContactForm() {
 
   const isSubmitting = status === "submitting";
 
+  const handleIdentityAutofill = (source: HTMLInputElement) => {
+    // Autofill can apply to both identity fields in one browser action. Wait a
+    // frame so both DOM values have landed, then advance only if the visitor is
+    // still in that flow. This guard prevents a page-load autofill from pulling
+    // someone down to the form or stealing focus from another control.
+    window.requestAnimationFrame(() => {
+      const name = document.getElementById(CONTACT_FIELD_IDS.name) as HTMLInputElement | null;
+      const email = document.getElementById(CONTACT_FIELD_IDS.email) as HTMLInputElement | null;
+      const message = document.getElementById(
+        CONTACT_FIELD_IDS.message,
+      ) as HTMLTextAreaElement | null;
+      const active = document.activeElement;
+
+      if (!name || !email || !message) return;
+      if (!source.matches(":autofill")) return;
+      if (active !== name && active !== email) return;
+      if (!name.value.trim() || !email.value.trim() || message.value !== "") return;
+
+      message.focus();
+    });
+  };
+
   return (
     <form
       noValidate
+      suppressHydrationWarning
       onSubmit={(event) => {
         event.preventDefault();
         void submit();
@@ -254,6 +277,7 @@ function ContactForm() {
           value={values.name}
           onChange={(value) => setField("name", value)}
           onBlur={() => blurField("name")}
+          onAutofill={handleIdentityAutofill}
           error={errors.name}
           autoComplete="name"
           maxLength={CONTACT_LIMITS.nameMax}
@@ -268,6 +292,7 @@ function ContactForm() {
           value={values.email}
           onChange={(value) => setField("email", value)}
           onBlur={() => blurField("email")}
+          onAutofill={handleIdentityAutofill}
           error={errors.email}
           autoComplete="email"
           maxLength={CONTACT_LIMITS.emailMax}
@@ -305,6 +330,7 @@ function ContactForm() {
             type="text"
             tabIndex={-1}
             autoComplete="off"
+            suppressHydrationWarning
             value={honeypot}
             onChange={(event) => setHoneypot(event.target.value)}
           />

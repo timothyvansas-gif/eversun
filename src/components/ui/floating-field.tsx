@@ -20,6 +20,8 @@ type FloatingFieldProps = {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
+  /** Called when this input may have entered the browser's autofill state. */
+  onAutofill?: (input: HTMLInputElement) => void;
   /** Error text. Present means invalid: red styling + aria-invalid. */
   error?: string;
   type?: "text" | "email" | "tel";
@@ -48,6 +50,7 @@ export function FloatingField({
   value,
   onChange,
   onBlur,
+  onAutofill,
   error,
   type = "text",
   multiline = false,
@@ -74,6 +77,9 @@ export function FloatingField({
     placeholder: " ",
     "aria-invalid": invalid,
     "aria-describedby": invalid ? errorId : undefined,
+    // Chrome injects a private autofill identifier before React hydrates.
+    // Accept that one browser-owned attribute without hiding tree mismatches.
+    suppressHydrationWarning: true,
     onBlur,
   };
 
@@ -98,6 +104,16 @@ export function FloatingField({
             {...shared}
             type={type}
             onChange={(event) => onChange(event.target.value)}
+            onAnimationStart={(event) => {
+              if (event.currentTarget.matches(":autofill")) {
+                onAutofill?.(event.currentTarget);
+              }
+            }}
+            // Chromium reliably emits input for an interactive autofill even
+            // when its CSS animation has already started before React listens.
+            // The consumer re-checks :autofill after the browser has painted,
+            // so ordinary typing passes through without side effects.
+            onInput={(event) => onAutofill?.(event.currentTarget)}
             className={`${FIELD_BASE} ff-input block h-[60px] rounded-[12px] px-4 pt-[22px] pb-2`}
           />
         )}
