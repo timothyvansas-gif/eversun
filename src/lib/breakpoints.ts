@@ -11,3 +11,11 @@ export const MOBILE_QUERY = "(max-width: 767px)";
  * (e.g. an open menu) can be reset; it does not close itself on resize.
  */
 export const DESKTOP_NAV_QUERY = "(min-width: 1024px)";
+
+/**
+ * Matches Tailwind's `xl` (min 1280px) split — where the carousels' overlay
+ * arrow buttons appear (`hidden xl:block`). Below it those buttons do not
+ * exist, so a track whose cards are not focusable has to be its own tab stop
+ * or its later cards cannot be reached by keyboard at all. See over-ons.
+ */
+export const CAROUSEL_NAV_QUERY = "(min-width: 1280px)";

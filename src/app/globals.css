@@ -85,6 +85,27 @@ html {
   pointer-events: none;
 }
 
+/* A carousel track that is its own tab stop (over-ons, whose team cards are
+   not focusable) cannot wear its own ring: the full-bleed negative margins run
+   the track out to the viewport edges, where the section's overflow: hidden
+   cuts the left and right of the ring off. What is left reads as two orange
+   rules across the page rather than a ring around anything.
+
+   The pseudo-element trick used above is no good here either — the track is a
+   scroll container, so an absolutely positioned child would scroll away with
+   the cards. So the ring goes to the wrapper instead, which stays inside the
+   content column and is not clipped. Scoped to a direct child, so the nav
+   buttons sitting in that same wrapper keep their own ring. */
+.carousel-track:focus-visible {
+  outline: none;
+}
+
+.carousel-shell:has(> .carousel-track:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
 /* Rounded focus ring for elements without their own radius. In @layer base so
    any rounded-* utility or inline radius still wins. */
 @layer base {

@@ -27,9 +27,14 @@ export const CAROUSEL_BLEED_STYLE: CSSProperties = {
   scrollPaddingLeft: BLEED_GUTTER,
 };
 
-/** The scroll track: free horizontal scrolling, draggable, gap 16/24px. */
+/**
+ * The scroll track: free horizontal scrolling, draggable, gap 16/24px.
+ * `carousel-track` is the hook the focus ring needs — a track that is its own
+ * tab stop cannot show the ring itself, since the bleed above runs it to the
+ * viewport edges where the section's overflow clips it. See globals.css.
+ */
 export const CAROUSEL_TRACK_CLASS =
-  "draggable-scroll flex overflow-x-auto gap-4 md:gap-6 pb-4";
+  "carousel-track draggable-scroll flex overflow-x-auto gap-4 md:gap-6 pb-4";
 
 /** A card shell's responsive width. Append flex/gap/etc. per section. */
 export const CAROUSEL_CARD_CLASS =

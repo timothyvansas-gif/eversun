@@ -6,6 +6,8 @@ import teamAisha from "@/images/people/team-aisha.webp";
 import teamDummy from "@/images/people/team-dummy.webp";
 import teamDummy2 from "@/images/people/team-dummy2.webp";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { CAROUSEL_NAV_QUERY } from "@/lib/breakpoints";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 
@@ -38,6 +40,19 @@ const teamMembers = [
 
 export default function OverOns() {
   const { scrollRef, canScroll, isAtStart, isAtEnd, scrollNext, scrollPrev } = useHorizontalScroller();
+
+  // A team card is not focusable — there is nothing on it to activate — so the
+  // track itself has to carry the keyboard path to the cards further along.
+  // From xl up the overlay arrows do that job, and a tab stop on the track only
+  // ringed the whole strip on the way past. Below xl those arrows are not
+  // rendered, and without the tab stop the last cards cannot be reached by
+  // keyboard at all, so there it stays.
+  //
+  // useMediaQuery reports false until mounted, so the server always ships the
+  // reachable version and the tab stop is only dropped once we know the arrows
+  // are really there. tabIndex -1 rather than no attribute: it also tells the
+  // browsers that hand scrollable containers their own tab stop to stay out.
+  const hasArrowButtons = useMediaQuery(CAROUSEL_NAV_QUERY) && canScroll;
 
   return (
     <section
@@ -80,11 +95,14 @@ export default function OverOns() {
             </div>
           </div>
 
-          {/* Scroll Container */}
-          <div className="relative">
+          {/* Scroll Container. carousel-shell: the track below is a tab stop
+              of its own (unlike the products one, whose cards are focusable),
+              and it wears the focus ring on behalf of that track — see
+              globals.css. */}
+          <div className="carousel-shell relative">
             <div
               ref={scrollRef}
-              tabIndex={0}
+              tabIndex={hasArrowButtons ? -1 : 0}
               role="region"
               aria-label="Team carrousel"
               className={CAROUSEL_TRACK_CLASS}
