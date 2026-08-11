@@ -406,6 +406,16 @@ body {
     opacity: 0.5;
   }
 
+  /* Browsers tint autofilled fields blue by default. Paint over only that UA
+     tint so autofill keeps the exact same resting surface as a normal field. */
+  .ff-input:-webkit-autofill,
+  .ff-input:-webkit-autofill:hover,
+  .ff-input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--color-surface-page) inset;
+    -webkit-text-fill-color: var(--color-ink-strong);
+    caret-color: var(--color-ink-strong);
+  }
+
   .draggable-scroll {
     scrollbar-width: none;
   }

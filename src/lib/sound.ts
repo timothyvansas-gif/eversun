@@ -97,3 +97,9 @@ export function createSoundPlayer(
 
 /** Foley tick behind the light/dark toggle on the zonnebank cards. */
 export const toggleSound = createSoundPlayer("/sounds/foley-tick.wav");
+
+/** Foley cue when a contact-form submission cannot be completed. */
+export const formErrorSound = createSoundPlayer("/sounds/foley-error.wav");
+
+/** Foley cue when the contact-form success confirmation is shown. */
+export const formSuccessSound = createSoundPlayer("/sounds/foley-complete.wav");

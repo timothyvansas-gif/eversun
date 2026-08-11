@@ -11,6 +11,7 @@ import {
   type ContactField,
   type ContactValues,
 } from "@/lib/contact-validation";
+import { formErrorSound, formSuccessSound } from "@/lib/sound";
 
 export type ContactStatus = "idle" | "submitting" | "success" | "error";
 
@@ -71,6 +72,7 @@ export function useContactForm() {
     if (invalid) {
       setStatus("idle");
       setFormError(null);
+      formErrorSound.play();
       document.getElementById(CONTACT_FIELD_IDS[invalid])?.focus();
       return;
     }
@@ -91,6 +93,7 @@ export function useContactForm() {
           (body && typeof body.message === "string" ? body.message : null) ?? GENERIC_ERROR,
         );
         setStatus("error");
+        formErrorSound.play();
         return;
       }
 
@@ -98,12 +101,14 @@ export function useContactForm() {
       setTouched({});
       setSubmitAttempted(false);
       setHoneypot("");
+      formSuccessSound.play();
       setStatus("success");
     } catch {
       // Offline, DNS failure, request blocked — nothing the visitor can fix by
       // retrying the same second, so point them at the phone as well.
       setFormError(GENERIC_ERROR);
       setStatus("error");
+      formErrorSound.play();
     }
   }, [errors, values, honeypot]);
 
