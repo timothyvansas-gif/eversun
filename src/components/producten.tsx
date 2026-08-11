@@ -7,7 +7,6 @@ import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 import { BTN_PILL_ACCENT } from "@/lib/button-styles";
-import { revealSound } from "@/lib/sound";
 import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import imgDareToBeDark from "@/images/producten/eversun-Dare-to-be-dark.webp";
@@ -102,23 +101,13 @@ function ProductCardItem({ product }: { product: Product }) {
       aria-expanded={isExpanded}
       aria-controls={descriptionId}
       aria-label={`${isExpanded ? "Verberg" : "Toon"} meer informatie over ${product.name}`}
-      // Touch heeft geen hover om het geluid op voor te laden, en pointerdown
-      // gaat aan de tik vooraf. Scheelt de eerste tap het wachten op het bestand.
-      onPointerDown={(event) => {
-        if (event.pointerType === "mouse") return;
-        revealSound.preload();
-      }}
       onClick={(event) => {
         if (!window.matchMedia(MOBILE_QUERY).matches) return;
-        const isKeyboard = event.detail === 0;
-        setIsKeyboardAction(isKeyboard);
+        setIsKeyboardAction(event.detail === 0);
 
         if (isExpanded) {
           closeDetails();
         } else {
-          // Alleen bij openen, en niet vanaf het toetsenbord: die route zet de
-          // transitie uit, dus er zou geluid bij een stilstaand paneel klinken.
-          if (!isKeyboard) revealSound.play();
           setIsPinnedOpen(true);
           setIsPointerDismissed(false);
         }

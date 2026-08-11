@@ -97,14 +97,3 @@ export function createSoundPlayer(
 
 /** Foley tick behind the light/dark toggle on the zonnebank cards. */
 export const toggleSound = createSoundPlayer("/sounds/foley-tick.wav");
-
-/**
- * Foley whoosh behind the product detail reveal, on touch only.
- *
- * Softer than the toggle: the panel slides open under the reader's own thumb
- * and the sound only has to accompany the movement, where the toggle has to
- * stand in for a switch being thrown.
- */
-export const revealSound = createSoundPlayer("/sounds/foley-whoosh.wav", {
-  volume: 0.3,
-});
