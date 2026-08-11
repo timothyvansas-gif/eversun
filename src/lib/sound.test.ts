@@ -46,6 +46,29 @@ describe("createSoundPlayer", () => {
     expect(audio.load).toHaveBeenCalledTimes(1);
   });
 
+  it("loads once however often it is preloaded", () => {
+    const audio = fakeAudio();
+    const player = createSoundPlayer("/x.wav", { createAudio: () => audio });
+
+    player.preload();
+    player.preload();
+    player.preload();
+
+    // load() resets readyState to HAVE_NOTHING, so a repeat throws away what
+    // has already arrived and the next play() has to fetch again.
+    expect(audio.load).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not load after playing, which would cut the sound off", () => {
+    const audio = fakeAudio();
+    const player = createSoundPlayer("/x.wav", { createAudio: () => audio });
+
+    player.play();
+    player.preload();
+
+    expect(audio.load).not.toHaveBeenCalled();
+  });
+
   it("rewinds before playing so a rapid second toggle sounds again", () => {
     const audio = fakeAudio();
     const player = createSoundPlayer("/x.wav", { createAudio: () => audio });
