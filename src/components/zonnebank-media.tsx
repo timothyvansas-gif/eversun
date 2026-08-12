@@ -14,9 +14,11 @@ export default function ZonnebankMedia({
   isVideoReady,
   isVideoActive,
   isVideoLoading,
+  isVideoUnavailable,
   onVideoToggle,
   onVideoLoadedData,
   onVideoCanPlay,
+  onVideoEnded,
   onVideoPlaying,
   onVideoWaiting,
   onVideoError,
@@ -27,9 +29,11 @@ export default function ZonnebankMedia({
   isVideoReady: boolean;
   isVideoActive: boolean;
   isVideoLoading: boolean;
+  isVideoUnavailable: boolean;
   onVideoToggle: () => void;
   onVideoLoadedData: () => void;
   onVideoCanPlay: () => void;
+  onVideoEnded: () => void;
   onVideoPlaying: () => void;
   onVideoWaiting: () => void;
   onVideoError: () => void;
@@ -55,6 +59,7 @@ export default function ZonnebankMedia({
             aria-hidden="true"
             onLoadedData={onVideoLoadedData}
             onCanPlay={onVideoCanPlay}
+            onEnded={onVideoEnded}
             onPlaying={onVideoPlaying}
             onWaiting={onVideoWaiting}
             onError={onVideoError}
@@ -76,7 +81,11 @@ export default function ZonnebankMedia({
           {data.badge}
         </span>
       )}
-      {data.desktopVideo && (
+      {/* Withdrawn when the clip cannot be played — a broken source, or a fetch
+          that never arrived. A control that promises a state it cannot reach is
+          worse than no control; the still image carries the card on its own.
+          The hook puts it back if the data turns up after all. */}
+      {data.desktopVideo && !isVideoUnavailable && (
         // duration-[1283ms] matches the toggle clip's one-way length (2.566667s / 2,
         // confirmed with ffprobe across all four renders) so the button fades in step
         // with the video instead of finishing early or lagging behind it.

@@ -1,9 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { toggleSound } from "@/lib/sound";
+import {
+  canPlayAction,
+  hasReachedTarget,
+  isAtRest,
+  nextLook,
+  restingFrame,
+  startFrame,
+  type Look,
+} from "@/lib/zonnebank-playback";
 
 // Play at native speed. Above 2x Safari stops presenting anything but
 // keyframes — the clip used to run at 4x and Safari painted a single frame,
@@ -11,18 +20,18 @@ import { toggleSound } from "@/lib/sound";
 // The 4x speed-up is baked into the files instead (~2.6s at 60fps), which
 // every browser renders in full.
 const VIDEO_SPEED = 1;
-const VIDEO_PLAY_RETRY_MS = 120;
-const MAX_VIDEO_PLAY_ATTEMPTS = 3;
-// One rAF tick advances the clip ~17ms now that it plays at 1x, so this only
-// has to cover a single frame of overshoot before finishPlayback snaps to the
-// exact resting position.
-const ENDPOINT_MARGIN_SECONDS = 0.04;
 
-function isAbortError(error: unknown) {
-  return error instanceof DOMException && error.name === "AbortError";
-}
+/** `HTMLMediaElement.HAVE_CURRENT_DATA` — a frame exists and can be shown. */
+const HAVE_CURRENT_DATA = 2;
 
-type PlaybackTarget = "dark" | "light" | null;
+/**
+ * How long a toggle may sit waiting for data before the video counts as
+ * unavailable and the control is withdrawn. Long enough for a slow phone
+ * connection to deliver the mobile clip, short enough that nobody is left
+ * watching a spinner that will never stop. It heals itself: if the data does
+ * arrive later, `canplay` puts the toggle back.
+ */
+const STALL_TIMEOUT_MS = 12000;
 
 /**
  * How much of the clip the browser may fetch ahead of being asked.
@@ -43,9 +52,11 @@ export type ZonnebankVideoControls = {
   isVideoReady: boolean;
   isVideoActive: boolean;
   isVideoLoading: boolean;
+  isVideoUnavailable: boolean;
   handleVideoToggle: () => void;
   handleVideoLoadedData: () => void;
   handleVideoCanPlay: () => void;
+  handleVideoEnded: () => void;
   handleVideoPlaying: () => void;
   handleVideoWaiting: () => void;
   handleVideoError: () => void;
@@ -54,20 +65,29 @@ export type ZonnebankVideoControls = {
 export function useZonnebankVideo(): ZonnebankVideoControls {
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isVideoActiveRef = useRef(false);
-  const playbackTargetRef = useRef<PlaybackTarget>(null);
-  const animationFrameRef = useRef<number | null>(null);
-  const revealFrameRef = useRef<number | null>(null);
-  const playRetryTimerRef = useRef<number | null>(null);
-  const playAttemptsRef = useRef(0);
-  const playRequestIdRef = useRef(0);
-  const playPromisePendingRef = useRef(false);
+
+  // The visitor's intent, and the only thing that decides which frame the clip
+  // rests on. Nothing in the transport path — an aborted play, a stalled fetch,
+  // a media error — writes it. That separation is the whole point: those used
+  // to reset this flag, so a hiccup during the first click knocked the toggle
+  // back to light and the bed sprang open again on its own.
+  const lookRef = useRef<Look>("light");
+  const [look, setLook] = useState<Look>("light");
+
+  // One id per transition. Every async callback carries the id it started with,
+  // so a superseded run can never settle or re-monitor on top of a newer one.
+  const runIdRef = useRef(0);
+  const isRunningRef = useRef(false);
+  const frameRef = useRef<number | null>(null);
+  const stallTimerRef = useRef<number | null>(null);
+
   const isVideoReadyRef = useRef(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
+
   const preloadRef = useRef<PreloadLevel>("none");
   const [videoPreload, setVideoPreload] = useState<PreloadLevel>("none");
-  const [isVideoReady, setIsVideoReady] = useState(false);
-  const [isVideoActive, setIsVideoActive] = useState(false);
-  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
   // Written to the element as well as to state: the element is what the browser
   // acts on, and it has to change in the same tick as the `load()` beside it
@@ -79,6 +99,128 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     const video = videoRef.current;
     if (video) video.preload = level;
     return true;
+  };
+
+  // These three touch only refs and setState, so they hold still across
+  // renders. That is what lets the visibilitychange listener below depend on
+  // `settle` honestly instead of silencing the dependency check.
+  const stopMonitor = useCallback(() => {
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+  }, []);
+
+  const stopStallTimer = useCallback(() => {
+    if (stallTimerRef.current !== null) {
+      window.clearTimeout(stallTimerRef.current);
+      stallTimerRef.current = null;
+    }
+  }, []);
+
+  /**
+   * The single exit from a transition, however it ended: arrived, aborted,
+   * refused, or never started. It puts the element on the frame the intent asks
+   * for, so the picture always agrees with the button even when the animation
+   * was lost.
+   */
+  const settle = useCallback(() => {
+    stopMonitor();
+    stopStallTimer();
+    isRunningRef.current = false;
+    setIsVideoLoading(false);
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.pause();
+    const frame = restingFrame(lookRef.current, video.duration);
+    if (frame !== null) video.currentTime = frame;
+  }, [stopMonitor, stopStallTimer]);
+
+  const monitor = (runId: number) => {
+    const video = videoRef.current;
+    if (!video || runId !== runIdRef.current) return;
+
+    // Playback can begin before metadata has landed, so duration is briefly
+    // unknown. Keep polling rather than bailing out — a dropped monitor would
+    // let the clip run past its stopping point.
+    if (hasReachedTarget(lookRef.current, video.currentTime, video.duration)) {
+      settle();
+      return;
+    }
+
+    frameRef.current = window.requestAnimationFrame(() => monitor(runId));
+  };
+
+  /**
+   * Drive the element to whatever the intent currently is.
+   *
+   * Called from the click — inside the gesture, which is what Safari grants
+   * playback on — and again from `canplay` when that click arrived before there
+   * was anything to play.
+   */
+  const drive = () => {
+    const video = videoRef.current;
+    if (!video || video.error) return;
+
+    const runId = ++runIdRef.current;
+    stopMonitor();
+    stopStallTimer();
+
+    video.muted = true;
+    video.volume = 0;
+    video.playbackRate = VIDEO_SPEED;
+
+    // Nobody is watching a hidden tab, and rAF does not run in one — the clip
+    // would play on with nothing to stop it at the midpoint and end up on the
+    // wrong frame. Skip the animation and go straight to the destination.
+    if (document.hidden) {
+      settle();
+      return;
+    }
+
+    // Nothing to play yet. Park the run, show the spinner, and let `canplay`
+    // call back in — a readiness gate, where the old code guessed with three
+    // blind retries and gave up by resetting the toggle.
+    if (video.readyState < HAVE_CURRENT_DATA) {
+      isRunningRef.current = true;
+      setIsVideoLoading(true);
+      stallTimerRef.current = window.setTimeout(() => {
+        stallTimerRef.current = null;
+        if (runId !== runIdRef.current) return;
+        isRunningRef.current = false;
+        setIsVideoLoading(false);
+        setIsVideoUnavailable(true);
+      }, STALL_TIMEOUT_MS);
+      return;
+    }
+
+    const { currentTime, duration } = video;
+    if (isAtRest(lookRef.current, currentTime, duration)) {
+      settle();
+      return;
+    }
+
+    const from = startFrame(lookRef.current, currentTime, duration);
+    if (from !== currentTime) video.currentTime = from;
+
+    isRunningRef.current = true;
+    setIsVideoLoading(true);
+    frameRef.current = window.requestAnimationFrame(() => monitor(runId));
+
+    void video.play().then(
+      () => {
+        if (runId !== runIdRef.current) return;
+        setIsVideoLoading(false);
+      },
+      () => {
+        // Aborted, blocked by policy, or out of data. The transition is lost;
+        // the intent is not, so settle() lands on the frame it asked for.
+        if (runId !== runIdRef.current) return;
+        settle();
+      },
+    );
   };
 
   useEffect(() => {
@@ -123,198 +265,41 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     return () => observer.disconnect();
   }, []);
 
+  // Leaving the tab mid-transition stops rAF, so the monitor that would halt
+  // the clip at its midpoint stops with it while the media plays on. Finishing
+  // the run immediately puts the element on the frame the intent asks for, so
+  // coming back finds the card in the state it was left in rather than one
+  // frame past it.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden && isRunningRef.current) settle();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [settle]);
+
   useEffect(
     () => () => {
-      if (animationFrameRef.current !== null) {
-        window.cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (revealFrameRef.current !== null) {
-        window.cancelAnimationFrame(revealFrameRef.current);
-      }
-      if (playRetryTimerRef.current !== null) {
-        window.clearTimeout(playRetryTimerRef.current);
-      }
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+      if (stallTimerRef.current !== null) window.clearTimeout(stallTimerRef.current);
     },
     [],
   );
 
-  const stopPlaybackMonitor = () => {
-    if (animationFrameRef.current !== null) {
-      window.cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-  };
-
-  const finishPlayback = () => {
-    const video = videoRef.current;
-    const target = playbackTargetRef.current;
-    if (!video || !target) return;
-
-    video.pause();
-    stopPlaybackMonitor();
-    if (revealFrameRef.current !== null) {
-      window.cancelAnimationFrame(revealFrameRef.current);
-      revealFrameRef.current = null;
-    }
-
-    if (target === "dark") {
-      video.currentTime = video.duration / 2;
-    } else {
-      video.currentTime = 0;
-    }
-
-    playbackTargetRef.current = null;
-    setIsVideoLoading(false);
-  };
-
-  const monitorPlayback = () => {
-    const video = videoRef.current;
-    const target = playbackTargetRef.current;
-    if (!video || !target) return;
-
-    // Playback can begin before metadata has landed (see startPlayback), so
-    // duration is briefly unknown. Keep polling rather than bailing out — a
-    // dropped monitor would let the clip run past its stopping point.
-    if (!Number.isFinite(video.duration) || video.duration <= 0) {
-      animationFrameRef.current = window.requestAnimationFrame(monitorPlayback);
-      return;
-    }
-
-    const midpoint = video.duration / 2;
-    const reachedTarget =
-      target === "dark"
-        ? video.currentTime >= midpoint - ENDPOINT_MARGIN_SECONDS
-        : video.currentTime >= video.duration - ENDPOINT_MARGIN_SECONDS;
-
-    if (reachedTarget) {
-      finishPlayback();
-      return;
-    }
-
-    animationFrameRef.current = window.requestAnimationFrame(monitorPlayback);
-  };
-
-  const attemptPlayback = () => {
-    const video = videoRef.current;
-    if (!video || !playbackTargetRef.current || playPromisePendingRef.current) {
-      return;
-    }
-
-    video.muted = true;
-    video.volume = 0;
-    video.playbackRate = VIDEO_SPEED;
-    playAttemptsRef.current += 1;
-    playPromisePendingRef.current = true;
-    const requestId = playRequestIdRef.current;
-
-    void video.play().then(
-      () => {
-        if (requestId !== playRequestIdRef.current) return;
-        playPromisePendingRef.current = false;
-        playAttemptsRef.current = 0;
-        if (isVideoReadyRef.current) setIsVideoLoading(false);
-        stopPlaybackMonitor();
-        animationFrameRef.current =
-          window.requestAnimationFrame(monitorPlayback);
-      },
-      (error: unknown) => {
-        if (requestId !== playRequestIdRef.current) return;
-        playPromisePendingRef.current = false;
-        if (!playbackTargetRef.current) return;
-
-        if (
-          isAbortError(error) &&
-          playAttemptsRef.current < MAX_VIDEO_PLAY_ATTEMPTS
-        ) {
-          if (playRetryTimerRef.current !== null) {
-            window.clearTimeout(playRetryTimerRef.current);
-          }
-
-          playRetryTimerRef.current = window.setTimeout(() => {
-            playRetryTimerRef.current = null;
-            attemptPlayback();
-          }, VIDEO_PLAY_RETRY_MS);
-          return;
-        }
-
-        playbackTargetRef.current = null;
-        isVideoActiveRef.current = false;
-        setIsVideoActive(false);
-        setIsVideoLoading(false);
-      },
-    );
-  };
-
-  const startPlayback = (target: Exclude<PlaybackTarget, null>) => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    stopPlaybackMonitor();
-    if (revealFrameRef.current !== null) {
-      window.cancelAnimationFrame(revealFrameRef.current);
-      revealFrameRef.current = null;
-    }
-    if (playRetryTimerRef.current !== null) {
-      window.clearTimeout(playRetryTimerRef.current);
-      playRetryTimerRef.current = null;
-    }
-
-    video.pause();
-    playAttemptsRef.current = 0;
-    playRequestIdRef.current += 1;
-    playPromisePendingRef.current = false;
-    playbackTargetRef.current = target;
-    setIsVideoLoading(true);
-
-    // Touch never hovers, so for those visitors this tap is the first request
-    // for the full clip.
-    raisePreload("auto");
-
-    if (target === "light" && video.currentTime <= 0.03) {
-      playbackTargetRef.current = null;
-      setIsVideoLoading(false);
-      return;
-    }
-
-    if (
-      Number.isFinite(video.duration) &&
-      video.duration > 0 &&
-      video.currentTime > 0
-    ) {
-      const midpoint = video.duration / 2;
-
-      if (target === "dark" && video.currentTime > midpoint) {
-        video.currentTime = video.duration - video.currentTime;
-      } else if (target === "light" && video.currentTime < midpoint) {
-        video.currentTime = video.duration - video.currentTime;
-      }
-    }
-
-    // No video.load() here on purpose: load() restarts resource selection and
-    // aborts the play() below. play() pulls the media in by itself.
-    //
-    // Safari also only grants playback on the user gesture that asked for it,
-    // and that permission does not survive an await. Asking here — inside the
-    // click, before anything has buffered — claims the gesture and lets Safari
-    // start as soon as the first frames arrive.
-    attemptPlayback();
-  };
-
   // Hovering the card is the reliable tell that the toggle is about to be
-  // clicked, and it buys the fetch a head start on the click. `load()` is safe
-  // pre-reveal: the guard in raisePreload means this only ever runs once, and
-  // nothing has played yet, so there is no playback position to reset.
+  // clicked, and it buys the fetch a head start on the click.
   //
-  // Once the card has already revealed a frame (the IntersectionObserver's
-  // metadata preload got there first), calling load() would still fire —
-  // load() unconditionally drops readyState back to HAVE_NOTHING, blanking
-  // the frame that's already on screen for a beat while it re-fetches. That
-  // was the first-hover flicker. The full fetch isn't lost by skipping it:
-  // attemptPlayback()'s video.play() on click pulls in the rest regardless.
+  // `load()` restarts resource selection: it drops readyState back to
+  // HAVE_NOTHING, which blanks a frame already on screen and aborts a play in
+  // flight. So it only runs while neither has happened yet. Skipping it costs
+  // nothing — the `play()` on click pulls the rest of the file in regardless.
   const handleCardPointerEnter = () => {
     const video = videoRef.current;
-    if (!video) return;
-    if (raisePreload("auto") && !isVideoReadyRef.current) video.load();
+    if (!video || video.error) return;
+    if (raisePreload("auto") && !isVideoReadyRef.current && !isRunningRef.current) {
+      video.load();
+    }
   };
 
   const handleVideoToggle = () => {
@@ -323,32 +308,33 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // for video to buffer. A switch that clicks late reads as a lag.
     toggleSound.play();
 
-    const nextActiveState = !isVideoActiveRef.current;
-    isVideoActiveRef.current = nextActiveState;
-    setIsVideoActive(nextActiveState);
-    startPlayback(nextActiveState ? "dark" : "light");
+    const next = nextLook(lookRef.current);
+    lookRef.current = next;
+    setLook(next);
+
+    // Touch never hovers, so for those visitors this tap is the first request
+    // for the full clip.
+    raisePreload("auto");
+    drive();
   };
 
-  const revealLoadedVideo = () => {
+  const reveal = () => {
     const video = videoRef.current;
     if (!video || isVideoReadyRef.current) return;
 
-    video.pause();
     isVideoReadyRef.current = true;
     setIsVideoReady(true);
 
-    if (playbackTargetRef.current && revealFrameRef.current === null) {
-      revealFrameRef.current = window.requestAnimationFrame(() => {
-        revealFrameRef.current = window.requestAnimationFrame(() => {
-          revealFrameRef.current = null;
-          attemptPlayback();
-        });
-      });
-    }
+    // Only pause when no transition is running. The old code paused
+    // unconditionally, which meant the first frames arriving mid-click killed
+    // the play the click had just started — the browser reported that back as
+    // an AbortError, and the retry budget it burned is what eventually reset
+    // the toggle. A self-inflicted failure, removed at the source.
+    if (!isRunningRef.current) video.pause();
   };
 
   const handleVideoLoadedData = () => {
-    revealLoadedVideo();
+    reveal();
   };
 
   const handleVideoCanPlay = () => {
@@ -358,30 +344,47 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     video.muted = true;
     video.volume = 0;
     video.playbackRate = VIDEO_SPEED;
-    revealLoadedVideo();
 
-    if (
-      playbackTargetRef.current &&
-      isVideoReadyRef.current &&
-      video.paused
-    ) {
-      if (revealFrameRef.current !== null) return;
+    // Data arrived, so the control works again whether it was withdrawn for a
+    // stall or an error.
+    if (!video.error) setIsVideoUnavailable(false);
 
-      revealFrameRef.current = window.requestAnimationFrame(() => {
-        revealFrameRef.current = null;
-        attemptPlayback();
-      });
+    reveal();
+
+    const action = canPlayAction(isRunningRef.current, video.paused);
+
+    // A click that landed before there was anything to play parked its run
+    // here; this is the callback it was waiting for.
+    if (action === "resume-run") {
+      drive();
+      return;
     }
+
+    // Idle, so the element has to agree with the intent. It will not after a
+    // stall was given up on: the visitor pressed for dark, the clip arrived
+    // late, and this is where the picture catches up. Snapped rather than
+    // animated — that gesture is seconds old by now.
+    if (action === "recover-frame") {
+      const frame = restingFrame(lookRef.current, video.duration);
+      if (frame !== null && !isAtRest(lookRef.current, video.currentTime, video.duration)) {
+        video.currentTime = frame;
+      }
+    }
+  };
+
+  // Backstop for a monitor that missed its endpoint — a tab throttled hard
+  // enough that rAF fell behind the media, say. Every detector converges on the
+  // same exit, so the element still lands on the intent's frame.
+  const handleVideoEnded = () => {
+    settle();
   };
 
   const handleVideoPlaying = () => {
-    if (playbackTargetRef.current && isVideoReadyRef.current) {
-      setIsVideoLoading(false);
-    }
+    if (isRunningRef.current) setIsVideoLoading(false);
   };
 
   const handleVideoWaiting = () => {
-    if (playbackTargetRef.current) setIsVideoLoading(true);
+    if (isRunningRef.current) setIsVideoLoading(true);
   };
 
   const handleVideoError = () => {
@@ -390,24 +393,23 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // A <source> fires its own error event whenever the browser passes it
     // over, and React surfaces that through the <video>'s onError. On desktop
     // the mobile-only <source> is skipped on every single load, so this ran on
-    // a perfectly healthy video and tore the toggle down: target cleared,
-    // pressed state reset, playback abandoned. The media element itself only
-    // counts as broken when it has recorded an error of its own.
+    // a perfectly healthy video and tore the toggle down. The media element
+    // itself only counts as broken when it has recorded an error of its own.
     if (!video || !video.error) return;
 
-    playbackTargetRef.current = null;
-    playRequestIdRef.current += 1;
-    playPromisePendingRef.current = false;
-    isVideoActiveRef.current = false;
-    stopPlaybackMonitor();
-    if (revealFrameRef.current !== null) {
-      window.cancelAnimationFrame(revealFrameRef.current);
-      revealFrameRef.current = null;
-    }
+    runIdRef.current += 1;
+    isRunningRef.current = false;
+    stopMonitor();
+    stopStallTimer();
+
     isVideoReadyRef.current = false;
-    setIsVideoActive(false);
-    setIsVideoLoading(false);
     setIsVideoReady(false);
+    setIsVideoLoading(false);
+
+    // The control is withdrawn rather than left standing on a promise it cannot
+    // keep; the still image is what the card falls back to. `look` is left
+    // alone on purpose — it belongs to the visitor, not to the network.
+    setIsVideoUnavailable(true);
   };
 
   return {
@@ -416,11 +418,13 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     videoPreload,
     handleCardPointerEnter,
     isVideoReady,
-    isVideoActive,
+    isVideoActive: look === "dark",
     isVideoLoading,
+    isVideoUnavailable,
     handleVideoToggle,
     handleVideoLoadedData,
     handleVideoCanPlay,
+    handleVideoEnded,
     handleVideoPlaying,
     handleVideoWaiting,
     handleVideoError,
