@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
@@ -17,11 +18,15 @@ function AfspraakButton({
   minuten,
   prijs,
   whatsappUrl,
+  qrCode,
+  title,
   className = "mt-3 md:mt-auto",
 }: {
   minuten: string;
   prijs: string;
   whatsappUrl: string;
+  qrCode: StaticImageData;
+  title: string;
   className?: string;
 }) {
   const [qrOpen, setQrOpen] = useState(false);
@@ -56,7 +61,13 @@ function AfspraakButton({
         </div>
       </div>
 
-      <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
+      <AfspraakOverlay
+        isOpen={qrOpen}
+        onClose={() => setQrOpen(false)}
+        whatsappUrl={whatsappUrl}
+        qrCode={qrCode}
+        bankTitle={title}
+      />
       <PlanJeMomentSheet
         isOpen={sheetOpen}
         onClose={() => setSheetOpen(false)}
@@ -158,6 +169,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           minuten={data.minuten}
           prijs={data.prijs}
           whatsappUrl={data.whatsappUrl}
+          qrCode={data.qrCode}
+          title={data.title}
         />
       </div>
     </CardWrapper>

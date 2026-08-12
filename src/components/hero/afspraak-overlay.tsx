@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import qrCode from "@/images/qr-code-ever-sun.svg";
+import defaultQrCode from "@/images/qr/algemeen.svg";
 import whatsappIcon from "@/images/whatsapp.svg";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -17,9 +17,18 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 export default function AfspraakOverlay({
   isOpen,
   onClose,
+  whatsappUrl = WHATSAPP_BOOKING_URL,
+  qrCode = defaultQrCode,
+  bankTitle,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  /** Booking link for both routes out of this overlay: the code and the button. */
+  whatsappUrl?: string;
+  /** Must encode `whatsappUrl` — the pairing is set up in `zonnebanken-data.ts`. */
+  qrCode?: StaticImageData;
+  /** Names the bank in the QR's alt text, for anyone who cannot see the code. */
+  bankTitle?: string;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -78,7 +87,11 @@ export default function AfspraakOverlay({
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-4">
                 <Image
                   src={qrCode}
-                  alt="QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
+                  alt={
+                    bankTitle
+                      ? `QR code om via WhatsApp een zonsessie op de ${bankTitle} te boeken bij Ever Sun`
+                      : "QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
+                  }
                   width={300}
                   height={300}
                   className="w-full h-auto rounded-[8px]"
@@ -90,7 +103,7 @@ export default function AfspraakOverlay({
               </p>
 
               <a
-                href={WHATSAPP_BOOKING_URL}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-[#111111]`}
