@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { m } from "framer-motion";
 import HeroButtons from "./hero-buttons";
 import HeroStatus from "./hero-status";
@@ -26,6 +26,47 @@ const fadeUp = {
   }),
 };
 
+// Two entrances, because the two breakpoints show different things. On desktop
+// the right-hand side goes first: header and review row share one cue, the
+// avatars then glide out of their stack (HeroReviews' own ENTRANCE_DELAY), and
+// the left column only starts once that glide is nearly home — so the eye is
+// handed from the row to the title instead of watching both at once.
+// The avatar that travels furthest starts at 0.75s and takes 0.85s, so 1.0
+// lands the title a third of the way into that last glide — the row has done
+// enough of its unpacking to have been read, and the two overlap rather than
+// queue.
+// Mobile has no avatar row to wait for, so it keeps the original cadence.
+const DESKTOP_DELAYS = { header: 0.2, reviews: 0.2, title: 1, sub: 1.15, buttons: 1.3, status: 1.3 };
+const MOBILE_DELAYS = { header: 0.2, reviews: 0.7, title: 0.3, sub: 0.6, buttons: 0.7, status: 0.9 };
+
+// Desktop-only gap between the avatars settling and the title underline
+// drawing. The two used to land within the same beat, so the underline read
+// as part of the dock's own landing rather than a separate cue.
+const UNDERLINE_EXTRA_DELAY_MS = 400;
+
+const DESKTOP = "(min-width: 1024px)";
+
+// One store for the whole schedule, rather than a viewport boolean the render
+// then maps: the server has no viewport, so the first paint has to be honest
+// about not knowing yet (null) instead of guessing mobile and swapping delays
+// out from under an animation that already started. Reading breakpoint and
+// schedule from a single snapshot also keeps them from resolving a render
+// apart. Both constants are module-level, so the snapshot is reference-stable
+// and React does not see a new value every render.
+function useEntranceDelays(): typeof DESKTOP_DELAYS | null {
+  const subscribe = useCallback((onChange: () => void) => {
+    const mql = window.matchMedia(DESKTOP);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return useSyncExternalStore(
+    subscribe,
+    () => (window.matchMedia(DESKTOP).matches ? DESKTOP_DELAYS : MOBILE_DELAYS),
+    () => null,
+  );
+}
+
 
 export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijden, onOpenAfspraak, onOpenPlanJeMoment, statusButtonRef }: { onOpenMenu: () => void; isMenuOpen: boolean; onOpenOpeningstijden: () => void; onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void; statusButtonRef: React.RefObject<HTMLButtonElement | null> }) {
   // Desktop menu is a hero-scoped dropdown (see DesktopMenu), independent of the
@@ -42,10 +83,27 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
     // The avatar row is desktop-only. It still mounts on mobile (display:none
     // does not stop framer animating), but nobody is watching it there, so the
     // underlines need not wait out its full entrance.
-    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    const t = setTimeout(() => setReviewsSettled(true), isDesktop ? 3200 : 1800);
+    const isDesktop = window.matchMedia(DESKTOP).matches;
+    const t = setTimeout(() => setReviewsSettled(true), isDesktop ? 3200 + UNDERLINE_EXTRA_DELAY_MS : 1800);
     return () => clearTimeout(t);
   }, []);
+  // Until the breakpoint is known every element stays at `hidden`, so nothing
+  // starts on the wrong clock. It costs a frame before the first fade — the
+  // header's own 0.2s delay covers it — not a visible pause.
+  const delays = useEntranceDelays();
+  const show = delays ? "visible" : "hidden";
+  const d = delays ?? DESKTOP_DELAYS;
+
+  // Fires from HeroReviews' onSettled callback, not an effect body, so this is
+  // not the setState-in-effect pattern the lint rule flags. Mobile has no dock
+  // to wait on and keeps firing immediately.
+  const onReviewsSettled = () => {
+    if (delays === DESKTOP_DELAYS) {
+      setTimeout(() => setReviewsSettled(true), UNDERLINE_EXTRA_DELAY_MS);
+    } else {
+      setReviewsSettled(true);
+    }
+  };
 
   return (
     <div
@@ -63,8 +121,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
         {/* Desktop Header */}
         <m.div
           initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          animate={delays ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+          transition={{ duration: 0.8, delay: d.header }}
           className="hidden lg:flex items-center justify-between"
         >
           {/* Status sits with the logo, not opposite it: both say who is
@@ -108,8 +166,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
         {/* Mobile Header */}
         <m.div
           initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          animate={delays ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
+          transition={{ duration: 0.8, delay: d.header }}
           className="lg:hidden flex items-center justify-between"
         >
           <button
@@ -156,8 +214,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   tabIndex={-1}
                   variants={fadeUp}
                   initial="hidden"
-                  animate="visible"
-                  custom={0.3}
+                  animate={show}
+                  custom={d.title}
                   // The clamp floors used to be 32px/40px, which pinned the
                   // title flat below 427px and pushed it onto three lines on a
                   // 375px phone. The fluid 7.5vw already tracks the width the
@@ -165,7 +223,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   // font size, against (viewport - 48px) of room — so lowering
                   // the floors lets it govern down to 320px and the line breaks
                   // on the comma instead. Only widths below 427px change.
-                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[64px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2] text-hero-ink"
+                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[66px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2] text-hero-ink"
                   style={{ marginLeft: "-3px" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -180,8 +238,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   className="hidden lg:block w-0 min-w-full mt-2.5 md:mt-3 lg:mt-4 font-sans font-normal text-[15px] md:text-[20px] lg:text-[18px] 2xl:text-[24px] leading-[25px] md:leading-[30px] lg:leading-[30px] 2xl:leading-[40px] text-hero-ink/75"
                   variants={fadeUp}
                   initial="hidden"
-                  animate="visible"
-                  custom={0.6}
+                  animate={show}
+                  custom={d.sub}
                 >
                   In onze zonnestudio draait het gewoon om jou.
                   <br />
@@ -192,23 +250,40 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   className="lg:hidden block w-0 min-w-full mt-2 md:mt-3 font-sans font-normal text-[15px] md:text-[20px] leading-[24px] md:leading-[30px] text-hero-ink/75"
                   variants={fadeUp}
                   initial="hidden"
-                  animate="visible"
-                  custom={0.6}
+                  animate={show}
+                  custom={d.sub}
                 >
                   In onze zonnestudio draait het gewoon om jou. Twintig minuten voor jezelf, zonder dat er iets van je gevraagd wordt.
                 </m.p>
               </div>
 
-              <m.div
-                className="mt-6 md:mt-8 lg:mt-11 flex flex-row items-center justify-between w-full gap-6"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={0.7}
-              >
-                <HeroButtons onOpenAfspraak={onOpenAfspraak} onOpenPlanJeMoment={onOpenPlanJeMoment} />
-                <HeroReviews onSettled={() => setReviewsSettled(true)} />
-              </m.div>
+              {/* The row is one layout, two entrances: on desktop the reviews
+                  arrive with the header and the buttons come in last with the
+                  rest of the left column, so the fade cannot sit on the shared
+                  parent. The wrapper below keeps the row's own geometry —
+                  justify-between still measures the same two children. */}
+              <div className="mt-6 md:mt-8 lg:mt-11 flex flex-row items-center justify-between w-full gap-6">
+                <m.div
+                  className="w-full sm:w-auto"
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate={show}
+                  custom={d.buttons}
+                >
+                  <HeroButtons onOpenAfspraak={onOpenAfspraak} onOpenPlanJeMoment={onOpenPlanJeMoment} />
+                </m.div>
+                {/* hidden below lg like HeroReviews itself: an empty animating
+                    wrapper would otherwise still take a turn in the flex row. */}
+                <m.div
+                  className="hidden lg:block"
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate={show}
+                  custom={d.reviews}
+                >
+                  <HeroReviews onSettled={onReviewsSettled} />
+                </m.div>
+              </div>
             </div>
           </div>
         </div>
@@ -216,8 +291,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
         <m.div
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
-          custom={0.9}
+          animate={show}
+          custom={d.status}
           className="mb-4 flex items-center justify-between lg:hidden"
         >
           <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />

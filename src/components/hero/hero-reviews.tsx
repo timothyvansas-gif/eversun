@@ -20,7 +20,11 @@ const reviewers = REVIEWS.map((review) => review.avatar);
 // suggests, since a resting avatar is SIZE_REST rather than the full box: 48
 // against a 36px step leaves the circles 12px into each other.
 const STACK_STEP = 36;
-const ENTRANCE_DELAY = 1.4; // wait for the review row to finish fading in
+// The glide starts early in the review row's own fade (which runs 0.2s–1.1s),
+// not after it. Waiting for the fade to finish read as a pause with nothing
+// happening in it; overlapping this far means the row is unpacking itself
+// while it is still arriving.
+const ENTRANCE_DELAY = 0.35;
 const ENTRANCE_STAGGER = 0.1;
 const ANCHOR = reviewers.length - 1;
 
