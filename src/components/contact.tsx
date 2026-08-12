@@ -208,7 +208,7 @@ function SuccessPanel({ onReset }: { onReset: () => void }) {
       <p className="mt-2.5 max-w-[380px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
         Dank je wel. We lezen het zo snel mogelijk en reageren meestal binnen één werkdag. Haast?
         Bel gerust even op{" "}
-        <a href="tel:+31625306491" className={`${DETAIL_LINK} text-ink-strong`}>
+        <a href="tel:+31625306491" className={`${DETAIL_LINK} whitespace-nowrap sm:whitespace-normal text-ink-strong`}>
           06 25 30 64 91
         </a>
         .
