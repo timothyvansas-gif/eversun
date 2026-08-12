@@ -262,7 +262,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   rest of the left column, so the fade cannot sit on the shared
                   parent. The wrapper below keeps the row's own geometry —
                   justify-between still measures the same two children. */}
-              <div className="mt-6 md:mt-8 lg:mt-11 flex flex-row items-center justify-between w-full gap-6">
+              <div className="mt-6 md:mt-8 lg:mt-14 flex flex-row items-center justify-between w-full gap-6">
                 <m.div
                   className="w-full sm:w-auto"
                   variants={fadeUp}
