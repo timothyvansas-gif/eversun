@@ -68,7 +68,7 @@ describe("validateContactField — email", () => {
 
 describe("validateContactField — message", () => {
   it("requires a value", () => {
-    expect(validateContactField("message", "")).toBe("Schrijf even je bericht.");
+    expect(validateContactField("message", "")).toBe("Vul je bericht in.");
   });
 
   it("rejects messages under the minimum", () => {
@@ -77,7 +77,7 @@ describe("validateContactField — message", () => {
   });
 
   it("counts trimmed length, so whitespace can't pad a message to valid", () => {
-    expect(validateContactField("message", `  ${" ".repeat(20)}  `)).toBe("Schrijf even je bericht.");
+    expect(validateContactField("message", `  ${" ".repeat(20)}  `)).toBe("Vul je bericht in.");
   });
 
   it("rejects messages past the maximum", () => {

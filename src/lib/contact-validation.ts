@@ -61,7 +61,7 @@ function validateEmail(value: string): string | undefined {
 
 function validateMessage(value: string): string | undefined {
   const message = value.trim();
-  if (!message) return "Schrijf even je bericht.";
+  if (!message) return "Vul je bericht in.";
   if (message.length < CONTACT_LIMITS.messageMin) {
     return `Nog even iets meer graag (minimaal ${CONTACT_LIMITS.messageMin} tekens).`;
   }
