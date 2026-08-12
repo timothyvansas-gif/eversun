@@ -72,7 +72,7 @@ export default function AfspraakOverlay({
 
               <h2 className="card-title text-zinc-900 text-center">Plan je zonsessie</h2>
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
-                Scan de QR-code om vanaf je eigen telefoon een afspraak te maken.
+                Scan met je telefoon, dan opent WhatsApp met je aanvraag al ingevuld.
               </p>
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-4">
