@@ -162,15 +162,14 @@ export default function HuidtestQuiz({
     ? QUESTIONS.length - 1
     : QUESTIONS.length;
 
-  const answered =
-    step.kind === "resultaat" ? totalQuestions : step.kind === "vraag" ? step.index : 0;
+  const answered = step.kind === "vraag" ? step.index : 0;
 
   const progress =
     step.kind === "intro" || step.kind === "exit"
       ? START_PROGRESS
       : START_PROGRESS + ((100 - START_PROGRESS) * answered) / totalQuestions;
 
-  const showsProgress = step.kind === "vraag" || step.kind === "resultaat";
+  const showsProgress = step.kind === "vraag";
 
   return (
     // A column that fills whatever it is in, so the action bar can be held on
@@ -209,7 +208,7 @@ export default function HuidtestQuiz({
             <button
               type="button"
               onClick={back}
-              className="mt-4 -ml-2 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong sm:inline-flex"
+              className="mt-4 -ml-2 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong md:inline-flex"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path

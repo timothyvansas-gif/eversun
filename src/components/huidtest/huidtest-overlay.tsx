@@ -128,7 +128,7 @@ export default function HuidtestOverlay({
               </div>
             )}
 
-            <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-4">
+            <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-6 md:pt-4">
               <HuidtestQuiz entry={entry} onClose={onClose} />
             </div>
           </m.div>

@@ -118,12 +118,13 @@ export default function ResultScreen({
         </div>
       </div>
 
-      {/* Kassakoopje. Smaller type, a tinted panel instead of a card, and no
-          photo bigger than a thumbnail: everything here says "and one of
-          these?" rather than "here is your second advice". */}
+      {/* Kassakoopje. Smaller type, a thumbnail rather than a photo, and a
+          rule instead of a panel: everything here says "and one of these?"
+          rather than "here is your second advice". The tint it used to sit on
+          made it a second card, which is the one thing it must not be. */}
       <section
         aria-labelledby="huidtest-kassakoopje"
-        className="mt-8 rounded-[12px] bg-surface-page p-4 sm:p-5"
+        className="mt-8 border-t border-line/50 pt-5"
       >
         <h3
           id="huidtest-kassakoopje"
@@ -158,17 +159,12 @@ export default function ResultScreen({
                 and a paragraph here starts competing with the advice above it.
                 Clamped rather than rewritten per product, so a longer line
                 added later cannot quietly turn the block into a page. */}
-            <p className="mt-1 line-clamp-2 font-sans text-[14px] leading-[22px] tracking-[-0.01em] text-muted">
+            <p className="line-clamp-2 font-sans text-[14px] leading-[22px] tracking-[-0.01em] text-muted">
               {PRODUCT_WAAROM[product.slug]}
             </p>
           </div>
         </div>
 
-        {advies.tattooTip && (
-          <p className="mt-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
-            {RESULTAAT.tattooTip}
-          </p>
-        )}
 
         {product.sachetPrice && (
           <div className="mt-4">
@@ -199,7 +195,7 @@ export default function ResultScreen({
 
       </StepCard>
 
-      <div className="flex-1" />
+      <div className="flex-1 md:hidden" />
 
       {/* The one thing this screen is for, kept within reach: the result is
           the longest screen in the test, and on a phone the button that books

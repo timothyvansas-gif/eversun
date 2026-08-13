@@ -21,7 +21,7 @@ export function CheckField({
   children: React.ReactNode;
 }) {
   return (
-    <label className="group flex min-h-[44px] w-fit cursor-pointer items-center gap-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+    <label className="group flex min-h-[44px] w-fit cursor-pointer items-start gap-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
       <input
         type="checkbox"
         checked={checked}
@@ -31,7 +31,10 @@ export function CheckField({
 
       <span
         aria-hidden="true"
-        className={`flex size-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors duration-150 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+        // 2px down: the box is 20px against a 24px line, so centring it on the
+        // line rather than on the whole label is what makes it look aligned
+        // once the text wraps.
+        className={`mt-[2px] flex size-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors duration-150 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
           checked
             ? "border-accent bg-accent"
             : "border-line bg-white/60 group-hover:border-[#312019]"

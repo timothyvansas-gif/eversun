@@ -37,8 +37,8 @@ export default function QuestionCard<K extends QuestionKey>({
   onNext?: () => void;
   /**
    * One question back. Absent on the first, where there is nothing behind it.
-   * Only drawn below sm: from there up the same move is a text link above the
-   * question, which is where a mouse expects it.
+   * Only drawn in the sheet: on the panel the same move is a text link above
+   * the question, which is where a mouse expects it.
    */
   onBack?: () => void;
 }) {
@@ -151,8 +151,9 @@ export default function QuestionCard<K extends QuestionKey>({
 
       {/* Takes up whatever is left, which is what pins the bar below to the
           bottom edge on a short question instead of letting it ride up under
-          the last option. */}
-      <div className="flex-1" />
+          the last option. Only in the sheet: the desktop panel is tall enough
+          that a button pushed to the floor loses its tie to the question. */}
+      <div className="flex-1 md:hidden" />
 
       {/* Every question is confirmed rather than sprung: the answer takes a
           mark, and the way on arrives under it. Choosing used to advance by
@@ -167,7 +168,7 @@ export default function QuestionCard<K extends QuestionKey>({
               type="button"
               onClick={onBack}
               aria-label="Terug naar de vorige vraag"
-              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] sm:hidden"
+              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
             >
               <span className="rotate-180">
                 <CtaArrow always />
@@ -175,7 +176,7 @@ export default function QuestionCard<K extends QuestionKey>({
             </button>
           )}
 
-          <CtaButton className="flex-1 sm:flex-none sm:w-auto" onClick={onNext}>
+          <CtaButton className="flex-1 md:flex-none md:w-auto" onClick={onNext}>
             Volgende
           </CtaButton>
         </div>

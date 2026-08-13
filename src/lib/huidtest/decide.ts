@@ -54,12 +54,7 @@ export function decideProduct(a: QuizAnswers): ProductSlug {
 export function decide(a: QuizAnswers): Advies {
   const { bank, stand } = decideBank(a);
 
-  return {
-    bank,
-    stand,
-    product: decideProduct(a),
-    tattooTip: a.huidgevoel === "gevoelig" && a.tattoo,
-  };
+  return { bank, stand, product: decideProduct(a) };
 }
 
 /**

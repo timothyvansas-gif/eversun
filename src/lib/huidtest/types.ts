@@ -29,11 +29,6 @@ export type Advies = {
   bank: BankId;
   stand: StandId | null;
   product: ProductSlug;
-  /**
-   * A sensitive skin with tattoos: the product stays the mild one, and the
-   * result screen adds a line about the tattoo-safe alternative.
-   */
-  tattooTip: boolean;
 };
 
 /**

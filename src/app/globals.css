@@ -495,6 +495,26 @@ body {
   animation: huidtest-bar-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* The travel is the sheet's, not the panel's. On a phone the bar comes up out
+   of the bottom edge it lives on; in the side panel there is no edge to come
+   from and the same movement reads as the button jumping into place, so there
+   it simply fades where it stands. */
+@keyframes huidtest-bar-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .huidtest-bar-in {
+    animation-name: huidtest-bar-fade;
+    animation-duration: 200ms;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .huidtest-bar-in {
     animation: none;

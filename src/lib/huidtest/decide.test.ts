@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BANK_REGELS, PRODUCT_REGELS, RESULTAAT } from "@/lib/huidtest/config";
+import { BANK_REGELS, PRODUCT_REGELS } from "@/lib/huidtest/config";
 import {
   buildWhatsappMessage,
   buildWhy,
@@ -184,17 +184,14 @@ describe("decideProduct", () => {
 });
 
 describe("decide", () => {
-  it("adds the tattoo tip when the mild product wins from inked skin", () => {
-    const advies = decide(answers({ huidgevoel: "gevoelig", tattoo: true, kleurstijl: undefined }));
-
-    expect(advies.product).toBe("dare-to-be-dark");
-    expect(advies.tattooTip).toBe(true);
-    expect(RESULTAAT.tattooTip).toContain("H.I.M. Surf");
-  });
-
-  it("leaves the tip off when there are no tattoos to protect", () => {
-    expect(decide(answers({ huidgevoel: "gevoelig", tattoo: false, kleurstijl: undefined })).tattooTip).toBe(
-      false,
+  it("keeps the mild product for a sensitive skin, tattoos or not", () => {
+    // P1 runs before the tattoo rules, which is the whole point of its place
+    // in the order: an irritable skin decides the product on its own.
+    expect(decide(answers({ huidgevoel: "gevoelig", tattoo: true, kleurstijl: undefined })).product).toBe(
+      "dare-to-be-dark",
+    );
+    expect(decide(answers({ huidgevoel: "gevoelig", tattoo: false, kleurstijl: undefined })).product).toBe(
+      "dare-to-be-dark",
     );
   });
 });
@@ -251,7 +248,7 @@ describe("buildWhy", () => {
 describe("buildWhatsappMessage", () => {
   it("names the bank and its stand", () => {
     const message = buildWhatsappMessage(
-      { bank: "prestige-1600", stand: "medium", product: "sun-honey", tattooTip: false },
+      { bank: "prestige-1600", stand: "medium", product: "sun-honey" },
       false,
     );
 
@@ -262,7 +259,7 @@ describe("buildWhatsappMessage", () => {
 
   it("leaves the stand out for a bank that has none", () => {
     const message = buildWhatsappMessage(
-      { bank: "770-medium", stand: null, product: "sun-honey", tattooTip: false },
+      { bank: "770-medium", stand: null, product: "sun-honey" },
       false,
     );
 
@@ -271,7 +268,7 @@ describe("buildWhatsappMessage", () => {
   });
 
   it("asks for a sachet only when the toggle is on", () => {
-    const advies = { bank: "770-medium", stand: null, product: "vault", tattooTip: false } as const;
+    const advies = { bank: "770-medium", stand: null, product: "vault" } as const;
 
     expect(buildWhatsappMessage(advies, true)).toContain(
       "Leggen jullie een sachet Vault voor me klaar?",

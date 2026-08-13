@@ -85,10 +85,14 @@ export const QUESTIONS: [
     key: "huidreactie",
     vraag: "Hoe reageert je huid op zon?",
     hulptekst: "Denk aan een zomerdag buiten, zonder bescherming.",
+    // Third, not first. It is the rarest answer here and the one that ends the
+    // test, so leading with it put the exit at the top of the very first
+    // question. The order the options are read in has no bearing on the rules;
+    // `id` is what those match on.
     options: [
-      { id: "type1", label: "Ik verbrand altijd en word eigenlijk nooit bruin" },
       { id: "type2", label: "Ik verbrand snel, daarna word ik licht bruin" },
       { id: "type3", label: "Ik word makkelijk bruin en verbrand zelden" },
+      { id: "type1", label: "Ik verbrand altijd en word eigenlijk nooit bruin" },
       { id: "type4", label: "Ik word diep bruin en verbrand bijna nooit" },
     ],
   },
@@ -144,8 +148,6 @@ export const RESULTAAT = {
   ctaSecundair: "Opnieuw doen",
   disclaimer:
     "Deze test geeft een indicatie. In de studio kijken we altijd nog even samen naar je huid. Dat advies is leidend.",
-  tattooTip:
-    "Tip voor je tattoos: H.I.M. Surf beschermt je inkt en is ook mild genoeg voor jouw huid.",
 } as const;
 
 export const HUID_FRAGMENT: Record<Exclude<Answers["huidreactie"], "type1">, string> = {
