@@ -107,7 +107,7 @@ export function BookingSheet({
         onDragEnd={(_, info) => {
           if (info.offset.y > 80 || info.velocity.y > 400) onClose();
         }}
-        className={`${pin} inset-x-0 bottom-0 z-20 mx-auto max-w-[520px] rounded-t-[20px] bg-surface-page px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5`}
+        className={`${pin} inset-x-0 bottom-0 z-20 mx-auto max-w-[520px] rounded-t-[20px] bg-surface-page px-6 pb-10 pt-5`}
       >
         {/* Its own row, not a button floated over the corner of the card: on
             the card it collided with the heading's box and read as damage. */}
