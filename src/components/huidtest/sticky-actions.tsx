@@ -17,14 +17,24 @@
  */
 export function StickyActions({
   children,
+  visible = true,
   className = "",
 }: {
   children: React.ReactNode;
+  /**
+   * Whether there is anything to act on yet. False renders nothing at all —
+   * not a hidden bar, which still holds its space and cuts the step card short
+   * above it, which is exactly how this looked wrong on a phone. When it turns
+   * true the bar slides up from the edge instead of blinking into place.
+   */
+  visible?: boolean;
   className?: string;
 }) {
+  if (!visible) return null;
+
   return (
     <div
-      className={`sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
+      className={`huidtest-bar-in sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
     >
       {children}
     </div>

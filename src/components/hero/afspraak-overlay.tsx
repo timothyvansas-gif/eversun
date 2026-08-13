@@ -21,6 +21,7 @@ export default function AfspraakOverlay({
   qrCode = defaultQrCode,
   qrSvg,
   bankTitle,
+  elevated = false,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -37,6 +38,13 @@ export default function AfspraakOverlay({
   qrSvg?: string;
   /** Names the bank in the QR's alt text, for anyone who cannot see the code. */
   bankTitle?: string;
+  /**
+   * Lifts the overlay above a layer that is already covering the page — the
+   * huidtest panel and its scrim, which sit at 80 and 90. Opened from the hero
+   * or a bank card there is nothing above the page, so the default stays where
+   * every other modal on the site is.
+   */
+  elevated?: boolean;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -65,13 +73,17 @@ export default function AfspraakOverlay({
 
   if (!mounted) return null;
 
+  // One value for the pair: a scrim and a dialog that disagree about their
+  // layer is exactly how this overlay ended up dimmed behind the huidtest.
+  const layer = elevated ? "z-[100]" : "z-50";
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
           <Backdrop
             onClick={onClose}
-            className="z-50"
+            className={layer}
             scrollLock
             transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
           />
@@ -82,7 +94,7 @@ export default function AfspraakOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Afspraak maken"
-            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-50 w-[364px]"
+            className={`hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl w-[364px] ${layer}`}
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.88, y: shouldReduceMotion ? 0 : -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}

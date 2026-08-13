@@ -472,3 +472,31 @@ body {
   }
 
 }
+
+/* The huidtest's action bar arrives rather than appears.
+
+   It only exists once an answer is chosen — rendered before that, it took its
+   space at the foot of the sheet and cut the white step card short, leaving a
+   strip of surface under a button nobody could see yet. Mounting it on the
+   choice fixes that, and this is what keeps the mount from being a jump: the
+   bar slides up out of the bottom edge it belongs to. */
+@keyframes huidtest-bar-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.huidtest-bar-in {
+  animation: huidtest-bar-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .huidtest-bar-in {
+    animation: none;
+  }
+}

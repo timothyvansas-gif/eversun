@@ -69,7 +69,7 @@ export default function ResultScreen({
   };
 
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       <StepCard>
       <h2
         ref={headingRef}
@@ -199,6 +199,8 @@ export default function ResultScreen({
 
       </StepCard>
 
+      <div className="flex-1" />
+
       {/* The one thing this screen is for, kept within reach: the result is
           the longest screen in the test, and on a phone the button that books
           it sat below a photo, a price, the reasoning and the sachet block.
@@ -206,7 +208,7 @@ export default function ResultScreen({
           The sachet line rides along because this button is what sends the
           message: what is switched on above should still be visible at the
           moment of sending, not four hundred pixels up the page. */}
-      <StickyActions className="mt-6">
+      <StickyActions className="mt-6 shrink-0">
         {sachet && product.sachetPrice && (
           <p className="mb-2 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
             Inclusief sachet {product.name} · € {product.sachetPrice}
@@ -237,6 +239,7 @@ export default function ResultScreen({
         whatsappUrl={whatsappUrl}
       />
       <AfspraakOverlay
+        elevated
         isOpen={overlayOpen}
         onClose={() => setBoeken("geen")}
         whatsappUrl={whatsappUrl}

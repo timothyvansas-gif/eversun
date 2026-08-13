@@ -173,9 +173,13 @@ export default function HuidtestQuiz({
   const showsProgress = step.kind === "vraag" || step.kind === "resultaat";
 
   return (
-    <div className="w-full">
+    // A column that fills whatever it is in, so the action bar can be held on
+    // the bottom edge rather than trailing the last option. A question with
+    // three answers is shorter than one with four, and a button that moved up
+    // with it made the two screens read as different layouts.
+    <div className="flex min-h-full w-full flex-col">
       {showsProgress && (
-        <div className="mb-5">
+        <div className="mb-5 shrink-0">
           <div
             role="progressbar"
             aria-valuemin={0}
@@ -239,11 +243,14 @@ export default function HuidtestQuiz({
             {INTRO.body}
           </p>
 
-          <h3 className="mt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+          {/* A rule where the card turns from telling to asking. The gate is a
+              different kind of thing from the paragraph above it, and a line
+              says so more quietly than white space can at this size. */}
+          <h3 className="mt-6 border-t border-line/50 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
             {INTRO.vraag}
           </h3>
 
-          <p className="mt-2 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+          <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
             {INTRO.wettelijk}
           </p>
 

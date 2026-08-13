@@ -64,7 +64,7 @@ export default function QuestionCard<K extends QuestionKey>({
   };
 
   return (
-    <div>
+    <div className="flex flex-1 flex-col">
       <StepCard>
       <h2
         id={headingId}
@@ -149,19 +149,16 @@ export default function QuestionCard<K extends QuestionKey>({
 
       </StepCard>
 
-      {/* Every question is confirmed rather than sprung: the answer takes a
-          mark, and the way on appears under it. Choosing used to advance by
-          itself, which read as the screen deciding it had heard enough.
+      {/* Takes up whatever is left, which is what pins the bar below to the
+          bottom edge on a short question instead of letting it ride up under
+          the last option. */}
+      <div className="flex-1" />
 
-          Rendered all along and revealed, not mounted on selection — a button
-          that appears out of nowhere pushes the options it sits under, and the
-          page would jump under the finger that just tapped one. */}
-      <StickyActions className="mt-7">
-        <div
-          className="flex items-center gap-3 transition-opacity duration-200"
-          style={{ opacity: selected ? 1 : 0, visibility: selected ? "visible" : "hidden" }}
-          aria-hidden={!selected}
-        >
+      {/* Every question is confirmed rather than sprung: the answer takes a
+          mark, and the way on arrives under it. Choosing used to advance by
+          itself, which read as the screen deciding it had heard enough. */}
+      <StickyActions className="mt-7 shrink-0" visible={Boolean(selected)}>
+        <div className="flex items-center gap-3">
           {/* Thumb-height, thumb-width, and beside the button it undoes rather
               than at the top of a sheet. The site's own arrow, turned around,
               so back and forward are visibly the same gesture in reverse. */}
@@ -178,7 +175,7 @@ export default function QuestionCard<K extends QuestionKey>({
             </button>
           )}
 
-          <CtaButton className="flex-1 sm:flex-none sm:w-auto" onClick={onNext} disabled={!selected}>
+          <CtaButton className="flex-1 sm:flex-none sm:w-auto" onClick={onNext}>
             Volgende
           </CtaButton>
         </div>
