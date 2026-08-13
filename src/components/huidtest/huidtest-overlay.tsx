@@ -90,15 +90,21 @@ export default function HuidtestOverlay({
             onDragEnd={(_, info) => {
               if (info.offset.y > DISMISS_OFFSET || info.velocity.y > DISMISS_VELOCITY) onClose();
             }}
-            style={{
-              maxWidth: isMobile ? undefined : PANEL_WIDTH,
-              paddingBottom: isMobile
-                ? "max(1rem, calc(env(safe-area-inset-bottom) + 0.5rem))"
-                : undefined,
-            }}
+            // No bottom padding of its own: the sticky action bar inside runs
+            // to the sheet's edge and carries the safe-area inset itself.
+            // Padding here left a strip of page under the button that read as
+            // the bar failing to reach the bottom.
+            style={{ maxWidth: isMobile ? undefined : PANEL_WIDTH }}
             className={
               isMobile
-                ? "fixed inset-x-0 bottom-0 z-[90] flex max-h-[92svh] flex-col rounded-t-[20px] bg-surface-page"
+                ? // One height for every step, not one per step. The result is
+                  // the tallest screen and already fills this, so sizing to
+                  // content meant the sheet grew and shrank underneath the
+                  // reader as they answered — the surface moving while the
+                  // content changed reads as two things happening at once.
+                  // Fixed, the questions simply sit at the top with the action
+                  // bar on the bottom edge, and nothing but the text changes.
+                  "fixed inset-x-0 bottom-0 z-[90] flex h-[92svh] flex-col rounded-t-[20px] bg-surface-page"
                 : "fixed inset-y-0 right-0 z-[90] flex w-full flex-col bg-surface-page shadow-[0_0_60px_rgba(0,0,0,0.25)]"
             }
           >
@@ -122,7 +128,7 @@ export default function HuidtestOverlay({
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto overscroll-contain px-6 pt-4 pb-2">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-6 pt-4">
               <HuidtestQuiz entry={entry} onClose={onClose} />
             </div>
           </m.div>

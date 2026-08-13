@@ -19,6 +19,7 @@ export default function AfspraakOverlay({
   onClose,
   whatsappUrl = WHATSAPP_BOOKING_URL,
   qrCode = defaultQrCode,
+  qrSvg,
   bankTitle,
 }: {
   isOpen: boolean;
@@ -27,6 +28,13 @@ export default function AfspraakOverlay({
   whatsappUrl?: string;
   /** Must encode `whatsappUrl` — the pairing is set up in `zonnebanken-data.ts`. */
   qrCode?: StaticImageData;
+  /**
+   * A code rendered at call time, for a `whatsappUrl` no committed asset can
+   * match. Wins from `qrCode` when given, and carries the same duty: it must
+   * encode the very link the button below it opens, or the two routes out of
+   * this overlay lead to different messages.
+   */
+  qrSvg?: string;
   /** Names the bank in the QR's alt text, for anyone who cannot see the code. */
   bankTitle?: string;
 }) {
@@ -50,6 +58,10 @@ export default function AfspraakOverlay({
     );
     firstFocusable?.focus();
   }, [isOpen]);
+
+  const qrLabel = bankTitle
+    ? `QR code om via WhatsApp een zonsessie op de ${bankTitle} te boeken bij Ever Sun`
+    : "QR code om via WhatsApp een zonsessie te boeken bij Ever Sun";
 
   if (!mounted) return null;
 
@@ -85,17 +97,28 @@ export default function AfspraakOverlay({
               </p>
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-4">
-                <Image
-                  src={qrCode}
-                  alt={
-                    bankTitle
-                      ? `QR code om via WhatsApp een zonsessie op de ${bankTitle} te boeken bij Ever Sun`
-                      : "QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
-                  }
-                  width={300}
-                  height={300}
-                  className="w-full h-auto rounded-[8px]"
-                />
+                {qrSvg ? (
+                  // Drawn in the browser, for a message no committed asset can
+                  // carry: the huidtest's advice varies with the stand and with
+                  // the sachet toggle, and a QR is baked data — change one word
+                  // and it is a different code. The markup is ours (module
+                  // rectangles and the glyph; the URL is woven into the pattern,
+                  // never into the SVG), which is what makes it safe to inject.
+                  <div
+                    role="img"
+                    aria-label={qrLabel}
+                    className="w-full [&>svg]:h-auto [&>svg]:w-full [&>svg]:rounded-[8px]"
+                    dangerouslySetInnerHTML={{ __html: qrSvg }}
+                  />
+                ) : (
+                  <Image
+                    src={qrCode}
+                    alt={qrLabel}
+                    width={300}
+                    height={300}
+                    className="w-full h-auto rounded-[8px]"
+                  />
+                )}
               </div>
 
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-4 text-center">

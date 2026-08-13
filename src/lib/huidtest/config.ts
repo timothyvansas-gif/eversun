@@ -35,7 +35,7 @@ export const INTRO = {
 export const EXIT_MINOR = {
   kop: "Nog even geduld",
   body: "Zonnen onder de zonnebank mag in Nederland pas vanaf 18 jaar. Dat is niet onze regel, maar wel eentje waar we volledig achter staan. Kom je na je achttiende langs? De koffie staat klaar.",
-  cta: "Terug naar de site",
+  cta: "Huidtest sluiten",
 } as const;
 
 /** The studio's number, spaced the way the rest of the site writes it. */
@@ -50,7 +50,7 @@ export const EXIT_TYPE1 = {
   // first than walk in.
   telefoonVoor: "Bel je liever even vooraf? Dat kan op ",
   telefoonNa: ". We denken graag met je mee.",
-  ctaSecundair: "Terug naar de site",
+  ctaSecundair: "Huidtest sluiten",
 } as const;
 
 /* ------------------------------------------------------------------ */

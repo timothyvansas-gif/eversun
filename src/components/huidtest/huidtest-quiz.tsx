@@ -8,6 +8,7 @@ import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
 import { decide, skipsKleurstijl } from "@/lib/huidtest/decide";
 import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
 import { CtaButton } from "@/components/huidtest/cta";
+import { StepCard } from "@/components/huidtest/step-card";
 import QuestionCard from "@/components/huidtest/question-card";
 import ExitScreen from "@/components/huidtest/exit-screen";
 import ResultScreen from "@/components/huidtest/result-screen";
@@ -183,11 +184,19 @@ export default function HuidtestQuiz({
             aria-label="Voortgang van de huidtest"
             className="h-[6px] w-full overflow-hidden rounded-full bg-line/40"
           >
+            {/* A full-width bar slid left behind the track's clip, rather than
+                a narrow one that grows. Two reasons, and the second is why it
+                is not a scaleX either: width animates layout every frame where
+                a transform stays on the compositor, and scaling a 6px pill
+                sideways squashes its round cap into an ellipse. Translating
+                keeps the cap circular and hides the other end off-track. */}
             <div
-              className="h-full rounded-full bg-accent"
+              className="h-full w-full rounded-full bg-accent"
               style={{
-                width: `${progress}%`,
-                transition: shouldReduceMotion ? "none" : "width 400ms cubic-bezier(0.22,1,0.36,1)",
+                transform: `translateX(-${100 - progress}%)`,
+                transition: shouldReduceMotion
+                  ? "none"
+                  : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
               }}
             />
           </div>
@@ -196,7 +205,7 @@ export default function HuidtestQuiz({
             <button
               type="button"
               onClick={back}
-              className="mt-4 -ml-2 inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong"
+              className="mt-4 -ml-2 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong sm:inline-flex"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
@@ -214,7 +223,10 @@ export default function HuidtestQuiz({
       )}
 
       {step.kind === "intro" && (
-        <div>
+        // The whole opening on one card: what the test is, the law it works
+        // under, and the gate itself. Split across the surface it read as three
+        // unrelated blocks; together it is one thing to answer.
+        <StepCard>
           <h2
             ref={headingRef as React.RefObject<HTMLHeadingElement>}
             tabIndex={-1}
@@ -223,32 +235,25 @@ export default function HuidtestQuiz({
             {INTRO.kop}
           </h2>
 
-          <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
             {INTRO.body}
           </p>
 
-          {/* The age check as one card: the question, the law it rests on, and
-              the two answers. Same white panel the openingstijden sheet uses,
-              down to the radius and the padding — this is a gate, and it reads
-              better as one object than as three paragraphs that happen to be
-              about the same thing. */}
-          <div className="mt-7 rounded-2xl bg-white px-6 py-5">
-            <h3 className="font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
-              {INTRO.vraag}
-            </h3>
+          <h3 className="mt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+            {INTRO.vraag}
+          </h3>
 
-            <p className="mt-2 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
-              {INTRO.wettelijk}
-            </p>
+          <p className="mt-2 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+            {INTRO.wettelijk}
+          </p>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
-              <CtaButton variant="outline" onClick={() => handleAge("minor")}>
-                {INTRO.nee}
-              </CtaButton>
-            </div>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
+            <CtaButton variant="outline" onClick={() => handleAge("minor")}>
+              {INTRO.nee}
+            </CtaButton>
           </div>
-        </div>
+        </StepCard>
       )}
 
       {step.kind === "vraag" && (
@@ -260,6 +265,7 @@ export default function HuidtestQuiz({
           checkboxChecked={answers.tattoo}
           onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
           onNext={() => goTo(nextStep(step.index, answers))}
+          onBack={stack.length > 1 ? back : undefined}
         />
       )}
 

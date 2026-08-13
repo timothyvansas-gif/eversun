@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EXIT_MINOR, EXIT_TYPE1, TELEFOON } from "@/lib/huidtest/config";
 import type { ExitReason } from "@/lib/huidtest/types";
 import { ctaClass, CtaButton, CTA_TRANSITION } from "@/components/huidtest/cta";
+import { StepCard } from "@/components/huidtest/step-card";
 
 /**
  * The two ways the test ends without advice: too young, and a skin that always
@@ -35,7 +36,7 @@ export default function ExitScreen({
   const terugVariant = reason === "minor" ? "accent" : "outline";
 
   return (
-    <div>
+    <StepCard>
       <h2
         ref={headingRef}
         tabIndex={-1}
@@ -44,7 +45,7 @@ export default function ExitScreen({
         {copy.kop}
       </h2>
 
-      <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+      <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
         {copy.body}
       </p>
 
@@ -72,6 +73,6 @@ export default function ExitScreen({
           </Link>
         )}
       </div>
-    </div>
+    </StepCard>
   );
 }

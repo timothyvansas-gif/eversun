@@ -2,8 +2,11 @@
 
 import { useRef } from "react";
 import type { Question, QuestionKey } from "@/lib/huidtest/config";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CheckField } from "@/components/huidtest/check-field";
 import { CtaButton } from "@/components/huidtest/cta";
+import { StepCard } from "@/components/huidtest/step-card";
+import { StickyActions } from "@/components/huidtest/sticky-actions";
 
 /**
  * One question, one screen.
@@ -21,6 +24,7 @@ export default function QuestionCard<K extends QuestionKey>({
   checkboxChecked,
   onCheckboxChange,
   onNext,
+  onBack,
 }: {
   question: Question<K>;
   /** Focus lands here on every step change, so the question is what gets read. */
@@ -31,6 +35,12 @@ export default function QuestionCard<K extends QuestionKey>({
   onCheckboxChange?: (checked: boolean) => void;
   /** Confirms the answer. Every question has one; nothing advances by itself. */
   onNext?: () => void;
+  /**
+   * One question back. Absent on the first, where there is nothing behind it.
+   * Only drawn below sm: from there up the same move is a text link above the
+   * question, which is where a mouse expects it.
+   */
+  onBack?: () => void;
 }) {
   const headingId = `huidtest-vraag-${question.key}`;
   const hulpId = question.hulptekst ? `${headingId}-hulp` : undefined;
@@ -55,6 +65,7 @@ export default function QuestionCard<K extends QuestionKey>({
 
   return (
     <div>
+      <StepCard>
       <h2
         id={headingId}
         ref={headingRef}
@@ -136,6 +147,8 @@ export default function QuestionCard<K extends QuestionKey>({
         </div>
       )}
 
+      </StepCard>
+
       {/* Every question is confirmed rather than sprung: the answer takes a
           mark, and the way on appears under it. Choosing used to advance by
           itself, which read as the screen deciding it had heard enough.
@@ -143,15 +156,33 @@ export default function QuestionCard<K extends QuestionKey>({
           Rendered all along and revealed, not mounted on selection — a button
           that appears out of nowhere pushes the options it sits under, and the
           page would jump under the finger that just tapped one. */}
-      <div
-        className="mt-7 transition-opacity duration-200"
-        style={{ opacity: selected ? 1 : 0, visibility: selected ? "visible" : "hidden" }}
-        aria-hidden={!selected}
-      >
-        <CtaButton className="w-full sm:w-auto" onClick={onNext} disabled={!selected}>
-          Volgende
-        </CtaButton>
-      </div>
+      <StickyActions className="mt-7">
+        <div
+          className="flex items-center gap-3 transition-opacity duration-200"
+          style={{ opacity: selected ? 1 : 0, visibility: selected ? "visible" : "hidden" }}
+          aria-hidden={!selected}
+        >
+          {/* Thumb-height, thumb-width, and beside the button it undoes rather
+              than at the top of a sheet. The site's own arrow, turned around,
+              so back and forward are visibly the same gesture in reverse. */}
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Terug naar de vorige vraag"
+              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] sm:hidden"
+            >
+              <span className="rotate-180">
+                <CtaArrow always />
+              </span>
+            </button>
+          )}
+
+          <CtaButton className="flex-1 sm:flex-none sm:w-auto" onClick={onNext} disabled={!selected}>
+            Volgende
+          </CtaButton>
+        </div>
+      </StickyActions>
     </div>
   );
 }
