@@ -104,3 +104,68 @@ export function hasReachedTarget(look: Look, currentTime: number, duration: numb
   const endpoint = look === "dark" ? duration / 2 : duration;
   return currentTime >= endpoint - ENDPOINT_MARGIN_SECONDS;
 }
+
+/** A `TimeRanges` list flattened into plain pairs, so this file stays testable. */
+export type TimeRange = readonly [start: number, end: number];
+
+/**
+ * Whether the element can actually be put on a frame, which is not the same
+ * question as whether the frame exists.
+ *
+ * Seeking needs byte ranges. A server that answers a `Range` request with the
+ * whole file — Cloudflare Workers' static assets do exactly that — leaves the
+ * clip fully buffered and still unseekable: Chrome reports `seekable` as
+ * `[0, 0]` and clamps every seek to zero. Frame zero is the bed in the light,
+ * so an unchecked `currentTime = midpoint` did not land on dark, it jumped
+ * back to open. Worse, the seek fired `canplay`, whose recovery seeked again,
+ * and the pair span until the tab was closed.
+ *
+ * So every write to `currentTime` asks here first. Zero stays reachable even
+ * on those servers, which is what keeps the light frame and the wrap in
+ * `planRun` working.
+ */
+export function canSeekTo(seekable: readonly TimeRange[], target: number): boolean {
+  if (!Number.isFinite(target)) return false;
+
+  return seekable.some(
+    ([start, end]) =>
+      target >= start - ENDPOINT_MARGIN_SECONDS && target <= end + ENDPOINT_MARGIN_SECONDS,
+  );
+}
+
+/**
+ * How a transition can get from where the element is to where the intent
+ * points, given what the element is allowed to seek.
+ */
+export type RunPlan =
+  /** Jump to the frame that runs into the target, then roll forward. */
+  | { kind: "seek"; frame: number }
+  /** Already in the right half: rolling forward arrives on its own. */
+  | { kind: "play" }
+  /**
+   * Wrong half, and the frame that would fix it cannot be seeked to. Run out
+   * the clip, restart at zero — the one seek every server allows — and play
+   * into the target from there. Costs a lap; keeps the state honest.
+   */
+  | { kind: "wrap" }
+  /** The picture already shows what was asked. Nothing to animate. */
+  | { kind: "settle" };
+
+export function planRun(
+  look: Look,
+  currentTime: number,
+  duration: number,
+  seekable: readonly TimeRange[],
+): RunPlan {
+  if (isAtRest(look, currentTime, duration)) return { kind: "settle" };
+
+  const from = startFrame(look, currentTime, duration);
+  if (from === currentTime) return { kind: "play" };
+  if (canSeekTo(seekable, from)) return { kind: "seek", frame: from };
+
+  // Light rests on the last frame as well as the first, so running the clip out
+  // reaches it without seeking at all. Dark only exists at the midpoint, which
+  // this half has already passed — that one has to go round.
+  if (look === "light") return { kind: "play" };
+  return canSeekTo(seekable, 0) ? { kind: "wrap" } : { kind: "play" };
+}

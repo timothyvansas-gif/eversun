@@ -109,6 +109,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     handleVideoLoadedData,
     handleVideoCanPlay,
     handleVideoEnded,
+    handleVideoTimeUpdate,
     handleVideoPlaying,
     handleVideoWaiting,
     handleVideoError,
@@ -135,6 +136,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoLoadedData={handleVideoLoadedData}
           onVideoCanPlay={handleVideoCanPlay}
           onVideoEnded={handleVideoEnded}
+          onVideoTimeUpdate={handleVideoTimeUpdate}
           onVideoPlaying={handleVideoPlaying}
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}

@@ -6,12 +6,15 @@ import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { toggleSound } from "@/lib/sound";
 import {
   canPlayAction,
+  canSeekTo,
+  ENDPOINT_MARGIN_SECONDS,
   hasReachedTarget,
   isAtRest,
   nextLook,
+  planRun,
   restingFrame,
-  startFrame,
   type Look,
+  type TimeRange,
 } from "@/lib/zonnebank-playback";
 
 // Play at native speed. Above 2x Safari stops presenting anything but
@@ -23,6 +26,25 @@ const VIDEO_SPEED = 1;
 
 /** `HTMLMediaElement.HAVE_CURRENT_DATA` — a frame exists and can be shown. */
 const HAVE_CURRENT_DATA = 2;
+
+/**
+ * How many times `canplay` may correct the resting frame before the hook stops
+ * trying.
+ *
+ * The correction is a seek, and a seek fires `canplay`. If the element does not
+ * end up where it was put — an unseekable clip clamping back to zero — those
+ * two feed each other forever, which is what pinned a CPU core and left the tab
+ * spinner turning. `canSeekTo` already refuses the seeks that are known to
+ * clamp; this is the backstop for a browser that claims a range it will not
+ * honour. Two is enough for the one case this exists to serve: a stalled clip
+ * arriving late and needing its frame set once.
+ */
+const MAX_FRAME_RECOVERIES = 2;
+
+/** `video.seekable` as plain pairs, which is what the playback helpers take. */
+function toRanges(seekable: TimeRanges): TimeRange[] {
+  return Array.from({ length: seekable.length }, (_, i) => [seekable.start(i), seekable.end(i)] as const);
+}
 
 /**
  * How long a toggle may sit waiting for data before the video counts as
@@ -57,6 +79,7 @@ export type ZonnebankVideoControls = {
   handleVideoLoadedData: () => void;
   handleVideoCanPlay: () => void;
   handleVideoEnded: () => void;
+  handleVideoTimeUpdate: () => void;
   handleVideoPlaying: () => void;
   handleVideoWaiting: () => void;
   handleVideoError: () => void;
@@ -80,6 +103,13 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   const isRunningRef = useRef(false);
   const frameRef = useRef<number | null>(null);
   const stallTimerRef = useRef<number | null>(null);
+
+  // Set while a run is taking the long way to dark: out through the end of the
+  // clip, back to zero, and forward into the midpoint. See `planRun`.
+  const isWrappingRef = useRef(false);
+
+  // Reset on every click, so the allowance is per intent rather than per page.
+  const frameRecoveriesRef = useRef(0);
 
   const isVideoReadyRef = useRef(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
@@ -128,27 +158,65 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     stopMonitor();
     stopStallTimer();
     isRunningRef.current = false;
+    isWrappingRef.current = false;
     setIsVideoLoading(false);
 
     const video = videoRef.current;
     if (!video) return;
 
     video.pause();
+
+    // Pausing is what holds the frame; the write below only corrects one the
+    // run failed to reach. Skipping it when the element is already there
+    // matters more than it sounds: on an unseekable clip a redundant write is
+    // not a no-op, it clamps to zero and reopens the bed. Same reason the
+    // correction asks `canSeekTo` before touching anything — where the seek
+    // would be refused, the frame the run stopped on is the best available.
     const frame = restingFrame(lookRef.current, video.duration);
-    if (frame !== null) video.currentTime = frame;
+    if (frame === null) return;
+    if (isAtRest(lookRef.current, video.currentTime, video.duration)) return;
+    if (!canSeekTo(toRanges(video.seekable), frame)) return;
+
+    video.currentTime = frame;
   }, [stopMonitor, stopStallTimer]);
+
+  /**
+   * One check of where the clip has got to, shared by the two things that watch
+   * a run: the rAF monitor, and `timeupdate` for when rAF is not running.
+   */
+  const advance = (runId: number) => {
+    const video = videoRef.current;
+    if (!video || runId !== runIdRef.current || !isRunningRef.current) return;
+
+    const { currentTime, duration } = video;
+
+    // The outbound half of a wrap. Its target is the end of the clip, not the
+    // intent's frame — that one lies behind us and is only reachable by
+    // starting over.
+    if (isWrappingRef.current) {
+      if (!Number.isFinite(duration) || currentTime < duration - ENDPOINT_MARGIN_SECONDS) return;
+
+      isWrappingRef.current = false;
+      video.currentTime = 0;
+      if (video.paused) void video.play().then(undefined, () => settle());
+      return;
+    }
+
+    // Playback can begin before metadata has landed, so duration is briefly
+    // unknown. Keep polling rather than bailing out — a dropped monitor would
+    // let the clip run past its stopping point.
+    if (hasReachedTarget(lookRef.current, currentTime, duration)) settle();
+  };
 
   const monitor = (runId: number) => {
     const video = videoRef.current;
     if (!video || runId !== runIdRef.current) return;
 
-    // Playback can begin before metadata has landed, so duration is briefly
-    // unknown. Keep polling rather than bailing out — a dropped monitor would
-    // let the clip run past its stopping point.
-    if (hasReachedTarget(lookRef.current, video.currentTime, video.duration)) {
-      settle();
-      return;
-    }
+    advance(runId);
+
+    // `advance` may have settled this run, and settling cancels the frame it
+    // does not know about yet. Re-check before booking the next one.
+    if (runId !== runIdRef.current || !isRunningRef.current) return;
 
     frameRef.current = window.requestAnimationFrame(() => monitor(runId));
   };
@@ -167,6 +235,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     const runId = ++runIdRef.current;
     stopMonitor();
     stopStallTimer();
+    isWrappingRef.current = false;
 
     video.muted = true;
     video.volume = 0;
@@ -175,9 +244,17 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // Nobody is watching a hidden tab, and rAF does not run in one — the clip
     // would play on with nothing to stop it at the midpoint and end up on the
     // wrong frame. Skip the animation and go straight to the destination.
+    //
+    // Only where the destination can be seeked to, though. Where it cannot,
+    // snapping is not on offer and stopping here would leave the picture
+    // disagreeing with the button, so the run goes ahead unwatched by rAF and
+    // `timeupdate` stops it instead — that one keeps firing in a hidden tab.
     if (document.hidden) {
-      settle();
-      return;
+      const resting = restingFrame(lookRef.current, video.duration);
+      if (resting === null || canSeekTo(toRanges(video.seekable), resting)) {
+        settle();
+        return;
+      }
     }
 
     // Nothing to play yet. Park the run, show the spinner, and let `canplay`
@@ -196,14 +273,20 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       return;
     }
 
-    const { currentTime, duration } = video;
-    if (isAtRest(lookRef.current, currentTime, duration)) {
+    const plan = planRun(
+      lookRef.current,
+      video.currentTime,
+      video.duration,
+      toRanges(video.seekable),
+    );
+
+    if (plan.kind === "settle") {
       settle();
       return;
     }
 
-    const from = startFrame(lookRef.current, currentTime, duration);
-    if (from !== currentTime) video.currentTime = from;
+    if (plan.kind === "seek") video.currentTime = plan.frame;
+    isWrappingRef.current = plan.kind === "wrap";
 
     isRunningRef.current = true;
     setIsVideoLoading(true);
@@ -270,9 +353,19 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   // the run immediately puts the element on the frame the intent asks for, so
   // coming back finds the card in the state it was left in rather than one
   // frame past it.
+  //
+  // Only when the resting frame can be seeked to, though: where it cannot,
+  // finishing early would strand the picture mid-transition, so the run is left
+  // to `timeupdate` — which, unlike rAF, keeps firing while the tab is hidden.
   useEffect(() => {
     const onVisibilityChange = () => {
-      if (document.hidden && isRunningRef.current) settle();
+      if (!document.hidden || !isRunningRef.current) return;
+
+      const video = videoRef.current;
+      if (!video) return;
+
+      const resting = restingFrame(lookRef.current, video.duration);
+      if (resting === null || canSeekTo(toRanges(video.seekable), resting)) settle();
     };
 
     document.addEventListener("visibilitychange", onVisibilityChange);
@@ -311,6 +404,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     const next = nextLook(lookRef.current);
     lookRef.current = next;
     setLook(next);
+    frameRecoveriesRef.current = 0;
 
     // Touch never hovers, so for those visitors this tap is the first request
     // for the full clip.
@@ -364,19 +458,47 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // stall was given up on: the visitor pressed for dark, the clip arrived
     // late, and this is where the picture catches up. Snapped rather than
     // animated — that gesture is seconds old by now.
+    //
+    // Guarded twice over, because this seek fires the very event that runs it:
+    // refused outright where the frame cannot be seeked to, and capped for a
+    // browser that accepts the seek and lands somewhere else anyway.
     if (action === "recover-frame") {
       const frame = restingFrame(lookRef.current, video.duration);
-      if (frame !== null && !isAtRest(lookRef.current, video.currentTime, video.duration)) {
-        video.currentTime = frame;
-      }
+      if (frame === null) return;
+      if (isAtRest(lookRef.current, video.currentTime, video.duration)) return;
+      if (frameRecoveriesRef.current >= MAX_FRAME_RECOVERIES) return;
+      if (!canSeekTo(toRanges(video.seekable), frame)) return;
+
+      frameRecoveriesRef.current += 1;
+      video.currentTime = frame;
     }
   };
 
   // Backstop for a monitor that missed its endpoint — a tab throttled hard
   // enough that rAF fell behind the media, say. Every detector converges on the
   // same exit, so the element still lands on the intent's frame.
+  //
+  // Except mid-wrap, where the end of the clip is a waypoint rather than the
+  // destination: that run restarts at zero and plays on into the midpoint.
   const handleVideoEnded = () => {
+    const video = videoRef.current;
+
+    if (isWrappingRef.current && video && isRunningRef.current) {
+      isWrappingRef.current = false;
+      video.currentTime = 0;
+      void video.play().then(undefined, () => settle());
+      return;
+    }
+
     settle();
+  };
+
+  // rAF stops in a hidden tab and can fall behind under load, while the media
+  // plays on either way. `timeupdate` fires from the media clock itself, so it
+  // catches the endpoint the monitor would have missed — coarser (about four a
+  // second), which is why it backs the monitor up rather than replacing it.
+  const handleVideoTimeUpdate = () => {
+    if (isRunningRef.current) advance(runIdRef.current);
   };
 
   const handleVideoPlaying = () => {
@@ -399,6 +521,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     runIdRef.current += 1;
     isRunningRef.current = false;
+    isWrappingRef.current = false;
     stopMonitor();
     stopStallTimer();
 
@@ -425,6 +548,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     handleVideoLoadedData,
     handleVideoCanPlay,
     handleVideoEnded,
+    handleVideoTimeUpdate,
     handleVideoPlaying,
     handleVideoWaiting,
     handleVideoError,

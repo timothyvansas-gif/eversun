@@ -19,6 +19,7 @@ export default function ZonnebankMedia({
   onVideoLoadedData,
   onVideoCanPlay,
   onVideoEnded,
+  onVideoTimeUpdate,
   onVideoPlaying,
   onVideoWaiting,
   onVideoError,
@@ -34,6 +35,7 @@ export default function ZonnebankMedia({
   onVideoLoadedData: () => void;
   onVideoCanPlay: () => void;
   onVideoEnded: () => void;
+  onVideoTimeUpdate: () => void;
   onVideoPlaying: () => void;
   onVideoWaiting: () => void;
   onVideoError: () => void;
@@ -60,6 +62,7 @@ export default function ZonnebankMedia({
             onLoadedData={onVideoLoadedData}
             onCanPlay={onVideoCanPlay}
             onEnded={onVideoEnded}
+            onTimeUpdate={onVideoTimeUpdate}
             onPlaying={onVideoPlaying}
             onWaiting={onVideoWaiting}
             onError={onVideoError}

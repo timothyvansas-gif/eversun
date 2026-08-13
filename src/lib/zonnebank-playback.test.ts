@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
   canPlayAction,
+  canSeekTo,
   ENDPOINT_MARGIN_SECONDS,
   hasReachedTarget,
   isAtRest,
   nextLook,
+  planRun,
   restingFrame,
   startFrame,
+  type TimeRange,
 } from "./zonnebank-playback";
 
 // The real clips measure 2.566667s, so the dark frame sits at 1.283333s.
@@ -140,5 +143,74 @@ describe("hasReachedTarget", () => {
     // be showing, so an unknown duration has to keep the monitor running.
     expect(hasReachedTarget("dark", 5, NaN)).toBe(false);
     expect(hasReachedTarget("light", 5, Number.POSITIVE_INFINITY)).toBe(false);
+  });
+});
+
+// What Chrome reports for a clip served by something that answers a Range
+// request with the whole file — Cloudflare Workers' static assets, as of this
+// fix. Fully buffered, and every seek clamps to zero.
+const UNSEEKABLE: TimeRange[] = [[0, 0]];
+const SEEKABLE: TimeRange[] = [[0, DURATION]];
+
+describe("canSeekTo", () => {
+  it("allows any frame of a seekable clip", () => {
+    expect(canSeekTo(SEEKABLE, 0)).toBe(true);
+    expect(canSeekTo(SEEKABLE, MID)).toBe(true);
+    expect(canSeekTo(SEEKABLE, DURATION)).toBe(true);
+  });
+
+  it("refuses the midpoint of an unseekable clip", () => {
+    // The whole bug in one assertion: this seek used to be issued anyway, and
+    // the browser clamped it to frame 0 — the bed in the light.
+    expect(canSeekTo(UNSEEKABLE, MID)).toBe(false);
+  });
+
+  it("still allows frame 0, which is what makes the wrap work", () => {
+    expect(canSeekTo(UNSEEKABLE, 0)).toBe(true);
+  });
+
+  it("refuses everything when the element reports no ranges at all", () => {
+    expect(canSeekTo([], 0)).toBe(false);
+  });
+
+  it("refuses a frame that is not a number yet", () => {
+    expect(canSeekTo(SEEKABLE, NaN)).toBe(false);
+  });
+});
+
+describe("planRun", () => {
+  it("does nothing when the picture already agrees", () => {
+    expect(planRun("light", 0, DURATION, SEEKABLE)).toEqual({ kind: "settle" });
+    expect(planRun("dark", MID, DURATION, SEEKABLE)).toEqual({ kind: "settle" });
+  });
+
+  it("just rolls forward when the clip is already in the right half", () => {
+    expect(planRun("dark", 0, DURATION, SEEKABLE)).toEqual({ kind: "play" });
+    expect(planRun("light", MID, DURATION, SEEKABLE)).toEqual({ kind: "play" });
+  });
+
+  it("mirrors onto the other half when it can seek there", () => {
+    // Interrupting a dark → light glide at 1.8s: the frame that looks the same
+    // but runs towards dark sits at duration - 1.8.
+    expect(planRun("dark", 1.8, DURATION, SEEKABLE)).toEqual({
+      kind: "seek",
+      frame: DURATION - 1.8,
+    });
+  });
+
+  it("runs an unseekable clip out to the end to reach light", () => {
+    // Light rests on the last frame too, so the far end is a destination
+    // rather than a detour.
+    expect(planRun("light", 0.5, DURATION, UNSEEKABLE)).toEqual({ kind: "play" });
+  });
+
+  it("takes the long way round to dark on an unseekable clip", () => {
+    // Dark exists only at the midpoint, which this half has passed. Out to the
+    // end, back to zero — the one seek that still lands — and forward again.
+    expect(planRun("dark", 1.8, DURATION, UNSEEKABLE)).toEqual({ kind: "wrap" });
+  });
+
+  it("plays rather than wraps when even frame 0 is out of reach", () => {
+    expect(planRun("dark", 1.8, DURATION, [])).toEqual({ kind: "play" });
   });
 });
