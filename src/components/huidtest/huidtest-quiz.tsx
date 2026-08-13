@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, m } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import { quietFocus } from "@/lib/quiet-focus";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -37,6 +38,15 @@ type Step =
  */
 const START_PROGRESS = 20;
 
+/**
+ * How far a step travels as it changes places. Small on purpose: the screens
+ * are a sequence, not a carousel, and anything further reads as a page turn
+ * between two questions that are meant to feel like one conversation.
+ */
+const STEP_TRAVEL = 20;
+
+const STEP_TRANSITION = { duration: 0.22, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
+
 export default function HuidtestQuiz({
   shared = null,
   entry = "direct",
@@ -69,24 +79,34 @@ export default function HuidtestQuiz({
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>(() => shared ?? { tattoo: false });
 
   const step = stack[stack.length - 1];
+
+  // Which way the last move went, so a step leaves the way the next one comes
+  // in. Forward and back looking identical is what makes a wizard feel like it
+  // is shuffling rather than moving.
+  const [direction, setDirection] = useState<1 | -1>(1);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hasStarted = useRef(false);
 
   const goTo = useCallback(
     (next: Step) => {
+      setDirection(1);
       setStack((current) => [...current, next]);
       if (historyBacked) window.history.pushState({ huidtest: true }, "");
     },
     [historyBacked],
   );
 
-  const pop = () => setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
+  const pop = () => {
+    setDirection(-1);
+    setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
+  };
 
   const back = () => {
     // On the route the browser's back button and the one on screen have to
     // agree; routing this one through history is what guarantees that, rather
     // than two implementations that have to be kept in line.
     if (historyBacked) {
+      setDirection(-1);
       window.history.back();
       return;
     }
@@ -96,8 +116,10 @@ export default function HuidtestQuiz({
   useEffect(() => {
     if (!historyBacked) return;
 
-    const onPopState = () =>
+    const onPopState = () => {
+      setDirection(-1);
       setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
+    };
 
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -170,6 +192,9 @@ export default function HuidtestQuiz({
       : START_PROGRESS + ((100 - START_PROGRESS) * answered) / totalQuestions;
 
   const showsProgress = step.kind === "vraag";
+  const stepKey = step.kind === "vraag" ? `vraag-${step.index}` : step.kind;
+
+  const travel = shouldReduceMotion ? 0 : STEP_TRAVEL * direction;
 
   return (
     // A column that fills whatever it is in, so the action bar can be held on
@@ -225,63 +250,78 @@ export default function HuidtestQuiz({
         </div>
       )}
 
-      {step.kind === "intro" && (
-        // The whole opening on one card: what the test is, the law it works
-        // under, and the gate itself. Split across the surface it read as three
-        // unrelated blocks; together it is one thing to answer.
-        <StepCard>
-          <h2
-            ref={headingRef as React.RefObject<HTMLHeadingElement>}
-            tabIndex={-1}
-            className="font-display text-ink-strong text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
-          >
-            {INTRO.kop}
-          </h2>
+      {/* One at a time, and each leaves the way the next arrives: forward
+          slides on from the right, back from the left. `mode="wait"` because
+          two steps crossfading in place would put two questions on screen at
+          once, which is exactly the confusion a wizard is meant to prevent. */}
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div
+          key={stepKey}
+          initial={{ opacity: 0, x: travel }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -travel }}
+          transition={STEP_TRANSITION}
+          className="flex flex-1 flex-col"
+        >
+        {step.kind === "intro" && (
+          // The whole opening on one card: what the test is, the law it works
+          // under, and the gate itself. Split across the surface it read as three
+          // unrelated blocks; together it is one thing to answer.
+          <StepCard>
+            <h2
+              ref={headingRef as React.RefObject<HTMLHeadingElement>}
+              tabIndex={-1}
+              className="font-display text-ink-strong text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+            >
+              {INTRO.kop}
+            </h2>
 
-          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
-            {INTRO.body}
-          </p>
+            <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+              {INTRO.body}
+            </p>
 
-          {/* A rule where the card turns from telling to asking. The gate is a
-              different kind of thing from the paragraph above it, and a line
-              says so more quietly than white space can at this size. */}
-          <h3 className="mt-6 border-t border-line/50 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
-            {INTRO.vraag}
-          </h3>
+            {/* A rule where the card turns from telling to asking. The gate is a
+                different kind of thing from the paragraph above it, and a line
+                says so more quietly than white space can at this size. */}
+            <h3 className="mt-6 border-t border-line/50 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+              {INTRO.vraag}
+            </h3>
 
-          <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
-            {INTRO.wettelijk}
-          </p>
+            <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+              {INTRO.wettelijk}
+            </p>
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
-            <CtaButton variant="outline" onClick={() => handleAge("minor")}>
-              {INTRO.nee}
-            </CtaButton>
-          </div>
-        </StepCard>
-      )}
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
+              <CtaButton variant="outline" onClick={() => handleAge("minor")}>
+                {INTRO.nee}
+              </CtaButton>
+            </div>
+          </StepCard>
+        )}
 
-      {step.kind === "vraag" && (
-        <QuestionCard
-          question={QUESTIONS[step.index]}
-          headingRef={headingRef}
-          selected={answers[QUESTIONS[step.index].key] as string | undefined}
-          onSelect={(id) => answer(step.index, id)}
-          checkboxChecked={answers.tattoo}
-          onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
-          onNext={() => goTo(nextStep(step.index, answers))}
-          onBack={stack.length > 1 ? back : undefined}
-        />
-      )}
+        {step.kind === "vraag" && (
+          <QuestionCard
+            question={QUESTIONS[step.index]}
+            headingRef={headingRef}
+            selected={answers[QUESTIONS[step.index].key] as string | undefined}
+            onSelect={(id) => answer(step.index, id)}
+            checkboxChecked={answers.tattoo}
+            onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
+            onNext={() => goTo(nextStep(step.index, answers))}
+            onBack={stack.length > 1 ? back : undefined}
+          />
+        )}
 
-      {step.kind === "exit" && (
-        <ExitScreen reason={step.reason} headingRef={headingRef} onClose={onClose} />
-      )}
+        {step.kind === "exit" && (
+          <ExitScreen reason={step.reason} headingRef={headingRef} onClose={onClose} />
+        )}
 
-      {step.kind === "resultaat" && (
-        <Resultaat answers={answers} headingRef={headingRef} onRestart={restart} />
-      )}
+        {step.kind === "resultaat" && (
+          <Resultaat answers={answers} headingRef={headingRef} onRestart={restart} />
+        )}
+        </m.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -76,8 +76,11 @@ export default function ResultScreen({
       {/* Bank card. Fixed aspect ratio so the advice does not jump when the
           photo lands — this screen is the payoff, and a reflow here reads as
           the answer changing its mind. */}
-      <div className="mt-6 overflow-hidden rounded-[12px]">
-        <div className="relative aspect-[4/3] w-full sm:aspect-[16/9]">
+      <div className="mt-6">
+        {/* The radius belongs to the photo, not to the block that also holds
+            the name and the price: on the wrapper it rounded the top corners
+            and left the bottom two square where the text took over. */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[12px] sm:aspect-[16/9]">
           <Image
             src={bank.image}
             alt={bank.alt}
