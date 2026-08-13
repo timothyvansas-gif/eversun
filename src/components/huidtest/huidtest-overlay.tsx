@@ -11,6 +11,7 @@ import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
 import { DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
+import { HuidtestSurfaceContext } from "@/components/huidtest/surface-context";
 
 /**
  * The huidtest as a layer over the page: a panel down the right-hand side on
@@ -26,7 +27,7 @@ import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
  * two half-finished tests and double the analytics.
  */
 
-const PANEL_WIDTH = 520;
+import { HUIDTEST_PANEL_WIDTH } from "@/components/huidtest/panel-metrics";
 
 /** Matches the other sheets: a slide out, quicker than the spring coming in. */
 const SHEET_EXIT = { duration: 0.28, ease: [0.36, 0, 0.66, 0] as [number, number, number, number] };
@@ -45,6 +46,9 @@ export default function HuidtestOverlay({
   entry: "home_sectie" | "hero_link" | "direct";
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  // State as well as a ref: the booking sheet portals into this element, and a
+  // ref alone would not tell React when it finally exists.
+  const [surface, setSurface] = useState<HTMLDivElement | null>(null);
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const dragControls = useDragControls();
   const [mounted, setMounted] = useState(false);
@@ -70,7 +74,10 @@ export default function HuidtestOverlay({
           <Backdrop onClick={onClose} className="z-[80] cursor-pointer" scrollLock />
 
           <m.div
-            ref={panelRef}
+            ref={(node: HTMLDivElement | null) => {
+              panelRef.current = node;
+              setSurface(node);
+            }}
             data-lenis-prevent
             role="dialog"
             aria-modal="true"
@@ -94,7 +101,7 @@ export default function HuidtestOverlay({
             // to the sheet's edge and carries the safe-area inset itself.
             // Padding here left a strip of page under the button that read as
             // the bar failing to reach the bottom.
-            style={{ maxWidth: isMobile ? undefined : PANEL_WIDTH }}
+            style={{ maxWidth: isMobile ? undefined : HUIDTEST_PANEL_WIDTH }}
             className={
               isMobile
                 ? // One height for every step, not one per step. The result is
@@ -129,7 +136,9 @@ export default function HuidtestOverlay({
             )}
 
             <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-6 md:pt-4">
-              <HuidtestQuiz entry={entry} onClose={onClose} />
+              <HuidtestSurfaceContext.Provider value={surface}>
+                <HuidtestQuiz entry={entry} onClose={onClose} />
+              </HuidtestSurfaceContext.Provider>
             </div>
           </m.div>
         </>

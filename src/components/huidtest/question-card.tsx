@@ -158,8 +158,8 @@ export default function QuestionCard<K extends QuestionKey>({
       {/* Every question is confirmed rather than sprung: the answer takes a
           mark, and the way on arrives under it. Choosing used to advance by
           itself, which read as the screen deciding it had heard enough. */}
-      <StickyActions className="mt-7 shrink-0" visible={Boolean(selected)}>
-        <div className="flex items-center gap-3">
+      <StickyActions className="mt-7 shrink-0 md:mt-4" visible={Boolean(selected)}>
+        <div className="flex items-center gap-3 md:justify-end">
           {/* Thumb-height, thumb-width, and beside the button it undoes rather
               than at the top of a sheet. The site's own arrow, turned around,
               so back and forward are visibly the same gesture in reverse. */}
@@ -176,7 +176,10 @@ export default function QuestionCard<K extends QuestionKey>({
             </button>
           )}
 
-          <CtaButton className="flex-1 md:flex-none md:w-auto" onClick={onNext}>
+          {/* Fills what the back button leaves on a phone, where a thumb
+              wants a wide target; on the panel it takes its own width at the
+              end of the row. */}
+          <CtaButton className="flex-1 md:flex-none" onClick={onNext}>
             Volgende
           </CtaButton>
         </div>

@@ -1,24 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { ZONNEBANKEN } from "@/data/zonnebanken-data";
 import { trackEvent } from "@/lib/analytics";
 import { CheckField } from "@/components/huidtest/check-field";
 import { CtaButton } from "@/components/huidtest/cta";
+import { BookingSheet } from "@/components/huidtest/booking-sheet";
 import { StepCard } from "@/components/huidtest/step-card";
 import { StickyActions } from "@/components/huidtest/sticky-actions";
 import { PRODUCT_WAAROM, RESULTAAT } from "@/lib/huidtest/config";
 import { buildWhatsappUrl, buildWhy, findProduct } from "@/lib/huidtest/decide";
 import { BANK_SLUGS, type Advies, type QuizAnswers } from "@/lib/huidtest/types";
-
-// Both are the site's own booking surfaces, reused rather than rebuilt so the
-// last step of the test looks like booking anywhere else. Loaded on demand:
-// most visitors read the advice and never open either.
-const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
-const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 
 /**
  * The advice, and the one small thing to add to it.
@@ -41,7 +35,7 @@ export default function ResultScreen({
   onRestart: () => void;
 }) {
   const [sachet, setSachet] = useState(false);
-  const [boeken, setBoeken] = useState<"geen" | "sheet" | "overlay">("geen");
+  const [boekenOpen, setBoekenOpen] = useState(false);
 
   const bank = ZONNEBANKEN.find((z) => z.slug === BANK_SLUGS[advies.bank])!;
   const product = findProduct(advies.product);
@@ -55,13 +49,6 @@ export default function ResultScreen({
   // before anyone asks for it. Only where it can be shown: a phone taps
   // through to WhatsApp and never sees a code.
   const qrSvg = useQrSvg(isDesktop ? whatsappUrl : null);
-
-  // The overlay shows a QR beside a button, and those two must lead to the same
-  // message. Its fallback is the studio's general code, which does not — so
-  // being asked for is not enough to open it: it opens when the drawing that
-  // matches is in hand. Derived rather than a second state to keep in step.
-  const overlayGevraagd = boeken === "overlay";
-  const overlayOpen = overlayGevraagd && Boolean(qrSvg);
 
   const toggleSachet = (aan: boolean) => {
     setSachet(aan);
@@ -204,7 +191,7 @@ export default function ResultScreen({
           The sachet line rides along because this button is what sends the
           message: what is switched on above should still be visible at the
           moment of sending, not four hundred pixels up the page. */}
-      <StickyActions className="mt-6 shrink-0">
+      <StickyActions className="mt-6 shrink-0 md:mt-4">
         {sachet && product.sachetPrice && (
           <p className="mb-2 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
             Inclusief sachet {product.name} · € {product.sachetPrice}
@@ -213,34 +200,22 @@ export default function ResultScreen({
 
         <CtaButton
           className="w-full"
-          aria-busy={overlayGevraagd && !overlayOpen}
           onClick={() => {
             trackEvent("huidtest_cta", { type: "whatsapp", sachet });
-            // Same split the rest of the site makes: a phone taps straight
-            // through to WhatsApp, a desktop needs the code to hand it over.
-            if (!isDesktop) {
-              setBoeken("sheet");
-              return;
-            }
-            setBoeken("overlay");
+            setBoekenOpen(true);
           }}
         >
           {RESULTAAT.ctaPrimair}
         </CtaButton>
       </StickyActions>
 
-      <PlanJeMomentSheet
-        isOpen={boeken === "sheet"}
-        onClose={() => setBoeken("geen")}
-        whatsappUrl={whatsappUrl}
-      />
-      <AfspraakOverlay
-        elevated
-        isOpen={overlayOpen}
-        onClose={() => setBoeken("geen")}
+      <BookingSheet
+        isOpen={boekenOpen}
+        onClose={() => setBoekenOpen(false)}
         whatsappUrl={whatsappUrl}
         qrSvg={qrSvg}
         bankTitle={bank.title}
+        showQr={isDesktop}
       />
     </div>
   );

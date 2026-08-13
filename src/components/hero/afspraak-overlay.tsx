@@ -19,9 +19,7 @@ export default function AfspraakOverlay({
   onClose,
   whatsappUrl = WHATSAPP_BOOKING_URL,
   qrCode = defaultQrCode,
-  qrSvg,
   bankTitle,
-  elevated = false,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -29,22 +27,8 @@ export default function AfspraakOverlay({
   whatsappUrl?: string;
   /** Must encode `whatsappUrl` — the pairing is set up in `zonnebanken-data.ts`. */
   qrCode?: StaticImageData;
-  /**
-   * A code rendered at call time, for a `whatsappUrl` no committed asset can
-   * match. Wins from `qrCode` when given, and carries the same duty: it must
-   * encode the very link the button below it opens, or the two routes out of
-   * this overlay lead to different messages.
-   */
-  qrSvg?: string;
   /** Names the bank in the QR's alt text, for anyone who cannot see the code. */
   bankTitle?: string;
-  /**
-   * Lifts the overlay above a layer that is already covering the page — the
-   * huidtest panel and its scrim, which sit at 80 and 90. Opened from the hero
-   * or a bank card there is nothing above the page, so the default stays where
-   * every other modal on the site is.
-   */
-  elevated?: boolean;
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -67,15 +51,7 @@ export default function AfspraakOverlay({
     firstFocusable?.focus();
   }, [isOpen]);
 
-  const qrLabel = bankTitle
-    ? `QR code om via WhatsApp een zonsessie op de ${bankTitle} te boeken bij Ever Sun`
-    : "QR code om via WhatsApp een zonsessie te boeken bij Ever Sun";
-
   if (!mounted) return null;
-
-  // One value for the pair: a scrim and a dialog that disagree about their
-  // layer is exactly how this overlay ended up dimmed behind the huidtest.
-  const layer = elevated ? "z-[100]" : "z-50";
 
   return createPortal(
     <AnimatePresence>
@@ -83,7 +59,7 @@ export default function AfspraakOverlay({
         <>
           <Backdrop
             onClick={onClose}
-            className={layer}
+            className="z-50"
             scrollLock
             transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
           />
@@ -94,7 +70,7 @@ export default function AfspraakOverlay({
             role="dialog"
             aria-modal="true"
             aria-label="Afspraak maken"
-            className={`hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl w-[364px] ${layer}`}
+            className="hidden md:block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-page rounded-2xl z-50 w-[364px]"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.88, y: shouldReduceMotion ? 0 : -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
@@ -109,28 +85,17 @@ export default function AfspraakOverlay({
               </p>
 
               <div className="bg-white rounded-2xl p-2 w-[300px] mx-auto mt-4">
-                {qrSvg ? (
-                  // Drawn in the browser, for a message no committed asset can
-                  // carry: the huidtest's advice varies with the stand and with
-                  // the sachet toggle, and a QR is baked data — change one word
-                  // and it is a different code. The markup is ours (module
-                  // rectangles and the glyph; the URL is woven into the pattern,
-                  // never into the SVG), which is what makes it safe to inject.
-                  <div
-                    role="img"
-                    aria-label={qrLabel}
-                    className="w-full [&>svg]:h-auto [&>svg]:w-full [&>svg]:rounded-[8px]"
-                    dangerouslySetInnerHTML={{ __html: qrSvg }}
-                  />
-                ) : (
-                  <Image
-                    src={qrCode}
-                    alt={qrLabel}
-                    width={300}
-                    height={300}
-                    className="w-full h-auto rounded-[8px]"
-                  />
-                )}
+                <Image
+                  src={qrCode}
+                  alt={
+                    bankTitle
+                      ? `QR code om via WhatsApp een zonsessie op de ${bankTitle} te boeken bij Ever Sun`
+                      : "QR code om via WhatsApp een zonsessie te boeken bij Ever Sun"
+                  }
+                  width={300}
+                  height={300}
+                  className="w-full h-auto rounded-[8px]"
+                />
               </div>
 
               <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-4 text-center">
