@@ -38,13 +38,19 @@ export const EXIT_MINOR = {
   cta: "Terug naar de site",
 } as const;
 
+/** The studio's number, spaced the way the rest of the site writes it. */
+export const TELEFOON = { weergave: "06 25 30 64 91", href: "tel:+31625306491" } as const;
+
 export const EXIT_TYPE1 = {
   kop: "Jouw huid vraagt om persoonlijk advies",
   body: "Met een huid die snel verbrandt en moeilijk bruint, geven we je online geen bankadvies. Niet omdat we niet willen, maar omdat jouw huid echt maatwerk verdient. Loop even binnen: we kijken samen naar wat wél kan, van rustige opbouw tot verzorgende producten.",
-  ctaPrimair: "Stuur ons een appje",
+  // No booking button on this screen. The advice is to come in and be looked
+  // at, and a CTA that starts a chat would quietly turn it back into a
+  // transaction. What is left is the number, for anyone who would rather ask
+  // first than walk in.
+  telefoonVoor: "Bel je liever even vooraf? Dat kan op ",
+  telefoonNa: ". We denken graag met je mee.",
   ctaSecundair: "Terug naar de site",
-  whatsappUrl:
-    "https://wa.me/31625306491?text=Hoi%20Ever%20Sun%2C%20ik%20heb%20de%20huidtest%20gedaan%20en%20kreeg%20het%20advies%20om%20even%20langs%20te%20komen%20voor%20persoonlijk%20huidadvies.",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -134,23 +140,19 @@ export const RESULTAAT = {
   standregel: (stand: StandId) => `Begin op de stand ${stand}.`,
   kassakoopjeKop: "Voor erbij",
   sachetToggle: (prijs: string) => `Leg een sachet voor me klaar · € ${prijs}`,
-  sachetMicrocopy:
-    "Groot genoeg voor één sessie, klein genoeg om te ontdekken of 'ie bij je past. Ligt klaar bij de balie.",
-  barefoot:
-    "Voor daarna: Barefoot Beachwood (€ 24,99) — kalmeert je huid na het zonnen en houdt je kleur een dag op z'n plek.",
   ctaPrimair: "Plan je moment",
   ctaSecundair: "Opnieuw doen",
   disclaimer:
-    "Deze test geeft een indicatie. In de studio kijken we altijd nog even samen naar je huid — dat advies is leidend.",
+    "Deze test geeft een indicatie. In de studio kijken we altijd nog even samen naar je huid. Dat advies is leidend.",
   tattooTip:
     "Tip voor je tattoos: H.I.M. Surf beschermt je inkt en is ook mild genoeg voor jouw huid.",
 } as const;
 
 export const HUID_FRAGMENT: Record<Exclude<Answers["huidreactie"], "type1">, string> = {
   type2:
-    "Je huid verbrandt snel en bruint voorzichtig — die verdient een rustige, gecontroleerde opbouw.",
+    "Je huid verbrandt snel en bruint voorzichtig, en verdient dus een rustige, gecontroleerde opbouw.",
   type3: "Je huid bruint makkelijk en kan goed tegen een stevige sessie.",
-  type4: "Je huid bruint diep en snel — daar mag best wat kracht achter.",
+  type4: "Je huid bruint diep en snel, daar mag best wat kracht achter.",
 };
 
 export const DOEL_FRAGMENT: Record<Answers["doel"], string> = {
@@ -178,19 +180,19 @@ export const DOEL_FRAGMENT_RUSTIG =
 
 export const PRODUCT_WAAROM: Record<ProductSlug, string> = {
   "dare-to-be-dark":
-    "Geen bronzer, geen parfum, geen olie — alleen activatoren die je eigen kleur aanzetten. Precies wat een gevoelige huid wil.",
+    "Geen bronzer, geen parfum, geen olie, alleen activatoren die je eigen kleur aanzetten. Precies wat een gevoelige huid wil.",
   "him-surf": "Beschermt je tattoos, trekt snel in en versterkt je kleur zonder bronzer.",
   "him-jet": "Diepe bronzer die je tattoos ontziet, met resultaat vanaf de eerste sessie.",
   "white-2-bronze":
-    "Directe bronzer met anti-oranje technologie — je ziet meteen kleur, en die blijft natuurlijk.",
+    "Directe bronzer met anti-oranje technologie. Je ziet meteen kleur, en die blijft natuurlijk.",
   "black-crown":
     "Zware bronzer voor gevorderden. Direct resultaat dat de dagen erna nog dieper wordt.",
   vault:
-    "Ingekapselde DHA komt langzaam vrij en color lock-agenten zetten je kleur vast — dagen lang egaal.",
+    "Ingekapselde DHA komt langzaam vrij en color lock-agenten zetten je kleur vast, dagen lang egaal.",
   "bronze-butter":
     "Zes boters en vegan collageen tegen een droge, trekkende huid. De kleur komt van jezelf.",
   "sun-honey":
-    "Maakt je huid ontvankelijker voor kleur — fijn als je kleur sneller wil opbouwen of al een tijdje stilstaat.",
+    "Maakt je huid ontvankelijker voor kleur. Fijn als je kleur sneller wil opbouwen of al een tijdje stilstaat.",
   // Never advised as the main product: it is the fixed after-sun line at the
   // bottom of the block, and the two moisturisers are not in the rules at all.
   "barefoot-beachwood": "",

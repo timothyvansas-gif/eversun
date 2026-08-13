@@ -220,7 +220,7 @@ describe("buildWhy", () => {
 
   it("pairs a skin fragment with a goal fragment", () => {
     expect(buildWhy(answers({ huidreactie: "type4", doel: "verdiepen" }), "prestige-1600")).toBe(
-      "Je huid bruint diep en snel — daar mag best wat kracht achter. Het rode Beauty Light stimuleert je doorbloeding, zodat je kleur dieper wordt.",
+      "Je huid bruint diep en snel, daar mag best wat kracht achter. Het rode Beauty Light stimuleert je doorbloeding, zodat je kleur dieper wordt.",
     );
   });
 

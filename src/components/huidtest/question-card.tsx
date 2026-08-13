@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { Question, QuestionKey } from "@/lib/huidtest/config";
+import { CheckField } from "@/components/huidtest/check-field";
 import { CtaButton } from "@/components/huidtest/cta";
 
 /**
@@ -28,7 +29,7 @@ export default function QuestionCard<K extends QuestionKey>({
   onSelect: (id: string) => void;
   checkboxChecked?: boolean;
   onCheckboxChange?: (checked: boolean) => void;
-  /** Only for the question with the checkbox — the rest advance on their own. */
+  /** Confirms the answer. Every question has one; nothing advances by itself. */
   onNext?: () => void;
 }) {
   const headingId = `huidtest-vraag-${question.key}`;
@@ -125,15 +126,14 @@ export default function QuestionCard<K extends QuestionKey>({
       </div>
 
       {question.checkbox && (
-        <label className="mt-5 flex min-h-[44px] w-fit cursor-pointer items-center gap-3 font-sans text-[15px] tracking-[-0.01em] text-ink-strong">
-          <input
-            type="checkbox"
+        <div className="mt-5">
+          <CheckField
             checked={checkboxChecked ?? false}
-            onChange={(event) => onCheckboxChange?.(event.target.checked)}
-            className="size-5 shrink-0 cursor-pointer accent-[var(--color-accent)]"
-          />
-          {question.checkbox.label}
-        </label>
+            onChange={(checked) => onCheckboxChange?.(checked)}
+          >
+            {question.checkbox.label}
+          </CheckField>
+        </div>
       )}
 
       {/* Every question is confirmed rather than sprung: the answer takes a

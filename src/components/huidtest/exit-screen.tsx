@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { EXIT_MINOR, EXIT_TYPE1 } from "@/lib/huidtest/config";
+import { EXIT_MINOR, EXIT_TYPE1, TELEFOON } from "@/lib/huidtest/config";
 import type { ExitReason } from "@/lib/huidtest/types";
-import { ctaClass, CtaButton, CtaLink, CTA_TRANSITION } from "@/components/huidtest/cta";
+import { ctaClass, CtaButton, CTA_TRANSITION } from "@/components/huidtest/cta";
 
 /**
  * The two ways the test ends without advice: too young, and a skin that always
@@ -48,13 +48,20 @@ export default function ExitScreen({
         {copy.body}
       </p>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-        {reason === "type1" && (
-          <CtaLink href={EXIT_TYPE1.whatsappUrl} target="_blank" rel="noopener noreferrer">
-            {EXIT_TYPE1.ctaPrimair}
-          </CtaLink>
-        )}
+      {reason === "type1" && (
+        <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+          {EXIT_TYPE1.telefoonVoor}
+          <a
+            href={TELEFOON.href}
+            className="whitespace-nowrap text-ink-strong underline decoration-line underline-offset-4 transition-colors duration-150 hover:decoration-ink-strong"
+          >
+            {TELEFOON.weergave}
+          </a>
+          {EXIT_TYPE1.telefoonNa}
+        </p>
+      )}
 
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         {onClose ? (
           <CtaButton variant={terugVariant} onClick={onClose}>
             {terugLabel}

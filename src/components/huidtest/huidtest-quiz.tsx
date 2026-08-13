@@ -227,19 +227,26 @@ export default function HuidtestQuiz({
             {INTRO.body}
           </p>
 
-          <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
-            {INTRO.wettelijk}
-          </p>
+          {/* The age check as one card: the question, the law it rests on, and
+              the two answers. Same white panel the openingstijden sheet uses,
+              down to the radius and the padding — this is a gate, and it reads
+              better as one object than as three paragraphs that happen to be
+              about the same thing. */}
+          <div className="mt-7 rounded-2xl bg-white px-6 py-5">
+            <h3 className="font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+              {INTRO.vraag}
+            </h3>
 
-          <h3 className="mt-7 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
-            {INTRO.vraag}
-          </h3>
+            <p className="mt-2 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+              {INTRO.wettelijk}
+            </p>
 
-          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
-            <CtaButton variant="outline" onClick={() => handleAge("minor")}>
-              {INTRO.nee}
-            </CtaButton>
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
+              <CtaButton variant="outline" onClick={() => handleAge("minor")}>
+                {INTRO.nee}
+              </CtaButton>
+            </div>
           </div>
         </div>
       )}

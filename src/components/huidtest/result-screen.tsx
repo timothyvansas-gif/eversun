@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { ZONNEBANKEN } from "@/data/zonnebanken-data";
 import { trackEvent } from "@/lib/analytics";
+import { CheckField } from "@/components/huidtest/check-field";
 import { CtaButton, CtaLink } from "@/components/huidtest/cta";
 import { PRODUCT_WAAROM, RESULTAAT } from "@/lib/huidtest/config";
 import { buildWhatsappUrl, buildWhy, findProduct } from "@/lib/huidtest/decide";
@@ -60,7 +61,7 @@ export default function ResultScreen({
       {/* Bank card. Fixed aspect ratio so the advice does not jump when the
           photo lands — this screen is the payoff, and a reflow here reads as
           the answer changing its mind. */}
-      <div className="mt-6 overflow-hidden rounded-[12px] border border-line bg-white">
+      <div className="mt-6 overflow-hidden rounded-[12px] bg-white">
         <div className="relative aspect-[4/3] w-full sm:aspect-[16/9]">
           <Image
             src={bank.image}
@@ -94,7 +95,7 @@ export default function ResultScreen({
           these?" rather than "here is your second advice". */}
       <section
         aria-labelledby="huidtest-kassakoopje"
-        className="mt-8 rounded-[12px] border border-line/70 bg-white/60 p-4 sm:p-5"
+        className="mt-8 rounded-[12px] bg-white/60 p-4 sm:p-5"
       >
         <h3
           id="huidtest-kassakoopje"
@@ -138,43 +139,19 @@ export default function ResultScreen({
         )}
 
         {product.sachetPrice && (
-          <>
-            <label className="mt-4 flex min-h-[44px] cursor-pointer items-center gap-3 font-sans text-[15px] tracking-[-0.01em] text-ink-strong">
-              <input
-                type="checkbox"
-                checked={sachet}
-                onChange={(event) => toggleSachet(event.target.checked)}
-                className="size-5 shrink-0 cursor-pointer accent-[var(--color-accent)]"
-              />
+          <div className="mt-4">
+            <CheckField checked={sachet} onChange={toggleSachet}>
               {RESULTAAT.sachetToggle(product.sachetPrice)}
-            </label>
-
-            <p className="mt-2 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
-              {RESULTAAT.sachetMicrocopy}
-            </p>
-          </>
+            </CheckField>
+          </div>
         )}
 
-        {/* No toggle: Barefoot Beachwood has no sachet, only a bottle. A switch
-            that quietly added a €24,99 item to the message would not be a
-            kassakoopje. */}
-        <p className="mt-4 border-t border-line/60 pt-3 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
-          {RESULTAAT.barefoot}
-        </p>
       </section>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <CtaLink
-          href={buildWhatsappUrl(advies, sachet)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent("huidtest_cta", { type: "whatsapp", sachet })}
-        >
-          {RESULTAAT.ctaPrimair}
-        </CtaLink>
-
+      <div className="mt-6">
         <CtaButton
           variant="outline"
+          className="w-full sm:w-auto"
           onClick={() => {
             trackEvent("huidtest_cta", { type: "opnieuw", sachet });
             onRestart();
@@ -184,9 +161,43 @@ export default function ResultScreen({
         </CtaButton>
       </div>
 
-      <p className="mt-8 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
+      <p className="mt-6 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
         {RESULTAAT.disclaimer}
       </p>
+
+      {/* The one thing this screen is for, kept within reach.
+          The result is the longest screen in the test — photo, price, reasoning,
+          the sachet block — and on a phone the button that books it used to sit
+          below all of it, off the bottom of a sheet. So it rides along: pinned
+          while there is anything left to read, settling into place at the end
+          rather than hovering over the last line forever.
+
+          It sticks to the scroll container it is in, which is the sheet on a
+          phone, the panel on desktop, and the page on /huidtest — the same
+          markup does the right thing in all three. The negative margin lets it
+          span the full width of that container, so it reads as a bar rather
+          than a floating button.
+
+          The sachet line comes along because this button is what sends the
+          message: whatever is switched on above should still be visible at the
+          moment of sending, not four hundred pixels up the page. */}
+      <div className="sticky bottom-0 -mx-6 mt-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px]">
+        {sachet && product.sachetPrice && (
+          <p className="mb-2 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
+            Inclusief sachet {product.name} · € {product.sachetPrice}
+          </p>
+        )}
+
+        <CtaLink
+          href={buildWhatsappUrl(advies, sachet)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent("huidtest_cta", { type: "whatsapp", sachet })}
+          className="w-full"
+        >
+          {RESULTAAT.ctaPrimair}
+        </CtaLink>
+      </div>
     </div>
   );
 }
