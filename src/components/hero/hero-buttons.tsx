@@ -1,7 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import { useState } from "react";
 import { CtaArrow } from "@/components/ui/cta-arrow";
-import { scrollBehavior } from "@/lib/animate-scroll";
+
+// Nobody sees the quiz until they ask for it, so it stays out of the hero's
+// bundle until the button is pressed.
+const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
 
 // No `gap`: CtaArrow carries its own margin and only unfolds on hover, so a
 // standing gap would push the label off-centre while the arrow is collapsed.
@@ -14,13 +19,16 @@ const baseStyle: React.CSSProperties = {
 
 
 export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
+  const [huidtestOpen, setHuidtestOpen] = useState(false);
+
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
       {/* Width is content-driven from sm up so the button widens as the arrow
-          unfolds, the way the outline pills do. Mobile keeps its fixed width:
-          there is no hover there, so there is nothing to grow into. */}
+          unfolds, the way the outline pills do. Mobile fills the column
+          instead: two stacked CTAs of different widths read as two different
+          kinds of thing, and these are a pair. */}
       <button
-        className="group/cta w-[172px] px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="group/cta w-full px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -40,20 +48,23 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
         <CtaArrow />
       </button>
 
-      {/* Desktop-only: no fill, ever — only the border opacity and the arrow
-          reveal change on hover. Layout comes from justify/items-center +
-          rounded-full classes, not baseStyle — that object's display:"flex"
-          would override the `hidden` class below lg (inline style always
-          beats a class), showing the button on mobile too. */}
+      {/* The second way in, beside booking rather than under it: someone who
+          would book but does not know which bed is theirs. No fill, ever —
+          only the border opacity and the arrow reveal change on hover. Full
+          width on mobile like the button above it, content-width from sm up. */}
       <button
-        className="group/cta hidden lg:flex justify-center items-center rounded-full px-12 min-h-[56px] font-sans font-medium text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
-        onClick={() => {
-          document.getElementById("waarom")?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
-        }}
+        className="group/cta flex w-full sm:w-auto justify-center items-center rounded-full sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
+        onClick={() => setHuidtestOpen(true)}
       >
-        <span>Ontdek</span>
+        <span>Doe huidtest</span>
         <CtaArrow />
       </button>
+
+      <HuidtestOverlay
+        isOpen={huidtestOpen}
+        onClose={() => setHuidtestOpen(false)}
+        entry="hero_link"
+      />
     </div>
   );
 }

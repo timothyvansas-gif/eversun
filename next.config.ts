@@ -7,7 +7,11 @@ const nextConfig: NextConfig = {
   // phone. Without a match Next serves the HTML but 403s every /_next chunk,
   // so the page loads dead. These are DHCP ranges, hence the wildcards — add
   // the network you are on rather than a single lease.
-  allowedDevOrigins: ["192.168.2.*", "10.30.*", "localhost:3000"],
+  // 127.0.0.1 is not an alias for localhost here: Next matches the Host header
+  // as written, so a browser that resolves one but not the other (headless
+  // Chrome under automation, for one) gets its /_next chunks blocked and the
+  // page loads without ever hydrating — every button dead, no console error.
+  allowedDevOrigins: ["192.168.2.*", "10.30.*", "localhost:3000", "127.0.0.1"],
   images: {
     formats: isProd ? ["image/avif", "image/webp"] : ["image/webp"],
     qualities: [75, 80, 90],
