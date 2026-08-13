@@ -1,13 +1,24 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { animate } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { ZONNEBANKEN } from "@/data/zonnebanken-data";
 import { trackEvent } from "@/lib/analytics";
 import { CheckField } from "@/components/huidtest/check-field";
 import { CtaButton } from "@/components/huidtest/cta";
 import { BookingSheet } from "@/components/huidtest/booking-sheet";
+import { useHuidtestSurface } from "@/components/huidtest/surface-context";
+import { stackedSheetHeight, STACK_SPRING } from "@/components/hero/sheet-stack";
+import { BOEKEN } from "@/lib/huidtest/config";
+
+// The site's own booking sheet, which already carries the phone button and a
+// review. On a phone it stacks on the test the way it stacks on the
+// openingstijden sheet; the desktop panel gets the QR sheet instead, since a
+// code is only useful on a screen you are not holding.
+const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 import { StepCard } from "@/components/huidtest/step-card";
 import { StickyActions } from "@/components/huidtest/sticky-actions";
 import { PRODUCT_WAAROM, RESULTAAT } from "@/lib/huidtest/config";
@@ -36,6 +47,7 @@ export default function ResultScreen({
 }) {
   const [sachet, setSachet] = useState(false);
   const [boekenOpen, setBoekenOpen] = useState(false);
+  const { element: surface, stackDepth } = useHuidtestSurface();
 
   const bank = ZONNEBANKEN.find((z) => z.slug === BANK_SLUGS[advies.bank])!;
   const product = findProduct(advies.product);
@@ -49,6 +61,15 @@ export default function ResultScreen({
   // before anyone asks for it. Only where it can be shown: a phone taps
   // through to WhatsApp and never sees a code.
   const qrSvg = useQrSvg(isDesktop ? whatsappUrl : null);
+
+  // The test sinks while the booking sheet covers it, and comes back as it
+  // leaves. Animated on the shared value rather than toggled, so a drag that
+  // starts to dismiss the sheet in front hands the size back on the way.
+  useEffect(() => {
+    if (!stackDepth) return;
+    const controls = animate(stackDepth, boekenOpen ? 1 : 0, STACK_SPRING);
+    return () => controls.stop();
+  }, [boekenOpen, stackDepth]);
 
   const toggleSachet = (aan: boolean) => {
     setSachet(aan);
@@ -212,14 +233,25 @@ export default function ResultScreen({
         </CtaButton>
       </StickyActions>
 
-      <BookingSheet
-        isOpen={boekenOpen}
-        onClose={() => setBoekenOpen(false)}
-        whatsappUrl={whatsappUrl}
-        qrSvg={qrSvg}
-        bankTitle={bank.title}
-        showQr={isDesktop}
-      />
+      {isDesktop ? (
+        <BookingSheet
+          isOpen={boekenOpen}
+          onClose={() => setBoekenOpen(false)}
+          whatsappUrl={whatsappUrl}
+          qrSvg={qrSvg}
+          bankTitle={bank.title}
+        />
+      ) : (
+        <PlanJeMomentSheet
+          isOpen={boekenOpen}
+          onClose={() => setBoekenOpen(false)}
+          whatsappUrl={whatsappUrl}
+          title={BOEKEN.kop}
+          description={BOEKEN.body}
+          stackDepth={stackDepth ?? undefined}
+          stackedMinHeight={stackedSheetHeight(surface)}
+        />
+      )}
     </div>
   );
 }

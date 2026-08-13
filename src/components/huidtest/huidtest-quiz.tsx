@@ -43,9 +43,16 @@ const START_PROGRESS = 20;
  * are a sequence, not a carousel, and anything further reads as a page turn
  * between two questions that are meant to feel like one conversation.
  */
-const STEP_TRAVEL = 20;
+const STEP_TRAVEL = 24;
 
-const STEP_TRANSITION = { duration: 0.22, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
+/**
+ * Arriving is the movement worth watching, so it takes its time on the site's
+ * own easing; leaving is shorter and steeper, because a screen on its way out
+ * has nothing left to say. The two overlap — see `mode` below — so the pair
+ * reads as one handover rather than two animations queued behind each other.
+ */
+const STEP_IN = { duration: 0.34, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
+const STEP_OUT = { duration: 0.2, ease: [0.36, 0, 0.66, 0] as [number, number, number, number] };
 
 export default function HuidtestQuiz({
   shared = null,
@@ -201,7 +208,7 @@ export default function HuidtestQuiz({
     // the bottom edge rather than trailing the last option. A question with
     // three answers is shorter than one with four, and a button that moved up
     // with it made the two screens read as different layouts.
-    <div className="flex min-h-full w-full flex-col">
+    <div className="relative flex min-h-full w-full flex-col">
       {showsProgress && (
         <div className="mb-5 shrink-0">
           <div
@@ -250,17 +257,20 @@ export default function HuidtestQuiz({
         </div>
       )}
 
-      {/* One at a time, and each leaves the way the next arrives: forward
-          slides on from the right, back from the left. `mode="wait"` because
-          two steps crossfading in place would put two questions on screen at
-          once, which is exactly the confusion a wizard is meant to prevent. */}
-      <AnimatePresence mode="wait" initial={false}>
+      {/* One handover, not two animations in a queue. `mode="wait"` held the
+          incoming step until the outgoing one had finished, which left the
+          panel empty for a fifth of a second and read as a stutter; popLayout
+          takes the leaving step out of the flow so both move at once and the
+          new screen is already arriving as the old one clears.
+
+          Forward slides on from the right and back from the left, so the two
+          directions are told apart by the movement rather than by guessing. */}
+      <AnimatePresence mode="popLayout" initial={false}>
         <m.div
           key={stepKey}
           initial={{ opacity: 0, x: travel }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -travel }}
-          transition={STEP_TRANSITION}
+          animate={{ opacity: 1, x: 0, transition: STEP_IN }}
+          exit={{ opacity: 0, x: -travel, transition: STEP_OUT }}
           className="flex flex-1 flex-col"
         >
         {step.kind === "intro" && (

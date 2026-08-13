@@ -10,7 +10,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { CtaLink } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
 import { useHuidtestSurface } from "@/components/huidtest/surface-context";
-import { TELEFOON } from "@/lib/huidtest/config";
+import { BOEKEN, TELEFOON } from "@/lib/huidtest/config";
 
 /**
  * Booking, as a sheet inside the test rather than a modal on top of it.
@@ -33,7 +33,6 @@ export function BookingSheet({
   whatsappUrl,
   qrSvg,
   bankTitle,
-  showQr,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -41,9 +40,8 @@ export function BookingSheet({
   /** Drawn at call time, because the advice's message is not a committed asset. */
   qrSvg?: string;
   bankTitle: string;
-  showQr: boolean;
 }) {
-  const surface = useHuidtestSurface();
+  const { element: surface } = useHuidtestSurface();
   const [target, setTarget] = useState<HTMLElement | null>(null);
 
   // The portal needs a document, and on the route it needs the body rather than
@@ -118,12 +116,11 @@ export function BookingSheet({
         </div>
 
         <StepCard>
-        <h2 className="card-title text-center text-zinc-900">Plan je zonsessie</h2>
+        <h2 className="card-title text-center text-zinc-900">{BOEKEN.kop}</h2>
 
-        {showQr && (
-          <>
+        <>
             <p className="mt-2 text-center font-sans text-[15px] leading-[24px] text-ink/70">
-              Scan met je telefoon, dan opent WhatsApp met je aanvraag al ingevuld.
+              {BOEKEN.qrUitleg}
             </p>
 
             <div className="mx-auto mt-4 w-[220px]">
@@ -143,16 +140,15 @@ export function BookingSheet({
             </div>
 
             <p className="mt-4 text-center font-sans text-[15px] leading-[24px] text-ink/70">
-              Of gewoon vanaf dit scherm.
+              {BOEKEN.ofHier}
             </p>
-          </>
-        )}
+        </>
 
         <CtaLink
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={`mt-4 w-full gap-2 ${showQr ? "" : "mt-5"}`}
+          className="mt-4 w-full gap-2"
         >
           <Image
             src={whatsappIcon}
@@ -161,11 +157,11 @@ export function BookingSheet({
             height={18}
             className="h-[18px] w-[18px] brightness-0 invert"
           />
-          Open WhatsApp
+          {BOEKEN.whatsapp}
         </CtaLink>
 
         <div className="mt-5 border-t border-line/50 pt-4 text-center">
-          <p className="card-title text-zinc-900">Liever bellen?</p>
+          <p className="card-title text-zinc-900">{BOEKEN.bellen}</p>
           <a
             href={TELEFOON.href}
             className="mt-1 block font-sans text-[15px] leading-[24px] text-ink/70 underline decoration-dotted underline-offset-6"

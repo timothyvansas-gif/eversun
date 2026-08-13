@@ -205,6 +205,21 @@ export const PRODUCT_WAAROM: Record<ProductSlug, string> = {
 /** The after-sun under every advice, whatever the quiz decided. */
 export const SECUNDAIR_PRODUCT: ProductSlug = "barefoot-beachwood";
 
+/**
+ * The booking step, reached from the result. It says what the message already
+ * contains, because that is the difference between this and booking anywhere
+ * else on the site: the advice travels with it, so nobody has to explain their
+ * skin twice.
+ */
+export const BOEKEN = {
+  kop: "Plan je zonsessie",
+  body: "Je advies gaat mee in het bericht, dus we weten al welke bank en welke stand bij je passen. Liever even overleggen? Bel gerust.",
+  qrUitleg: "Scan met je telefoon, dan opent WhatsApp met je advies er al in.",
+  ofHier: "Of gewoon vanaf dit scherm.",
+  whatsapp: "Open WhatsApp",
+  bellen: "Liever bellen?",
+} as const;
+
 /* ------------------------------------------------------------------ */
 /* Entry points                                                        */
 /* ------------------------------------------------------------------ */

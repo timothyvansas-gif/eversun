@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import type { MotionValue } from "framer-motion";
 
 /**
  * The element the test is being shown in: the side panel on desktop, the sheet
@@ -13,8 +14,21 @@ import { createContext, useContext } from "react";
  * Handing the element down beats reaching for it with a querySelector, which is
  * the same coupling written less honestly.
  */
-export const HuidtestSurfaceContext = createContext<HTMLElement | null>(null);
+export type HuidtestSurface = {
+  element: HTMLElement | null;
+  /**
+   * 0 while the test is the front sheet, 1 once another sheet is stacked on it.
+   * The surface reads it to sink; whatever stacks writes it, including while
+   * being dragged back down, so the two move as one stack.
+   */
+  stackDepth: MotionValue<number> | null;
+};
 
-export function useHuidtestSurface(): HTMLElement | null {
+export const HuidtestSurfaceContext = createContext<HuidtestSurface>({
+  element: null,
+  stackDepth: null,
+});
+
+export function useHuidtestSurface(): HuidtestSurface {
   return useContext(HuidtestSurfaceContext);
 }

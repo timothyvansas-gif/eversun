@@ -164,10 +164,19 @@ export default function PlanJeMomentSheet({
   whatsappUrl = WHATSAPP_BOOKING_URL,
   stackedMinHeight,
   stackDepth,
+  title,
+  description,
 }: {
   isOpen: boolean;
   onClose: () => void;
   whatsappUrl?: string;
+  /**
+   * What this sheet is for, when it is opened from somewhere with its own
+   * story — the huidtest closes on an advice, not on an invitation to drop by.
+   * Both fall back to the general booking wording.
+   */
+  title?: string;
+  description?: React.ReactNode;
   /**
    * How deep in the stack the sheet behind this one sits, written while this
    * sheet is dragged: pulling it down gives the sheet behind its size back on
@@ -271,17 +280,21 @@ export default function PlanJeMomentSheet({
               <div className="px-6 pt-8">
                 <div className="bg-white rounded-2xl px-6 py-6">
                   <div className="mb-5">
-                    <h2 className="card-title text-zinc-900">Plan je moment</h2>
+                    <h2 className="card-title text-zinc-900">{title ?? "Plan je moment"}</h2>
                     <p className="font-sans text-[15px] text-muted leading-[24px] mt-[6px]">
-                      Toe aan een moment voor jezelf? Kom lekker langs aan de{" "}
-                      <a
-                        href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted underline decoration-dotted underline-offset-6"
-                      >
-                        Kloekhorststraat 4A in Assen
-                      </a>
+                      {description ?? (
+                        <>
+                          Toe aan een moment voor jezelf? Kom lekker langs aan de{" "}
+                          <a
+                            href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted underline decoration-dotted underline-offset-6"
+                          >
+                            Kloekhorststraat 4A in Assen
+                          </a>
+                        </>
+                      )}
                     </p>
                   </div>
 
