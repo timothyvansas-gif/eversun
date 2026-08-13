@@ -187,7 +187,11 @@ export default function ResultScreen({
 
       </section>
 
-      <div className="mt-6">
+      <p className="mt-6 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
+        {RESULTAAT.disclaimer}
+      </p>
+
+      <div className="mt-5">
         <CtaButton
           variant="outline"
           className="w-full sm:w-auto"
@@ -199,10 +203,6 @@ export default function ResultScreen({
           {RESULTAAT.ctaSecundair}
         </CtaButton>
       </div>
-
-      <p className="mt-6 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
-        {RESULTAAT.disclaimer}
-      </p>
 
       </StepCard>
 

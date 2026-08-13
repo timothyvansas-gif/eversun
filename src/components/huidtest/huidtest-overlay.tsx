@@ -63,6 +63,12 @@ export default function HuidtestOverlay({
   const [isBehind, setIsBehind] = useState(false);
   useEffect(() => stackDepth.on("change", (depth) => setIsBehind(depth > 0.5)), [stackDepth]);
 
+  // Whether the content has moved under the sheet's own edge. Text ending
+  // hard against the drag handle reads as content that has been cut off, so a
+  // short fade takes over there — but only once there is something to fade,
+  // or the card's top edge would look tinted at rest.
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const dragControls = useDragControls();
   const [mounted, setMounted] = useState(false);
@@ -95,10 +101,25 @@ export default function HuidtestOverlay({
         </div>
       )}
 
-      <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-6 md:pt-4">
-        <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
-          <HuidtestQuiz entry={entry} onClose={onClose} />
-        </HuidtestSurfaceContext.Provider>
+      <div className="relative flex flex-1 flex-col overflow-hidden">
+        {/* Sits over the top of the scroll area, not in it, so it fades what
+            passes beneath rather than moving with it. Sheet only: it is there
+            for the drag handle, and the panel has no handle to run into. */}
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-surface-page to-transparent transition-opacity duration-200 md:hidden ${
+            isScrolled ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <div
+          onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 4)}
+          className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-6 md:pt-4"
+        >
+          <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
+            <HuidtestQuiz entry={entry} onClose={onClose} />
+          </HuidtestSurfaceContext.Provider>
+        </div>
       </div>
     </>
   );
