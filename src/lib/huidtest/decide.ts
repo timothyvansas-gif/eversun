@@ -114,14 +114,16 @@ export function buildWhatsappUrl(advies: Advies, sachet: boolean): string {
 }
 
 /**
- * One line for the booking sheet: on a phone it covers the advice the moment
- * it opens, and someone who ends up calling instead of messaging should not
- * lose sight of what was decided.
+ * Compact context for the booking sheet: on a phone it covers the advice the
+ * moment it opens, and someone who calls instead of messaging should still
+ * understand both the recommendation and any product they selected.
  */
 export function buildAdviesReferentie(advies: Advies, sachet: boolean): string {
   const product = findProduct(advies.product);
-  const sachetSuffix =
-    sachet && product.sachetPrice ? `, incl. sachet ${product.name} (€ ${product.sachetPrice})` : "";
+  const productSentence =
+    sachet && product.sachetPrice
+      ? ` Je koos daarbij voor een sachet ${product.name} (€ ${product.sachetPrice}).`
+      : "";
 
-  return `Je advies: ${adviesNaam(advies)}${sachetSuffix}.`;
+  return `Op basis van je antwoorden adviseren we de ${adviesNaam(advies)}. Die past het beste bij je huid en wensen.${productSentence}`;
 }

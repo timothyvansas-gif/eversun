@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import type { Question, QuestionKey } from "@/lib/huidtest/config";
 import { CheckField } from "@/components/huidtest/check-field";
 import { StepCard } from "@/components/huidtest/step-card";
@@ -24,6 +24,7 @@ export default function QuestionCard<K extends QuestionKey>({
   onSelect,
   checkboxChecked,
   onCheckboxChange,
+  onHeightChange,
 }: {
   question: Question<K>;
   /** Focus lands here on every step change, so the question is what gets read. */
@@ -32,10 +33,25 @@ export default function QuestionCard<K extends QuestionKey>({
   onSelect: (id: string) => void;
   checkboxChecked?: boolean;
   onCheckboxChange?: (checked: boolean) => void;
+  /** Reports the rendered card size to the desktop transition stage. */
+  onHeightChange?: (height: number) => void;
 }) {
   const headingId = `huidtest-vraag-${question.key}`;
   const hulpId = question.hulptekst ? `${headingId}-hulp` : undefined;
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    if (!card || !onHeightChange) return;
+
+    const report = () => onHeightChange(Math.ceil(card.getBoundingClientRect().height));
+    report();
+
+    const observer = new ResizeObserver(report);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [onHeightChange, question.key]);
 
   const handleArrows = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     const forward = event.key === "ArrowDown" || event.key === "ArrowRight";
@@ -55,7 +71,7 @@ export default function QuestionCard<K extends QuestionKey>({
   };
 
   return (
-    <StepCard>
+    <StepCard ref={cardRef}>
       <h2
         id={headingId}
         ref={headingRef}

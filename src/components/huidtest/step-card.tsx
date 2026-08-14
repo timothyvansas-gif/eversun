@@ -14,9 +14,15 @@
 export function StepCard({
   children,
   className = "",
+  ref,
 }: {
   children: React.ReactNode;
   className?: string;
+  ref?: React.Ref<HTMLDivElement>;
 }) {
-  return <div className={`rounded-2xl bg-white px-6 py-6 ${className}`}>{children}</div>;
+  return (
+    <div ref={ref} className={`rounded-2xl bg-white px-6 py-6 ${className}`}>
+      {children}
+    </div>
+  );
 }

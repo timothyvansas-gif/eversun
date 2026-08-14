@@ -285,7 +285,9 @@ describe("buildAdviesReferentie", () => {
       false,
     );
 
-    expect(referentie).toBe("Je advies: Ergoline Prestige 1600 (stand medium).");
+    expect(referentie).toBe(
+      "Op basis van je antwoorden adviseren we de Ergoline Prestige 1600 (stand medium). Die past het beste bij je huid en wensen.",
+    );
   });
 
   it("leaves the stand out for a bank that has none", () => {
@@ -294,14 +296,16 @@ describe("buildAdviesReferentie", () => {
       false,
     );
 
-    expect(referentie).toBe("Je advies: Ergoline 770 medium.");
+    expect(referentie).toBe(
+      "Op basis van je antwoorden adviseren we de Ergoline 770 medium. Die past het beste bij je huid en wensen.",
+    );
   });
 
   it("adds the sachet and its price only when the toggle is on", () => {
     const advies = { bank: "770-medium", stand: null, product: "vault" } as const;
 
     expect(buildAdviesReferentie(advies, true)).toBe(
-      "Je advies: Ergoline 770 medium, incl. sachet Vault (€ 12,99).",
+      "Op basis van je antwoorden adviseren we de Ergoline 770 medium. Die past het beste bij je huid en wensen. Je koos daarbij voor een sachet Vault (€ 12,99).",
     );
     expect(buildAdviesReferentie(advies, false)).not.toContain("sachet");
   });

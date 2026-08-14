@@ -70,6 +70,14 @@ const START_PROGRESS = 20;
 const STEP_SLIDE = { type: "spring", stiffness: 120, damping: 21, mass: 1 } as const;
 
 /**
+ * Breathing room between two question cards while they share the stage. It is
+ * the same 24px rhythm as the surface padding, and part of the travel itself —
+ * not a margin on either card — so forward animation and back-swipe expose the
+ * exact same gap without changing either card's resting width.
+ */
+const STEP_GAP = 24;
+
+/**
  * For the screens either side of the questions, which have no sibling to slide
  * against: the advice arrives as the progress bar above it closes, and a
  * carousel move on top of that is two things happening at once.
@@ -86,6 +94,18 @@ const INSTANT = { duration: 0 };
  * fades instead.
  */
 type StepMotion = { travel: number; instant: boolean };
+
+/**
+ * How the action bar leaves: quietly, unless the screen it is leaving for has
+ * a bar of its own to put in its place, in which case there is nothing to show
+ * and it goes on the spot. Read at the moment it leaves — see `custom` below.
+ */
+const BAR_VARIANTS = {
+  exit: (handsOver: boolean) =>
+    handsOver
+      ? { opacity: 0, transition: INSTANT }
+      : { opacity: 0, y: 16, transition: STEP_FADE },
+};
 
 /**
  * As variants rather than inline props, because that is what lets a step read
@@ -152,6 +172,7 @@ export default function HuidtestQuiz({
   onClose?: () => void;
 }) {
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   // A shared link is where this render starts: the answers were in the URL
   // before the first paint. Deriving the opening step from them beats setting
@@ -173,14 +194,16 @@ export default function HuidtestQuiz({
   // the stage rather than the viewport: in a panel the two are not the same.
   const stageRef = useRef<HTMLDivElement>(null);
   const dragX = useMotionValue(0);
-  const peekX = useTransform(dragX, (v) => v - (stageRef.current?.offsetWidth ?? 0));
+  const peekX = useTransform(
+    dragX,
+    (v) => v - (stageRef.current?.offsetWidth ?? 0) - STEP_GAP,
+  );
   const [peekStep, setPeekStep] = useState<Step | null>(null);
 
-  // The distance a step travels when it is not a finger moving it. Measured
-  // rather than assumed, because it has to be the same width the swipe pulls
-  // the step behind it back by — a step that arrives from anywhere else is a
-  // different gesture wearing the same clothes. Watched, since a phone that
-  // turns and a panel that is not the viewport both change it.
+  // The width a step crosses when it is not a finger moving it. Measured rather
+  // than assumed, because it is also the basis of the back-swipe; STEP_GAP is
+  // added to both paths below. Watched, since a phone that turns and a panel
+  // that is not the viewport both change it.
   const [stageWidth, setStageWidth] = useState(0);
   useEffect(() => {
     const stage = stageRef.current;
@@ -193,6 +216,25 @@ export default function HuidtestQuiz({
     observer.observe(stage);
     return () => observer.disconnect();
   }, []);
+
+  // Questions do not all take the same number of lines, but the controls below
+  // them should not move every time that copy changes. On a desktop surface we
+  // keep the tallest rendered question as the stage's floor. QuestionCard
+  // reports its actual size, so this follows copy, fonts and panel width rather
+  // than relying on a height that can quietly go stale. Mobile deliberately
+  // keeps its natural height: there the sheet scrolls and the action bar sticks
+  // to its bottom edge.
+  const [questionStageHeight, setQuestionStageHeight] = useState(0);
+  const recordQuestionHeight = useCallback(
+    (height: number) => {
+      // Read the real viewport here as well as gating the prop below. The quiz
+      // route can hydrate from a server render that cannot know the breakpoint;
+      // a phone must never be recorded as the desktop height during that handoff.
+      if (window.matchMedia(MOBILE_QUERY).matches) return;
+      setQuestionStageHeight((current) => (height > current ? height : current));
+    },
+    [],
+  );
 
   // Whether the step now on screen was carried there by the gesture. Its
   // entrance would otherwise run a second time over a screen that has finished
@@ -317,28 +359,24 @@ export default function HuidtestQuiz({
 
   const stepKey = step.kind === "vraag" ? `vraag-${step.index}` : step.kind;
 
-  // A full width, so a step confirmed with the button travels the same
-  // distance a step pulled back by a finger does — the advice included. It
-  // was held flat for a while because the progress bar above it closes on the
-  // same beat, and a 24px nudge arriving into that read as two unrelated
+  // A full stage plus the shared gutter, so a step confirmed with the button
+  // travels the same distance a step pulled back by a finger does — the advice
+  // included. It was held flat for a while because the progress bar above it
+  // closes on the same beat, and a 24px nudge arriving into that read as two unrelated
   // things twitching at once; a glide the width of the card is a big enough
   // move to be the one thing happening, and the bar closing under it is then
   // just the room it is settling into. Flat only when the gesture has already
   // done the moving, and when motion is turned down.
-  const travel = shouldReduceMotion || swipedBack ? 0 : stageWidth * direction;
+  const travel = shouldReduceMotion || swipedBack ? 0 : (stageWidth + STEP_GAP) * direction;
 
   /** Handed to both halves of a step change, and read as each of them moves. */
   const stepMotion: StepMotion = { travel, instant: swipedBack };
 
-  // Swiping back, alongside the button rather than instead of it: on a phone the
-  // test is a sheet, and a sheet that moves between screens invites the gesture
-  // every other one here answers to. Only where there is a finger and only where
-  // there is something behind the current step.
-  const isMobile = useMediaQuery(MOBILE_QUERY);
-
-  // What a swipe would uncover. Only a question or the intro: starting over
-  // parks the finished result behind question one, and dragging that back into
-  // view would show an advice built on the answers that were just cleared.
+  // Swiping back sits alongside the button rather than replacing it. Only on a
+  // phone, only where there is something behind this question, and only for a
+  // question or the intro: starting over parks the finished result behind
+  // question one, and dragging that into view would expose an advice built on
+  // answers that were just cleared.
   const peekTarget = stack[stack.length - 2];
   const canSwipeBack =
     isMobile &&
@@ -396,6 +434,7 @@ export default function HuidtestQuiz({
           onSelect={(id) => answer(s.index, id)}
           checkboxChecked={answers.tattoo}
           onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
+          onHeightChange={isMobile ? undefined : recordQuestionHeight}
         />
       )}
 
@@ -466,8 +505,10 @@ export default function HuidtestQuiz({
           to the sliding layer instead.
 
           On a phone it takes the height that is going, so the bar rides the
-          bottom edge. On the panel it is content-sized: a button pushed to the
-          floor there loses its tie to the question.
+          bottom edge. On the panel it is content-sized, with the tallest
+          question as its floor: a button pushed to the panel's bottom loses
+          its tie to the question, while a button following every question's
+          exact height visibly hops up and down through the test.
 
           `flex-auto` rather than `flex-1`, which differ only in their basis:
           both grow into spare room, but `flex-1` starts from zero, and a box
@@ -479,23 +520,21 @@ export default function HuidtestQuiz({
           basis of `auto` the question's real height reaches the column, and
           the bar stays inside it.
 
-          It clips its own sides, rather than leaving that to the surface. A
-          step travels exactly this box's width, but this box is inset from
-          the surface by its padding, so a card that had gone the full
-          distance still had that much of its edge inside the visible area —
-          parked at the left until the step unmounted and took it away in one
-          frame. Clipped here the distance is exactly enough, on both sides
+          It clips its own sides, rather than leaving that to the surface. This
+          box is inset from the surface by its padding, so a card moved by only
+          the surface width still had that much of its edge in view — parked at
+          the left until unmount. The travel is this box's width plus the shared
+          gutter now; clipping here makes that same geometry exact on both sides
           and for the step a swipe parks behind this one too.
 
-          Cutting both axes is the panel's alone, and has to be. There, the box is
-          sized by its content, so cutting at its edge only ever catches the
-          outgoing card popLayout has frozen at its old height — which is what
-          left a taller question's last option hanging under a shorter one.
-          On a phone the box is a flex child filling the surface, and a flex
-          child only keeps its content's height while its overflow is visible:
-          clipping here drops its minimum to zero, so `flex-1` squeezes it to
-          whatever is left over and the question is cut off with nothing to
-          scroll, because the cut is what stopped it overflowing.
+          Cutting both axes is the panel's alone, and is safe because its two
+          transitioning cards share one grid cell. That row stays as tall as
+          the taller participant until the slide is over, so a shorter incoming
+          card cannot move the clip edge through the one still leaving. On a
+          phone the old popLayout path stays in place. There this box is a flex
+          child filling the surface, and cutting its vertical axis would drop
+          its automatic minimum to zero: the question would be cut off with
+          nothing left for the sheet to scroll.
 
           `clip` rather than `hidden`, because the result's own action bar is
           inside this box. `hidden` makes an element a scroll container, and a
@@ -506,13 +545,18 @@ export default function HuidtestQuiz({
           past it to the surface it belongs to. */}
       <div
         ref={stageRef}
+        style={
+          !isMobile && step.kind === "vraag" && questionStageHeight > 0
+            ? { minHeight: questionStageHeight }
+            : undefined
+        }
         className="relative flex flex-auto flex-col overflow-x-clip md:flex-none md:overflow-clip"
       >
-        {/* The step being swiped back to, held one screen-width to the left and
-            pulled along by the same value the drag writes. Rendered only while
-            the gesture is live, so the quiz is one screen at every other moment
-            — and hidden from screen readers, which are still on the step the
-            visitor has not left yet. */}
+        {/* The step being swiped back to, held one stage-width and its gutter to
+            the left and pulled along by the same value the drag writes. Rendered
+            only while the gesture is live, so the quiz is one screen at every
+            other moment — and hidden from screen readers, which are still on
+            the step the visitor has not left yet. */}
         {peekStep && (
           <m.div
             aria-hidden="true"
@@ -531,7 +575,7 @@ export default function HuidtestQuiz({
             decides the axis, and a vertical one hands the pointer straight back
             to the scroll container. */}
         <m.div
-          className="flex flex-1 flex-col"
+          className="flex flex-1 flex-col md:grid"
           style={{ x: dragX }}
           drag={canSwipeBack ? "x" : false}
           dragDirectionLock
@@ -570,7 +614,11 @@ export default function HuidtestQuiz({
             // the screen the finger was pulling in is already where it lands.
             // The swap then happens on a still frame: same content, one from
             // the peek layer and one from the step itself.
-            animate(dragX, stageRef.current?.offsetWidth ?? 0, SWIPE_RELEASE).then(() => {
+            animate(
+              dragX,
+              (stageRef.current?.offsetWidth ?? 0) + STEP_GAP,
+              SWIPE_RELEASE,
+            ).then(() => {
               back(true);
               dragX.set(0);
               setPeekStep(null);
@@ -587,11 +635,14 @@ export default function HuidtestQuiz({
             });
           }}
         >
-        {/* One handover, not two animations in a queue. `mode="wait"` held the
+          {/* One handover, not two animations in a queue. `mode="wait"` held the
             incoming step until the outgoing one had finished, which left the
-            panel empty for a fifth of a second and read as a stutter; popLayout
-            takes the leaving step out of the flow so both move at once and the
-            new screen is already arriving as the old one clears.
+            panel empty for a fifth of a second and read as a stutter. On a
+            phone popLayout still takes the leaving step out of the flow: the
+            sheet owns the available height and scrolls anything taller. In the
+            desktop panel both steps instead share one grid cell in sync mode.
+            Both then contribute to the row's height while they move, so its
+            vertical clip can never cut through the taller one.
 
             Between questions the pair is one strip: the step arriving and the
             step leaving cover the same width in the same time, so nothing
@@ -612,19 +663,23 @@ export default function HuidtestQuiz({
             while the new one arrived from the right as well, and the two slid
             straight through each other. `custom` on the presence hands the
             leaving step the direction of the move actually happening. */}
-        <AnimatePresence mode="popLayout" initial={false} custom={stepMotion}>
-          <m.div
-            key={stepKey}
+          <AnimatePresence
+            mode={isMobile ? "popLayout" : "sync"}
+            initial={false}
             custom={stepMotion}
-            variants={STEP_VARIANTS}
-            initial={swipedBack ? false : "enter"}
-            animate="center"
-            exit="exit"
-            className="flex flex-1 flex-col"
           >
-            {renderStep(step)}
-          </m.div>
-        </AnimatePresence>
+            <m.div
+              key={stepKey}
+              custom={stepMotion}
+              variants={STEP_VARIANTS}
+              initial={swipedBack ? false : "enter"}
+              animate="center"
+              exit="exit"
+              className="flex flex-1 flex-col md:col-start-1 md:row-start-1"
+            >
+              {renderStep(step)}
+            </m.div>
+          </AnimatePresence>
         </m.div>
       </div>
 
@@ -645,13 +700,22 @@ export default function HuidtestQuiz({
           its way out. Now it drops and fades on the way. `popLayout` hands
           its height back at the start rather than the end, which is what the
           step area grows into — so the space closes while the bar is still
-          visibly leaving, instead of after it has blinked out. */}
-      <AnimatePresence initial={false} mode="popLayout">
+          visibly leaving, instead of after it has blinked out.
+
+          Except into the advice, which brings a bar of its own. There the two
+          are the same fixture with different buttons on it, and playing one
+          out while the other comes in is a handover made visible for no
+          reason — `popLayout` takes the leaving one out of the flow to close
+          the gap, so it spent its fade lying across the photo of the bed. It
+          goes on the spot instead, and the advice's own bar is already
+          standing where it stood. */}
+      <AnimatePresence initial={false} mode="popLayout" custom={step.kind === "resultaat"}>
         {step.kind === "vraag" && (
         <StickyActions
           key="quiz-actions"
           className="mt-7 shrink-0 md:mt-4"
-          exit={{ opacity: 0, y: 16, transition: STEP_FADE }}
+          variants={BAR_VARIANTS}
+          exit="exit"
         >
           <div className="flex items-center gap-3 md:justify-between">
             {/* Thumb-height, thumb-width, and beside the button it undoes rather

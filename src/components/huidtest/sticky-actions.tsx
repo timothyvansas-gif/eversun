@@ -1,6 +1,9 @@
 "use client";
 
 import { m, type MotionProps } from "framer-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 
 /**
  * The bar the test's forward button rides on.
@@ -21,6 +24,23 @@ import { m, type MotionProps } from "framer-motion";
  * become its containing block — and a sticky element can only travel as far as
  * that block reaches, which around a bar this size is nowhere at all.
  */
+
+/**
+ * The travel is the sheet's, not the panel's. On a phone the bar comes up out
+ * of the bottom edge it lives on; in the side panel there is no edge to come
+ * from and the same movement reads as the button jumping into place, so there
+ * it simply fades where it stands.
+ *
+ * This was a CSS keyframe until the bar had to be able to leave as well as
+ * arrive. A running animation outranks inline styles, and `both` keeps its
+ * last frame doing so long after it has finished — so the class went on
+ * holding `translateY(0)` while the exit wrote a transform of its own, and the
+ * two traded the property back and forth every frame. One owner, and the
+ * flicker has nothing left to argue about.
+ */
+const BAR_IN = { duration: 0.28, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
+const BAR_IN_PANEL = { duration: 0.2, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
+
 export function StickyActions({
   children,
   visible = true,
@@ -38,12 +58,21 @@ export function StickyActions({
   visible?: boolean;
   className?: string;
 } & MotionProps) {
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const shouldReduceMotion = useReducedMotion();
+
   if (!visible) return null;
 
   return (
     <m.div
+      initial={shouldReduceMotion ? false : { opacity: 0, y: isMobile ? "100%" : 0 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        transition: isMobile ? BAR_IN : BAR_IN_PANEL,
+      }}
       {...motion}
-      className={`huidtest-bar-in sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
+      className={`sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
     >
       {children}
     </m.div>

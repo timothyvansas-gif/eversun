@@ -473,50 +473,6 @@ body {
 
 }
 
-/* The huidtest's action bar arrives rather than appears.
-
-   It only exists once an answer is chosen — rendered before that, it took its
-   space at the foot of the sheet and cut the white step card short, leaving a
-   strip of surface under a button nobody could see yet. Mounting it on the
-   choice fixes that, and this is what keeps the mount from being a jump: the
-   bar slides up out of the bottom edge it belongs to. */
-@keyframes huidtest-bar-in {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.huidtest-bar-in {
-  animation: huidtest-bar-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* The travel is the sheet's, not the panel's. On a phone the bar comes up out
-   of the bottom edge it lives on; in the side panel there is no edge to come
-   from and the same movement reads as the button jumping into place, so there
-   it simply fades where it stands. */
-@keyframes huidtest-bar-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (min-width: 768px) {
-  .huidtest-bar-in {
-    animation-name: huidtest-bar-fade;
-    animation-duration: 200ms;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .huidtest-bar-in {
-    animation: none;
-  }
-}
+/* The huidtest's action bar arrives in `sticky-actions.tsx` now. It has to be
+   able to leave as well, and a keyframe and a transform cannot share one
+   element without trading it back and forth every frame. */
