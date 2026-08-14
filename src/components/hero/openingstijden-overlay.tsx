@@ -8,7 +8,6 @@ import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
@@ -23,7 +22,7 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
   // The orange holds on hover, like every other accent button.
   const className =
-    "group/cta mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden";
+    "mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
@@ -31,12 +30,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
     transition: "transform 0.2s ease",
   } as const;
 
-  const content = (
-    <>
-      <span className="relative z-10">Plan je moment</span>
-      <CtaArrow />
-    </>
-  );
+  const content = "Plan je moment";
 
   if (!onPlanJeMoment) {
     return (
@@ -113,11 +107,10 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className={`group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{ minHeight: "48px" }}
     >
       Route naar Ever Sun
-      <CtaArrow />
     </a>
   );
 }

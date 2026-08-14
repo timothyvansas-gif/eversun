@@ -3,7 +3,6 @@ import { useRef, useEffect } from "react";
 export function useContainerScale(designWidth: number) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -15,7 +14,6 @@ export function useContainerScale(designWidth: number) {
       const xOffset = (width - designWidth * scale) / 2;
       const transform = `translateX(${xOffset}px) scale(${scale})`;
       content.style.transform = transform;
-      if (bgRef.current) bgRef.current.style.transform = transform;
     };
 
     const observer = new ResizeObserver(([entry]) => {
@@ -27,5 +25,5 @@ export function useContainerScale(designWidth: number) {
     return () => observer.disconnect();
   }, [designWidth]);
 
-  return { containerRef, contentRef, bgRef };
+  return { containerRef, contentRef };
 }

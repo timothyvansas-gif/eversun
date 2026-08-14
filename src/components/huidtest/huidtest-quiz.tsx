@@ -10,7 +10,6 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
 import { decide, skipsKleurstijl } from "@/lib/huidtest/decide";
 import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CtaButton } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
 import { StickyActions } from "@/components/huidtest/sticky-actions";
@@ -719,17 +718,25 @@ export default function HuidtestQuiz({
         >
           <div className="flex items-center gap-3 md:justify-between">
             {/* Thumb-height, thumb-width, and beside the button it undoes rather
-                than at the top of a sheet. The site's own arrow, turned around,
-                so back and forward are visibly the same gesture in reverse. */}
+                than at the top of a sheet. Unlike the decorative CTA arrows
+                removed elsewhere, this icon communicates the control's only
+                action: returning to the previous question. */}
             <button
               type="button"
               onClick={() => back()}
               aria-label="Terug naar de vorige vraag"
               className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
             >
-              <span className="rotate-180">
-                <CtaArrow always />
-              </span>
+              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M13.5 8h-9m0 0L8 4m-3.5 4L8 12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
             </button>
 
             {/* The panel's own back, at the button's own baseline rather than

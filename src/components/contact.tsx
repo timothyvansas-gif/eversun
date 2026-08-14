@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { animate, useMotionValue } from "framer-motion";
 import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
 import { FloatingField } from "@/components/ui/floating-field";
@@ -113,10 +112,8 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
     <button
       type="submit"
       disabled={isSubmitting}
-      // Width is content-driven from sm up, so the pill grows to the right as
-      // the arrow unfolds and the label stays where it is. A floor on the
-      // button instead of the label would centre that slack around the text,
-      // and the arrow would drag the label left on hover.
+      // Width is content-driven from sm up. The label keeps a floor of its own
+      // so swapping to the shorter submitting state does not resize the pill.
       className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
@@ -131,9 +128,6 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
         )}
         {isSubmitting ? "Versturen…" : "Verstuur bericht"}
       </span>
-      {/* Outside the gap-2.5 above: that gap is the spinner's, and applying it
-          to a collapsed arrow would knock the label off-centre at rest. */}
-      <CtaArrow />
     </button>
   );
 }

@@ -5,7 +5,6 @@ import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -56,7 +55,6 @@ function AfspraakButton({
           </div>
           <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
             Plan je moment
-            <CtaArrow />
           </button>
         </div>
       </div>

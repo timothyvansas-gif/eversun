@@ -1,8 +1,10 @@
 "use client";
+import Image from "next/image";
 import { m, useInView } from "framer-motion";
 import { useContainerScale } from "@/hooks/use-container-scale";
 import { useStickyCard } from "@/components/sticky-card-context";
 import PinMarker from "@/components/pin-marker";
+import parkingBackground from "@/images/bg-park-yellow.svg";
 import pBordSm from "@/images/p-bord-sm.svg";
 import pBordL from "@/images/p-bord-l.svg";
 
@@ -44,7 +46,7 @@ const itemVariants = {
 } as const;
 
 export default function ParkingCard() {
-  const { containerRef, contentRef, bgRef } = useContainerScale(411);
+  const { containerRef, contentRef } = useContainerScale(411);
   const parkingInView = useInView(containerRef, { once: false, amount: 0.5 });
   const { isCovered } = useStickyCard();
   const shouldAnimate = parkingInView && !isCovered;
@@ -54,13 +56,19 @@ export default function ParkingCard() {
       ref={containerRef}
       className="relative w-full h-[362px] xl:h-[431px] bg-brand rounded-[12px] overflow-hidden"
     >
-      {/* Background canvas — same transform as contentRef, below overlay */}
-      <div
-        ref={bgRef}
-        className="absolute top-0 left-0 origin-top-left"
-        style={{ width: 411, height: 431 }}
-      >
-        <div className="absolute inset-0 bg-[url('/bg-park-yellow.svg')] bg-no-repeat bg-[center_top_40px]" />
+      {/* A real responsive image rather than part of the JS-scaled canvas.
+          Mobile Safari could leave the transformed CSS background unpainted
+          until a resize forced another composite. This has the same geometry
+          — 32px from the top on mobile, 40px at the 411px design width — but
+          is correct on the first paint without waiting for ResizeObserver. */}
+      <div className="pointer-events-none absolute inset-x-0 top-8 flex justify-center xl:top-10">
+        <Image
+          src={parkingBackground}
+          alt=""
+          loading="eager"
+          unoptimized
+          className="h-auto w-full max-w-[411px]"
+        />
       </div>
 
       <div

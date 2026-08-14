@@ -6,10 +6,8 @@ import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
  * The huidtest's two buttons.
  *
  * They are close cousins of the site's pills but not the same animal, so they
- * live here rather than bending the shared constants: no arrow unfolding on
- * hover — inside the test a button is an answer, and a travelling arrow on
- * every one of them is motion where the eye should be reading — and the filled
- * one darkens to the page black on hover, the way the overlays' CTAs do.
+ * live here rather than bending the shared constants: inside the test a button
+ * is an answer, and the filled one darkens to the page black on hover.
  *
  * The transition is an inline style on purpose. Two `transition-property`
  * utilities on one element resolve by stylesheet order rather than by intent,

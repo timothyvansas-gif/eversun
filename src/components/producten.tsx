@@ -7,7 +7,6 @@ import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 import { BTN_PILL_ACCENT } from "@/lib/button-styles";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import { PRODUCTEN, type Product } from "@/data/producten-data";
 
@@ -55,7 +54,6 @@ function PlanMomentButton() {
         className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 md:border md:border-line md:bg-transparent md:text-zinc-900 md:transition-[transform,border-color] md:hover:border-[#312019]`}
       >
         Plan je moment
-        <CtaArrow />
       </button>
       <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
       <PlanJeMomentSheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)} />

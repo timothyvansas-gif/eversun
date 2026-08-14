@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
@@ -154,7 +153,6 @@ export default function FotoBottomSheet({
                     className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}
                   >
                     Plan je moment
-                    <CtaArrow />
                   </button>
                   <CloseButton onClick={handleClose} />
                 </div>
