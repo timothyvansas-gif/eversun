@@ -83,7 +83,11 @@ export const QUESTIONS: [
 ] = [
   {
     key: "huidreactie",
-    vraag: "Hoe reageert je huid op zon?",
+    // "op zon" is dropped rather than lost: the line under it is already about
+    // a summer's day outside without protection, so the title can stop at the
+    // question and let that sentence carry the conditions. On a phone the
+    // longer version broke after "op" and left "zon?" alone on a second line.
+    vraag: "Hoe reageert je huid?",
     hulptekst: "Denk aan een zomerdag buiten, zonder bescherming.",
     // Third, not first. It is the rarest answer here and the one that ends the
     // test, so leading with it put the exit at the top of the very first
@@ -145,7 +149,7 @@ export const RESULTAAT = {
   kassakoopjeKop: "Voor erbij",
   sachetToggle: (prijs: string) => `Leg een sachet voor me klaar · € ${prijs}`,
   ctaPrimair: "Plan je moment",
-  ctaSecundair: "Die huidtest opnieuw",
+  ctaSecundair: "Doe huidtest opnieuw",
   disclaimer:
     "Deze test geeft een indicatie. In de studio kijken we altijd nog even samen naar je huid. Dat advies is leidend.",
 } as const;

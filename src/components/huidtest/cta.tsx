@@ -17,7 +17,7 @@ import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
  */
 
 const BASE =
-  "inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
 
 const VARIANTS = {
   accent: "bg-accent text-surface-page hover:bg-[#111111]",

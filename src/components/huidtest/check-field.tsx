@@ -21,7 +21,7 @@ export function CheckField({
   children: React.ReactNode;
 }) {
   return (
-    <label className="group flex min-h-[44px] w-fit cursor-pointer items-start gap-2 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+    <label className="group flex min-h-[44px] w-fit cursor-pointer items-start gap-2 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
       <input
         type="checkbox"
         checked={checked}

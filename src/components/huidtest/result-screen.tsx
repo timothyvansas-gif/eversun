@@ -157,16 +157,12 @@ export default function ResultScreen({
           </div>
 
           <div className="min-w-0">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h4 className="font-sans text-[16px] font-medium tracking-[-0.01em] text-ink-strong">
-                {product.name}
-              </h4>
-              {product.sachetPrice && (
-                <span className="font-sans text-[15px] font-semibold tracking-[-0.01em] text-ink-strong">
-                  € {product.sachetPrice}
-                </span>
-              )}
-            </div>
+            {/* Name only. The price belongs to the line that asks for one —
+                the toggle below says it, and saying it twice in a block this
+                small reads as two different prices rather than one. */}
+            <h4 className="font-sans text-[16px] font-medium tracking-[-0.01em] text-ink-strong">
+              {product.name}
+            </h4>
             {/* Two lines, whatever the product: this is a nudge at the till,
                 and a paragraph here starts competing with the advice above it.
                 Clamped rather than rewritten per product, so a longer line
