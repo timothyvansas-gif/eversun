@@ -286,7 +286,7 @@ export default function HuidtestQuiz({
               {INTRO.kop}
             </h2>
 
-            <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+            <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
               {INTRO.body}
             </p>
 
@@ -297,7 +297,7 @@ export default function HuidtestQuiz({
               {INTRO.vraag}
             </h3>
 
-            <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+            <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
               {INTRO.wettelijk}
             </p>
 

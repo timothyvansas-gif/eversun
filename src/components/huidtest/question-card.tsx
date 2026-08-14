@@ -76,7 +76,7 @@ export default function QuestionCard<K extends QuestionKey>({
       </h2>
 
       {question.hulptekst && (
-        <p id={hulpId} className="mt-2 font-sans text-[15px] leading-[24px] text-muted">
+        <p id={hulpId} className="mt-2 font-sans text-[15px] leading-[24px] text-zinc-600">
           {question.hulptekst}
         </p>
       )}
@@ -85,7 +85,7 @@ export default function QuestionCard<K extends QuestionKey>({
         role="radiogroup"
         aria-labelledby={headingId}
         aria-describedby={hulpId}
-        className="mt-7 flex flex-col gap-3"
+        className="mt-5 flex flex-col gap-3"
       >
         {question.options.map((option, index) => {
           const isSelected = selected === option.id;
@@ -108,7 +108,7 @@ export default function QuestionCard<K extends QuestionKey>({
               className={`flex min-h-[56px] w-full cursor-pointer items-center gap-3 rounded-[12px] border px-5 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
                 isSelected
                   ? "border-accent bg-white text-ink-strong"
-                  : "border-line bg-white/60 text-ink-strong hover:border-[#312019] hover:bg-white"
+                  : "border-line/50 bg-white/60 text-ink-strong hover:border-[#312019] hover:bg-white"
               }`}
             >
               <span className="flex-1">{option.label}</span>

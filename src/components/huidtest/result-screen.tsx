@@ -90,7 +90,7 @@ export default function ResultScreen({
       {/* The reasoning sits between the title and the card, where it reads as
           the sentence that introduces the advice. Under the card it was a
           footnote to a decision already made. */}
-      <p className="mt-3 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+      <p className="mt-3 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
         {waarom}
       </p>
 
@@ -122,7 +122,7 @@ export default function ResultScreen({
             <span className="text-[15px] font-semibold text-ink-strong">{bank.prijs}</span>
           </div>
           {advies.stand && (
-            <p className="w-full font-sans text-[15px] tracking-[-0.01em] text-ink">
+            <p className="w-full font-sans text-[15px] tracking-[-0.01em] text-zinc-600">
               {RESULTAAT.standregel(advies.stand)}
             </p>
           )}
@@ -170,7 +170,7 @@ export default function ResultScreen({
                 and a paragraph here starts competing with the advice above it.
                 Clamped rather than rewritten per product, so a longer line
                 added later cannot quietly turn the block into a page. */}
-            <p className="line-clamp-2 font-sans text-[14px] leading-[22px] tracking-[-0.01em] text-muted">
+            <p className="line-clamp-2 font-sans text-[14px] leading-[22px] tracking-[-0.01em] text-zinc-600">
               {PRODUCT_WAAROM[product.slug]}
             </p>
           </div>
@@ -187,7 +187,7 @@ export default function ResultScreen({
 
       </section>
 
-      <p className="mt-6 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
+      <p className="mt-6 max-w-[62ch] font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-zinc-600">
         {RESULTAAT.disclaimer}
       </p>
 
@@ -215,13 +215,7 @@ export default function ResultScreen({
           The sachet line rides along because this button is what sends the
           message: what is switched on above should still be visible at the
           moment of sending, not four hundred pixels up the page. */}
-      <StickyActions className="mt-6 shrink-0 md:mt-4">
-        {sachet && product.sachetPrice && (
-          <p className="mb-2 font-sans text-[13px] leading-[20px] tracking-[-0.01em] text-muted">
-            Inclusief sachet {product.name} · € {product.sachetPrice}
-          </p>
-        )}
-
+      <StickyActions className="mt-6 shrink-0 md:mt-4 md:pt-5 md:pb-5">
         <CtaButton
           className="w-full"
           onClick={() => {

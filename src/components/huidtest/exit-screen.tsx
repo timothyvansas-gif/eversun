@@ -45,12 +45,12 @@ export default function ExitScreen({
         {copy.kop}
       </h2>
 
-      <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+      <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
         {copy.body}
       </p>
 
       {reason === "type1" && (
-        <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink">
+        <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
           {EXIT_TYPE1.telefoonVoor}
           <a
             href={TELEFOON.href}

@@ -119,7 +119,7 @@ export function BookingSheet({
         <h2 className="card-title text-center text-zinc-900">{BOEKEN.kop}</h2>
 
         <>
-            <p className="mt-2 text-center font-sans text-[15px] leading-[24px] text-ink/70">
+            <p className="mt-2 text-center font-sans text-[15px] leading-[24px] text-zinc-600">
               {BOEKEN.qrUitleg}
             </p>
 
@@ -139,7 +139,7 @@ export function BookingSheet({
               )}
             </div>
 
-            <p className="mt-4 text-center font-sans text-[15px] leading-[24px] text-ink/70">
+            <p className="mt-4 text-center font-sans text-[15px] leading-[24px] text-zinc-600">
               {BOEKEN.ofHier}
             </p>
         </>
@@ -164,7 +164,7 @@ export function BookingSheet({
           <p className="card-title text-zinc-900">{BOEKEN.bellen}</p>
           <a
             href={TELEFOON.href}
-            className="mt-1 block font-sans text-[15px] leading-[24px] text-ink/70 underline decoration-dotted underline-offset-6"
+            className="mt-1 block font-sans text-[15px] leading-[24px] text-zinc-600 underline decoration-dotted underline-offset-6"
           >
             {TELEFOON.weergave}
           </a>
