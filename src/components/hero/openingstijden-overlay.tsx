@@ -20,14 +20,12 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
  * overlay keeps working wherever nothing is stacked on top of it.
  */
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
-  // The orange holds on hover, like every other accent button.
   const className =
-    "mt-7 flex w-full items-center justify-center font-sans font-medium text-[15px] text-surface-page active:scale-[0.98]";
+    "mt-7 flex w-full items-center justify-center bg-accent font-sans font-medium text-[15px] text-surface-page hover:bg-void hover:text-white active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
-    background: "var(--color-accent)",
-    transition: "transform 0.2s ease",
+    transition: "transform 0.2s ease, background-color 0.2s ease, color 0.2s ease",
   } as const;
 
   const content = "Plan je moment";

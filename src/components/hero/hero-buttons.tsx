@@ -1,7 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { m } from "framer-motion";
 import { useState } from "react";
+
+const BLOB_SIZE = 560;
 
 // Nobody sees the quiz until they ask for it, so it stays out of the hero's
 // bundle until the button is pressed.
@@ -9,6 +12,8 @@ const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-ove
 
 export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
   const [huidtestOpen, setHuidtestOpen] = useState(false);
+  const [primaryHovered, setPrimaryHovered] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
@@ -16,7 +21,14 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           two stacked CTAs of different widths read as two different kinds of
           thing, and these are a pair. */}
       <button
-        className="flex w-full items-center justify-center rounded-full bg-accent px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer hover:bg-void active:scale-[0.98] transition-[transform,background-color] duration-200"
+        className="relative flex w-full items-center justify-center overflow-hidden rounded-full bg-accent px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        onMouseEnter={(event) => {
+          if (!window.matchMedia("(hover: hover)").matches) return;
+          const rect = event.currentTarget.getBoundingClientRect();
+          setOrigin({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+          setPrimaryHovered(true);
+        }}
+        onMouseLeave={() => setPrimaryHovered(false)}
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -25,7 +37,20 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           }
         }}
       >
-        <span>Plan je moment</span>
+        <m.span
+          aria-hidden
+          className="pointer-events-none absolute rounded-full bg-void"
+          style={{
+            width: BLOB_SIZE,
+            height: BLOB_SIZE,
+            left: origin.x - BLOB_SIZE / 2,
+            top: origin.y - BLOB_SIZE / 2,
+          }}
+          initial={false}
+          animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
+          transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
+        />
+        <span className="relative z-10">Plan je moment</span>
       </button>
 
       {/* The second way in, beside booking rather than under it: someone who

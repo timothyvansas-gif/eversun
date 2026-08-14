@@ -23,12 +23,12 @@ export const BTN_PILL =
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its
- * own. Medium weight like the other accent buttons (hero, contact).
- *
- * The orange never changes on hover; the press scale is its only movement.
+ * own. Medium weight like the other accent buttons (hero, contact). Filled
+ * CTAs invert to black with white type on hover; the hero's CTA deliberately
+ * owns its cursor-origin blob instead.
  */
 export const BTN_PILL_ACCENT =
-  "inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";
+  "inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-void hover:text-white active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /**
  * Minimum comfortable tap area for a small icon control: 44×44, per Apple HIG

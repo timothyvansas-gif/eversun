@@ -34,8 +34,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      // The orange holds on hover, like every other accent button.
-      className="w-full font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
+      className="w-full bg-accent font-sans font-medium text-[15px] text-surface-page hover:bg-void hover:text-white active:scale-[0.98] relative overflow-hidden"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
@@ -43,8 +42,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
         alignItems: "center",
         minHeight: "48px",
         borderRadius: "9999px",
-        background: "var(--color-accent)",
-        transition: "transform 0.2s ease",
+        transition: "transform 0.2s ease, background-color 0.2s ease, color 0.2s ease",
       }}
     >
       <span className="relative z-10 col-start-2 flex items-center gap-3">
