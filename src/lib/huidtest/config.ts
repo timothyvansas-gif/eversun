@@ -149,7 +149,7 @@ export const RESULTAAT = {
   kassakoopjeKop: "Voor erbij",
   sachetToggle: (prijs: string) => `Leg een sachet voor me klaar · € ${prijs}`,
   ctaPrimair: "Plan je moment",
-  ctaSecundair: "Doe huidtest opnieuw",
+  ctaSecundair: "Doe de huidtest opnieuw",
   disclaimer:
     "Deze test geeft een indicatie. In de studio kijken we altijd nog even samen naar je huid. Dat advies is leidend.",
 } as const;

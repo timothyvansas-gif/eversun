@@ -56,7 +56,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
         className="group/cta flex w-full sm:w-auto justify-center items-center rounded-full sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
         onClick={() => setHuidtestOpen(true)}
       >
-        <span>Doe huidtest</span>
+        <span>Doe de huidtest</span>
         <CtaArrow />
       </button>
 
