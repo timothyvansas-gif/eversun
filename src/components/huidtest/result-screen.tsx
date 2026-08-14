@@ -98,7 +98,7 @@ export default function ResultScreen({
       {/* Bank card. Fixed aspect ratio so the advice does not jump when the
           photo lands — this screen is the payoff, and a reflow here reads as
           the answer changing its mind. */}
-      <div className="mt-6">
+      <div className="mt-4">
         {/* The radius belongs to the photo, not to the block that also holds
             the name and the price: on the wrapper it rounded the top corners
             and left the bottom two square where the text took over. */}
@@ -114,16 +114,16 @@ export default function ResultScreen({
           />
         </div>
 
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pt-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pt-4">
           <h3 className="font-display text-[22px] font-medium leading-tight tracking-[-0.01em] text-ink-strong">
             {bank.title}
           </h3>
-          <div className="flex items-center gap-3 font-sans tracking-[-0.01em]">
+          <div className="flex items-center gap-3 font-sans leading-tight tracking-[-0.01em]">
             <span className="text-[14px] text-muted">{bank.minuten}</span>
             <span className="text-[15px] font-semibold text-ink-strong">{bank.prijs}</span>
           </div>
           {advies.stand && (
-            <p className="w-full font-sans text-[15px] tracking-[-0.01em] text-zinc-600">
+            <p className="w-full font-sans text-[15px] leading-tight tracking-[-0.01em] text-zinc-600">
               {RESULTAAT.standregel(advies.stand)}
             </p>
           )}
@@ -136,7 +136,7 @@ export default function ResultScreen({
           made it a second card, which is the one thing it must not be. */}
       <section
         aria-labelledby="huidtest-kassakoopje"
-        className="mt-8 border-t border-line/50 pt-5"
+        className="mt-4 border-t border-line/30 pt-5"
       >
         <h3
           id="huidtest-kassakoopje"
@@ -192,18 +192,16 @@ export default function ResultScreen({
         {RESULTAAT.disclaimer}
       </p>
 
-      <div className="mt-5">
-        <CtaButton
-          variant="outline"
-          className="w-full sm:w-auto"
-          onClick={() => {
-            trackEvent("huidtest_cta", { type: "opnieuw", sachet });
-            onRestart();
-          }}
-        >
-          {RESULTAAT.ctaSecundair}
-        </CtaButton>
-      </div>
+      <button
+        type="button"
+        onClick={() => {
+          trackEvent("huidtest_cta", { type: "opnieuw", sachet });
+          onRestart();
+        }}
+        className="mt-2 cursor-pointer font-sans text-[15px] text-ink-strong underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
+      >
+        {RESULTAAT.ctaSecundair}
+      </button>
 
       </StepCard>
 

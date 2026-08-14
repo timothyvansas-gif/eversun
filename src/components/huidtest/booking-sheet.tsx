@@ -160,7 +160,7 @@ export function BookingSheet({
           {BOEKEN.whatsapp}
         </CtaLink>
 
-        <div className="mt-5 border-t border-line/50 pt-4 text-center">
+        <div className="mt-5 border-t border-line/30 pt-4 text-center">
           <p className="card-title text-zinc-900">{BOEKEN.bellen}</p>
           <a
             href={TELEFOON.href}

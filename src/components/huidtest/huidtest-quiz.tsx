@@ -293,7 +293,7 @@ export default function HuidtestQuiz({
             {/* A rule where the card turns from telling to asking. The gate is a
                 different kind of thing from the paragraph above it, and a line
                 says so more quietly than white space can at this size. */}
-            <h3 className="mt-6 border-t border-line/50 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+            <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
               {INTRO.vraag}
             </h3>
 
