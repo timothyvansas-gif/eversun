@@ -41,6 +41,11 @@ type Step =
  */
 const START_PROGRESS = 20;
 
+// The age gate is the first real step, so it should not greet someone with an
+// empty track. Keep it visibly lighter than the first bank question, which
+// starts at the endowed 20% mark.
+const INTRO_PROGRESS = START_PROGRESS / 2;
+
 /**
  * One glide, shared by the step arriving and the step leaving.
  *
@@ -349,7 +354,7 @@ export default function HuidtestQuiz({
   // the one place it silently held its last value instead.
   const progress =
     step.kind === "intro"
-      ? 0
+      ? INTRO_PROGRESS
       : step.kind === "exit"
         ? START_PROGRESS
         : step.kind === "resultaat"
