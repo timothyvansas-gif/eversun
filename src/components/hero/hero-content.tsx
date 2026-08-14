@@ -193,9 +193,8 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
 
         <div className="flex-1 flex flex-col justify-end lg:absolute lg:inset-x-0 lg:bottom-10 2xl:bottom-20 lg:block">
           {/* At 2xl+: titles/CTAs get max-w-[1280px] back so they stay in position */}
-          {/* On phones, move 8px of the breathing room below the CTAs to the
-              gap above them. The total hero rhythm stays the same; the buttons
-              simply sit a touch closer to the status row at the bottom. */}
+          {/* On phones, keep the CTA gap compact and bring the status row closer
+              so the bottom rhythm does not feel stretched. */}
           <div className="mb-12 md:mb-14 lg:mb-0">
             <div className="translate-y-4 lg:translate-y-0">
               {/* w-fit sizes this wrapper to the title, so the subtitle below can
@@ -265,7 +264,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   rest of the left column, so the fade cannot sit on the shared
                   parent. The wrapper below keeps the row's own geometry —
                   justify-between still measures the same two children. */}
-              <div className="mt-8 lg:mt-14 flex flex-row items-center justify-between w-full gap-6">
+              <div className="mt-6 lg:mt-14 flex flex-row items-center justify-between w-full gap-6">
                 <m.div
                   className="w-full sm:w-auto"
                   variants={fadeUp}
@@ -296,7 +295,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
           initial="hidden"
           animate={show}
           custom={d.status}
-          className="mb-4 flex items-center justify-between lg:hidden"
+          className="relative -top-1 mb-4 flex items-center justify-between lg:hidden"
         >
           <HeroStatus ref={statusButtonRef} onOpen={onOpenOpeningstijden} />
         </m.div>
