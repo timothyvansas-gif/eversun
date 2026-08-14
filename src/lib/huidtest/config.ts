@@ -227,12 +227,6 @@ export const BOEKEN = {
 /* Entry points                                                        */
 /* ------------------------------------------------------------------ */
 
-export const TEASER = {
-  kop: "Welke bank past bij jouw huid?",
-  body: "Doe de huidtest: vijf korte vragen en je weet welke bank en welk product bij je passen. Duurt nog geen minuut.",
-  cta: "Doe de huidtest",
-} as const;
-
 /* ------------------------------------------------------------------ */
 /* Rules                                                               */
 /* ------------------------------------------------------------------ */

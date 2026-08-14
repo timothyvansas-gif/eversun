@@ -17,7 +17,6 @@ import { BACKDROP_SCRIM } from "@/components/ui/backdrop";
 // set — trimming the eager JS the desktop audit flags as unused.
 const Bento = dynamic(() => import("@/components/bento"));
 const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
-const HuidtestTeaser = dynamic(() => import("@/components/huidtest-teaser"));
 const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
 const Contact = dynamic(() => import("@/components/contact"));
@@ -131,7 +130,6 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
           <Bento />
         </div>
         <OnzeZonnebanken />
-        <HuidtestTeaser />
         <Producten />
         <OverOns />
         <Contact />
