@@ -72,7 +72,7 @@ function AfspraakButton({
         whatsappUrl={whatsappUrl}
         description={
           <>
-            Plan je moment voor de {title}. Stuur ons een bericht, dan plannen we een tijd die jou uitkomt.
+            Voor de {title} kun je ons appen of bellen. Dan plannen we een moment dat jou uitkomt.
           </>
         }
       />
