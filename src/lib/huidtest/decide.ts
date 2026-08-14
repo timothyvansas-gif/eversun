@@ -88,6 +88,13 @@ export function findProduct(slug: ProductSlug): Product {
   return product;
 }
 
+/** "Ergoline Prestige 1600 (stand medium)", or without the suffix for a bank without one. */
+function adviesNaam(advies: Advies): string {
+  const bankNaam = ZONNEBANK_BOOKINGS[BANK_SLUGS[advies.bank]];
+  const standSuffix = advies.stand ? ` (stand ${advies.stand})` : "";
+  return `${bankNaam}${standSuffix}`;
+}
+
 /**
  * The prefilled WhatsApp message. The sachet line is there only when the
  * visitor switched the toggle on — the whole point of the kassakoopje is that
@@ -95,15 +102,26 @@ export function findProduct(slug: ProductSlug): Product {
  * at the counter.
  */
 export function buildWhatsappMessage(advies: Advies, sachet: boolean): string {
-  const bankNaam = ZONNEBANK_BOOKINGS[BANK_SLUGS[advies.bank]];
-  const standSuffix = advies.stand ? ` (stand ${advies.stand})` : "";
   const sachetRegel = sachet
     ? `Leggen jullie een sachet ${findProduct(advies.product).name} voor me klaar?\n`
     : "";
 
-  return `Hoi Ever Sun,\nik heb de huidtest gedaan. Mijn advies: ${bankNaam}${standSuffix}.\n${sachetRegel}Ik wil graag een sessie plannen.`;
+  return `Hoi Ever Sun,\nik heb de huidtest gedaan. Mijn advies: ${adviesNaam(advies)}.\n${sachetRegel}Ik wil graag een sessie plannen.`;
 }
 
 export function buildWhatsappUrl(advies: Advies, sachet: boolean): string {
   return whatsappUrl(buildWhatsappMessage(advies, sachet));
+}
+
+/**
+ * One line for the booking sheet: on a phone it covers the advice the moment
+ * it opens, and someone who ends up calling instead of messaging should not
+ * lose sight of what was decided.
+ */
+export function buildAdviesReferentie(advies: Advies, sachet: boolean): string {
+  const product = findProduct(advies.product);
+  const sachetSuffix =
+    sachet && product.sachetPrice ? `, incl. sachet ${product.name} (€ ${product.sachetPrice})` : "";
+
+  return `Je advies: ${adviesNaam(advies)}${sachetSuffix}.`;
 }

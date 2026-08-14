@@ -213,7 +213,6 @@ export const SECUNDAIR_PRODUCT: ProductSlug = "barefoot-beachwood";
  */
 export const BOEKEN = {
   kop: "Plan je zonsessie",
-  body: "Je advies gaat mee in het bericht, dus we weten al welke bank en welke stand bij je passen. Liever even overleggen? Bel gerust.",
   qrUitleg: "Scan met je telefoon, dan opent WhatsApp met je advies er al in.",
   ofHier: "Of gewoon vanaf dit scherm.",
   whatsapp: "Open WhatsApp",

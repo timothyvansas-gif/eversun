@@ -22,7 +22,7 @@ const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment
 import { StepCard } from "@/components/huidtest/step-card";
 import { StickyActions } from "@/components/huidtest/sticky-actions";
 import { PRODUCT_WAAROM, RESULTAAT } from "@/lib/huidtest/config";
-import { buildWhatsappUrl, buildWhy, findProduct } from "@/lib/huidtest/decide";
+import { buildAdviesReferentie, buildWhatsappUrl, buildWhy, findProduct } from "@/lib/huidtest/decide";
 import { BANK_SLUGS, type Advies, type QuizAnswers } from "@/lib/huidtest/types";
 
 /**
@@ -54,6 +54,7 @@ export default function ResultScreen({
   const waarom = buildWhy(answers, advies.bank);
 
   const whatsappUrl = buildWhatsappUrl(advies, sachet);
+  const referentie = buildAdviesReferentie(advies, sachet);
   const isDesktop = useIsDesktop();
 
   // Drawn while the advice is being read, and redrawn the moment the sachet
@@ -241,7 +242,7 @@ export default function ResultScreen({
           onClose={() => setBoekenOpen(false)}
           whatsappUrl={whatsappUrl}
           title={BOEKEN.kop}
-          description={BOEKEN.body}
+          description={referentie}
           stackDepth={stackDepth ?? undefined}
           stackedMinHeight={stackedSheetHeight(surface)}
         />

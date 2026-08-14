@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BANK_REGELS, PRODUCT_REGELS } from "@/lib/huidtest/config";
 import {
+  buildAdviesReferentie,
   buildWhatsappMessage,
   buildWhy,
   decide,
@@ -274,5 +275,34 @@ describe("buildWhatsappMessage", () => {
       "Leggen jullie een sachet Vault voor me klaar?",
     );
     expect(buildWhatsappMessage(advies, false)).not.toContain("sachet");
+  });
+});
+
+describe("buildAdviesReferentie", () => {
+  it("names the bank and its stand", () => {
+    const referentie = buildAdviesReferentie(
+      { bank: "prestige-1600", stand: "medium", product: "sun-honey" },
+      false,
+    );
+
+    expect(referentie).toBe("Je advies: Ergoline Prestige 1600 (stand medium).");
+  });
+
+  it("leaves the stand out for a bank that has none", () => {
+    const referentie = buildAdviesReferentie(
+      { bank: "770-medium", stand: null, product: "sun-honey" },
+      false,
+    );
+
+    expect(referentie).toBe("Je advies: Ergoline 770 medium.");
+  });
+
+  it("adds the sachet and its price only when the toggle is on", () => {
+    const advies = { bank: "770-medium", stand: null, product: "vault" } as const;
+
+    expect(buildAdviesReferentie(advies, true)).toBe(
+      "Je advies: Ergoline 770 medium, incl. sachet Vault (€ 12,99).",
+    );
+    expect(buildAdviesReferentie(advies, false)).not.toContain("sachet");
   });
 });
