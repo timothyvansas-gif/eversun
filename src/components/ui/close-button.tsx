@@ -6,12 +6,13 @@ const SIZES = {
 } as const;
 
 const VARIANTS = {
-  // For a light/white surface. Its own outline color: the unlayered global
-  // accent ring reads too faint against a near-white × at this size.
-  light: "text-ink/60 hover:text-ink hover:border-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900",
-  // For a dark surface (#111111 and similar). Leans on the global accent
-  // focus ring instead of overriding it — that ring reads fine on dark.
-  dark: "text-nav-ink/60 hover:text-nav-ink hover:border-nav-ink/30",
+  // For a light/white surface. The × is fully present at rest; on hover its
+  // border resolves to the same ink colour instead of introducing a second
+  // warm line colour.
+  light: "text-ink border-line hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900",
+  // For a dark surface (#111111 and similar), with the same resting/hover
+  // relationship in the light nav palette.
+  dark: "text-nav-ink border-nav-ink/30 hover:border-nav-ink",
 } as const;
 
 type CloseButtonProps = {
@@ -39,7 +40,7 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
         type="button"
         onClick={onClick}
         aria-label={label}
-        className={`flex items-center justify-center rounded-full border border-transparent leading-none transition-colors duration-150 cursor-pointer ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+        className={`flex items-center justify-center rounded-full border leading-none transition-colors duration-150 cursor-pointer ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
       >
         {/* The "×" glyph sits ~0.05em below the centre of its text box, which
             shows as soon as the hover ring makes the circle visible. Nudged back
