@@ -1,15 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, animate, m, useMotionValue, useTransform } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import { quietFocus } from "@/lib/quiet-focus";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
+import { STACK_SPRING } from "@/components/hero/sheet-stack";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
 import { decide, skipsKleurstijl } from "@/lib/huidtest/decide";
 import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
+import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CtaButton } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
+import { StickyActions } from "@/components/huidtest/sticky-actions";
 import QuestionCard from "@/components/huidtest/question-card";
 import ExitScreen from "@/components/huidtest/exit-screen";
 import ResultScreen from "@/components/huidtest/result-screen";
@@ -38,6 +43,10 @@ type Step =
  */
 const START_PROGRESS = 20;
 
+/** The bar's own size, so the collapse on the result screen animates to exactly nothing. */
+const PROGRESS_HEIGHT = 6;
+const PROGRESS_MARGIN = 20;
+
 /**
  * How far a step travels as it changes places. Small on purpose: the screens
  * are a sequence, not a carousel, and anything further reads as a page turn
@@ -53,6 +62,26 @@ const STEP_TRAVEL = 24;
  */
 const STEP_IN = { duration: 0.34, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
 const STEP_OUT = { duration: 0.2, ease: [0.36, 0, 0.66, 0] as [number, number, number, number] };
+
+/** No transition at all, for a step change a gesture has already performed. */
+const INSTANT = { duration: 0 };
+
+/**
+ * Carries a swipe the rest of the way to the edge once it has committed. Fast,
+ * because the finger has already done most of the distance and this is only
+ * finishing a motion already in flight — and a tween rather than a spring, so
+ * it is guaranteed to land exactly on the pixel the handoff depends on.
+ */
+const SWIPE_COMMIT = { type: "tween", duration: 0.18, ease: [0.22, 1, 0.36, 1] } as const;
+
+/**
+ * How far a swipe has to travel, or how fast, before it counts as going back.
+ * The same pair the sheets dismiss on, a notch shorter: this gesture undoes one
+ * answer rather than closing the test, so it should not ask for as much
+ * commitment as the one that throws the whole thing away.
+ */
+const SWIPE_BACK_OFFSET = 60;
+const SWIPE_BACK_VELOCITY = 300;
 
 export default function HuidtestQuiz({
   shared = null,
@@ -94,9 +123,23 @@ export default function HuidtestQuiz({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hasStarted = useRef(false);
 
+  // How far the swipe has pulled the current step, and the step behind it
+  // riding the same value one screen-width back. The step area is measured off
+  // the stage rather than the viewport: in a panel the two are not the same.
+  const stageRef = useRef<HTMLDivElement>(null);
+  const dragX = useMotionValue(0);
+  const peekX = useTransform(dragX, (v) => v - (stageRef.current?.offsetWidth ?? 0));
+  const [peekStep, setPeekStep] = useState<Step | null>(null);
+
+  // Whether the step now on screen was carried there by the gesture. Its
+  // entrance would otherwise run a second time over a screen that has finished
+  // arriving, which reads as the question flinching once it lands.
+  const [swipedBack, setSwipedBack] = useState(false);
+
   const goTo = useCallback(
     (next: Step) => {
       setDirection(1);
+      setSwipedBack(false);
       setStack((current) => [...current, next]);
       if (historyBacked) window.history.pushState({ huidtest: true }, "");
     },
@@ -108,7 +151,10 @@ export default function HuidtestQuiz({
     setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
   };
 
-  const back = () => {
+  /** `viaSwipe` when the gesture has already moved the step into place. */
+  const back = (viaSwipe = false) => {
+    setSwipedBack(viaSwipe);
+
     // On the route the browser's back button and the one on screen have to
     // agree; routing this one through history is what guarantees that, rather
     // than two implementations that have to be kept in line.
@@ -193,15 +239,106 @@ export default function HuidtestQuiz({
 
   const answered = step.kind === "vraag" ? step.index : 0;
 
+  // Defined for every step, including the ones either side of the questions:
+  // the bar that carries it is a fixture of the whole quiz now, not a thing
+  // that comes and goes with them, and a step it has no number for would be
+  // the one place it silently held its last value instead.
   const progress =
-    step.kind === "intro" || step.kind === "exit"
-      ? START_PROGRESS
-      : START_PROGRESS + ((100 - START_PROGRESS) * answered) / totalQuestions;
+    step.kind === "intro"
+      ? 0
+      : step.kind === "exit"
+        ? START_PROGRESS
+        : step.kind === "resultaat"
+          ? 100
+          : START_PROGRESS + ((100 - START_PROGRESS) * answered) / totalQuestions;
 
-  const showsProgress = step.kind === "vraag";
   const stepKey = step.kind === "vraag" ? `vraag-${step.index}` : step.kind;
 
-  const travel = shouldReduceMotion ? 0 : STEP_TRAVEL * direction;
+  // Flat, not carried in from the side, on the result: the space above it is
+  // closing on the same beat, and a horizontal slide arriving while the
+  // question above collapses reads as two different things happening at
+  // once rather than one card settling into the room the bar just gave up.
+  const travel =
+    shouldReduceMotion || swipedBack || step.kind === "resultaat" ? 0 : STEP_TRAVEL * direction;
+
+  // Swiping back, alongside the button rather than instead of it: on a phone the
+  // test is a sheet, and a sheet that moves between screens invites the gesture
+  // every other one here answers to. Only where there is a finger and only where
+  // there is something behind the current step.
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+
+  // What a swipe would uncover. Only a question or the intro: starting over
+  // parks the finished result behind question one, and dragging that back into
+  // view would show an advice built on the answers that were just cleared.
+  const peekTarget = stack[stack.length - 2];
+  const canSwipeBack =
+    isMobile &&
+    step.kind === "vraag" &&
+    (peekTarget?.kind === "vraag" || peekTarget?.kind === "intro");
+
+  /** What the visitor has picked on the question now showing, if anything. */
+  const currentAnswer =
+    step.kind === "vraag" ? (answers[QUESTIONS[step.index].key] as string | undefined) : undefined;
+
+  const renderStep = (s: Step) => (
+    <>
+      {s.kind === "intro" && (
+        // The whole opening on one card: what the test is, the law it works
+        // under, and the gate itself. Split across the surface it read as three
+        // unrelated blocks; together it is one thing to answer.
+        <StepCard>
+          <h2
+            ref={headingRef as React.RefObject<HTMLHeadingElement>}
+            tabIndex={-1}
+            className="font-display text-ink-strong text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+          >
+            {INTRO.kop}
+          </h2>
+
+          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+            {INTRO.body}
+          </p>
+
+          {/* A rule where the card turns from telling to asking. The gate is a
+              different kind of thing from the paragraph above it, and a line
+              says so more quietly than white space can at this size. */}
+          <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
+            {INTRO.vraag}
+          </h3>
+
+          <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+            {INTRO.wettelijk}
+          </p>
+
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
+            <CtaButton variant="outline" onClick={() => handleAge("minor")}>
+              {INTRO.nee}
+            </CtaButton>
+          </div>
+        </StepCard>
+      )}
+
+      {s.kind === "vraag" && (
+        <QuestionCard
+          question={QUESTIONS[s.index]}
+          headingRef={headingRef}
+          selected={answers[QUESTIONS[s.index].key] as string | undefined}
+          onSelect={(id) => answer(s.index, id)}
+          checkboxChecked={answers.tattoo}
+          onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
+        />
+      )}
+
+      {s.kind === "exit" && (
+        <ExitScreen reason={s.reason} headingRef={headingRef} onClose={onClose} />
+      )}
+
+      {s.kind === "resultaat" && (
+        <Resultaat answers={answers} headingRef={headingRef} onRestart={restart} />
+      )}
+    </>
+  );
 
   return (
     // A column that fills whatever it is in, so the action bar can be held on
@@ -209,38 +346,218 @@ export default function HuidtestQuiz({
     // three answers is shorter than one with four, and a button that moved up
     // with it made the two screens read as different layouts.
     <div className="relative flex min-h-full w-full flex-col">
-      {showsProgress && (
-        <div className="mb-5 shrink-0">
+      {/* A fixture of the quiz for the age gate and every question, mounted
+          once so that arriving never costs a jump — but a full bar has
+          nothing left to report once the advice is up, and sitting there
+          anyway would just be decoration. So it closes on the result rather
+          than unmounting: the height it gives up is the height the card
+          above gains, on the same beat, rather than a card that jumps up to
+          fill a gap that vanished a frame before. */}
+      <m.div
+        className="shrink-0 overflow-hidden"
+        animate={{
+          height: step.kind === "resultaat" ? 0 : PROGRESS_HEIGHT,
+          marginBottom: step.kind === "resultaat" ? 0 : PROGRESS_MARGIN,
+        }}
+        transition={shouldReduceMotion ? INSTANT : STEP_IN}
+      >
+        <div
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(progress)}
+          aria-label="Voortgang van de huidtest"
+          className="h-[6px] w-full overflow-hidden rounded-full bg-line/40"
+        >
+          {/* A full-width bar slid left behind the track's clip, rather than
+              a narrow one that grows. Two reasons, and the second is why it
+              is not a scaleX either: width animates layout every frame where
+              a transform stays on the compositor, and scaling a 6px pill
+              sideways squashes its round cap into an ellipse. Translating
+              keeps the cap circular and hides the other end off-track. */}
           <div
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(progress)}
-            aria-label="Voortgang van de huidtest"
-            className="h-[6px] w-full overflow-hidden rounded-full bg-line/40"
-          >
-            {/* A full-width bar slid left behind the track's clip, rather than
-                a narrow one that grows. Two reasons, and the second is why it
-                is not a scaleX either: width animates layout every frame where
-                a transform stays on the compositor, and scaling a 6px pill
-                sideways squashes its round cap into an ellipse. Translating
-                keeps the cap circular and hides the other end off-track. */}
-            <div
-              className="h-full w-full rounded-full bg-accent"
-              style={{
-                transform: `translateX(-${100 - progress}%)`,
-                transition: shouldReduceMotion
-                  ? "none"
-                  : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
-              }}
-            />
-          </div>
+            className="h-full w-full rounded-full bg-accent"
+            style={{
+              transform: `translateX(-${100 - progress}%)`,
+              transition: shouldReduceMotion
+                ? "none"
+                : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
+            }}
+          />
+        </div>
+      </m.div>
 
-          {step.kind === "vraag" && stack.length > 1 && (
+      {/* The step area: cards only, and the positioning context the step behind
+          is parked in. Everything that moves lives in here, and the action bar
+          below deliberately does not — a transform on an ancestor is what took
+          the bar's `sticky` away from the scrolling surface and left it stuck
+          to the sliding layer instead.
+
+          On a phone it takes the height that is going, so the bar rides the
+          bottom edge. On the panel it is content-sized: a button pushed to the
+          floor there loses its tie to the question.
+
+          The clip is the panel's alone, and has to be. There, the box is
+          sized by its content, so cutting at its edge only ever catches the
+          outgoing card popLayout has frozen at its old height — which is what
+          left a taller question's last option hanging under a shorter one.
+          On a phone the box is a flex child filling the surface, and a flex
+          child only keeps its content's height while its overflow is visible:
+          clipping here drops its minimum to zero, so `flex-1` squeezes it to
+          whatever is left over and the question is cut off with nothing to
+          scroll, because the cut is what stopped it overflowing. */}
+      <div
+        ref={stageRef}
+        className="relative flex flex-1 flex-col md:flex-none md:overflow-hidden"
+      >
+        {/* The step being swiped back to, held one screen-width to the left and
+            pulled along by the same value the drag writes. Rendered only while
+            the gesture is live, so the quiz is one screen at every other moment
+            — and hidden from screen readers, which are still on the step the
+            visitor has not left yet. */}
+        {peekStep && (
+          <m.div
+            aria-hidden="true"
+            style={{ x: peekX }}
+            className="pointer-events-none absolute inset-0 flex flex-col"
+          >
+            {renderStep(peekStep)}
+          </m.div>
+        )}
+
+        {/* The swipe rides on its own element, outside the one that animates the
+            step change. Both would write x, and on a single element the drag and
+            the entrance fight over it — the same collision the sheet stack hit.
+
+            dragDirectionLock is what keeps the quiz scrollable: the first move
+            decides the axis, and a vertical one hands the pointer straight back
+            to the scroll container. */}
+        <m.div
+          className="flex flex-1 flex-col"
+          style={{ x: dragX }}
+          drag={canSwipeBack ? "x" : false}
+          dragDirectionLock
+          // No constraints, and the release settled by hand below. Constrained,
+          // framer starts its own spring back to the bound the moment the
+          // finger lifts, and that animation and the one that finishes the
+          // gesture would both be writing x at once.
+          dragMomentum={false}
+          // Both flags go up before the step can change, not with it. The step
+          // animation reads its exit from the render it is leaving, so a flag
+          // set at commit time arrives one render too late and the outgoing
+          // question still fades over the one the finger just pulled in.
+          onDragStart={() => {
+            setPeekStep(peekTarget ?? null);
+            setSwipedBack(true);
+          }}
+          // Back is the only direction with something behind it. Clamped rather
+          // than constrained so that dragging the other way meets a wall instead
+          // of stretching against one.
+          onDrag={() => {
+            if (dragX.get() < 0) dragX.set(0);
+          }}
+          onDragEnd={(_, info) => {
+            const commits =
+              info.offset.x > SWIPE_BACK_OFFSET || info.velocity.x > SWIPE_BACK_VELOCITY;
+
+            if (!commits) {
+              animate(dragX, 0, STACK_SPRING).then(() => {
+                setPeekStep(null);
+                setSwipedBack(false);
+              });
+              return;
+            }
+
+            // Carry the gesture through to the edge before the step changes, so
+            // the screen the finger was pulling in is already where it lands.
+            // The swap then happens on a still frame: same content, one from
+            // the peek layer and one from the step itself.
+            //
+            // A tween, not the spring the rest of this gesture uses. A spring
+            // resolves once it is close enough to call itself at rest, and
+            // "close enough" left a sliver of the outgoing card's white a few
+            // pixels short of the edge — invisible while it was still moving,
+            // then cut instead of slid the moment the swap landed a few pixels
+            // off from where the eye had already tracked it to. A tween has no
+            // rest threshold to fall short of: the frame it hands off on is the
+            // exact frame the new step takes over.
+            animate(dragX, stageRef.current?.offsetWidth ?? 0, SWIPE_COMMIT).then(() => {
+              back(true);
+              dragX.set(0);
+              setPeekStep(null);
+            });
+          }}
+        >
+        {/* One handover, not two animations in a queue. `mode="wait"` held the
+            incoming step until the outgoing one had finished, which left the
+            panel empty for a fifth of a second and read as a stutter; popLayout
+            takes the leaving step out of the flow so both move at once and the
+            new screen is already arriving as the old one clears.
+
+            Forward slides on from the right and back from the left, so the two
+            directions are told apart by the movement rather than by guessing.
+
+            A swipe has already done all of that with the finger, so there the
+            handover is cut out entirely: the step it pulled in is standing
+            where it belongs, and anything played over that is a second
+            transition on top of one that already finished. */}
+        <AnimatePresence mode="popLayout" initial={false}>
+          <m.div
+            key={stepKey}
+            initial={swipedBack ? false : { opacity: 0, x: travel }}
+            animate={{ opacity: 1, x: 0, transition: swipedBack ? INSTANT : STEP_IN }}
+            exit={
+              swipedBack
+                ? { opacity: 0, transition: INSTANT }
+                : { opacity: 0, x: -travel, transition: STEP_OUT }
+            }
+            className="flex flex-1 flex-col"
+          >
+            {renderStep(step)}
+          </m.div>
+        </AnimatePresence>
+        </m.div>
+      </div>
+
+      {/* One bar for every question, mounted once and left alone. It used to be
+          rendered inside the question, which cost it twice over: it remounted
+          on every step, so it replayed its entrance and resized as it went, and
+          it sat under whatever transform moved the step, which is what detached
+          its `sticky` from the scrolling surface mid-swipe.
+
+          Out here it is a fixture — the questions slide past it and it does not
+          move. Which also means it can no longer come and go with the answer:
+          the way on is always there, and says so by being disabled until there
+          is something to confirm. */}
+      {step.kind === "vraag" && (
+        <StickyActions className="mt-7 shrink-0 md:mt-4">
+          <div className="flex items-center gap-3 md:justify-between">
+            {/* Thumb-height, thumb-width, and beside the button it undoes rather
+                than at the top of a sheet. The site's own arrow, turned around,
+                so back and forward are visibly the same gesture in reverse. */}
             <button
               type="button"
-              onClick={back}
-              className="mt-4 -ml-2 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong md:inline-flex"
+              onClick={() => back()}
+              aria-label="Terug naar de vorige vraag"
+              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
+            >
+              <span className="rotate-180">
+                <CtaArrow always />
+              </span>
+            </button>
+
+            {/* The panel's own back, at the button's own baseline rather than
+                pinned above the questions: up there it moved every time the
+                bar under it changed height, which on a panel tall enough to
+                never scroll is a jump with nothing to blame it on. Mounted for
+                every question rather than only once the stack allows it — the
+                stack always does, since a step this bar is drawn on has always
+                come from somewhere, so a condition here would never once have
+                been false in practice. */}
+            <button
+              type="button"
+              onClick={() => back()}
+              className="hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong md:inline-flex"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
@@ -253,85 +570,20 @@ export default function HuidtestQuiz({
               </svg>
               Terug
             </button>
-          )}
-        </div>
-      )}
 
-      {/* One handover, not two animations in a queue. `mode="wait"` held the
-          incoming step until the outgoing one had finished, which left the
-          panel empty for a fifth of a second and read as a stutter; popLayout
-          takes the leaving step out of the flow so both move at once and the
-          new screen is already arriving as the old one clears.
-
-          Forward slides on from the right and back from the left, so the two
-          directions are told apart by the movement rather than by guessing. */}
-      <AnimatePresence mode="popLayout" initial={false}>
-        <m.div
-          key={stepKey}
-          initial={{ opacity: 0, x: travel }}
-          animate={{ opacity: 1, x: 0, transition: STEP_IN }}
-          exit={{ opacity: 0, x: -travel, transition: STEP_OUT }}
-          className="flex flex-1 flex-col"
-        >
-        {step.kind === "intro" && (
-          // The whole opening on one card: what the test is, the law it works
-          // under, and the gate itself. Split across the surface it read as three
-          // unrelated blocks; together it is one thing to answer.
-          <StepCard>
-            <h2
-              ref={headingRef as React.RefObject<HTMLHeadingElement>}
-              tabIndex={-1}
-              className="font-display text-ink-strong text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+            {/* Fills what the back button leaves on a phone, where a thumb
+                wants a wide target; on the panel it takes its own width at the
+                end of the row. */}
+            <CtaButton
+              className="flex-1 md:flex-none"
+              disabled={!currentAnswer}
+              onClick={() => goTo(nextStep(step.index, answers))}
             >
-              {INTRO.kop}
-            </h2>
-
-            <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-              {INTRO.body}
-            </p>
-
-            {/* A rule where the card turns from telling to asking. The gate is a
-                different kind of thing from the paragraph above it, and a line
-                says so more quietly than white space can at this size. */}
-            <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-strong">
-              {INTRO.vraag}
-            </h3>
-
-            <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-              {INTRO.wettelijk}
-            </p>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
-              <CtaButton variant="outline" onClick={() => handleAge("minor")}>
-                {INTRO.nee}
-              </CtaButton>
-            </div>
-          </StepCard>
-        )}
-
-        {step.kind === "vraag" && (
-          <QuestionCard
-            question={QUESTIONS[step.index]}
-            headingRef={headingRef}
-            selected={answers[QUESTIONS[step.index].key] as string | undefined}
-            onSelect={(id) => answer(step.index, id)}
-            checkboxChecked={answers.tattoo}
-            onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
-            onNext={() => goTo(nextStep(step.index, answers))}
-            onBack={stack.length > 1 ? back : undefined}
-          />
-        )}
-
-        {step.kind === "exit" && (
-          <ExitScreen reason={step.reason} headingRef={headingRef} onClose={onClose} />
-        )}
-
-        {step.kind === "resultaat" && (
-          <Resultaat answers={answers} headingRef={headingRef} onRestart={restart} />
-        )}
-        </m.div>
-      </AnimatePresence>
+              Volgende
+            </CtaButton>
+          </div>
+        </StickyActions>
+      )}
     </div>
   );
 }

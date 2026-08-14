@@ -2,11 +2,8 @@
 
 import { useRef } from "react";
 import type { Question, QuestionKey } from "@/lib/huidtest/config";
-import { CtaArrow } from "@/components/ui/cta-arrow";
 import { CheckField } from "@/components/huidtest/check-field";
-import { CtaButton } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
-import { StickyActions } from "@/components/huidtest/sticky-actions";
 
 /**
  * One question, one screen.
@@ -15,6 +12,10 @@ import { StickyActions } from "@/components/huidtest/sticky-actions";
  * several, and a screen reader should say so — "2 van 4" — instead of reading
  * four unrelated buttons. It also sets the keyboard contract, which this
  * component then has to keep: arrows move within the group, Tab leaves it.
+ *
+ * The card is all there is here. The button that confirms an answer belongs to
+ * the surface rather than to the question — see the action bar in the quiz
+ * shell — so it can stay still while the questions move past it.
  */
 export default function QuestionCard<K extends QuestionKey>({
   question,
@@ -23,8 +24,6 @@ export default function QuestionCard<K extends QuestionKey>({
   onSelect,
   checkboxChecked,
   onCheckboxChange,
-  onNext,
-  onBack,
 }: {
   question: Question<K>;
   /** Focus lands here on every step change, so the question is what gets read. */
@@ -33,14 +32,6 @@ export default function QuestionCard<K extends QuestionKey>({
   onSelect: (id: string) => void;
   checkboxChecked?: boolean;
   onCheckboxChange?: (checked: boolean) => void;
-  /** Confirms the answer. Every question has one; nothing advances by itself. */
-  onNext?: () => void;
-  /**
-   * One question back. Absent on the first, where there is nothing behind it.
-   * Only drawn in the sheet: on the panel the same move is a text link above
-   * the question, which is where a mouse expects it.
-   */
-  onBack?: () => void;
 }) {
   const headingId = `huidtest-vraag-${question.key}`;
   const hulpId = question.hulptekst ? `${headingId}-hulp` : undefined;
@@ -64,8 +55,7 @@ export default function QuestionCard<K extends QuestionKey>({
   };
 
   return (
-    <div className="flex flex-1 flex-col">
-      <StepCard>
+    <StepCard>
       <h2
         id={headingId}
         ref={headingRef}
@@ -146,44 +136,6 @@ export default function QuestionCard<K extends QuestionKey>({
           </CheckField>
         </div>
       )}
-
-      </StepCard>
-
-      {/* Takes up whatever is left, which is what pins the bar below to the
-          bottom edge on a short question instead of letting it ride up under
-          the last option. Only in the sheet: the desktop panel is tall enough
-          that a button pushed to the floor loses its tie to the question. */}
-      <div className="flex-1 md:hidden" />
-
-      {/* Every question is confirmed rather than sprung: the answer takes a
-          mark, and the way on arrives under it. Choosing used to advance by
-          itself, which read as the screen deciding it had heard enough. */}
-      <StickyActions className="mt-7 shrink-0 md:mt-4" visible={Boolean(selected)}>
-        <div className="flex items-center gap-3 md:justify-end">
-          {/* Thumb-height, thumb-width, and beside the button it undoes rather
-              than at the top of a sheet. The site's own arrow, turned around,
-              so back and forward are visibly the same gesture in reverse. */}
-          {onBack && (
-            <button
-              type="button"
-              onClick={onBack}
-              aria-label="Terug naar de vorige vraag"
-              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
-            >
-              <span className="rotate-180">
-                <CtaArrow always />
-              </span>
-            </button>
-          )}
-
-          {/* Fills what the back button leaves on a phone, where a thumb
-              wants a wide target; on the panel it takes its own width at the
-              end of the row. */}
-          <CtaButton className="flex-1 md:flex-none" onClick={onNext}>
-            Volgende
-          </CtaButton>
-        </div>
-      </StickyActions>
-    </div>
+    </StepCard>
   );
 }

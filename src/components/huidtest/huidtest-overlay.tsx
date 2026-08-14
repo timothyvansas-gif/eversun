@@ -63,12 +63,6 @@ export default function HuidtestOverlay({
   const [isBehind, setIsBehind] = useState(false);
   useEffect(() => stackDepth.on("change", (depth) => setIsBehind(depth > 0.5)), [stackDepth]);
 
-  // Whether the content has moved under the sheet's own edge. Text ending
-  // hard against the drag handle reads as content that has been cut off, so a
-  // short fade takes over there — but only once there is something to fade,
-  // or the card's top edge would look tinted at rest.
-  const [isScrolled, setIsScrolled] = useState(false);
-
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const dragControls = useDragControls();
   const [mounted, setMounted] = useState(false);
@@ -102,19 +96,11 @@ export default function HuidtestOverlay({
       )}
 
       <div className="relative flex flex-1 flex-col overflow-hidden">
-        {/* Sits over the top of the scroll area, not in it, so it fades what
-            passes beneath rather than moving with it. Sheet only: it is there
-            for the drag handle, and the panel has no handle to run into. */}
         <div
-          aria-hidden="true"
-          className={`pointer-events-none absolute inset-x-0 top-0 z-10 h-6 bg-gradient-to-b from-surface-page to-transparent transition-opacity duration-200 md:hidden ${
-            isScrolled ? "opacity-100" : "opacity-0"
-          }`}
-        />
-
-        <div
-          onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 4)}
-          className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-6 md:pt-4"
+          // overflow-x is clip rather than hidden: the step waiting behind a
+          // swipe is parked a screen-width to the left, and hidden would make
+          // that a scrollable region instead of one that is simply not shown.
+          className="flex flex-1 flex-col overflow-y-auto overflow-x-clip overscroll-contain px-6 pt-0 md:pt-4"
         >
           <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
             <HuidtestQuiz entry={entry} onClose={onClose} />
@@ -169,9 +155,16 @@ export default function HuidtestOverlay({
                 // grew and shrank underneath the reader as they answered.
                 className="flex h-[92svh] flex-col rounded-t-[20px] bg-surface-page"
               >
+                {/* The strip the sheet is dragged by, not just the mark drawn on
+                    it. The bar itself is 4px tall, and a grab area that ends
+                    where it ends asks for a thumb placed to the pixel — which
+                    is what made closing the sheet feel like it had stopped
+                    working. The padding below carries the hit area down to
+                    40px and is taken back off the scroller, so what is on
+                    screen does not move. */}
                 <div
                   onPointerDown={(event) => dragControls.start(event)}
-                  className="flex shrink-0 cursor-grab justify-center pt-3 active:cursor-grabbing"
+                  className="flex shrink-0 cursor-grab justify-center pt-3 pb-6 active:cursor-grabbing"
                 >
                   <div className="h-1 w-10 rounded-full bg-ink/20" />
                 </div>

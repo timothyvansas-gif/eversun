@@ -22,10 +22,11 @@ export function StickyActions({
 }: {
   children: React.ReactNode;
   /**
-   * Whether there is anything to act on yet. False renders nothing at all —
-   * not a hidden bar, which still holds its space and cuts the step card short
-   * above it, which is exactly how this looked wrong on a phone. When it turns
-   * true the bar slides up from the edge instead of blinking into place.
+   * Whether this surface has anything to act on at all. False renders nothing
+   * — not a hidden bar, which still holds its space. It is about the screen
+   * rather than the answer on it: the questions keep one bar between them and
+   * disable the button instead, so that it cannot appear and disappear
+   * underneath a thumb that is reaching for it.
    */
   visible?: boolean;
   className?: string;
