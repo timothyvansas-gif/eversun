@@ -45,6 +45,7 @@ export function StickyActions({
   children,
   visible = true,
   className = "",
+  backgroundClassName = "bg-surface-page/95",
   ...motion
 }: {
   children: React.ReactNode;
@@ -57,6 +58,8 @@ export function StickyActions({
    */
   visible?: boolean;
   className?: string;
+  /** Surface colour for a bar that needs a different veil on one screen. */
+  backgroundClassName?: string;
 } & MotionProps) {
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const shouldReduceMotion = useReducedMotion();
@@ -72,7 +75,7 @@ export function StickyActions({
         transition: isMobile ? BAR_IN : BAR_IN_PANEL,
       }}
       {...motion}
-      className={`sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
+      className={`sticky bottom-0 -mx-6 ${backgroundClassName} px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
     >
       {children}
     </m.div>

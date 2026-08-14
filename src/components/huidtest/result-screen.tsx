@@ -210,7 +210,10 @@ export default function ResultScreen({
           The sachet line rides along because this button is what sends the
           message: what is switched on above should still be visible at the
           moment of sending, not four hundred pixels up the page. */}
-      <StickyActions className="mt-6 shrink-0 md:mt-4 md:pt-5 md:pb-5">
+      <StickyActions
+        backgroundClassName="bg-surface-page/70 md:bg-surface-page/95"
+        className="mt-6 shrink-0 md:mt-4 md:pt-5 md:pb-5"
+      >
         <CtaButton
           className="w-full"
           onClick={() => {
