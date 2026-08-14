@@ -80,7 +80,7 @@ export default function AfspraakOverlay({
               <CloseButton onClick={onClose} className="absolute top-4 right-4" />
 
               <h2 className="card-title text-zinc-900 text-center">Plan je zonsessie</h2>
-              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-2 text-center">
+              <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-2 text-center">
                 Scan met je telefoon, dan opent WhatsApp met je aanvraag al ingevuld.
               </p>
 
@@ -98,7 +98,7 @@ export default function AfspraakOverlay({
                 />
               </div>
 
-              <p className="font-sans text-[15px] text-ink/70 leading-[24px] mt-4 text-center">
+              <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-4 text-center">
                 Of gewoon vanaf dit scherm.
               </p>
 
@@ -117,7 +117,7 @@ export default function AfspraakOverlay({
                 <p className="card-title text-zinc-900">Liever bellen?</p>
                 <a
                   href="tel:+31625306491"
-                  className="font-sans text-[15px] text-ink/70 leading-[24px] mt-1 block underline decoration-dotted underline-offset-6 md:no-underline"
+                  className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-1 block underline decoration-dotted underline-offset-6 md:no-underline"
                 >
                   06 25306491
                 </a>

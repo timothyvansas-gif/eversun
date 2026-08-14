@@ -62,7 +62,7 @@ function PhoneButton() {
   return (
     <a
       href="tel:+31625306491"
-      className={`w-full font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`w-full font-sans font-medium text-[15px] text-zinc-900 rounded-full ${BTN_OUTLINE_BORDER} active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
@@ -147,12 +147,10 @@ function Review() {
           {/* leading-none, so the line box hugs the capitals. The 7px is the
               5px that puts the gap between stars and name back where it was,
               plus 2px asked for on top. */}
-          <p className="font-sans text-[14px] font-medium text-ink leading-none mt-[7px]">{review.name}</p>
+          <p className="font-sans text-[14px] font-medium text-zinc-900 leading-none mt-[7px]">{review.name}</p>
         </div>
       </div>
-      {/* text-muted, not ink/60: that blend measures 4.48:1 on the white card,
-          under the 4.5:1 floor. The token is the same role at 5.46:1. */}
-      <p className="mt-3 font-sans text-[14px] text-muted leading-[22px]">{review.quote}</p>
+      <p className="mt-3 font-sans text-[14px] text-zinc-600 leading-[22px]">{review.quote}</p>
     </div>
   );
 }
@@ -286,7 +284,7 @@ export default function PlanJeMomentSheet({
                 <div className="bg-white rounded-2xl px-6 py-6">
                   <div className="mb-5">
                     <h2 className="card-title text-zinc-900">{title ?? "Plan je moment"}</h2>
-                    <p className="font-sans text-[15px] text-muted leading-[24px] mt-[6px]">
+                    <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-[6px]">
                       {description ?? (
                         <>
                           Toe aan een moment voor jezelf? Kom lekker langs aan de{" "}
@@ -294,7 +292,7 @@ export default function PlanJeMomentSheet({
                             href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-muted underline decoration-dotted underline-offset-6"
+                            className="text-zinc-600 underline decoration-dotted underline-offset-6"
                           >
                             Kloekhorststraat 4A in Assen
                           </a>

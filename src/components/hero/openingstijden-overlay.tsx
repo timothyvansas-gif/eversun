@@ -45,13 +45,10 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
   );
 }
 
-// text-muted rather than ink/60: that alpha blend measures 4.44:1 on the sheet
-// surface, just under 1.4.3, and it carried the phone link with it. The token is
-// the same role in the palette and clears at 4.99:1.
 function AddressInfo() {
   return (
-    <p className="font-sans text-[15px] text-muted leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-muted underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
+    <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-[6px]">
+      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
     </p>
   );
 }
@@ -69,9 +66,9 @@ function HoursTable() {
             key={day}
             className={`grid grid-cols-2 py-3 ${i < HOURS.length - 1 ? "border-b border-surface-page" : ""}`}
           >
-            <span className={`font-sans text-[15px] text-ink leading-[1.4] ${isToday ? "font-semibold" : "font-normal"}`}>{day}</span>
+            <span className={`font-sans text-[15px] text-zinc-600 leading-[1.4] ${isToday ? "font-semibold" : "font-normal"}`}>{day}</span>
             <div className="flex items-center gap-4">
-              <p className={`font-sans text-[15px] text-ink leading-[1.4] ${isToday ? "font-semibold" : "font-medium"}`}>{hours}</p>
+              <p className={`font-sans text-[15px] text-zinc-600 leading-[1.4] ${isToday ? "font-semibold" : "font-medium"}`}>{hours}</p>
               {isToday && (
                 <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
                   {isOpen ? (
@@ -105,7 +102,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-ink rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-zinc-900 rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{ minHeight: "48px" }}
     >
       Route naar Ever Sun

@@ -133,18 +133,15 @@ export default function FotoBottomSheet({
               <div className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pt-5 md:pt-7 pb-4 md:pb-5 shrink-0 md:flex md:items-center md:justify-between md:gap-4">
                 <div>
                   <div className="flex items-baseline gap-2.5">
-                    <h2 className="font-display text-[20px] md:text-[24px] font-medium text-ink tracking-[-0.01em]">
+                    <h2 className="font-display text-[20px] md:text-[24px] font-medium text-zinc-900 tracking-[-0.01em]">
                       Binnenkijken bij Ever Sun
                     </h2>
-                    {/* ink/40 measured 2.47:1 here — the count is real
-                        information, not decoration, so it takes the same
-                        secondary token as the line below it. */}
-                    <span className="font-sans text-[15px] text-muted tracking-[-0.01em] whitespace-nowrap">
+                    <span className="font-sans text-[15px] text-zinc-600 tracking-[-0.01em] whitespace-nowrap">
                       {`${sheetPhotos.length} foto's`}
                     </span>
                   </div>
-                  <p className="font-sans text-[15px] text-muted leading-[24px] mt-1">
-                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-muted underline decoration-dotted underline-offset-6">06 25306491</a>
+                  <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-1">
+                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-dotted underline-offset-6">06 25306491</a>
                   </p>
                 </div>
                 <div className="hidden md:flex items-center gap-3 shrink-0">
