@@ -70,6 +70,11 @@ function AfspraakButton({
         isOpen={sheetOpen}
         onClose={() => setSheetOpen(false)}
         whatsappUrl={whatsappUrl}
+        description={
+          <>
+            Plan je moment voor de {title}. Stuur ons een bericht, dan plannen we een tijd die jou uitkomt.
+          </>
+        }
       />
     </>
   );
