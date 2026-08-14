@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, PT_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
+import { SOCIAL_IMAGE, TWITTER_IMAGE } from "@/lib/social-metadata";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -54,12 +55,14 @@ export const metadata: Metadata = {
     siteName: "Ever Sun",
     locale: "nl_NL",
     type: "website",
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Ever Sun | Zonnebank & Zonnestudio Assen",
     description:
       "Ergoline zonnebanken, persoonlijk huidadvies en een sessie die om jou draait. Kloekhorststraat 4a, Assen.",
+    images: [TWITTER_IMAGE],
   },
   appleWebApp: {
     capable: true,

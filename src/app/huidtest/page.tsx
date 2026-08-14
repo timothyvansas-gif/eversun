@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
 import { decodeAnswers, SHARE_PARAM } from "@/lib/huidtest/share";
+import { SOCIAL_IMAGE, TWITTER_IMAGE } from "@/lib/social-metadata";
 
 /**
  * The quiz as a page, which is what a shared link needs — a result someone
@@ -24,6 +25,14 @@ export const metadata: Metadata = {
     siteName: "Ever Sun",
     locale: "nl_NL",
     type: "website",
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Huidtest | Ever Sun",
+    description:
+      "Vijf korte vragen en je weet welke zonnebank en welk product bij jouw huid passen.",
+    images: [TWITTER_IMAGE],
   },
 };
 
