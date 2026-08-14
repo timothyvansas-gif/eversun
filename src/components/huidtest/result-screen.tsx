@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { animate } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { ZONNEBANKEN } from "@/data/zonnebanken-data";
 import { trackEvent } from "@/lib/analytics";
 import { CheckField } from "@/components/huidtest/check-field";
@@ -47,6 +48,7 @@ export default function ResultScreen({
 }) {
   const [sachet, setSachet] = useState(false);
   const [boekenOpen, setBoekenOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const { element: surface, stackDepth } = useHuidtestSurface();
 
   const bank = ZONNEBANKEN.find((z) => z.slug === BANK_SLUGS[advies.bank])!;
@@ -68,9 +70,18 @@ export default function ResultScreen({
   // starts to dismiss the sheet in front hands the size back on the way.
   useEffect(() => {
     if (!stackDepth) return;
+
+    // The value still marks the covered quiz as inert, but there is no journey
+    // between states when reduced motion is requested. HuidtestOverlay also
+    // maps this semantic depth to a stationary visual surface in that mode.
+    if (shouldReduceMotion) {
+      stackDepth.set(boekenOpen ? 1 : 0);
+      return;
+    }
+
     const controls = animate(stackDepth, boekenOpen ? 1 : 0, STACK_SPRING);
     return () => controls.stop();
-  }, [boekenOpen, stackDepth]);
+  }, [boekenOpen, shouldReduceMotion, stackDepth]);
 
   const toggleSachet = (aan: boolean) => {
     setSachet(aan);
@@ -78,7 +89,7 @@ export default function ResultScreen({
   };
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div data-huidtest-result className="flex flex-1 flex-col">
       <StepCard>
       <h2
         ref={headingRef}

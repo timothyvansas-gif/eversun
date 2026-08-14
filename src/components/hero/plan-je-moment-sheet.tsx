@@ -9,6 +9,7 @@ import { getReviews } from "@/lib/reviews";
 import StarIcon from "@/components/ui/star-icon";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Backdrop } from "@/components/ui/backdrop";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
@@ -192,6 +193,7 @@ export default function PlanJeMomentSheet({
 }) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   // This sheet's own scrim, handed to the Backdrop so the drag can dim it. One
   // value with three writers that never overlap: the fade-in on open, the drag
@@ -261,6 +263,11 @@ export default function PlanJeMomentSheet({
                 // Let go halfway and the sheet behind sinks back with this one,
                 // on the same spring, rather than snapping back on release.
                 if (!stackDepth) return;
+                if (shouldReduceMotion) {
+                  stackDepth.set(1);
+                  scrimOpacity.set(1);
+                  return;
+                }
                 animate(stackDepth, 1, STACK_SPRING);
                 animate(scrimOpacity, 1, STACK_SPRING);
               }}

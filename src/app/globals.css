@@ -133,7 +133,7 @@ body {
    And it could not touch the right things: the hero entrance, the parallax, the
    bento reveal, the sheets and the menu all animate in JS (framer-motion, gsap),
    where no stylesheet reaches them. Those are gated at the source now —
-   `MotionConfig reducedMotion="user"` in page-layout for the declarative ones,
+   `MotionConfig reducedMotion="user"` in motion-provider for the declarative ones,
    an explicit check in the components that drive a MotionValue or a
    ScrollTrigger by hand.
 
@@ -143,6 +143,31 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* The desktop result can scroll behind the panel's fixed close row. Fade its
+   top edge only after it has moved, so content disappears into the panel rather
+   than being cut off by a hard clip. The :has() marker keeps every question,
+   the direct /huidtest route and all mobile surfaces completely untouched. */
+@media (min-width: 768px) {
+  .huidtest-panel-scroll[data-scrolled="true"]:has([data-huidtest-result]) {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgb(0 0 0 / 12%) 4px,
+      rgb(0 0 0 / 40%) 12px,
+      rgb(0 0 0 / 72%) 21px,
+      #000 32px
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgb(0 0 0 / 12%) 4px,
+      rgb(0 0 0 / 40%) 12px,
+      rgb(0 0 0 / 72%) 21px,
+      #000 32px
+    );
   }
 }
 

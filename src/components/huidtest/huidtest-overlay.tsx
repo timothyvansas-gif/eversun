@@ -6,6 +6,7 @@ import { AnimatePresence, m, useDragControls, useMotionValue, useTransform } fro
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
@@ -45,6 +46,7 @@ export default function HuidtestOverlay({
   entry: "home_sectie" | "hero_link" | "direct";
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   // State as well as a ref: the booking sheet portals into this element, and a
   // ref alone would not tell React when it finally exists.
   const [surface, setSurface] = useState<HTMLDivElement | null>(null);
@@ -100,7 +102,21 @@ export default function HuidtestOverlay({
           // overflow-x is clip rather than hidden: the step waiting behind a
           // swipe is parked a screen-width to the left, and hidden would make
           // that a scrollable region instead of one that is simply not shown.
-          className="flex flex-1 flex-col overflow-y-auto overflow-x-clip overscroll-contain px-6 pt-0 md:pt-4"
+          // The data flag drives the desktop-only result fade in globals.css.
+          // It turns on only after the progress bar has fully left the visible
+          // scroll area, so the mask can never wash over that indicator.
+          // Writing it on the element also avoids a React render per scroll.
+          data-scrolled="false"
+          onScroll={(event) => {
+            const scroller = event.currentTarget;
+            const progress = scroller.querySelector<HTMLElement>('[role="progressbar"]');
+            const progressHasLeft = progress
+              ? progress.getBoundingClientRect().bottom <= scroller.getBoundingClientRect().top
+              : scroller.scrollTop > 0;
+            const next = progressHasLeft ? "true" : "false";
+            if (scroller.dataset.scrolled !== next) scroller.dataset.scrolled = next;
+          }}
+          className="huidtest-panel-scroll flex flex-1 flex-col overflow-y-auto overflow-x-clip overscroll-contain px-6 pt-0 md:pt-4"
         >
           <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
             <HuidtestQuiz entry={entry} onClose={onClose} />
@@ -127,7 +143,14 @@ export default function HuidtestOverlay({
                exactly how the entrance went missing. */
             <m.div
               className="fixed inset-x-0 bottom-0 z-[55]"
-              style={{ y: behindLift, scale: behindScale, transformOrigin: "bottom center" }}
+              // stackDepth also controls focus ownership, so it must still
+              // change when a second sheet opens. Only the scale/lift is
+              // optional: reduced motion keeps the covered test stationary.
+              style={{
+                y: shouldReduceMotion ? 0 : behindLift,
+                scale: shouldReduceMotion ? 1 : behindScale,
+                transformOrigin: "bottom center",
+              }}
               inert={isBehind}
             >
               <m.div

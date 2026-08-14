@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { LazyMotion, MotionConfig } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import MotionProvider from "@/components/motion-provider";
 import { DESKTOP_NAV_QUERY } from "@/lib/breakpoints";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
@@ -21,25 +21,11 @@ const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
 const Contact = dynamic(() => import("@/components/contact"));
 
-// LazyMotion ships only the tiny `m` component in the initial bundle; the full
-// DOM feature set (gestures, drag, layout, the animation engine) loads as a
-// separate async chunk after hydration, off the critical path. `domMax`
-// (not `domAnimation`) because the overlays and photo sheet use drag.
-const loadMotionFeatures = () =>
-  import("framer-motion").then((mod) => mod.domMax);
-
 const PUSH_TRANSITION = "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
-// `reducedMotion="user"` is the one switch that reaches every `m.*` on the page.
-// framer-motion then drops transform and layout animations whenever the OS asks
-// for less motion, while opacity and colour keep animating — so the hero still
-// arrives, the bento cards still appear and the sheets still read as covering
-// the page; nothing travels to get there. Every component keeps its own
-// durations and easing, because the switch changes which properties animate,
-// not how long they take.
-//
-// Effects driven by a MotionValue or a ScrollTrigger never pass through it and
-// are gated where they are created (hero parallax, sticky cards, advies-card).
+// Declarative Framer Motion is governed by the shared MotionProvider. This local
+// preference remains necessary for the page push below: it is a plain inline
+// CSS transition and therefore sits outside Framer Motion's policy.
 
 // `footer` is rendered by the server page and passed in as a slot, so the
 // static Footer stays a server component instead of being pulled into this
@@ -75,8 +61,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
   }, [isDesktopNav, isMenuOpen]);
 
   return (
-    <LazyMotion features={loadMotionFeatures} strict>
-    <MotionConfig reducedMotion="user">
+    <MotionProvider>
     <div className="relative bg-void min-h-screen">
       {/* First tabbable on the page, so the keyboard route to the content does
           not run through the header and the whole menu. Hidden until focused. */}
@@ -146,7 +131,6 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         style={BACKDROP_SCRIM}
       />
     </div>
-    </MotionConfig>
-    </LazyMotion>
+    </MotionProvider>
   );
 }

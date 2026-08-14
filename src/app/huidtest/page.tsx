@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MotionProvider from "@/components/motion-provider";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
 import { decodeAnswers, SHARE_PARAM } from "@/lib/huidtest/share";
 import { SOCIAL_IMAGE, TWITTER_IMAGE } from "@/lib/social-metadata";
@@ -45,16 +46,18 @@ export default async function HuidtestPage({
   const shared = decodeAnswers(typeof raw === "string" ? raw : null);
 
   return (
-    <main className="min-h-screen bg-surface-page px-6 py-12 sm:py-16">
-      {/* Clipped, not hidden: the step waiting behind a swipe is parked a
-          screen-width to the left, and it should be out of sight rather than
-          somewhere the page can be scrolled to. */}
-      <div className="mx-auto w-full max-w-[640px] overflow-x-clip">
-        {/* The page needs a heading of its own: inside, every screen is an h2,
-            because the quiz is a section of a page as often as it is the page. */}
-        <h1 className="sr-only">Huidtest</h1>
-        <HuidtestQuiz shared={shared} historyBacked />
-      </div>
-    </main>
+    <MotionProvider>
+      <main className="min-h-screen bg-surface-page px-6 py-12 sm:py-16">
+        {/* Clipped, not hidden: the step waiting behind a swipe is parked a
+            screen-width to the left, and it should be out of sight rather than
+            somewhere the page can be scrolled to. */}
+        <div className="mx-auto w-full max-w-[640px] overflow-x-clip">
+          {/* The page needs a heading of its own: inside, every screen is an h2,
+              because the quiz is a section of a page as often as it is the page. */}
+          <h1 className="sr-only">Huidtest</h1>
+          <HuidtestQuiz shared={shared} historyBacked />
+        </div>
+      </main>
+    </MotionProvider>
   );
 }

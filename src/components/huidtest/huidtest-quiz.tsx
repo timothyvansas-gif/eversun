@@ -722,6 +722,16 @@ export default function HuidtestQuiz({
           exit="exit"
         >
           <div className="flex items-center gap-3 md:justify-between">
+            {/* First in the DOM so the primary action is reached before the
+                secondary back action. CSS order keeps back visually left. */}
+            <CtaButton
+              className="order-2 flex-1 md:flex-none"
+              disabled={!currentAnswer}
+              onClick={() => goTo(nextStep(step.index, answers))}
+            >
+              Volgende
+            </CtaButton>
+
             {/* Thumb-height, thumb-width, and beside the button it undoes rather
                 than at the top of a sheet. Unlike the decorative CTA arrows
                 removed elsewhere, this icon communicates the control's only
@@ -730,7 +740,7 @@ export default function HuidtestQuiz({
               type="button"
               onClick={() => back()}
               aria-label="Terug naar de vorige vraag"
-              className="flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
+              className="order-1 flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line text-ink-strong transition-colors duration-150 hover:border-[#312019] md:hidden"
             >
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
@@ -755,7 +765,7 @@ export default function HuidtestQuiz({
             <button
               type="button"
               onClick={() => back()}
-              className="hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong md:inline-flex"
+              className="order-1 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-muted transition-colors duration-150 hover:text-ink-strong md:inline-flex"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
@@ -769,16 +779,6 @@ export default function HuidtestQuiz({
               Terug
             </button>
 
-            {/* Fills what the back button leaves on a phone, where a thumb
-                wants a wide target; on the panel it takes its own width at the
-                end of the row. */}
-            <CtaButton
-              className="flex-1 md:flex-none"
-              disabled={!currentAnswer}
-              onClick={() => goTo(nextStep(step.index, answers))}
-            >
-              Volgende
-            </CtaButton>
           </div>
         </StickyActions>
         )}
