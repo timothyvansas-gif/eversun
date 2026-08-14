@@ -1,5 +1,7 @@
 "use client";
 
+import { m, type MotionProps } from "framer-motion";
+
 /**
  * The bar the test's forward button rides on.
  *
@@ -14,11 +16,16 @@
  * bar across the surface instead of a button floating on top of the text it is
  * covering. That padding is 24px everywhere the test is shown, which is what
  * lets one constant do.
+ *
+ * It animates as itself rather than inside a wrapper, because a wrapper would
+ * become its containing block — and a sticky element can only travel as far as
+ * that block reaches, which around a bar this size is nowhere at all.
  */
 export function StickyActions({
   children,
   visible = true,
   className = "",
+  ...motion
 }: {
   children: React.ReactNode;
   /**
@@ -30,14 +37,15 @@ export function StickyActions({
    */
   visible?: boolean;
   className?: string;
-}) {
+} & MotionProps) {
   if (!visible) return null;
 
   return (
-    <div
+    <m.div
+      {...motion}
       className={`huidtest-bar-in sticky bottom-0 -mx-6 bg-surface-page/95 px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-[2px] ${className}`}
     >
       {children}
-    </div>
+    </m.div>
   );
 }

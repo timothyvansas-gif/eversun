@@ -27,7 +27,12 @@ const VARIANTS = {
   outline: `text-ink-strong ${BTN_OUTLINE_BORDER}`,
 } as const;
 
-const TRANSITION = "transform 150ms ease, background-color 150ms ease, border-color 150ms ease";
+// Opacity is on this list because the way on spends most of its life waiting.
+// It is the one property the disabled state changes, and left off the list it
+// was the one property that snapped: swiping back to an answered question lit
+// the button in a single frame while its colours were still easing.
+const TRANSITION =
+  "transform 150ms ease, background-color 150ms ease, border-color 150ms ease, opacity 150ms ease";
 
 export function ctaClass(variant: keyof typeof VARIANTS, extra = ""): string {
   return `${BASE} ${VARIANTS[variant]} ${extra}`;
