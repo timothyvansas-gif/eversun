@@ -60,7 +60,7 @@ function AfspraakButton({
             </div>
             <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
-          <div className="mt-3 flex gap-4">
+          <div className="mt-3 flex gap-2">
             <button onClick={handleClick} className={`${BTN_PILL_ACCENT} min-h-[48px] flex-1 justify-center px-3`}>
               Plan je moment
             </button>
@@ -103,7 +103,7 @@ function AfspraakButton({
           </div>
         </div>
 
-        <div className="hidden items-center justify-start gap-6 xl:flex">
+        <div className="hidden xl:block">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
@@ -114,16 +114,18 @@ function AfspraakButton({
             </div>
             <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
-          <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
-            Plan je moment
-          </button>
-          <button
-            type="button"
-            onClick={onStartHuidtest}
-            className="min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70 xl:ml-auto xl:inline-flex"
-          >
-            Doe de huidtest
-          </button>
+          <div className="mt-3 flex gap-4">
+            <button onClick={handleClick} className={`${BTN_PILL_ACCENT} !px-[28px] xl:!px-[36px] py-[10px] flex-shrink-0`}>
+              Plan je moment
+            </button>
+            <button
+              type="button"
+              onClick={onStartHuidtest}
+              className={`${BTN_PILL} min-h-[44px] w-[120px] shrink-0 justify-center px-3 active:scale-[0.98] transition-[transform,border-color] duration-150`}
+            >
+              Huidtest
+            </button>
+          </div>
         </div>
       </div>
 
