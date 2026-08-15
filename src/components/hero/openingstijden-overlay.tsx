@@ -102,7 +102,7 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-zinc-900 rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-zinc-600 rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{ minHeight: "48px" }}
     >
       Route naar Ever Sun

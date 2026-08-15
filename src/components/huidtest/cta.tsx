@@ -22,7 +22,7 @@ const VARIANTS = {
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
   // transition below carries border-color.
-  outline: `text-ink-strong ${BTN_OUTLINE_BORDER}`,
+  outline: BTN_OUTLINE_BORDER,
 } as const;
 
 // Opacity is on this list because the way on spends most of its life waiting.

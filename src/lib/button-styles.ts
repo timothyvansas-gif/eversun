@@ -16,10 +16,10 @@
  * together, and two `transition-property` utilities on one element resolve by
  * stylesheet order rather than by intent.
  */
-export const BTN_OUTLINE_BORDER = "border border-line hover:border-[#312019]";
+export const BTN_OUTLINE_BORDER = "border border-line text-zinc-600 hover:border-[#312019] hover:text-zinc-900";
 
 export const BTN_PILL =
-  `inline-flex items-center text-zinc-900 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
+  `inline-flex items-center text-zinc-600 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its

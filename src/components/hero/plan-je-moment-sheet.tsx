@@ -62,7 +62,7 @@ function PhoneButton() {
   return (
     <a
       href="tel:+31625306491"
-      className={`w-full font-sans font-medium text-[15px] text-zinc-900 rounded-full ${BTN_OUTLINE_BORDER} active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`w-full font-sans font-medium text-[15px] text-zinc-600 rounded-full ${BTN_OUTLINE_BORDER} active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
