@@ -1,5 +1,7 @@
 "use client";
 
+import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
+
 /**
  * A checkbox drawn the same way a chosen answer is: an accent square with a
  * quiet white mark.
@@ -37,7 +39,7 @@ export function CheckField({
         className={`mt-[2px] flex size-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors duration-150 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
           checked
             ? "border-accent bg-accent"
-            : "border-ink-primary/20 bg-white/60 group-hover:border-ink-primary"
+            : `${OUTLINE_BORDER_COLOR} bg-white/60 group-hover:border-ink-primary`
         }`}
       >
         <svg

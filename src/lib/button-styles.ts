@@ -16,8 +16,11 @@
  * together, and two `transition-property` utilities on one element resolve by
  * stylesheet order rather than by intent.
  */
+/** Resting edge shared by outline buttons, fields and huidtest choices. */
+export const OUTLINE_BORDER_COLOR = "border-ink-primary/20";
+
 export const BTN_OUTLINE_BORDER =
-  "border border-ink-primary/20 text-zinc-600 hover:border-ink-primary hover:text-zinc-900";
+  `border ${OUTLINE_BORDER_COLOR} text-zinc-600 hover:border-ink-primary hover:text-zinc-900`;
 
 export const BTN_PILL =
   `inline-flex items-center text-zinc-600 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;

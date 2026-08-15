@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import type { Question, QuestionKey } from "@/lib/huidtest/config";
 import { CheckField } from "@/components/huidtest/check-field";
 import { StepCard } from "@/components/huidtest/step-card";
+import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 /**
  * One question, one screen.
@@ -114,7 +115,7 @@ export default function QuestionCard<K extends QuestionKey>({
               className={`relative flex min-h-[56px] w-full cursor-pointer items-center rounded-[12px] border px-5 pr-8 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
                 isSelected
                   ? "border-accent bg-white text-ink-strong"
-                  : "border-ink-primary/20 bg-white/60 text-ink-strong hover:border-ink-primary hover:bg-white"
+                  : `${OUTLINE_BORDER_COLOR} bg-white/60 text-ink-strong hover:border-ink-primary hover:bg-white`
               }`}
             >
               <span className="flex-1">{option.label}</span>

@@ -1,3 +1,5 @@
+import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
+
 // pointer-coarse:text-[16px] is not a design choice — Safari on iOS auto-zooms
 // the page whenever a focused control is smaller than 16px, and that zoom widens
 // the visual viewport into horizontal overflow on the body. Mouse-driven devices
@@ -89,7 +91,7 @@ export function FloatingField({
         className={`${WRAPPER_BASE} ${
           invalid
             ? "border-danger bg-danger-surface"
-            : "border-ink-primary/20 bg-white hover:border-ink-primary"
+            : `${OUTLINE_BORDER_COLOR} bg-white hover:border-ink-primary`
         } ${disabled ? "opacity-60" : ""}`}
       >
         {multiline ? (

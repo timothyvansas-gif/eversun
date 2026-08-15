@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
-  BTN_BOOKING_DESKTOP_WIDTH,
   BTN_CTA_HEIGHT,
   BTN_PILL,
   BTN_PILL_ACCENT,
@@ -25,7 +24,7 @@ const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-ove
 
 function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
   return (
-    <div className="flex items-center gap-3 text-zinc-900 font-sans">
+    <div className="flex items-center gap-3 text-zinc-600 font-sans">
       <div className="flex items-center gap-2">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
           <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
@@ -39,16 +38,12 @@ function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) 
 }
 
 function AfspraakButton({
-  minuten,
-  prijs,
   whatsappUrl,
   qrCode,
   title,
   onStartHuidtest,
   className = "mt-3 md:mt-auto",
 }: {
-  minuten: string;
-  prijs: string;
   whatsappUrl: string;
   qrCode: StaticImageData;
   title: string;
@@ -60,18 +55,19 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        <SessionDetails minuten={minuten} prijs={prijs} />
-        <div className="mt-4 flex flex-nowrap items-center gap-2 md:mt-[14px] md:gap-3 max-[300px]:flex-wrap">
-          <button onClick={appointment.open} className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} min-w-0 flex-[1.8] justify-center !px-4 md:flex-none md:!px-7`}>
+        <div className="flex w-full flex-col gap-3 lg:w-auto lg:flex-row">
+          <button
+            onClick={appointment.open}
+            className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
+          >
             Plan je moment
           </button>
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} min-w-0 flex-1 justify-center !px-4 md:flex-none md:!px-7`}
+            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
           >
-            <span className="md:hidden">Huidtest</span>
-            <span className="hidden md:inline">Doe de huidtest</span>
+            Doe de huidtest
           </button>
         </div>
       </div>
@@ -164,13 +160,18 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}
         />
-        <div className="flex items-center gap-3 mt-3 md:mt-0">
-          <h3 className="card-title text-zinc-900">{data.title}</h3>
-          {data.tag && (
-            <span className="shrink-0 whitespace-nowrap text-[13px] font-semibold leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
-              {data.tag}
-            </span>
-          )}
+        <div className="mt-3 md:mt-0">
+          <div className="flex items-center gap-3">
+            <h3 className="card-title text-zinc-900">{data.title}</h3>
+            {data.tag && (
+              <span className="shrink-0 whitespace-nowrap text-[13px] font-semibold leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
+                {data.tag}
+              </span>
+            )}
+          </div>
+          <div className="mt-2">
+            <SessionDetails minuten={data.minuten} prijs={data.prijs} />
+          </div>
         </div>
         {data.description.map((paragraph, i) => (
           <p
@@ -191,8 +192,6 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           </p>
         ))}
         <AfspraakButton
-          minuten={data.minuten}
-          prijs={data.prijs}
           whatsappUrl={data.whatsappUrl}
           qrCode={data.qrCode}
           title={data.title}
