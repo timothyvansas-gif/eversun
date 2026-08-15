@@ -155,7 +155,7 @@ function ProductCardItem({ product }: { product: Product }) {
           <div className="product-moving-copy flex flex-col gap-[6px]">
             <div className="product-primary-copy flex flex-col gap-[6px]">
               <div className="flex items-center gap-3">
-                <h3 className="min-w-0 text-ink-strong text-[20px] font-medium tracking-[-0.24px] font-display">
+                <h3 className="card-title min-w-0 text-ink-strong">
                   {product.name}
                 </h3>
                 <svg

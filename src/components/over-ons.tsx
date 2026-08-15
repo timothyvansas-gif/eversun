@@ -131,7 +131,7 @@ export default function OverOns() {
 
                 {/* Text Area */}
                 <div className="flex flex-col gap-[10px] pr-4">
-                  <h3 className="text-nav-ink text-[20px] font-medium tracking-[-0.27px] font-display">
+                  <h3 className="card-title text-nav-ink">
                     {member.name}
                   </h3>
                   <p className="text-on-dark-muted text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
