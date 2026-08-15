@@ -21,7 +21,7 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
  */
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
   const className =
-    "mt-7 flex w-full items-center justify-center bg-accent font-sans font-medium text-[15px] text-surface-page hover:bg-void hover:text-white active:scale-[0.98]";
+    "mt-7 flex w-full items-center justify-center bg-void font-sans font-medium text-[15px] text-surface-page hover:bg-accent active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",

@@ -3,7 +3,7 @@
 /* Ahead of every rule that uses these tokens (html/body's background-color
    below included): Tailwind's build resolves var() against source order, not
    just cascade order, so a rule using --color-void above this block would
-   fold to black instead of #111111. */
+   fold to black instead of #0B0B0B. */
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
@@ -23,9 +23,9 @@
   /* Off-white for the nav layer (sticky header, menus, footer) — neutral,
      since those sit on flat black/near-black, not the warm photo. */
   --color-nav-ink: #ededec;
-  /* Page/chrome black — #111111, not pure #000000, so dark surfaces (sticky
+  /* Page/chrome black — #0B0B0B, not pure #000000, so dark surfaces (sticky
      header, menus, footer, hero fallback) keep a hint of lift. */
-  --color-void: #111111;
+  --color-void: #0B0B0B;
 }
 
 @theme inline {

@@ -106,7 +106,7 @@ export default function AfspraakOverlay({
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-[#111111]`}
+                className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />

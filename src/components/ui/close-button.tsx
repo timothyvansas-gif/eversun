@@ -10,7 +10,7 @@ const VARIANTS = {
   // border resolves to the same ink colour instead of introducing a second
   // warm line colour.
   light: "text-ink border-line hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900",
-  // For a dark surface (#111111 and similar), with the same resting/hover
+  // For a dark surface (#0B0B0B and similar), with the same resting/hover
   // relationship in the light nav palette.
   dark: "text-nav-ink border-nav-ink/30 hover:border-nav-ink",
 } as const;

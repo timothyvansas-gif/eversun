@@ -35,7 +35,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-full bg-accent font-sans font-medium text-[15px] text-surface-page hover:bg-void hover:text-white active:scale-[0.98] relative overflow-hidden"
+      className="w-full bg-void font-sans font-medium text-[15px] text-surface-page hover:bg-accent active:scale-[0.98] relative overflow-hidden"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",

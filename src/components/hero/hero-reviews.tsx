@@ -289,7 +289,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
                 style={{
                   padding: "20px",
                   borderRadius: 16,
-                  border: "1px solid #111",
+                  border: "1px solid #0B0B0B",
                   background: "rgba(0, 0, 0, 0.85)",
                   boxShadow: "0 4px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.22)",
                   backdropFilter: "blur(2px)",

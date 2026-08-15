@@ -70,7 +70,7 @@ export default function FooterCredit() {
             // Programmatic focus target, not a control: kill its own ring
             // (inline beats the unlayered global *:focus-visible rule, which no
             // Tailwind utility can). The × and Contact keep their rings.
-            style={{ backgroundColor: "#111111", outline: "none" }}
+            style={{ backgroundColor: "#0B0B0B", outline: "none" }}
             className="block fixed bottom-16 left-6 right-6 origin-bottom md:absolute md:bottom-full md:left-1/2 md:ml-[-170px] md:right-auto md:mb-3 md:w-[340px] rounded-2xl p-6 shadow-xl z-50 text-left"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -93,7 +93,7 @@ export default function FooterCredit() {
                   Timothy van Sas
                 </span>
                 {/* #888888, the same grey the Over Ons team cards use for their
-                    description text on this same #111111-family background. */}
+                    description text on this same #0B0B0B-family background. */}
                 <span className="block text-[#888888] text-[15px] font-normal leading-[1.2] font-sans mt-1">
                   Product/UX designer
                 </span>

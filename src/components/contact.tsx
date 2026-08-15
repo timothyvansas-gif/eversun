@@ -89,7 +89,7 @@ function ContactDetails() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-strong transition-colors duration-200 hover:bg-accent"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-void transition-colors duration-200 hover:bg-accent"
             >
               <Image
                 src={social.icon}
