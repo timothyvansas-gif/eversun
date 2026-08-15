@@ -107,7 +107,7 @@ export default function ResultScreen({
           Say when the independent answer confirms it — and, more importantly,
           when it does not — before explaining the recommendation itself. */}
       {bekekenBank && (
-        <p className="mt-3 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+        <p className="mt-1.5 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
           {bekekenBank.slug === bank.slug
             ? RESULTAAT.bekekenBankBevestiging(bekekenBank.title)
             : RESULTAAT.bekekenBankAlternatief(bekekenBank.title, bank.title)}
@@ -117,7 +117,7 @@ export default function ResultScreen({
       {/* The reasoning sits between the title and the card, where it reads as
           the sentence that introduces the advice. Under the card it was a
           footnote to a decision already made. */}
-      <p className="mt-3 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+      <p className="mt-1.5 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
         {waarom}
       </p>
 
