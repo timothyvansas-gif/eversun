@@ -88,7 +88,7 @@ export default function DesktopMenu({
                 key={label}
                 href={resolveNavTarget(label)}
                 onClick={(e) => handleNav(e, label)}
-                className="py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-[transform,color] duration-200 hover:translate-x-1 hover:text-nav-ink focus-visible:translate-x-1 focus-visible:text-nav-ink"
+                className="py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-colors duration-300 hover:text-nav-ink focus-visible:text-nav-ink"
               >
                 {label}
               </a>
@@ -101,7 +101,7 @@ export default function DesktopMenu({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-[transform,color] duration-200 hover:translate-x-1 hover:text-nav-ink focus-visible:translate-x-1 focus-visible:text-nav-ink"
+              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-colors duration-300 hover:text-nav-ink focus-visible:text-nav-ink"
             >
               WhatsApp
               <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5" style={{ filter: "brightness(0) invert(93%)" }} />
