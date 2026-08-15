@@ -9,7 +9,7 @@ const VARIANTS = {
   // For a light/white surface. The × is fully present at rest; on hover its
   // border resolves to the same ink colour instead of introducing a second
   // warm line colour.
-  light: "text-ink border-[#0B0B0B]/25 hover:border-[#0B0B0B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900",
+  light: "text-ink border-ink-primary/25 hover:border-ink-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900",
   // For a dark surface (#0B0B0B and similar), with the same resting/hover
   // relationship in the light nav palette.
   dark: "text-nav-ink border-nav-ink/30 hover:border-nav-ink",

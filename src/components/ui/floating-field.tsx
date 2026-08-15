@@ -88,8 +88,8 @@ export function FloatingField({
       <div
         className={`${WRAPPER_BASE} ${
           invalid
-            ? "border-[#A6371A] bg-[#FDF3EF]"
-            : "border-[#0B0B0B]/20 bg-white hover:border-[#0B0B0B]"
+            ? "border-danger bg-danger-surface"
+            : "border-ink-primary/20 bg-white hover:border-ink-primary"
         } ${disabled ? "opacity-60" : ""}`}
       >
         {multiline ? (
@@ -118,7 +118,7 @@ export function FloatingField({
           />
         )}
 
-        <label htmlFor={id} className={`ff-label ${invalid ? "!text-[#A6371A]" : ""}`}>
+        <label htmlFor={id} className={`ff-label ${invalid ? "!text-danger" : ""}`}>
           {label}
         </label>
       </div>
@@ -144,7 +144,7 @@ export function FloatingField({
         <div className="overflow-hidden">
           <p
             id={errorId}
-            className={`pt-1.5 font-sans text-[15px] leading-[24px] text-[#A6371A] transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+            className={`pt-1.5 font-sans text-[15px] leading-[24px] text-danger transition-opacity duration-200 ease-out motion-reduce:transition-none ${
               invalid ? "opacity-100" : "opacity-0"
             }`}
           >

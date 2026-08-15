@@ -17,7 +17,7 @@
  * stylesheet order rather than by intent.
  */
 export const BTN_OUTLINE_BORDER =
-  "border border-[#0B0B0B]/20 text-zinc-600 hover:border-[#0B0B0B] hover:text-zinc-900";
+  "border border-ink-primary/20 text-zinc-600 hover:border-ink-primary hover:text-zinc-900";
 
 export const BTN_PILL =
   `inline-flex items-center text-zinc-600 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
@@ -28,7 +28,7 @@ export const BTN_PILL =
  * with the page's filled primary CTA.
  */
 export const BTN_PILL_DARK_OUTLINE =
-  "inline-flex items-center border border-[#0B0B0B] bg-transparent text-[#0B0B0B] text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-[#0B0B0B] hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+  "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its
@@ -38,6 +38,10 @@ export const BTN_PILL_DARK_OUTLINE =
  */
 export const BTN_PILL_ACCENT =
   "inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-void active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+
+/** Shared geometry for the section-level CTAs. */
+export const BTN_CTA_HEIGHT = "min-h-[48px]";
+export const BTN_BOOKING_DESKTOP_WIDTH = "md:min-w-[220px]";
 
 /**
  * Minimum comfortable tap area for a small icon control: 44×44, per Apple HIG

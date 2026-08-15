@@ -98,7 +98,7 @@ export default function ResultScreen({
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="font-display text-[#0B0B0B] text-[clamp(26px,5.5vw,38px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+        className="font-display text-ink-primary text-[clamp(26px,5.5vw,38px)] font-medium leading-tight tracking-[-0.01em] outline-none"
       >
         {RESULTAAT.kop}
       </h2>
@@ -141,7 +141,7 @@ export default function ResultScreen({
         </div>
 
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pt-4">
-          <h3 className="font-display text-[22px] font-medium leading-tight tracking-[-0.01em] text-[#0B0B0B]">
+          <h3 className="font-display text-[22px] font-medium leading-tight tracking-[-0.01em] text-ink-primary">
             {bank.title}
           </h3>
           <div className="flex items-center gap-3 font-sans leading-tight tracking-[-0.01em]">
@@ -166,7 +166,7 @@ export default function ResultScreen({
       >
         <h3
           id="huidtest-kassakoopje"
-          className="font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-[#0B0B0B]"
+          className="font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-ink-primary"
         >
           {RESULTAAT.kassakoopjeKop}
         </h3>
@@ -186,7 +186,7 @@ export default function ResultScreen({
             {/* Name only. The price belongs to the line that asks for one —
                 the toggle below says it, and saying it twice in a block this
                 small reads as two different prices rather than one. */}
-            <h4 className="font-sans text-[16px] font-medium tracking-[-0.01em] text-[#0B0B0B]">
+            <h4 className="font-sans text-[16px] font-medium tracking-[-0.01em] text-ink-primary">
               {product.name}
             </h4>
             {/* Two lines, whatever the product: this is a nudge at the till,

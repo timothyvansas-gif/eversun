@@ -4,12 +4,17 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
-import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { BTN_PILL, BTN_PILL_ACCENT } from "@/lib/button-styles";
+import {
+  BTN_BOOKING_DESKTOP_WIDTH,
+  BTN_CTA_HEIGHT,
+  BTN_PILL,
+  BTN_PILL_ACCENT,
+} from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
 import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
+import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
@@ -50,29 +55,20 @@ function AfspraakButton({
   onStartHuidtest: () => void;
   className?: string;
 }) {
-  const [qrOpen, setQrOpen] = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(false);
-
-  const handleClick = () => {
-    if (window.matchMedia(MOBILE_QUERY).matches) {
-      setSheetOpen(true);
-    } else {
-      setQrOpen(true);
-    }
-  };
+  const appointment = useAppointmentLauncher();
 
   return (
     <>
       <div className={className}>
         <SessionDetails minuten={minuten} prijs={prijs} />
         <div className="mt-4 flex flex-nowrap items-center gap-2 md:mt-[14px] md:gap-3 max-[300px]:flex-wrap">
-          <button onClick={handleClick} className={`${BTN_PILL_ACCENT} min-h-[48px] min-w-0 flex-[1.8] justify-center !px-4 md:min-w-[220px] md:flex-none md:!px-7`}>
+          <button onClick={appointment.open} className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} min-w-0 flex-[1.8] justify-center !px-4 md:flex-none md:!px-7`}>
             Plan je moment
           </button>
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`${BTN_PILL} min-h-[48px] min-w-0 flex-1 justify-center !px-4 md:flex-none md:!px-7`}
+            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} min-w-0 flex-1 justify-center !px-4 md:flex-none md:!px-7`}
           >
             <span className="md:hidden">Huidtest</span>
             <span className="hidden md:inline">Doe de huidtest</span>
@@ -81,15 +77,15 @@ function AfspraakButton({
       </div>
 
       <AfspraakOverlay
-        isOpen={qrOpen}
-        onClose={() => setQrOpen(false)}
+        isOpen={appointment.qrOpen}
+        onClose={appointment.closeQr}
         whatsappUrl={whatsappUrl}
         qrCode={qrCode}
         bankTitle={title}
       />
       <PlanJeMomentSheet
-        isOpen={sheetOpen}
-        onClose={() => setSheetOpen(false)}
+        isOpen={appointment.sheetOpen}
+        onClose={appointment.closeSheet}
         whatsappUrl={whatsappUrl}
         description={
           <>
@@ -148,7 +144,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // Pointer over the card upgrades the clip from metadata to a full
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
-        className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-[#FDF9F5] xl:p-10 xl:h-full xl:rounded-[12px]"
+        className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-surface-card xl:p-10 xl:h-full xl:rounded-[12px]"
       >
         <ZonnebankMedia
           data={data}

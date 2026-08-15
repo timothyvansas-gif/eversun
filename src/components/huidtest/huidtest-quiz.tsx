@@ -440,7 +440,7 @@ export default function HuidtestQuiz({
           <h2
             ref={headingRef as React.RefObject<HTMLHeadingElement>}
             tabIndex={-1}
-            className="font-display text-[#0B0B0B] text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+            className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
           >
             {INTRO.kop}
           </h2>
@@ -452,7 +452,7 @@ export default function HuidtestQuiz({
           {/* A rule where the card turns from telling to asking. The gate is a
               different kind of thing from the paragraph above it, and a line
               says so more quietly than white space can at this size. */}
-          <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-[#0B0B0B]">
+          <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-primary">
             {INTRO.vraag}
           </h3>
 
@@ -533,7 +533,7 @@ export default function HuidtestQuiz({
               aria-valuemax={100}
               aria-valuenow={Math.round(progress)}
               aria-label="Voortgang van de huidtest"
-              className="h-[6px] w-full overflow-hidden rounded-full bg-[#0B0B0B]/5"
+              className="h-[6px] w-full overflow-hidden rounded-full bg-ink-primary/5"
             >
               {/* A full-width bar slid left behind the track's clip, rather than
                   a narrow one that grows. Two reasons, and the second is why it
@@ -542,7 +542,7 @@ export default function HuidtestQuiz({
                   sideways squashes its round cap into an ellipse. Translating
                   keeps the cap circular and hides the other end off-track. */}
               <div
-                className="h-full w-full rounded-full bg-[#0B0B0B]"
+                className="h-full w-full rounded-full bg-ink-primary"
                 style={{
                   transform: `translateX(-${100 - progress}%)`,
                   transition: shouldReduceMotion
@@ -793,7 +793,7 @@ export default function HuidtestQuiz({
               type="button"
               onClick={() => back()}
               aria-label="Terug naar de vorige vraag"
-              className="order-1 flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#0B0B0B]/25 text-ink-strong transition-colors duration-150 hover:border-[#0B0B0B] md:hidden"
+              className="order-1 flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink-primary/25 text-ink-strong transition-colors duration-150 hover:border-ink-primary md:hidden"
             >
               <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
@@ -875,7 +875,7 @@ function Resultaat({
         <h2
           ref={headingRef as React.RefObject<HTMLHeadingElement>}
           tabIndex={-1}
-          className="font-display text-[#0B0B0B] text-[clamp(24px,4.5vw,32px)] font-medium leading-tight outline-none"
+          className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight outline-none"
         >
           Deze test is nog niet af
         </h2>

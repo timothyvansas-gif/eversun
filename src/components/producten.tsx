@@ -4,9 +4,10 @@ import Image, { StaticImageData } from "next/image";
 import dynamic from "next/dynamic";
 import { useState, type CSSProperties } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
+import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
-import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { BTN_BOOKING_DESKTOP_WIDTH, BTN_CTA_HEIGHT, BTN_PILL_ACCENT } from "@/lib/button-styles";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import { PRODUCTEN, type Product } from "@/data/producten-data";
 
@@ -32,29 +33,20 @@ const PRODUCT_BACKDROP = [
 ].join(", ");
 
 function PlanMomentButton() {
-  const [qrOpen, setQrOpen] = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(false);
-
-  const handleClick = () => {
-    if (window.matchMedia(MOBILE_QUERY).matches) {
-      setSheetOpen(true);
-    } else {
-      setQrOpen(true);
-    }
-  };
+  const appointment = useAppointmentLauncher();
 
   return (
     <>
       <button
-        onClick={handleClick}
+        onClick={appointment.open}
         // Filled at every breakpoint, so the section keeps one clear action
         // whether the pill fills the mobile column or hugs its desktop label.
-        className={`${BTN_PILL_ACCENT} min-h-[48px] !px-[28px] w-full md:min-w-[220px] md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
+        className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         Plan je moment
       </button>
-      <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
-      <PlanJeMomentSheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)} />
+      <AfspraakOverlay isOpen={appointment.qrOpen} onClose={appointment.closeQr} />
+      <PlanJeMomentSheet isOpen={appointment.sheetOpen} onClose={appointment.closeSheet} />
     </>
   );
 }
@@ -129,9 +121,9 @@ function ProductCardItem({ product }: { product: Product }) {
           <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
           <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
-              <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#0B0B0B]">Sachet {product.sachetPrice}</span>
+              <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">Sachet {product.sachetPrice}</span>
             )}
-            <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-[#0B0B0B]">{product.containerLabel} {product.containerPrice}</span>
+            <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">{product.containerLabel} {product.containerPrice}</span>
           </div>
         </div>
 
@@ -250,8 +242,7 @@ export default function Producten() {
 
   return (
     <section
-      className="relative w-full overflow-hidden py-16 xl:py-24"
-      style={{ backgroundColor: "#FAF4EC" }}
+      className="relative w-full overflow-hidden bg-surface-page py-16 xl:py-24"
     >
       <div
         className="relative z-10 w-full flex flex-col items-center"
@@ -303,7 +294,7 @@ export default function Producten() {
             {canScroll && (
               <>
                 <div
-                  className={`hidden xl:block absolute left-0 top-[232px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute left-0 top-[232px] -translate-y-1/2 -translate-x-1/3 z-20 transition-[opacity,transform] duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"
@@ -313,7 +304,7 @@ export default function Producten() {
                   />
                 </div>
                 <div
-                  className={`hidden xl:block absolute right-0 top-[232px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute right-0 top-[232px] -translate-y-1/2 translate-x-1/3 z-20 transition-[opacity,transform] duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="dark"

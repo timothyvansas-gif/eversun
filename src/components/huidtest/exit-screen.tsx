@@ -41,7 +41,7 @@ export default function ExitScreen({
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="font-display text-[#0B0B0B] text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+        className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
       >
         {copy.kop}
       </h2>

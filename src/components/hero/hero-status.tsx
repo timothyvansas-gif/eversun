@@ -52,8 +52,8 @@ const HeroStatus = forwardRef<HTMLButtonElement, { onOpen: () => void }>(functio
       <span className="relative flex items-center justify-center w-2.5 h-2.5 md:w-4 md:h-4 shrink-0">
         {isOpen ? (
           <>
-            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
-            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
+            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-status-open opacity-60 animate-ping" />
+            <span className="absolute inline-flex w-[14px] h-[14px] md:w-[22px] md:h-[22px] rounded-full bg-status-open opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
             <Image src={statusOpen} alt="" width={16} height={16} className="block w-full h-full" />
           </>
         ) : (

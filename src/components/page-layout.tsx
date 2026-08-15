@@ -109,7 +109,7 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
           <HeroSection onOpenMenu={toggleMenu} isMenuOpen={isMenuOpen} />
         </div>
         <div
-          className="relative z-10 w-full flex flex-col items-center bg-surface-page "
+          className="relative z-10 w-full flex flex-col items-center bg-surface-page"
           style={{ paddingLeft: "clamp(1.5rem, 4vw, 10rem)", paddingRight: "clamp(1.5rem, 4vw, 10rem)" }}
         >
           <Bento />

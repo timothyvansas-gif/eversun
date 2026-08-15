@@ -56,8 +56,7 @@ export default function OverOns() {
 
   return (
     <section
-      className="relative w-full overflow-hidden py-16 xl:py-24"
-      style={{ backgroundColor: "#0B0B0B" }}
+      className="relative w-full overflow-hidden bg-surface-dark py-16 xl:py-24"
     >
       <Image
         src={logoBackground}
@@ -80,7 +79,7 @@ export default function OverOns() {
                   De zonnestralen
                 </h2>
                 {/* Second line of the heading, not a subsection — see producten. */}
-                <p className="text-[#808080] text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
+                <p className="text-on-dark-secondary text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] xl:tracking-[-0.015em] font-display mt-1">
                   van Ever Sun
                 </p>
               </div>
@@ -89,7 +88,7 @@ export default function OverOns() {
                   background and misses 1.4.3 at 15px; this one clears at
                   4.65:1. Two greys doing one job was also how the miss went
                   unnoticed. */}
-              <p className="text-[#888888] text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
+              <p className="text-on-dark-muted text-[15px] leading-[24px] max-w-[411px] tracking-[-0.01em] xl:mb-[2px]">
                 Maak kennis met de zonnestralen die van jouw moment van rust een echte premium ervaring maken. Persoonlijk, vakkundig en altijd met een glimlach. ツ
               </p>
             </div>
@@ -135,7 +134,7 @@ export default function OverOns() {
                   <h3 className="text-nav-ink text-[20px] font-medium tracking-[-0.27px] font-display">
                     {member.name}
                   </h3>
-                  <p className="text-[#888888] text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
+                  <p className="text-on-dark-muted text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
                     {member.description}
                   </p>
                 </div>
@@ -147,7 +146,7 @@ export default function OverOns() {
             {canScroll && (
               <>
                 <div
-                  className={`hidden xl:block absolute left-0 top-[200px] -translate-y-1/2 -translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute left-0 top-[200px] -translate-y-1/2 -translate-x-1/3 z-20 transition-[opacity,transform] duration-300 ease-out ${isAtStart ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="light"
@@ -157,7 +156,7 @@ export default function OverOns() {
                   />
                 </div>
                 <div
-                  className={`hidden xl:block absolute right-0 top-[200px] -translate-y-1/2 translate-x-1/3 z-20 transition-all duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
+                  className={`hidden xl:block absolute right-0 top-[200px] -translate-y-1/2 translate-x-1/3 z-20 transition-[opacity,transform] duration-300 ease-out ${isAtEnd ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"}`}
                 >
                   <CarouselNavButton
                     variant="light"

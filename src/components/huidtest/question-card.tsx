@@ -76,7 +76,7 @@ export default function QuestionCard<K extends QuestionKey>({
         id={headingId}
         ref={headingRef}
         tabIndex={-1}
-        className="font-display text-[#0B0B0B] text-[clamp(24px,5vw,34px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+        className="font-display text-ink-primary text-[clamp(24px,5vw,34px)] font-medium leading-tight tracking-[-0.01em] outline-none"
       >
         {question.vraag}
       </h2>
@@ -114,7 +114,7 @@ export default function QuestionCard<K extends QuestionKey>({
               className={`relative flex min-h-[56px] w-full cursor-pointer items-center rounded-[12px] border px-5 pr-8 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
                 isSelected
                   ? "border-accent bg-white text-ink-strong"
-                  : "border-[#0B0B0B]/20 bg-white/60 text-ink-strong hover:border-[#0B0B0B] hover:bg-white"
+                  : "border-ink-primary/20 bg-white/60 text-ink-strong hover:border-ink-primary hover:bg-white"
               }`}
             >
               <span className="flex-1">{option.label}</span>

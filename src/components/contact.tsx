@@ -11,7 +11,7 @@ import { FloatingField } from "@/components/ui/floating-field";
 import { useContactForm } from "@/hooks/use-contact-form";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
-import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { BTN_CTA_HEIGHT, BTN_PILL_ACCENT } from "@/lib/button-styles";
 import { stackedSheetHeight, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const OpeningstijdenOverlay = dynamic(() => import("@/components/hero/openingstijden-overlay"));
@@ -37,8 +37,8 @@ function DetailBlock({
 }) {
   return (
     <div className={className}>
-      <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">{label}</p>
-      <div className="mt-0.5 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">
+      <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-ink-primary">{label}</p>
+      <div className="mt-0.5 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-primary">
         {children}
       </div>
     </div>
@@ -80,7 +80,7 @@ function ContactDetails() {
           there, and dropping this block also clears the lone item that was
           left dangling on the last grid row. */}
       <div className="hidden sm:block">
-        <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">Volg ons</p>
+        <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-ink-primary">Volg ons</p>
         <div className="mt-2 flex items-center gap-2">
           {SOCIALS.map((social) => (
             <a
@@ -89,7 +89,7 @@ function ContactDetails() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0B0B0B] transition-colors duration-200 hover:bg-accent"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-primary transition-colors duration-200 hover:bg-accent"
             >
               <Image
                 src={social.icon}
@@ -114,7 +114,7 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       disabled={isSubmitting}
       // Width is content-driven from sm up. The label keeps a floor of its own
       // so swapping to the shorter submitting state does not resize the pill.
-      className={`${BTN_PILL_ACCENT} relative min-h-[48px] w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
+      className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
@@ -336,7 +336,7 @@ function ContactForm() {
       </div>
 
       {formError && (
-        <p role="alert" className="mt-3 font-sans text-[15px] leading-[24px] text-[#A6371A]">
+        <p role="alert" className="mt-3 font-sans text-[15px] leading-[24px] text-danger">
           {formError}
         </p>
       )}

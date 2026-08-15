@@ -7,6 +7,11 @@
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
+  --color-surface-card: #fdf9f5;
+  /* Primary near-black. Semantic aliases keep text, controls and dark
+     surfaces independently addressable without duplicating the hex value. */
+  --color-ink-primary: #0b0b0b;
+  --color-surface-dark: var(--color-ink-primary);
   --color-ink: #1a1a1a;
   --color-ink-strong: #1f1f1e;
   /* Darkened from #94825c, which cleared only 3.4:1 on the page surface and
@@ -25,7 +30,12 @@
   --color-nav-ink: #ededec;
   /* Page/chrome black — #0B0B0B, not pure #000000, so dark surfaces (sticky
      header, menus, footer, hero fallback) keep a hint of lift. */
-  --color-void: #0B0B0B;
+  --color-void: var(--color-ink-primary);
+  --color-on-dark-secondary: #808080;
+  --color-on-dark-muted: #888888;
+  --color-danger: #a6371a;
+  --color-danger-surface: #fdf3ef;
+  --color-status-open: #4fa800;
 }
 
 @theme inline {
@@ -396,7 +406,7 @@ body {
     left: 16px;
     right: 16px;
     pointer-events: none;
-    color: #52525b;
+    color: var(--color-zinc-600);
     line-height: 1.25;
     transition: top 0.18s ease, font-size 0.18s ease, transform 0.18s ease, color 0.18s ease;
   }

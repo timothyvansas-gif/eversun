@@ -73,9 +73,9 @@ function HoursTable() {
                 <span className="relative flex items-center justify-center w-2.5 h-2.5 shrink-0">
                   {isOpen ? (
                     <>
-                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-60 animate-ping" />
-                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-[#4FA800] opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
-                      <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-[#4FA800]" />
+                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-status-open opacity-60 animate-ping" />
+                      <span className="absolute inline-flex w-[14px] h-[14px] rounded-full bg-status-open opacity-40 animate-ping" style={{ animationDelay: "0.75s" }} />
+                      <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-status-open" />
                     </>
                   ) : (
                     <span className="absolute inline-flex w-[10px] h-[10px] rounded-full bg-accent" />

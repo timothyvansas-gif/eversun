@@ -70,8 +70,8 @@ export default function FooterCredit() {
             // Programmatic focus target, not a control: kill its own ring
             // (inline beats the unlayered global *:focus-visible rule, which no
             // Tailwind utility can). The × and Contact keep their rings.
-            style={{ backgroundColor: "#0B0B0B", outline: "none" }}
-            className="block fixed bottom-16 left-6 right-6 origin-bottom md:absolute md:bottom-full md:left-1/2 md:ml-[-170px] md:right-auto md:mb-3 md:w-[340px] rounded-2xl p-6 shadow-xl z-50 text-left"
+            style={{ outline: "none" }}
+            className="block fixed bottom-16 left-6 right-6 origin-bottom bg-surface-dark md:absolute md:bottom-full md:left-1/2 md:ml-[-170px] md:right-auto md:mb-3 md:w-[340px] rounded-2xl p-6 shadow-xl z-50 text-left"
             initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96, y: shouldReduceMotion ? 0 : 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.98, y: shouldReduceMotion ? 0 : 6, transition: { duration: 0.15, ease: [0.36, 0, 0.66, 0] } }}
@@ -94,12 +94,12 @@ export default function FooterCredit() {
                 </span>
                 {/* #888888, the same grey the Over Ons team cards use for their
                     description text on this same #0B0B0B-family background. */}
-                <span className="block text-[#888888] text-[15px] font-normal leading-[1.2] font-sans mt-1">
+                <span className="block text-on-dark-muted text-[15px] font-normal leading-[1.2] font-sans mt-1">
                   Product/UX designer
                 </span>
                 <a
                   href={`mailto:${atob(EMAIL_B64)}?subject=${encodeURIComponent("Ik wil ook een website die converteert")}`}
-                  className="inline-block mt-2.5 text-[#888888] text-[15px] font-sans underline underline-offset-6 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded-sm transition-colors"
+                  className="inline-block mt-2.5 text-on-dark-muted text-[15px] font-sans underline underline-offset-6 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded-sm transition-colors"
                 >
                   Contact
                 </a>
