@@ -25,6 +25,7 @@ import { StickyActions } from "@/components/huidtest/sticky-actions";
 import { PRODUCT_WAAROM, RESULTAAT } from "@/lib/huidtest/config";
 import { buildAdviesReferentie, buildWhatsappUrl, buildWhy, findProduct } from "@/lib/huidtest/decide";
 import { BANK_SLUGS, type Advies, type QuizAnswers } from "@/lib/huidtest/types";
+import type { ZonnebankSlug } from "@/lib/whatsapp";
 
 /**
  * The advice, and the one small thing to add to it.
@@ -38,11 +39,13 @@ import { BANK_SLUGS, type Advies, type QuizAnswers } from "@/lib/huidtest/types"
 export default function ResultScreen({
   answers,
   advies,
+  bekekenBank: bekekenBankSlug,
   headingRef,
   onRestart,
 }: {
   answers: QuizAnswers;
   advies: Advies;
+  bekekenBank?: ZonnebankSlug;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onRestart: () => void;
 }) {
@@ -52,6 +55,7 @@ export default function ResultScreen({
   const { element: surface, stackDepth } = useHuidtestSurface();
 
   const bank = ZONNEBANKEN.find((z) => z.slug === BANK_SLUGS[advies.bank])!;
+  const bekekenBank = ZONNEBANKEN.find((z) => z.slug === bekekenBankSlug);
   const product = findProduct(advies.product);
   const waarom = buildWhy(answers, advies.bank);
 
@@ -98,6 +102,17 @@ export default function ResultScreen({
       >
         {RESULTAAT.kop}
       </h2>
+
+      {/* The card someone opened from is context, never an input to the rules.
+          Say when the independent answer confirms it — and, more importantly,
+          when it does not — before explaining the recommendation itself. */}
+      {bekekenBank && (
+        <p className="mt-3 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+          {bekekenBank.slug === bank.slug
+            ? RESULTAAT.bekekenBankBevestiging(bekekenBank.title)
+            : RESULTAAT.bekekenBankAlternatief(bekekenBank.title, bank.title)}
+        </p>
+      )}
 
       {/* The reasoning sits between the title and the card, where it reads as
           the sentence that introduces the advice. Under the card it was a

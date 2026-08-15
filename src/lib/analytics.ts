@@ -10,7 +10,10 @@
  * flow gets checked without a provider attached.
  */
 export type AnalyticsEvent =
-  | { name: "huidtest_start"; props: { entry: "home_sectie" | "hero_link" | "direct" } }
+  | {
+      name: "huidtest_start";
+      props: { entry: "home_sectie" | "hero_link" | "direct" | "zonnebank_kaart" };
+    }
   | { name: "huidtest_vraag"; props: { vraag: string; antwoord: string } }
   | { name: "huidtest_exit"; props: { reden: "minor" | "type1" } }
   | { name: "huidtest_resultaat"; props: { bank: string; stand: string | null; product: string } }

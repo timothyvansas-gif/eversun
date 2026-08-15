@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { BTN_PILL } from "@/lib/button-styles";
+import { BTN_PILL, BTN_PILL_ACCENT } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -13,12 +14,17 @@ import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
+// This is only needed after someone asks for advice, so it stays out of the
+// initial bundle for a section that most visitors simply browse.
+const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
+
 function AfspraakButton({
   minuten,
   prijs,
   whatsappUrl,
   qrCode,
   title,
+  onStartHuidtest,
   className = "mt-3 md:mt-auto",
 }: {
   minuten: string;
@@ -26,6 +32,7 @@ function AfspraakButton({
   whatsappUrl: string;
   qrCode: StaticImageData;
   title: string;
+  onStartHuidtest: () => void;
   className?: string;
 }) {
   const [qrOpen, setQrOpen] = useState(false);
@@ -42,7 +49,61 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        <div className="flex items-center justify-between md:justify-start md:gap-6">
+        <div className="md:hidden">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
+                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
+            </div>
+            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
+          </div>
+          <div className="mt-3 flex gap-4">
+            <button onClick={handleClick} className={`${BTN_PILL_ACCENT} min-h-[48px] flex-1 justify-center px-3`}>
+              Plan je moment
+            </button>
+            <button
+              type="button"
+              onClick={onStartHuidtest}
+              className={`${BTN_PILL} min-h-[48px] w-[120px] shrink-0 justify-center px-3 active:scale-[0.98] transition-[transform,border-color] duration-150`}
+            >
+              Huidtest
+            </button>
+          </div>
+        </div>
+
+        {/* Tablet keeps the existing compact hierarchy; only phones use the
+            two-button layout above. */}
+        <div className="hidden md:block xl:hidden">
+          <div className="mb-0.5 flex">
+            <button
+              type="button"
+              onClick={onStartHuidtest}
+              className="inline-flex min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70"
+            >
+              Doe de huidtest
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+                  <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
+              </div>
+              <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
+            </div>
+            <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
+              Plan je moment
+            </button>
+          </div>
+        </div>
+
+        <div className="hidden items-center justify-start gap-6 xl:flex">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
@@ -55,6 +116,13 @@ function AfspraakButton({
           </div>
           <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
             Plan je moment
+          </button>
+          <button
+            type="button"
+            onClick={onStartHuidtest}
+            className="min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70 xl:ml-auto xl:inline-flex"
+          >
+            Doe de huidtest
           </button>
         </div>
       </div>
@@ -99,6 +167,7 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function ZonnebankCard({ data }: { data: Zonnebank }) {
+  const [huidtestOpen, setHuidtestOpen] = useState(false);
   const {
     cardRef,
     videoRef,
@@ -178,8 +247,15 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           whatsappUrl={data.whatsappUrl}
           qrCode={data.qrCode}
           title={data.title}
+          onStartHuidtest={() => setHuidtestOpen(true)}
         />
       </div>
+      <HuidtestOverlay
+        isOpen={huidtestOpen}
+        onClose={() => setHuidtestOpen(false)}
+        entry="zonnebank_kaart"
+        bekekenBank={data.slug}
+      />
     </CardWrapper>
   );
 }

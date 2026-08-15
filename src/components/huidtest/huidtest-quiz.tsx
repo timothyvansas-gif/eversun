@@ -10,6 +10,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
 import { decide, skipsKleurstijl } from "@/lib/huidtest/decide";
 import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
+import type { ZonnebankSlug } from "@/lib/whatsapp";
 import { CtaButton } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
 import { StickyActions } from "@/components/huidtest/sticky-actions";
@@ -167,6 +168,7 @@ const SWIPE_BACK_VELOCITY = 300;
 export default function HuidtestQuiz({
   shared = null,
   entry = "direct",
+  bekekenBank,
   historyBacked = false,
   onClose,
 }: {
@@ -176,7 +178,9 @@ export default function HuidtestQuiz({
    * read here, so this component behaves the same in both.
    */
   shared?: QuizAnswers | null;
-  entry?: "home_sectie" | "hero_link" | "direct";
+  entry?: "home_sectie" | "hero_link" | "direct" | "zonnebank_kaart";
+  /** The card that opened this quiz. It adds context to the result, never bias. */
+  bekekenBank?: ZonnebankSlug;
   /**
    * Whether going back moves through the browser's own history. True on the
    * route, where the quiz is the page and back means the previous question.
@@ -477,7 +481,12 @@ export default function HuidtestQuiz({
       )}
 
       {s.kind === "resultaat" && (
-        <Resultaat answers={answers} headingRef={headingRef} onRestart={restart} />
+        <Resultaat
+          answers={answers}
+          bekekenBank={bekekenBank}
+          headingRef={headingRef}
+          onRestart={restart}
+        />
       )}
     </>
   );
@@ -833,10 +842,12 @@ export default function HuidtestQuiz({
  */
 function Resultaat({
   answers,
+  bekekenBank,
   headingRef,
   onRestart,
 }: {
   answers: Partial<QuizAnswers>;
+  bekekenBank?: ZonnebankSlug;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onRestart: () => void;
 }) {
@@ -871,7 +882,13 @@ function Resultaat({
   }
 
   return (
-    <ResultScreen answers={answers} advies={advies} headingRef={headingRef} onRestart={onRestart} />
+    <ResultScreen
+      answers={answers}
+      advies={advies}
+      bekekenBank={bekekenBank}
+      headingRef={headingRef}
+      onRestart={onRestart}
+    />
   );
 }
 

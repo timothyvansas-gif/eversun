@@ -145,6 +145,9 @@ export const QUESTIONS: [
 
 export const RESULTAAT = {
   kop: "Dit past bij jou",
+  bekekenBankBevestiging: (bank: string) => `Je bekeek de ${bank}. Die sluit goed aan bij je antwoorden.`,
+  bekekenBankAlternatief: (bekeken: string, advies: string) =>
+    `Je bekeek de ${bekeken}. Op basis van je antwoorden past de ${advies} beter bij je huid.`,
   standregel: (stand: StandId) => `Begin op de stand ${stand}.`,
   kassakoopjeKop: "Voor erbij",
   sachetToggle: (prijs: string) => `Leg een sachet voor me klaar · € ${prijs}`,

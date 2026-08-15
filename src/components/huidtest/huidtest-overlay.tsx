@@ -14,6 +14,7 @@ import { BEHIND_LIFT, BEHIND_SCALE, DRAG_ELASTIC, STACK_SPRING } from "@/compone
 import { HUIDTEST_PANEL_WIDTH } from "@/components/huidtest/panel-metrics";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
 import { HuidtestSurfaceContext } from "@/components/huidtest/surface-context";
+import type { ZonnebankSlug } from "@/lib/whatsapp";
 
 /**
  * The huidtest as a layer over the page: a panel down the right-hand side on
@@ -40,10 +41,13 @@ export default function HuidtestOverlay({
   isOpen,
   onClose,
   entry,
+  bekekenBank,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  entry: "home_sectie" | "hero_link" | "direct";
+  entry: "home_sectie" | "hero_link" | "direct" | "zonnebank_kaart";
+  /** The card someone came from; never used by the advice rules themselves. */
+  bekekenBank?: ZonnebankSlug;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -119,7 +123,7 @@ export default function HuidtestOverlay({
           className="huidtest-panel-scroll flex flex-1 flex-col overflow-y-auto overflow-x-clip overscroll-contain px-6 pt-0 md:pt-4"
         >
           <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
-            <HuidtestQuiz entry={entry} onClose={onClose} />
+            <HuidtestQuiz entry={entry} bekekenBank={bekekenBank} onClose={onClose} />
           </HuidtestSurfaceContext.Provider>
         </div>
       </div>
