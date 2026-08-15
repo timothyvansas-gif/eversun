@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, animate, m, useMotionValue, useTransform } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import { quietFocus } from "@/lib/quiet-focus";
@@ -857,7 +857,15 @@ function Resultaat({
   onRestart: () => void;
 }) {
   const complete = isComplete(answers);
-  const advies = complete ? decide(answers) : null;
+
+  // Memoised because the effect below reports on it, and an advice rebuilt on
+  // every render is a new object every render — which is a new dependency every
+  // render, which is the result being reported over and over. The screen
+  // re-renders for reasons that have nothing to do with the answers: the
+  // progress bar holds for 560ms and then dismisses itself, and that alone
+  // guarantees a second pass. Tied to the answers instead, it changes when the
+  // advice can actually have changed.
+  const advies = useMemo(() => (isComplete(answers) ? decide(answers) : null), [answers]);
 
   useEffect(() => {
     if (advies) {
