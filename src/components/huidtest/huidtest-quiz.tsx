@@ -75,6 +75,24 @@ const STEP_VARIANTS = {
   }),
 };
 
+/**
+ * Whatever actually scrolls the quiz: a panel's own scroll area, or the page.
+ *
+ * Found by walking up from the quiz's own root rather than taken from the
+ * surface context, because those are not the same element — the context hands
+ * down the panel, so a sheet can slide up from its bottom edge, while the thing
+ * that scrolls is a box inside it. Asking the DOM which ancestor scrolls is the
+ * question actually being asked here, and it answers correctly on the route,
+ * where nothing above the quiz scrolls and the page does.
+ */
+function scrollerFor(root: HTMLElement | null): HTMLElement | Window {
+  for (let node = root?.parentElement ?? null; node; node = node.parentElement) {
+    const { overflowY } = window.getComputedStyle(node);
+    if (overflowY === "auto" || overflowY === "scroll") return node;
+  }
+  return window;
+}
+
 export default function HuidtestQuiz({
   shared = null,
   entry = "direct",
@@ -114,6 +132,9 @@ export default function HuidtestQuiz({
   // arriving, which reads as the question flinching once it lands.
   const [swipedBack, setSwipedBack] = useState(false);
 
+  // The quiz's own root, used to find whatever is scrolling it. See `scrollerFor`.
+  const rootRef = useRef<HTMLDivElement>(null);
+
   // The cause the flow reports is the only thing movement is decided from.
   // Going back never clears the swipe flag: the gesture raises it before it asks
   // to go back, and clearing it here would put an entrance animation over a
@@ -122,6 +143,21 @@ export default function HuidtestQuiz({
     const forward = cause === "advance" || cause === "restart";
     setDirection(forward ? 1 : -1);
     if (forward) setSwipedBack(false);
+
+    // A new screen starts at its top. Without this the offset built up on the
+    // screen being left simply stayed: on a phone, restarting from the bottom
+    // of the advice painted question one 57px above the viewport and left it
+    // there for the length of the transition. Only once the outgoing card
+    // stopped taking up room did the document shrink to the viewport, and the
+    // browser's own clamp then moved everything into place at once — which is
+    // what read as a jump.
+    //
+    // Reset here rather than in a layout effect, because here the screen being
+    // left is still laid out: the document is still tall enough for the scroll
+    // to move, and it moves before React commits the screen that replaces it.
+    const scroller = scrollerFor(rootRef.current);
+    const scrolled = scroller instanceof Window ? window.scrollY > 0 : scroller.scrollTop > 0;
+    if (scrolled) scroller.scrollTo(0, 0);
   }, []);
 
   const config = useMemo(
@@ -256,7 +292,7 @@ export default function HuidtestQuiz({
     // surface's height with the bar hanging below its own bottom edge — and a
     // sticky element cannot be held anywhere its containing block does not
     // reach, so it simply scrolled away with the questions.
-    <div className="relative flex w-full shrink-0 flex-col min-h-full">
+    <div ref={rootRef} className="relative flex w-full shrink-0 flex-col min-h-full">
       <HuidtestProgress progress={progress} resultKey={resultProgressKey} />
 
       {/* The step area: cards only, and the positioning context the step behind
