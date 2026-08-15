@@ -116,7 +116,7 @@ export function BookingSheet({
         </div>
 
         <StepCard>
-        <h2 className="card-title text-center text-zinc-900">{BOEKEN.kop}</h2>
+        <h2 className="card-title text-center text-[#0B0B0B]">{BOEKEN.kop}</h2>
 
         <>
             <p className="mt-2 text-center font-sans text-[15px] leading-[24px] text-zinc-600">

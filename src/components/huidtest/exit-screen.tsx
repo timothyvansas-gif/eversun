@@ -41,7 +41,7 @@ export default function ExitScreen({
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="font-display text-ink-strong text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
+        className="font-display text-[#0B0B0B] text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
       >
         {copy.kop}
       </h2>
@@ -55,7 +55,7 @@ export default function ExitScreen({
           {personalCopy.telefoonVoor}
           <a
             href={TELEFOON.href}
-            className="whitespace-nowrap text-ink-strong underline decoration-line underline-offset-4 transition-colors duration-150 hover:decoration-ink-strong"
+            className="whitespace-nowrap text-ink-strong underline decoration-zinc-400 underline-offset-4 transition-colors duration-150 hover:decoration-ink-strong"
           >
             {TELEFOON.weergave}
           </a>

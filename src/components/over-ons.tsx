@@ -57,7 +57,7 @@ export default function OverOns() {
   return (
     <section
       className="relative w-full overflow-hidden py-16 xl:py-24"
-      style={{ backgroundColor: "#1F1F1E" }}
+      style={{ backgroundColor: "#0B0B0B" }}
     >
       <Image
         src={logoBackground}
@@ -126,7 +126,7 @@ export default function OverOns() {
                   {/* Gradient Overlay */}
                   <div
                     className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(180deg, rgba(31, 31, 30, 0.00) 71.16%, rgba(31, 31, 30, 0.90) 99.64%)" }}
+                    style={{ background: "linear-gradient(180deg, rgba(11, 11, 11, 0.00) 71.16%, rgba(11, 11, 11, 0.90) 99.64%)" }}
                   />
                 </div>
 

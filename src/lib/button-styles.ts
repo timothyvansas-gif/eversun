@@ -16,10 +16,19 @@
  * together, and two `transition-property` utilities on one element resolve by
  * stylesheet order rather than by intent.
  */
-export const BTN_OUTLINE_BORDER = "border border-line text-zinc-600 hover:border-[#312019] hover:text-zinc-900";
+export const BTN_OUTLINE_BORDER =
+  "border border-[#0B0B0B]/20 text-zinc-600 hover:border-[#0B0B0B] hover:text-zinc-900";
 
 export const BTN_PILL =
   `inline-flex items-center text-zinc-600 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
+
+/**
+ * Strong outlined CTA: a clear dark edge at rest that fills to the same dark
+ * colour on hover. Used where a card needs a booking action without competing
+ * with the page's filled primary CTA.
+ */
+export const BTN_PILL_DARK_OUTLINE =
+  "inline-flex items-center border border-[#0B0B0B] bg-transparent text-[#0B0B0B] text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-[#0B0B0B] hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its

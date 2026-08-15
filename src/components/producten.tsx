@@ -47,11 +47,9 @@ function PlanMomentButton() {
     <>
       <button
         onClick={handleClick}
-        // Filled on mobile, where it is the full-width close of the section,
-        // and the outline pill from md up, matching the one under the
-        // zonnebanken. The md: colours land after the base utilities in
-        // Tailwind's order, so they win from that breakpoint on.
-        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 md:border md:border-line md:bg-transparent md:text-zinc-600 md:transition-[transform,border-color,background-color,color] md:hover:border-[#312019] md:hover:bg-transparent md:hover:text-zinc-900`}
+        // Filled at every breakpoint, so the section keeps one clear action
+        // whether the pill fills the mobile column or hugs its desktop label.
+        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         Plan je moment
       </button>

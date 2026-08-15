@@ -55,7 +55,7 @@ export default function FooterCredit() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="underline decoration-line decoration-1 underline-offset-6 hover:decoration-ink-strong focus-visible:decoration-ink-strong rounded-sm transition-colors duration-150 cursor-pointer"
+        className="underline decoration-zinc-400 decoration-1 underline-offset-6 hover:decoration-ink-strong focus-visible:decoration-ink-strong rounded-sm transition-colors duration-150 cursor-pointer"
       >
         Realisatie
       </button>

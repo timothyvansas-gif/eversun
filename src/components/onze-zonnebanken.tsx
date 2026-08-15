@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { BTN_PILL, BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { BTN_PILL, BTN_PILL_DARK_OUTLINE } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -50,27 +50,29 @@ function AfspraakButton({
     <>
       <div className={className}>
         <div className="md:hidden">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
-                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
-            </div>
-            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
-          </div>
-          <div className="mt-3 flex gap-2">
-            <button onClick={handleClick} className={`${BTN_PILL_ACCENT} min-h-[48px] flex-1 justify-center px-3`}>
-              Plan je moment
+          <div>
+            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} min-h-[48px] w-full justify-center gap-2 px-2`}>
+              <span className="shrink-0">Plan je moment</span>
+              <span aria-hidden="true">-</span>
+              <span className="flex items-center gap-2 whitespace-nowrap text-[14px] tracking-[-0.01em]">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+                  <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                {minuten}
+              </span>
+              <span className="shrink-0 whitespace-nowrap text-[15px] font-semibold tracking-[-0.01em]">{prijs}</span>
             </button>
-            <button
-              type="button"
-              onClick={onStartHuidtest}
-              className={`${BTN_PILL} min-h-[48px] w-[120px] shrink-0 justify-center px-3 active:scale-[0.98] transition-[transform,border-color] duration-150`}
-            >
-              Huidtest
-            </button>
+            <p className="mt-4 text-center font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+              Welke bank past bij mij?{" "}
+              <button
+                type="button"
+                onClick={onStartHuidtest}
+                className="cursor-pointer text-ink-strong underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
+              >
+                Doe de test
+              </button>
+            </p>
           </div>
         </div>
 
@@ -81,7 +83,7 @@ function AfspraakButton({
             <button
               type="button"
               onClick={onStartHuidtest}
-              className="inline-flex min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70"
+              className="inline-flex min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70"
             >
               Doe de huidtest
             </button>
@@ -97,7 +99,7 @@ function AfspraakButton({
               </div>
               <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
             </div>
-            <button onClick={handleClick} className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}>
+            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} !px-[28px] py-[10px] flex-shrink-0`}>
               Plan je moment
             </button>
           </div>
@@ -115,7 +117,7 @@ function AfspraakButton({
             <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
           </div>
           <div className="mt-3 flex gap-4">
-            <button onClick={handleClick} className={`${BTN_PILL_ACCENT} !px-[28px] xl:!px-[36px] py-[10px] flex-shrink-0`}>
+            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} !px-[28px] xl:!px-[36px] py-[10px] flex-shrink-0`}>
               Plan je moment
             </button>
             <button
