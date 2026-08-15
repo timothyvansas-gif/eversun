@@ -46,6 +46,18 @@ const START_PROGRESS = 20;
 // starts at the endowed 20% mark.
 const INTRO_PROGRESS = START_PROGRESS / 2;
 
+/** Let the completed bar register before the result gets the space back. */
+const RESULT_PROGRESS_HOLD = 560;
+
+const PROGRESS_EXIT = {
+  opacity: { duration: 0.22, ease: "easeOut" as const },
+  height: { duration: 0.32, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+  marginBottom: {
+    duration: 0.32,
+    ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+  },
+};
+
 /**
  * One glide, shared by the step arriving and the step leaving.
  *
@@ -185,6 +197,24 @@ export default function HuidtestQuiz({
   const [answers, setAnswers] = useState<Partial<QuizAnswers>>(() => shared ?? { tattoo: false });
 
   const step = stack[stack.length - 1];
+
+  // Keep the completed bar visible for one quiet beat. On the result it then
+  // fades while its own height and gap collapse, which lets the card below it
+  // settle into the released space instead of jumping there in one frame.
+  const resultProgressKey = step.kind === "resultaat" ? stack.length : null;
+  const [dismissedResultProgressKey, setDismissedResultProgressKey] = useState<number | null>(null);
+  useEffect(() => {
+    if (resultProgressKey === null) return;
+
+    const timer = window.setTimeout(
+      () => setDismissedResultProgressKey(resultProgressKey),
+      shouldReduceMotion ? 240 : RESULT_PROGRESS_HOLD,
+    );
+    return () => window.clearTimeout(timer);
+  }, [resultProgressKey, shouldReduceMotion]);
+
+  const showProgress =
+    resultProgressKey === null || dismissedResultProgressKey !== resultProgressKey;
 
   // Which way the last move went, so a step leaves the way the next one comes
   // in. Forward and back looking identical is what makes a wizard feel like it
@@ -467,40 +497,49 @@ export default function HuidtestQuiz({
     // sticky element cannot be held anywhere its containing block does not
     // reach, so it simply scrolled away with the questions.
     <div className="relative flex w-full shrink-0 flex-col min-h-full">
-      {/* A fixture of every step, the advice included, so that arriving never
-          costs a jump. It was worth trying to retire the full bar on the
-          result — it has nothing left to report there — but every way of
-          taking it away moved it: closing its height ran a fill and a
-          collapse along the same 6px rule while the card slid in beside it,
-          and no amount of fading that line first stopped the space under it
-          from shifting. A bar that simply sits there full is the quieter
-          answer, and it leaves the advice as the only thing that moves. */}
-      <div className="mb-5 shrink-0">
-        <div
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(progress)}
-          aria-label="Voortgang van de huidtest"
-          className="h-[6px] w-full overflow-hidden rounded-full bg-line/40"
-        >
-          {/* A full-width bar slid left behind the track's clip, rather than
-              a narrow one that grows. Two reasons, and the second is why it
-              is not a scaleX either: width animates layout every frame where
-              a transform stays on the compositor, and scaling a 6px pill
-              sideways squashes its round cap into an ellipse. Translating
-              keeps the cap circular and hides the other end off-track. */}
-          <div
-            className="h-full w-full rounded-full bg-accent"
-            style={{
-              transform: `translateX(-${100 - progress}%)`,
-              transition: shouldReduceMotion
-                ? "none"
-                : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
-            }}
-          />
-        </div>
-      </div>
+      {/* The completed bar gets one quiet beat on the result, then leaves its
+          opacity, height and gap together. The advice below can consequently
+          settle into the released space without a sudden layout jump. */}
+      <AnimatePresence initial={false}>
+        {showProgress && (
+          <m.div
+            key="quiz-progress"
+            initial={false}
+            animate={{ height: "auto", marginBottom: 20, opacity: 1 }}
+            exit={
+              shouldReduceMotion
+                ? { height: 0, marginBottom: 0, opacity: 0, transition: { duration: 0 } }
+                : { height: 0, marginBottom: 0, opacity: 0, transition: PROGRESS_EXIT }
+            }
+            className="shrink-0 overflow-hidden"
+          >
+            <div
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progress)}
+              aria-label="Voortgang van de huidtest"
+              className="h-[6px] w-full overflow-hidden rounded-full bg-line/40"
+            >
+              {/* A full-width bar slid left behind the track's clip, rather than
+                  a narrow one that grows. Two reasons, and the second is why it
+                  is not a scaleX either: width animates layout every frame where
+                  a transform stays on the compositor, and scaling a 6px pill
+                  sideways squashes its round cap into an ellipse. Translating
+                  keeps the cap circular and hides the other end off-track. */}
+              <div
+                className="h-full w-full rounded-full bg-accent"
+                style={{
+                  transform: `translateX(-${100 - progress}%)`,
+                  transition: shouldReduceMotion
+                    ? "none"
+                    : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
+                }}
+              />
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
 
       {/* The step area: cards only, and the positioning context the step behind
           is parked in. Everything that moves lives in here, and the action bar
