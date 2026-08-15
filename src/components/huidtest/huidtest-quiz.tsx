@@ -8,8 +8,17 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
-import { decide, onlineAdviceExitReason, skipsKleurstijl } from "@/lib/huidtest/decide";
-import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
+import { decide } from "@/lib/huidtest/decide";
+import {
+  currentAnswer as answerFor,
+  isComplete,
+  nextStep,
+  openingStep,
+  progressFor,
+  stepKey as keyFor,
+  type Step,
+} from "@/lib/huidtest/flow";
+import type { QuizAnswers } from "@/lib/huidtest/types";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
 import { CtaButton } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
@@ -26,26 +35,11 @@ import ResultScreen from "@/components/huidtest/result-screen";
  * Everything else (the progress bar, both back buttons) reads from it rather
  * than counting for itself, because a second counter is a second thing to get
  * out of step with the answers.
+ *
+ * Which screen follows which is not decided here: `lib/huidtest/flow.ts` owns
+ * that, and is unit-tested without a browser. What is left in this file is the
+ * part that genuinely needs one — measurement, gestures and motion.
  */
-
-type Step =
-  | { kind: "intro" }
-  | { kind: "vraag"; index: number }
-  | { kind: "exit"; reason: ExitReason }
-  | { kind: "resultaat" };
-
-/**
- * The bar starts filled rather than empty. Endowed progress: someone who can
- * see they are already under way finishes more often than someone staring at
- * zero, and the first question genuinely is not the start — the age check is
- * behind them.
- */
-const START_PROGRESS = 20;
-
-// The age gate is the first real step, so it should not greet someone with an
-// empty track. Keep it visibly lighter than the first bank question, which
-// starts at the endowed 20% mark.
-const INTRO_PROGRESS = START_PROGRESS / 2;
 
 /** Let the completed bar register before the result gets the space back. */
 const RESULT_PROGRESS_HOLD = 560;
@@ -349,26 +343,6 @@ export default function HuidtestQuiz({
     goTo({ kind: "vraag", index: 0 });
   };
 
-  /** Where the quiz goes once the question at `index` has been confirmed. */
-  const nextStep = (index: number, current: Partial<QuizAnswers>): Step => {
-    const question = QUESTIONS[index];
-    const exitReason = onlineAdviceExitReason(current);
-
-    // Safety answers end the test before any advice exists. Checked on the way
-    // out rather than on the tap: picking an option is not the same as standing
-    // by it, and being thrown onto an exit screen mid-thought is no way to be
-    // told this.
-    if (exitReason) return { kind: "exit", reason: exitReason };
-
-    // The last question exists only for a skin that has not already decided the
-    // product. Asking it anyway would be asking for an answer nothing reads.
-    if (question.key === "huidgevoel" && skipsKleurstijl(current.huidgevoel!)) {
-      return { kind: "resultaat" };
-    }
-    if (index >= QUESTIONS.length - 1) return { kind: "resultaat" };
-    return { kind: "vraag", index: index + 1 };
-  };
-
   const answer = (index: number, id: string) => {
     const question = QUESTIONS[index];
 
@@ -381,26 +355,9 @@ export default function HuidtestQuiz({
     goTo({ kind: "vraag", index: 0 });
   };
 
-  const totalQuestions = skipsKleurstijl(answers.huidgevoel ?? "normaal")
-    ? QUESTIONS.length - 1
-    : QUESTIONS.length;
+  const progress = progressFor(step, answers, QUESTIONS.length);
 
-  const answered = step.kind === "vraag" ? step.index : 0;
-
-  // Defined for every step, including the ones either side of the questions:
-  // the bar that carries it is a fixture of the whole quiz now, not a thing
-  // that comes and goes with them, and a step it has no number for would be
-  // the one place it silently held its last value instead.
-  const progress =
-    step.kind === "intro"
-      ? INTRO_PROGRESS
-      : step.kind === "exit"
-        ? START_PROGRESS
-        : step.kind === "resultaat"
-          ? 100
-          : START_PROGRESS + ((100 - START_PROGRESS) * answered) / totalQuestions;
-
-  const stepKey = step.kind === "vraag" ? `vraag-${step.index}` : step.kind;
+  const stepKey = keyFor(step);
 
   // A full stage plus the shared gutter, so a step confirmed with the button
   // travels the same distance a step pulled back by a finger does — the advice
@@ -426,9 +383,7 @@ export default function HuidtestQuiz({
     step.kind === "vraag" &&
     (peekTarget?.kind === "vraag" || peekTarget?.kind === "intro");
 
-  /** What the visitor has picked on the question now showing, if anything. */
-  const currentAnswer =
-    step.kind === "vraag" ? (answers[QUESTIONS[step.index].key] as string | undefined) : undefined;
+  const currentAnswer = answerFor(step, answers, QUESTIONS);
 
   const renderStep = (s: Step) => (
     <>
@@ -780,7 +735,7 @@ export default function HuidtestQuiz({
             <CtaButton
               className="order-2 flex-1 md:flex-none"
               disabled={!currentAnswer}
-              onClick={() => goTo(nextStep(step.index, answers))}
+              onClick={() => goTo(nextStep(step.index, answers, QUESTIONS))}
             >
               Volgende
             </CtaButton>
@@ -903,21 +858,4 @@ function Resultaat({
       onRestart={onRestart}
     />
   );
-}
-
-/**
- * Where a visit begins: the intro, or straight to the advice a link carries. A
- * link carrying a safety answer lands on the exit, the same as answering it
- * would — the age check is skippable, those answers are not.
- */
-function openingStep(shared: QuizAnswers | null): Step {
-  if (!shared) return { kind: "intro" };
-  const exitReason = onlineAdviceExitReason(shared);
-  if (exitReason) return { kind: "exit", reason: exitReason };
-  return { kind: "resultaat" };
-}
-
-function isComplete(a: Partial<QuizAnswers>): a is QuizAnswers {
-  if (!a.huidreactie || !a.haarkleur || !a.ervaring || !a.doel || !a.huidgevoel) return false;
-  return skipsKleurstijl(a.huidgevoel) || Boolean(a.kleurstijl);
 }
