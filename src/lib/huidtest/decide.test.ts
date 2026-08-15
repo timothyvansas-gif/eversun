@@ -7,6 +7,7 @@ import {
   decide,
   decideBank,
   decideProduct,
+  onlineAdviceExitReason,
   skipsKleurstijl,
 } from "@/lib/huidtest/decide";
 import type { QuizAnswers } from "@/lib/huidtest/types";
@@ -17,6 +18,7 @@ import type { QuizAnswers } from "@/lib/huidtest/types";
  */
 const base: QuizAnswers = {
   huidreactie: "type3",
+  haarkleur: "anders",
   ervaring: "soms",
   doel: "verdiepen",
   huidgevoel: "normaal",
@@ -27,6 +29,12 @@ const base: QuizAnswers = {
 const answers = (over: Partial<QuizAnswers>): QuizAnswers => ({ ...base, ...over });
 
 describe("decideBank", () => {
+  it("never gives an online bank advice for naturally red or auburn hair", () => {
+    expect(() => decideBank(answers({ haarkleur: "rossig" }))).toThrow(
+      "Geen online bankadvies voor uitstroom: rossig",
+    );
+  });
+
   it("B1 — a first-timer gets the calmest bed, whatever else they said", () => {
     expect(decideBank(answers({ ervaring: "nooit", doel: "snel", huidreactie: "type4" }))).toEqual({
       bank: "600-light",
@@ -97,7 +105,15 @@ describe("decideBank", () => {
         for (const doel of ["basis", "snel", "verdiepen", "behoud"] as const) {
           for (const huidgevoel of ["droog", "gevoelig", "normaal"] as const) {
             const kleurstijl = skipsKleurstijl(huidgevoel) ? undefined : ("direct" as const);
-            const advies = decide({ huidreactie, ervaring, doel, huidgevoel, tattoo: true, kleurstijl });
+            const advies = decide({
+              huidreactie,
+              haarkleur: "anders",
+              ervaring,
+              doel,
+              huidgevoel,
+              tattoo: true,
+              kleurstijl,
+            });
 
             expect(advies.bank).toBeTruthy();
             expect(advies.product).toBeTruthy();
@@ -115,6 +131,22 @@ describe("decideBank", () => {
     // B3 catches every sensitive skin, so it has to sit behind B2 or the Blue
     // Vision case can never be reached.
     expect(BANK_REGELS.map((r) => r.id)).toEqual(["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9"]);
+  });
+});
+
+describe("onlineAdviceExitReason", () => {
+  it("routes skin that never tans to personal advice first", () => {
+    expect(onlineAdviceExitReason(answers({ huidreactie: "type1", haarkleur: "rossig" }))).toBe(
+      "type1",
+    );
+  });
+
+  it("routes naturally red or auburn hair to personal advice", () => {
+    expect(onlineAdviceExitReason(answers({ haarkleur: "rossig" }))).toBe("rossig");
+  });
+
+  it("allows the regular advice flow for other hair colours", () => {
+    expect(onlineAdviceExitReason(answers({ haarkleur: "anders" }))).toBeNull();
   });
 });
 
@@ -198,7 +230,7 @@ describe("decide", () => {
 });
 
 describe("skipsKleurstijl", () => {
-  it("skips question 5 for a sensitive skin, because P1 already decided", () => {
+  it("skips the final question for a sensitive skin, because P1 already decided", () => {
     expect(skipsKleurstijl("gevoelig")).toBe(true);
   });
 

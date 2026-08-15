@@ -3,12 +3,13 @@ import type { ZonnebankSlug } from "@/lib/whatsapp";
 
 /**
  * What the visitor told us. Nothing derived lives here: the bank, the product
- * and the reasoning are all functions of these six answers, which is what makes
+ * and the reasoning are all functions of these answers, which is what makes
  * the result shareable as a URL — encode the answers, rebuild everything else.
  */
 export type Answers = {
   age: "ok" | "minor";
   huidreactie: "type1" | "type2" | "type3" | "type4";
+  haarkleur: "rossig" | "anders";
   ervaring: "nooit" | "soms" | "regelmatig";
   doel: "basis" | "snel" | "verdiepen" | "behoud";
   huidgevoel: "droog" | "gevoelig" | "normaal";
@@ -17,7 +18,7 @@ export type Answers = {
   kleurstijl?: "direct" | "natuurlijk";
 };
 
-/** The five questions, minus the age check, which gates rather than advises. */
+/** The six questions, minus the age check, which gates rather than advises. */
 export type QuizAnswers = Omit<Answers, "age">;
 
 export type BankId = "600-light" | "770-medium" | "prestige-1600" | "blue-vision";
@@ -32,11 +33,10 @@ export type Advies = {
 };
 
 /**
- * The two answers that end the test without a bank advice. Both get their own
- * screen, and neither can be reached past this point — including through a
- * shared URL.
+ * The answers that end the test without a bank advice. None can be reached
+ * past this point — including through a shared URL.
  */
-export type ExitReason = "minor" | "type1";
+export type ExitReason = "minor" | "type1" | "rossig";
 
 /**
  * The bank ids the rules are written against, mapped onto the slugs the rest of

@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { EXIT_MINOR, EXIT_TYPE1, TELEFOON } from "@/lib/huidtest/config";
+import { EXIT_MINOR, EXIT_ROSSIG, EXIT_TYPE1, TELEFOON } from "@/lib/huidtest/config";
 import type { ExitReason } from "@/lib/huidtest/types";
 import { ctaClass, CtaButton, CTA_TRANSITION } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
 
 /**
- * The two ways the test ends without advice: too young, and a skin that always
- * burns.
+ * The ways the test ends without advice: too young, a skin that always burns,
+ * or naturally red/auburn hair.
  *
- * Neither is a failure state and neither is styled like one — no warning
- * colours, no apology. One is the law and the other is a reason to come in and
- * be looked at properly, so both get the same calm treatment as the result.
+ * None is a failure state or styled like one — no warning colours, no apology.
+ * One is the law and the others are reasons to come in and be looked at
+ * properly, so all get the same calm treatment as the result.
  */
 export default function ExitScreen({
   reason,
@@ -28,8 +28,9 @@ export default function ExitScreen({
    */
   onClose?: () => void;
 }) {
-  const copy = reason === "minor" ? EXIT_MINOR : EXIT_TYPE1;
-  const terugLabel = reason === "minor" ? EXIT_MINOR.cta : EXIT_TYPE1.ctaSecundair;
+  const personalCopy = reason === "rossig" ? EXIT_ROSSIG : EXIT_TYPE1;
+  const copy = reason === "minor" ? EXIT_MINOR : personalCopy;
+  const terugLabel = reason === "minor" ? EXIT_MINOR.cta : personalCopy.ctaSecundair;
 
   // Filled when it is the only way on (the minor exit), outline when it stands
   // beside the WhatsApp button — one primary per screen, either way.
@@ -49,16 +50,16 @@ export default function ExitScreen({
         {copy.body}
       </p>
 
-      {reason === "type1" && (
+      {reason !== "minor" && (
         <p className="mt-4 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-          {EXIT_TYPE1.telefoonVoor}
+          {personalCopy.telefoonVoor}
           <a
             href={TELEFOON.href}
             className="whitespace-nowrap text-ink-strong underline decoration-line underline-offset-4 transition-colors duration-150 hover:decoration-ink-strong"
           >
             {TELEFOON.weergave}
           </a>
-          {EXIT_TYPE1.telefoonNa}
+          {personalCopy.telefoonNa}
         </p>
       )}
 

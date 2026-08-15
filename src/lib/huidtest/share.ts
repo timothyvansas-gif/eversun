@@ -12,7 +12,7 @@ import type { QuizAnswers } from "@/lib/huidtest/types";
  * the why-line is a function of the answers, not of the bank.
  *
  * Positional and unpadded, because it ends up in a URL people paste into
- * WhatsApp: `?a=type3.soms.snel.normaal.0.direct`.
+ * WhatsApp: `?a=type3.anders.soms.snel.normaal.0.direct`.
  */
 
 export const SHARE_PARAM = "a";
@@ -27,6 +27,7 @@ const GEEN_KLEURSTIJL = "x";
 export function encodeAnswers(a: QuizAnswers): string {
   return [
     a.huidreactie,
+    a.haarkleur,
     a.ervaring,
     a.doel,
     a.huidgevoel,
@@ -46,11 +47,12 @@ export function decodeAnswers(value: string | null | undefined): QuizAnswers | n
   if (!value) return null;
 
   const parts = value.split(".");
-  if (parts.length !== 6) return null;
+  if (parts.length !== 7) return null;
 
-  const [huidreactie, ervaring, doel, huidgevoel, tattoo, kleurstijl] = parts;
+  const [huidreactie, haarkleur, ervaring, doel, huidgevoel, tattoo, kleurstijl] = parts;
 
   if (!OPTION_IDS.huidreactie.includes(huidreactie)) return null;
+  if (!OPTION_IDS.haarkleur.includes(haarkleur)) return null;
   if (!OPTION_IDS.ervaring.includes(ervaring)) return null;
   if (!OPTION_IDS.doel.includes(doel)) return null;
   if (!OPTION_IDS.huidgevoel.includes(huidgevoel)) return null;
@@ -58,15 +60,16 @@ export function decodeAnswers(value: string | null | undefined): QuizAnswers | n
 
   const answers = {
     huidreactie,
+    haarkleur,
     ervaring,
     doel,
     huidgevoel,
     tattoo: tattoo === "1",
   } as QuizAnswers;
 
-  // A sensitive skin never sees question 5, so a link claiming an answer to it
-  // is inconsistent with itself — and a link missing one for any other skin is
-  // incomplete. Either way there is no honest advice to rebuild.
+  // A sensitive skin never sees the final question, so a link claiming an answer
+  // to it is inconsistent with itself — and a link missing one for any other skin
+  // is incomplete. Either way there is no honest advice to rebuild.
   if (skipsKleurstijl(answers.huidgevoel)) {
     if (kleurstijl !== GEEN_KLEURSTIJL) return null;
     return answers;

@@ -164,7 +164,7 @@ export function BookingSheet({
           <p className="card-title text-zinc-900">{BOEKEN.bellen}</p>
           <a
             href={TELEFOON.href}
-            className="mt-1 block font-sans text-[15px] leading-[24px] text-zinc-600 underline decoration-dotted underline-offset-6"
+            className="mt-1 block font-sans text-[15px] leading-[24px] text-zinc-600"
           >
             {TELEFOON.weergave}
           </a>

@@ -15,7 +15,7 @@ export type AnalyticsEvent =
       props: { entry: "home_sectie" | "hero_link" | "direct" | "zonnebank_kaart" };
     }
   | { name: "huidtest_vraag"; props: { vraag: string; antwoord: string } }
-  | { name: "huidtest_exit"; props: { reden: "minor" | "type1" } }
+  | { name: "huidtest_exit"; props: { reden: "minor" | "type1" | "rossig" } }
   | { name: "huidtest_resultaat"; props: { bank: string; stand: string | null; product: string } }
   | { name: "huidtest_sachet"; props: { product: string; aan: boolean } }
   | { name: "huidtest_cta"; props: { type: "whatsapp" | "opnieuw"; sachet: boolean } };

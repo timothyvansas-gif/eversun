@@ -11,7 +11,13 @@ import {
   WAAROM_EERSTE_KEER,
   whatsappUrl,
 } from "@/lib/huidtest/config";
-import { BANK_SLUGS, type Advies, type QuizAnswers, type StandId } from "@/lib/huidtest/types";
+import {
+  BANK_SLUGS,
+  type Advies,
+  type ExitReason,
+  type QuizAnswers,
+  type StandId,
+} from "@/lib/huidtest/types";
 
 /**
  * The advice, derived from the answers and nothing else.
@@ -27,7 +33,23 @@ export function skipsKleurstijl(huidgevoel: QuizAnswers["huidgevoel"]): boolean 
   return huidgevoel === "gevoelig";
 }
 
+/**
+ * A safety answer always wins over goals, experience and product preferences.
+ * NVWA lists naturally red hair as a tanning-bed risk characteristic:
+ * https://www.nvwa.nl/onderwerpen/productveiligheid/zonnebanken/wat-kan-er-mis-gaan
+ */
+export function onlineAdviceExitReason(
+  a: Partial<QuizAnswers>,
+): Exclude<ExitReason, "minor"> | null {
+  if (a.huidreactie === "type1") return "type1";
+  if (a.haarkleur === "rossig") return "rossig";
+  return null;
+}
+
 export function decideBank(a: QuizAnswers): { bank: Advies["bank"]; stand: StandId | null } {
+  const exitReason = onlineAdviceExitReason(a);
+  if (exitReason) throw new Error(`Geen online bankadvies voor uitstroom: ${exitReason}`);
+
   const regel = BANK_REGELS.find((r) => r.when(a));
 
   // Unreachable: B9 has no condition beyond `behoud`, and the four doel values

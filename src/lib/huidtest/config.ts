@@ -53,12 +53,26 @@ export const EXIT_TYPE1 = {
   ctaSecundair: "Huidtest sluiten",
 } as const;
 
+export const EXIT_ROSSIG = {
+  kop: "Jouw huid vraagt om persoonlijk advies",
+  body: "Natuurlijk rood of rossig haar is een risicokenmerk bij zonnebankgebruik. Daarom geven we je online geen bankadvies. Loop even binnen voor een persoonlijke huidbeoordeling: we bespreken eerlijk wat wel en niet verstandig is.",
+  telefoonVoor: "Bel je liever even vooraf? Dat kan op ",
+  telefoonNa: ". We denken graag met je mee.",
+  ctaSecundair: "Huidtest sluiten",
+} as const;
+
 /* ------------------------------------------------------------------ */
-/* The five questions                                                  */
+/* The six questions                                                   */
 /* ------------------------------------------------------------------ */
 
 /** Which answer a question writes, which is also its analytics name. */
-export type QuestionKey = "huidreactie" | "ervaring" | "doel" | "huidgevoel" | "kleurstijl";
+export type QuestionKey =
+  | "huidreactie"
+  | "haarkleur"
+  | "ervaring"
+  | "doel"
+  | "huidgevoel"
+  | "kleurstijl";
 
 export type QuestionOption<K extends QuestionKey> = {
   id: NonNullable<Answers[K]>;
@@ -70,12 +84,13 @@ export type Question<K extends QuestionKey = QuestionKey> = {
   vraag: string;
   hulptekst?: string;
   options: QuestionOption<K>[];
-  /** Question 4 carries the tattoo checkbox, so it cannot auto-advance. */
+  /** The skin-feel question carries the tattoo checkbox, so it cannot auto-advance. */
   checkbox?: { key: "tattoo"; label: string };
 };
 
 export const QUESTIONS: [
   Question<"huidreactie">,
+  Question<"haarkleur">,
   Question<"ervaring">,
   Question<"doel">,
   Question<"huidgevoel">,
@@ -98,6 +113,15 @@ export const QUESTIONS: [
       { id: "type3", label: "Ik word makkelijk bruin en verbrand zelden" },
       { id: "type1", label: "Ik verbrand altijd en word eigenlijk nooit bruin" },
       { id: "type4", label: "Ik word diep bruin en verbrand bijna nooit" },
+    ],
+  },
+  {
+    key: "haarkleur",
+    vraag: "Heb je van nature rood of rossig haar?",
+    hulptekst: "Ook als je haar nu geverfd of grijs is.",
+    options: [
+      { id: "rossig", label: "Ja, rood of rossig" },
+      { id: "anders", label: "Nee" },
     ],
   },
   {

@@ -8,7 +8,7 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
-import { decide, skipsKleurstijl } from "@/lib/huidtest/decide";
+import { decide, onlineAdviceExitReason, skipsKleurstijl } from "@/lib/huidtest/decide";
 import type { ExitReason, QuizAnswers } from "@/lib/huidtest/types";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
 import { CtaButton } from "@/components/huidtest/cta";
@@ -351,15 +351,20 @@ export default function HuidtestQuiz({
 
   /** Where the quiz goes once the question at `index` has been confirmed. */
   const nextStep = (index: number, current: Partial<QuizAnswers>): Step => {
-    // A skin that always burns ends the test, before any advice exists. Checked
-    // on the way out rather than on the tap: picking an option is not the same
-    // as standing by it, and being thrown onto an exit screen mid-thought is no
-    // way to be told this.
-    if (index === 0 && current.huidreactie === "type1") return { kind: "exit", reason: "type1" };
+    const question = QUESTIONS[index];
+    const exitReason = onlineAdviceExitReason(current);
 
-    // Question 5 exists only for a skin that has not already decided the
+    // Safety answers end the test before any advice exists. Checked on the way
+    // out rather than on the tap: picking an option is not the same as standing
+    // by it, and being thrown onto an exit screen mid-thought is no way to be
+    // told this.
+    if (exitReason) return { kind: "exit", reason: exitReason };
+
+    // The last question exists only for a skin that has not already decided the
     // product. Asking it anyway would be asking for an answer nothing reads.
-    if (index === 3 && skipsKleurstijl(current.huidgevoel!)) return { kind: "resultaat" };
+    if (question.key === "huidgevoel" && skipsKleurstijl(current.huidgevoel!)) {
+      return { kind: "resultaat" };
+    }
     if (index >= QUESTIONS.length - 1) return { kind: "resultaat" };
     return { kind: "vraag", index: index + 1 };
   };
@@ -894,16 +899,17 @@ function Resultaat({
 
 /**
  * Where a visit begins: the intro, or straight to the advice a link carries. A
- * link claiming type1 lands on the exit, the same as answering it would — the
- * age check is skippable, that one is not.
+ * link carrying a safety answer lands on the exit, the same as answering it
+ * would — the age check is skippable, those answers are not.
  */
 function openingStep(shared: QuizAnswers | null): Step {
   if (!shared) return { kind: "intro" };
-  if (shared.huidreactie === "type1") return { kind: "exit", reason: "type1" };
+  const exitReason = onlineAdviceExitReason(shared);
+  if (exitReason) return { kind: "exit", reason: exitReason };
   return { kind: "resultaat" };
 }
 
 function isComplete(a: Partial<QuizAnswers>): a is QuizAnswers {
-  if (!a.huidreactie || !a.ervaring || !a.doel || !a.huidgevoel) return false;
+  if (!a.huidreactie || !a.haarkleur || !a.ervaring || !a.doel || !a.huidgevoel) return false;
   return skipsKleurstijl(a.huidgevoel) || Boolean(a.kleurstijl);
 }

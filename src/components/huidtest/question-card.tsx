@@ -107,7 +107,7 @@ export default function QuestionCard<K extends QuestionKey>({
               aria-checked={isSelected}
               // One tab stop for the whole group — the selected option, or the
               // first one before anything is chosen. Four stops per question
-              // would turn a five-question quiz into a twenty-press slog.
+              // would turn a six-question quiz into a twenty-four-press slog.
               tabIndex={isSelected || (!selected && index === 0) ? 0 : -1}
               onClick={() => onSelect(option.id as string)}
               onKeyDown={(event) => handleArrows(event, index)}
@@ -123,7 +123,7 @@ export default function QuestionCard<K extends QuestionKey>({
                   width from long answer labels on narrow screens. */}
               <span
                 aria-hidden="true"
-                className={`absolute right-2 top-2 flex size-5 items-center justify-center rounded-full transition-[opacity,transform] duration-150 ${
+                className={`absolute right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full transition-[opacity,transform] duration-150 ${
                   isSelected ? "bg-accent opacity-100 scale-100" : "opacity-0 scale-75"
                 }`}
               >
