@@ -82,7 +82,7 @@ export default function ZonnebankMedia({
         )}
       </div>
       {data.badge && (
-        <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">
+        <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">
           {data.badge}
         </span>
       )}
