@@ -49,7 +49,7 @@ function PlanMomentButton() {
         onClick={handleClick}
         // Filled at every breakpoint, so the section keeps one clear action
         // whether the pill fills the mobile column or hugs its desktop label.
-        className={`${BTN_PILL_ACCENT} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
+        className={`${BTN_PILL_ACCENT} min-h-[48px] !px-[28px] w-full md:min-w-[220px] md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         Plan je moment
       </button>

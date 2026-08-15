@@ -62,7 +62,7 @@ export default function OverOns() {
       <Image
         src={logoBackground}
         alt=""
-        className="absolute top-0 right-0 pointer-events-none select-none"
+        className="absolute top-0 right-0 pointer-events-none select-none opacity-40"
         style={{ objectFit: "none", objectPosition: "top right" }}
         aria-hidden
       />

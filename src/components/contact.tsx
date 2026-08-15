@@ -37,8 +37,8 @@ function DetailBlock({
 }) {
   return (
     <div className={className}>
-      <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">{label}</p>
-      <div className="mt-0.5 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+      <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">{label}</p>
+      <div className="mt-0.5 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">
         {children}
       </div>
     </div>
@@ -46,7 +46,7 @@ function DetailBlock({
 }
 
 const DETAIL_LINK =
-  "underline decoration-zinc-400 decoration-1 underline-offset-6 hover:decoration-ink-strong transition-colors duration-150";
+  "text-zinc-600 underline decoration-zinc-400 decoration-1 underline-offset-6 hover:text-zinc-900 hover:decoration-ink-strong transition-colors duration-150";
 
 function ContactDetails() {
   // Two columns at every width. Stacked, the four blocks run well past the
@@ -80,7 +80,7 @@ function ContactDetails() {
           there, and dropping this block also clears the lone item that was
           left dangling on the last grid row. */}
       <div className="hidden sm:block">
-        <p className="font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">Volg ons</p>
+        <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-[#0B0B0B]">Volg ons</p>
         <div className="mt-2 flex items-center gap-2">
           {SOCIALS.map((social) => (
             <a
@@ -89,7 +89,7 @@ function ContactDetails() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-void transition-colors duration-200 hover:bg-accent"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0B0B0B] transition-colors duration-200 hover:bg-accent"
             >
               <Image
                 src={social.icon}
@@ -114,7 +114,7 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       disabled={isSubmitting}
       // Width is content-driven from sm up. The label keeps a floor of its own
       // so swapping to the shorter submitting state does not resize the pill.
-      className={`${BTN_PILL_ACCENT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
+      className={`${BTN_PILL_ACCENT} relative min-h-[48px] w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
@@ -341,7 +341,7 @@ function ContactForm() {
         </p>
       )}
 
-      <p className="mt-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+      <p className="mt-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
         We gebruiken je gegevens alleen om je bericht te beantwoorden.
       </p>
     </form>
@@ -405,17 +405,17 @@ export default function Contact() {
                 Even contact?
               </h2>
               {/* Second line of the heading, not a subsection — see producten. */}
-              <p className="mt-1 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-muted xl:tracking-[-0.015em]">
+              <p className="mt-1 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-zinc-500 xl:tracking-[-0.015em]">
                 We horen graag van je
               </p>
 
-              <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
+              <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
                 Vraag over een bank of een product? Stuur een bericht, of loop langs tijdens
                 onze{" "}
                 <button
                   type="button"
                   onClick={() => setIsOpeningstijdenOpen(true)}
-                  className={`${DETAIL_LINK} inline cursor-pointer text-muted`}
+                  className={`${DETAIL_LINK} inline cursor-pointer text-zinc-600`}
                 >
                   openingstijden.
                 </button>

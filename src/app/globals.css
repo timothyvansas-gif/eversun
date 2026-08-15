@@ -396,7 +396,7 @@ body {
     left: 16px;
     right: 16px;
     pointer-events: none;
-    color: var(--color-muted);
+    color: #52525b;
     line-height: 1.25;
     transition: top 0.18s ease, font-size 0.18s ease, transform 0.18s ease, color 0.18s ease;
   }

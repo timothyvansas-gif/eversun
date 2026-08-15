@@ -89,7 +89,7 @@ export function FloatingField({
         className={`${WRAPPER_BASE} ${
           invalid
             ? "border-[#A6371A] bg-[#FDF3EF]"
-            : "border-transparent bg-surface-page hover:border-line"
+            : "border-[#0B0B0B]/20 bg-white hover:border-[#0B0B0B]"
         } ${disabled ? "opacity-60" : ""}`}
       >
         {multiline ? (
