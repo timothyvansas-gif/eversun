@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { BTN_PILL, BTN_PILL_DARK_OUTLINE } from "@/lib/button-styles";
+import { BTN_PILL, BTN_PILL_ACCENT } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -17,6 +17,21 @@ const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 // This is only needed after someone asks for advice, so it stays out of the
 // initial bundle for a section that most visitors simply browse.
 const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
+
+function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
+  return (
+    <div className="flex items-center gap-3 text-zinc-900 font-sans">
+      <div className="flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+          <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{minuten}</span>
+      </div>
+      <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{prijs}</span>
+    </div>
+  );
+}
 
 function AfspraakButton({
   minuten,
@@ -49,85 +64,19 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        <div className="md:hidden">
-          <div>
-            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} min-h-[48px] w-full justify-center gap-2 px-2`}>
-              <span className="shrink-0">Plan je moment</span>
-              <span aria-hidden="true">-</span>
-              <span className="flex items-center gap-2 whitespace-nowrap text-[14px] tracking-[-0.01em]">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
-                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-                  <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {minuten}
-              </span>
-              <span className="shrink-0 whitespace-nowrap text-[15px] font-semibold tracking-[-0.01em]">{prijs}</span>
-            </button>
-            <p className="mt-4 text-center font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-              Welke bank past bij mij?{" "}
-              <button
-                type="button"
-                onClick={onStartHuidtest}
-                className="cursor-pointer text-ink-strong underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
-              >
-                Doe de test
-              </button>
-            </p>
-          </div>
-        </div>
-
-        {/* Tablet keeps the existing compact hierarchy; only phones use the
-            two-button layout above. */}
-        <div className="hidden md:block xl:hidden">
-          <div className="mb-0.5 flex">
-            <button
-              type="button"
-              onClick={onStartHuidtest}
-              className="inline-flex min-h-[44px] cursor-pointer items-center font-sans text-[15px] tracking-[-0.01em] text-ink-strong underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong active:opacity-70"
-            >
-              Doe de huidtest
-            </button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
-                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-                  <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
-              </div>
-              <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
-            </div>
-            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} !px-[28px] py-[10px] flex-shrink-0`}>
-              Plan je moment
-            </button>
-          </div>
-        </div>
-
-        <div className="hidden xl:block">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-900 shrink-0" aria-hidden="true">
-                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-                <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span className="text-zinc-900 text-[14px] font-sans tracking-[-0.01em]">{minuten}</span>
-            </div>
-            <span className="text-zinc-900 text-[15px] font-semibold font-sans tracking-[-0.01em]">{prijs}</span>
-          </div>
-          <div className="mt-3 flex gap-4">
-            <button onClick={handleClick} className={`${BTN_PILL_DARK_OUTLINE} !px-[28px] xl:!px-[36px] py-[10px] flex-shrink-0`}>
-              Plan je moment
-            </button>
-            <button
-              type="button"
-              onClick={onStartHuidtest}
-              className={`${BTN_PILL} min-h-[44px] w-[120px] shrink-0 justify-center px-3 active:scale-[0.98] transition-[transform,border-color] duration-150`}
-            >
-              Huidtest
-            </button>
-          </div>
+        <SessionDetails minuten={minuten} prijs={prijs} />
+        <div className="mt-4 flex flex-nowrap items-center gap-2 md:mt-[14px] md:gap-3 max-[300px]:flex-wrap">
+          <button onClick={handleClick} className={`${BTN_PILL_ACCENT} min-h-[48px] min-w-0 flex-[1.8] justify-center !px-4 md:min-w-[220px] md:flex-none md:!px-7`}>
+            Plan je moment
+          </button>
+          <button
+            type="button"
+            onClick={onStartHuidtest}
+            className={`${BTN_PILL} min-h-[48px] min-w-0 flex-1 justify-center !px-4 md:flex-none md:!px-7`}
+          >
+            <span className="md:hidden">Huidtest</span>
+            <span className="hidden md:inline">Doe de huidtest</span>
+          </button>
         </div>
       </div>
 
