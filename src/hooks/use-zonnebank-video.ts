@@ -7,9 +7,9 @@ import { toggleSound } from "@/lib/sound";
 import {
   canPlayAction,
   canSeekTo,
-  ENDPOINT_MARGIN_SECONDS,
   hasReachedTarget,
   isAtRest,
+  isOnRestingFrame,
   nextLook,
   planRun,
   restingFrame,
@@ -47,6 +47,21 @@ function toRanges(seekable: TimeRanges): TimeRange[] {
 }
 
 /**
+ * Put an idle element on its one canonical frame when the server/browser lets
+ * it seek there. Returning whether a seek was issued lets `canplay` cap only
+ * real recovery attempts, not harmless checks after the seek completes.
+ */
+function moveToRestingFrame(video: HTMLVideoElement, look: Look): boolean {
+  const frame = restingFrame(look, video.duration);
+  if (frame === null) return false;
+  if (isOnRestingFrame(look, video.currentTime, video.duration)) return false;
+  if (!canSeekTo(toRanges(video.seekable), frame)) return false;
+
+  video.currentTime = frame;
+  return true;
+}
+
+/**
  * How long a toggle may sit waiting for data before the video counts as
  * unavailable and the control is withdrawn. Long enough for a slow phone
  * connection to deliver the mobile clip, short enough that nobody is left
@@ -54,6 +69,14 @@ function toRanges(seekable: TimeRanges): TimeRange[] {
  * arrive later, `canplay` puts the toggle back.
  */
 const STALL_TIMEOUT_MS = 12000;
+
+/**
+ * Last-resort release when a browser reports `ended` but never delivers the
+ * final queued video-frame callback. Normal iOS/WebKit playback drains those
+ * frames first; this only prevents a permanently disabled control on a broken
+ * media pipeline.
+ */
+const END_DRAIN_TIMEOUT_MS = 1000;
 
 /**
  * How much of the clip the browser may fetch ahead of being asked.
@@ -66,6 +89,10 @@ const STALL_TIMEOUT_MS = 12000;
  */
 type PreloadLevel = "none" | "metadata" | "auto";
 
+type PlaybackMonitor =
+  | { kind: "video-frame"; id: number }
+  | { kind: "animation-frame"; id: number };
+
 export type ZonnebankVideoControls = {
   cardRef: RefObject<HTMLDivElement | null>;
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -73,6 +100,7 @@ export type ZonnebankVideoControls = {
   handleCardPointerEnter: () => void;
   isVideoReady: boolean;
   isVideoActive: boolean;
+  isVideoAnimating: boolean;
   isVideoLoading: boolean;
   isVideoUnavailable: boolean;
   handleVideoToggle: () => void;
@@ -101,8 +129,11 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   // so a superseded run can never settle or re-monitor on top of a newer one.
   const runIdRef = useRef(0);
   const isRunningRef = useRef(false);
-  const frameRef = useRef<number | null>(null);
+  const isVisuallySettledRef = useRef(true);
+  const presentedTimeRef = useRef<number | null>(0);
+  const monitorRef = useRef<PlaybackMonitor | null>(null);
   const stallTimerRef = useRef<number | null>(null);
+  const endDrainTimerRef = useRef<number | null>(null);
 
   // Set while a run is taking the long way to dark: out through the end of the
   // clip, back to zero, and forward into the midpoint. See `planRun`.
@@ -113,6 +144,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
   const isVideoReadyRef = useRef(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isVideoAnimating, setIsVideoAnimating] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
 
@@ -135,10 +167,17 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   // renders. That is what lets the visibilitychange listener below depend on
   // `settle` honestly instead of silencing the dependency check.
   const stopMonitor = useCallback(() => {
-    if (frameRef.current !== null) {
-      window.cancelAnimationFrame(frameRef.current);
-      frameRef.current = null;
+    const monitor = monitorRef.current;
+    if (!monitor) return;
+
+    monitorRef.current = null;
+
+    if (monitor.kind === "video-frame") {
+      videoRef.current?.cancelVideoFrameCallback(monitor.id);
+      return;
     }
+
+    window.cancelAnimationFrame(monitor.id);
   }, []);
 
   const stopStallTimer = useCallback(() => {
@@ -148,17 +187,30 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     }
   }, []);
 
+  const stopEndDrainTimer = useCallback(() => {
+    if (endDrainTimerRef.current !== null) {
+      window.clearTimeout(endDrainTimerRef.current);
+      endDrainTimerRef.current = null;
+    }
+  }, []);
+
   /**
    * The single exit from a transition, however it ended: arrived, aborted,
-   * refused, or never started. It puts the element on the frame the intent asks
-   * for, so the picture always agrees with the button even when the animation
-   * was lost.
+   * refused, or never started.
+   *
+   * A successful visible run holds the frame that Safari just submitted to the
+   * compositor. Seeking that paused element to a mathematically cleaner frame
+   * is not harmless on iOS: the seek may only be painted when the next `play()`
+   * starts, producing a closed-frame flash before the opening animation. Frame
+   * correction is therefore reserved for invisible/failed runs.
    */
-  const settle = useCallback(() => {
+  const settle = useCallback((correctFrame = false) => {
     stopMonitor();
     stopStallTimer();
+    stopEndDrainTimer();
     isRunningRef.current = false;
     isWrappingRef.current = false;
+    setIsVideoAnimating(false);
     setIsVideoLoading(false);
 
     const video = videoRef.current;
@@ -166,60 +218,83 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     video.pause();
 
-    // Pausing is what holds the frame; the write below only corrects one the
-    // run failed to reach. Skipping it when the element is already there
-    // matters more than it sounds: on an unseekable clip a redundant write is
-    // not a no-op, it clamps to zero and reopens the bed. Same reason the
-    // correction asks `canSeekTo` before touching anything — where the seek
-    // would be refused, the frame the run stopped on is the best available.
-    const frame = restingFrame(lookRef.current, video.duration);
-    if (frame === null) return;
-    if (isAtRest(lookRef.current, video.currentTime, video.duration)) return;
-    if (!canSeekTo(toRanges(video.seekable), frame)) return;
-
-    video.currentTime = frame;
-  }, [stopMonitor, stopStallTimer]);
+    if (correctFrame) {
+      moveToRestingFrame(video, lookRef.current);
+      presentedTimeRef.current = video.currentTime;
+    }
+    isVisuallySettledRef.current =
+      !correctFrame || isAtRest(lookRef.current, video.currentTime, video.duration);
+  }, [stopEndDrainTimer, stopMonitor, stopStallTimer]);
 
   /**
-   * One check of where the clip has got to, shared by the two things that watch
-   * a run: the rAF monitor, and `timeupdate` for when rAF is not running.
+   * One check of where the clip has got to. `presentedTime` is normally the
+   * timestamp of a frame that reached the compositor; legacy browsers and
+   * hidden tabs fall back to the media clock.
    */
-  const advance = (runId: number) => {
+  const advance = (runId: number, presentedTime: number) => {
     const video = videoRef.current;
     if (!video || runId !== runIdRef.current || !isRunningRef.current) return;
 
-    const { currentTime, duration } = video;
+    const { duration } = video;
 
     // The outbound half of a wrap. Its target is the end of the clip, not the
     // intent's frame — that one lies behind us and is only reachable by
     // starting over.
     if (isWrappingRef.current) {
-      if (!Number.isFinite(duration) || currentTime < duration - ENDPOINT_MARGIN_SECONDS) return;
+      if (!hasReachedTarget("light", presentedTime, duration)) return;
 
       isWrappingRef.current = false;
       video.currentTime = 0;
-      if (video.paused) void video.play().then(undefined, () => settle());
+      if (video.paused) void video.play().then(undefined, () => settle(true));
       return;
     }
 
     // Playback can begin before metadata has landed, so duration is briefly
     // unknown. Keep polling rather than bailing out — a dropped monitor would
     // let the clip run past its stopping point.
-    if (hasReachedTarget(lookRef.current, currentTime, duration)) settle();
+    if (hasReachedTarget(lookRef.current, presentedTime, duration)) settle();
   };
 
-  const monitor = (runId: number) => {
+  function scheduleMonitor(runId: number) {
+    const video = videoRef.current;
+    if (!video || runId !== runIdRef.current || !isRunningRef.current) return;
+
+    // Mobile WebKit may advance `currentTime` hundreds of milliseconds ahead of
+    // the frame it has actually painted. Pausing on that clock discards the
+    // queued frames and visibly freezes the return transition around 80%.
+    // Frame callbacks observe compositor delivery instead, which is the event
+    // the interaction genuinely cares about.
+    if (typeof video.requestVideoFrameCallback === "function") {
+      const scheduled: PlaybackMonitor = { kind: "video-frame", id: -1 };
+      scheduled.id = video.requestVideoFrameCallback((_now, metadata) => {
+        if (monitorRef.current === scheduled) monitorRef.current = null;
+        monitor(runId, metadata.mediaTime);
+      });
+      monitorRef.current = scheduled;
+      return;
+    }
+
+    const scheduled: PlaybackMonitor = { kind: "animation-frame", id: -1 };
+    scheduled.id = window.requestAnimationFrame(() => {
+      if (monitorRef.current === scheduled) monitorRef.current = null;
+      monitor(runId, video.currentTime);
+    });
+    monitorRef.current = scheduled;
+  }
+
+  function monitor(runId: number, presentedTime: number) {
     const video = videoRef.current;
     if (!video || runId !== runIdRef.current) return;
 
-    advance(runId);
+    presentedTimeRef.current = presentedTime;
+    advance(runId, presentedTime);
 
     // `advance` may have settled this run, and settling cancels the frame it
     // does not know about yet. Re-check before booking the next one.
     if (runId !== runIdRef.current || !isRunningRef.current) return;
 
-    frameRef.current = window.requestAnimationFrame(() => monitor(runId));
-  };
+    scheduleMonitor(runId);
+  }
 
   /**
    * Drive the element to whatever the intent currently is.
@@ -241,18 +316,19 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     video.volume = 0;
     video.playbackRate = VIDEO_SPEED;
 
-    // Nobody is watching a hidden tab, and rAF does not run in one — the clip
-    // would play on with nothing to stop it at the midpoint and end up on the
-    // wrong frame. Skip the animation and go straight to the destination.
+    // Nobody is watching a hidden tab, and visual frame callbacks are suspended
+    // there — the clip would play on with nothing to stop it at the midpoint and
+    // end up on the wrong frame. Skip the animation and go straight to the
+    // destination.
     //
     // Only where the destination can be seeked to, though. Where it cannot,
     // snapping is not on offer and stopping here would leave the picture
-    // disagreeing with the button, so the run goes ahead unwatched by rAF and
-    // `timeupdate` stops it instead — that one keeps firing in a hidden tab.
+    // disagreeing with the button, so the run goes ahead unwatched by visual
+    // callbacks and `timeupdate` stops it instead.
     if (document.hidden) {
       const resting = restingFrame(lookRef.current, video.duration);
       if (resting === null || canSeekTo(toRanges(video.seekable), resting)) {
-        settle();
+        settle(true);
         return;
       }
     }
@@ -267,6 +343,8 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
         stallTimerRef.current = null;
         if (runId !== runIdRef.current) return;
         isRunningRef.current = false;
+        isVisuallySettledRef.current = false;
+        setIsVideoAnimating(false);
         setIsVideoLoading(false);
         setIsVideoUnavailable(true);
       }, STALL_TIMEOUT_MS);
@@ -275,7 +353,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     const plan = planRun(
       lookRef.current,
-      video.currentTime,
+      presentedTimeRef.current ?? video.currentTime,
       video.duration,
       toRanges(video.seekable),
     );
@@ -290,7 +368,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     isRunningRef.current = true;
     setIsVideoLoading(true);
-    frameRef.current = window.requestAnimationFrame(() => monitor(runId));
+    scheduleMonitor(runId);
 
     void video.play().then(
       () => {
@@ -299,9 +377,9 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       },
       () => {
         // Aborted, blocked by policy, or out of data. The transition is lost;
-        // the intent is not, so settle() lands on the frame it asked for.
+        // the intent is not, so the invisible correction keeps state intact.
         if (runId !== runIdRef.current) return;
-        settle();
+        settle(true);
       },
     );
   };
@@ -348,15 +426,14 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     return () => observer.disconnect();
   }, []);
 
-  // Leaving the tab mid-transition stops rAF, so the monitor that would halt
-  // the clip at its midpoint stops with it while the media plays on. Finishing
-  // the run immediately puts the element on the frame the intent asks for, so
-  // coming back finds the card in the state it was left in rather than one
-  // frame past it.
+  // Leaving the tab mid-transition suspends visual frame delivery while the
+  // media clock can keep moving. Finishing the run immediately puts the element
+  // on the frame the intent asks for, so coming back finds the card in the state
+  // it was left in rather than one frame past it.
   //
   // Only when the resting frame can be seeked to, though: where it cannot,
   // finishing early would strand the picture mid-transition, so the run is left
-  // to `timeupdate` — which, unlike rAF, keeps firing while the tab is hidden.
+  // to `timeupdate`, which can keep firing while the tab is hidden.
   useEffect(() => {
     const onVisibilityChange = () => {
       if (!document.hidden || !isRunningRef.current) return;
@@ -365,7 +442,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
       if (!video) return;
 
       const resting = restingFrame(lookRef.current, video.duration);
-      if (resting === null || canSeekTo(toRanges(video.seekable), resting)) settle();
+      if (resting === null || canSeekTo(toRanges(video.seekable), resting)) settle(true);
     };
 
     document.addEventListener("visibilitychange", onVisibilityChange);
@@ -374,10 +451,11 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
   useEffect(
     () => () => {
-      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
-      if (stallTimerRef.current !== null) window.clearTimeout(stallTimerRef.current);
+      stopMonitor();
+      stopStallTimer();
+      stopEndDrainTimer();
     },
-    [],
+    [stopEndDrainTimer, stopMonitor, stopStallTimer],
   );
 
   // Hovering the card is the reliable tell that the toggle is about to be
@@ -396,6 +474,12 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
   };
 
   const handleVideoToggle = () => {
+    // This is an explanatory state transition, not a scrubbable control. A
+    // second tap while the first 1.28s run is still active used to mirror-seek
+    // the clip mid-flight. Mobile Safari can surface those seeks as a flash, so
+    // one transition is deliberately atomic.
+    if (isRunningRef.current) return;
+
     // Straight away, not after the clip starts: the click is the gesture the
     // browser grants playback on, and the toggle can wait several hundred ms
     // for video to buffer. A switch that clicks late reads as a lag.
@@ -404,6 +488,8 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     const next = nextLook(lookRef.current);
     lookRef.current = next;
     setLook(next);
+    isVisuallySettledRef.current = false;
+    setIsVideoAnimating(true);
     frameRecoveriesRef.current = 0;
 
     // Touch never hovers, so for those visitors this tap is the first request
@@ -462,15 +548,13 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     // Guarded twice over, because this seek fires the very event that runs it:
     // refused outright where the frame cannot be seeked to, and capped for a
     // browser that accepts the seek and lands somewhere else anyway.
-    if (action === "recover-frame") {
-      const frame = restingFrame(lookRef.current, video.duration);
-      if (frame === null) return;
-      if (isAtRest(lookRef.current, video.currentTime, video.duration)) return;
+    if (action === "recover-frame" && !isVisuallySettledRef.current) {
       if (frameRecoveriesRef.current >= MAX_FRAME_RECOVERIES) return;
-      if (!canSeekTo(toRanges(video.seekable), frame)) return;
-
-      frameRecoveriesRef.current += 1;
-      video.currentTime = frame;
+      if (moveToRestingFrame(video, lookRef.current)) frameRecoveriesRef.current += 1;
+      if (isAtRest(lookRef.current, video.currentTime, video.duration)) {
+        isVisuallySettledRef.current = true;
+        presentedTimeRef.current = video.currentTime;
+      }
     }
   };
 
@@ -486,19 +570,42 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     if (isWrappingRef.current && video && isRunningRef.current) {
       isWrappingRef.current = false;
       video.currentTime = 0;
-      void video.play().then(undefined, () => settle());
+      void video.play().then(undefined, () => settle(true));
       return;
     }
 
-    settle();
+    // iOS can advance the media clock to `ended` while the compositor still has
+    // hundreds of milliseconds of decoded frames queued. Settling here used to
+    // pause and discard that tail around 80%. A live video-frame monitor is the
+    // authority; let it drain to the actual final frame.
+    if (monitorRef.current?.kind === "video-frame" && !document.hidden) {
+      const runId = runIdRef.current;
+      stopEndDrainTimer();
+      endDrainTimerRef.current = window.setTimeout(() => {
+        endDrainTimerRef.current = null;
+        if (runId !== runIdRef.current || !isRunningRef.current) return;
+        settle(lookRef.current === "dark");
+      }, END_DRAIN_TIMEOUT_MS);
+      return;
+    }
+
+    settle(lookRef.current === "dark");
   };
 
-  // rAF stops in a hidden tab and can fall behind under load, while the media
-  // plays on either way. `timeupdate` fires from the media clock itself, so it
-  // catches the endpoint the monitor would have missed — coarser (about four a
-  // second), which is why it backs the monitor up rather than replacing it.
+  // `timeupdate` is only a transport fallback. While visible, a video-frame
+  // callback is the source of truth because the media clock can run ahead of
+  // pixels actually painted by mobile WebKit. In a hidden tab there is nothing
+  // to paint, so the clock may safely finish an otherwise unseekable run.
   const handleVideoTimeUpdate = () => {
-    if (isRunningRef.current) advance(runIdRef.current);
+    if (!isRunningRef.current) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const hasPresentedFrameMonitor = monitorRef.current?.kind === "video-frame";
+    if (document.hidden || !hasPresentedFrameMonitor) {
+      advance(runIdRef.current, video.currentTime);
+    }
   };
 
   const handleVideoPlaying = () => {
@@ -521,12 +628,16 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
 
     runIdRef.current += 1;
     isRunningRef.current = false;
+    isVisuallySettledRef.current = false;
     isWrappingRef.current = false;
     stopMonitor();
     stopStallTimer();
+    stopEndDrainTimer();
 
     isVideoReadyRef.current = false;
+    presentedTimeRef.current = null;
     setIsVideoReady(false);
+    setIsVideoAnimating(false);
     setIsVideoLoading(false);
 
     // The control is withdrawn rather than left standing on a promise it cannot
@@ -542,6 +653,7 @@ export function useZonnebankVideo(): ZonnebankVideoControls {
     handleCardPointerEnter,
     isVideoReady,
     isVideoActive: look === "dark",
+    isVideoAnimating,
     isVideoLoading,
     isVideoUnavailable,
     handleVideoToggle,

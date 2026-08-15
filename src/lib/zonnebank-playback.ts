@@ -17,11 +17,22 @@
 export type Look = "light" | "dark";
 
 /**
- * How close to a frame counts as being on it. One rAF tick advances the clip
- * ~17ms at 1x, so this covers a single frame of overshoot before the hook snaps
- * to the exact resting position.
+ * How close to a state counts as already showing that state. This is deliberately
+ * a visual tolerance rather than a canonical resting position: the hook may use
+ * it to avoid replaying an imperceptible tail, but still normalises the idle
+ * element to the exact frame returned by `restingFrame`.
  */
 export const ENDPOINT_MARGIN_SECONDS = 0.04;
+
+/**
+ * The clips are 60fps. A frame callback reports the presentation timestamp at
+ * the start of a frame, so the final displayed frame sits roughly one frame
+ * before `duration` rather than exactly on it.
+ */
+export const PRESENTED_FRAME_MARGIN_SECONDS = 0.02;
+
+/** Floating-point tolerance for an exact, canonical resting-frame check. */
+const CANONICAL_FRAME_EPSILON_SECONDS = 0.001;
 
 function hasUsableDuration(duration: number): boolean {
   return Number.isFinite(duration) && duration > 0;
@@ -57,6 +68,17 @@ export function isAtRest(look: Look, currentTime: number, duration: number): boo
 }
 
 /**
+ * Whether the media clock is on the one canonical idle frame for this look.
+ *
+ * Unlike `isAtRest`, the end of the clip is not a canonical light frame. Using
+ * frame zero for every light rest makes the next transition deterministic.
+ */
+export function isOnRestingFrame(look: Look, currentTime: number, duration: number): boolean {
+  const frame = restingFrame(look, duration);
+  return frame !== null && Math.abs(currentTime - frame) <= CANONICAL_FRAME_EPSILON_SECONDS;
+}
+
+/**
  * Where playback has to start to reach the target by running forward.
  *
  * The clip only plays one way, so a position in the wrong half would travel
@@ -69,8 +91,18 @@ export function startFrame(look: Look, currentTime: number, duration: number): n
   if (!hasUsableDuration(duration)) return currentTime;
 
   const midpoint = duration / 2;
-  if (look === "dark" && currentTime > midpoint) return duration - currentTime;
-  if (look === "light" && currentTime < midpoint) return duration - currentTime;
+  // Container durations are rounded independently from frame timestamps. On
+  // iOS the real dark frame is 1.283333s while half the reported 2.567s duration
+  // is 1.283500s. Treating that sub-frame difference as the wrong half issues a
+  // needless seek, which restarts Safari's hardware decoder and flashes the
+  // closed frame before opening. Only mirror when the picture is meaningfully
+  // across the midpoint.
+  if (look === "dark" && currentTime > midpoint + ENDPOINT_MARGIN_SECONDS) {
+    return duration - currentTime;
+  }
+  if (look === "light" && currentTime < midpoint - ENDPOINT_MARGIN_SECONDS) {
+    return duration - currentTime;
+  }
   return currentTime;
 }
 
@@ -97,12 +129,19 @@ export function canPlayAction(isRunning: boolean, isPaused: boolean): CanPlayAct
   return isRunning ? "resume-run" : "recover-frame";
 }
 
-/** Whether a running transition has arrived, margin included. */
+/**
+ * Whether a presented frame has reached the target.
+ *
+ * Dark has a real frame at the midpoint, so it should be shown before stopping.
+ * Light lives on the clip's final frame, whose presentation timestamp is one
+ * 60fps frame before the media duration.
+ */
 export function hasReachedTarget(look: Look, currentTime: number, duration: number): boolean {
   if (!hasUsableDuration(duration)) return false;
 
   const endpoint = look === "dark" ? duration / 2 : duration;
-  return currentTime >= endpoint - ENDPOINT_MARGIN_SECONDS;
+  const margin = look === "light" ? PRESENTED_FRAME_MARGIN_SECONDS : CANONICAL_FRAME_EPSILON_SECONDS;
+  return currentTime >= endpoint - margin;
 }
 
 /** A `TimeRanges` list flattened into plain pairs, so this file stays testable. */

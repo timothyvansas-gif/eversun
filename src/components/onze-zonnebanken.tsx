@@ -106,6 +106,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
     handleCardPointerEnter,
     isVideoReady,
     isVideoActive,
+    isVideoAnimating,
     isVideoLoading,
     isVideoUnavailable,
     handleVideoToggle,
@@ -133,6 +134,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           videoPreload={videoPreload}
           isVideoReady={isVideoReady}
           isVideoActive={isVideoActive}
+          isVideoAnimating={isVideoAnimating}
           isVideoLoading={isVideoLoading}
           isVideoUnavailable={isVideoUnavailable}
           onVideoToggle={handleVideoToggle}

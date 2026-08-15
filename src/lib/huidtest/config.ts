@@ -25,7 +25,7 @@ export const whatsappUrl = (message: string) =>
 
 export const INTRO = {
   kop: "Welke bank en welk product passen bij jouw huid?",
-  body: "Vijf korte vragen, klaar in een minuutje. Aan het eind weet je waar je huid blij van wordt.",
+  body: "Binnen een minuut weet je waar je huid blij van wordt.",
   wettelijk: "Zonnebanken zijn in Nederland alleen toegestaan vanaf 18 jaar.",
   vraag: "Ben je 18 jaar of ouder?",
   ja: "Ja, ik ben 18+",

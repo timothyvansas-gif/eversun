@@ -5,6 +5,7 @@ import {
   ENDPOINT_MARGIN_SECONDS,
   hasReachedTarget,
   isAtRest,
+  isOnRestingFrame,
   nextLook,
   planRun,
   restingFrame,
@@ -74,6 +75,18 @@ describe("isAtRest", () => {
   });
 });
 
+describe("isOnRestingFrame", () => {
+  it("uses one canonical frame for light even though both endpoints look light", () => {
+    expect(isOnRestingFrame("light", 0, DURATION)).toBe(true);
+    expect(isOnRestingFrame("light", DURATION, DURATION)).toBe(false);
+  });
+
+  it("only accepts the exact dark midpoint", () => {
+    expect(isOnRestingFrame("dark", MID, DURATION)).toBe(true);
+    expect(isOnRestingFrame("dark", MID - ENDPOINT_MARGIN_SECONDS / 2, DURATION)).toBe(false);
+  });
+});
+
 describe("startFrame", () => {
   it("leaves a position that already runs toward the target", () => {
     expect(startFrame("dark", 0, DURATION)).toBe(0);
@@ -89,13 +102,27 @@ describe("startFrame", () => {
     expect(startFrame("light", DURATION * 0.25, DURATION)).toBeCloseTo(DURATION * 0.75, 6);
   });
 
-  it("always lands in the half that ends on the target", () => {
+  it("does not seek across a rounded midpoint by less than one visual frame", () => {
+    const roundedDuration = 2.567;
+    const presentedDarkFrame = 1.283333;
+
+    expect(startFrame("light", presentedDarkFrame, roundedDuration)).toBe(presentedDarkFrame);
+    expect(startFrame("dark", roundedDuration - presentedDarkFrame, roundedDuration)).toBe(
+      roundedDuration - presentedDarkFrame,
+    );
+  });
+
+  it("lands in the target half or within one visual-frame margin of it", () => {
     // The property the mirroring exists for: wherever the clip was left, the
     // start frame must sit in the half that runs toward the intent, or playback
     // would travel away from it.
     for (const at of [0, 0.4, MID - 0.01, MID + 0.01, DURATION * 0.8, DURATION]) {
-      expect(startFrame("dark", at, DURATION)).toBeLessThanOrEqual(MID);
-      expect(startFrame("light", at, DURATION)).toBeGreaterThanOrEqual(MID);
+      expect(startFrame("dark", at, DURATION)).toBeLessThanOrEqual(
+        MID + ENDPOINT_MARGIN_SECONDS,
+      );
+      expect(startFrame("light", at, DURATION)).toBeGreaterThanOrEqual(
+        MID - ENDPOINT_MARGIN_SECONDS,
+      );
     }
   });
 
@@ -134,8 +161,13 @@ describe("hasReachedTarget", () => {
     expect(hasReachedTarget("light", DURATION, DURATION)).toBe(true);
   });
 
-  it("catches an endpoint the rAF tick stepped just short of", () => {
-    expect(hasReachedTarget("dark", MID - ENDPOINT_MARGIN_SECONDS / 2, DURATION)).toBe(true);
+  it("waits for the real midpoint frame before stopping on dark", () => {
+    expect(hasReachedTarget("dark", MID - ENDPOINT_MARGIN_SECONDS / 2, DURATION)).toBe(false);
+    expect(hasReachedTarget("dark", MID, DURATION)).toBe(true);
+  });
+
+  it("accepts the final presented 60fps frame as the light endpoint", () => {
+    expect(hasReachedTarget("light", DURATION - 1 / 60, DURATION)).toBe(true);
   });
 
   it("never reports arrival before the duration is known", () => {
