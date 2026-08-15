@@ -6,11 +6,9 @@ import { quietFocus } from "@/lib/quiet-focus";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { INTRO, QUESTIONS } from "@/lib/huidtest/config";
-import { decide } from "@/lib/huidtest/decide";
+import { QUESTIONS } from "@/lib/huidtest/config";
 import {
   currentAnswer as answerFor,
-  isComplete,
   progressFor,
   stepKey as keyFor,
   type Step,
@@ -18,15 +16,23 @@ import {
 } from "@/lib/huidtest/flow";
 import { useHuidtestFlow } from "@/components/huidtest/use-huidtest-flow";
 import { useHuidtestStageMetrics } from "@/components/huidtest/use-huidtest-stage-metrics";
+import {
+  INSTANT,
+  STEP_FADE,
+  STEP_GAP,
+  STEP_SLIDE,
+  SWIPE_BACK_OFFSET,
+  SWIPE_BACK_VELOCITY,
+  SWIPE_RELEASE,
+} from "@/components/huidtest/motion";
 import { HuidtestProgress } from "@/components/huidtest/huidtest-progress";
+import { HuidtestIntro } from "@/components/huidtest/huidtest-intro";
+import { HuidtestQuestionActions } from "@/components/huidtest/huidtest-question-actions";
+import { ResultGuard } from "@/components/huidtest/result-guard";
 import type { QuizAnswers } from "@/lib/huidtest/types";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
-import { CtaButton } from "@/components/huidtest/cta";
-import { StepCard } from "@/components/huidtest/step-card";
-import { StickyActions } from "@/components/huidtest/sticky-actions";
 import QuestionCard from "@/components/huidtest/question-card";
 import ExitScreen from "@/components/huidtest/exit-screen";
-import ResultScreen from "@/components/huidtest/result-screen";
 
 /**
  * The quiz, top to bottom, wherever it is shown: a side panel on desktop, a
@@ -43,69 +49,12 @@ import ResultScreen from "@/components/huidtest/result-screen";
  */
 
 /**
- * One glide, shared by the step arriving and the step leaving.
- *
- * They used to differ — a longer entrance over a short hop, a shorter exit —
- * on the reasoning that a screen on its way out has nothing left to say. Beside
- * the swipe that reasoning fell apart: the gesture moves both screens as one
- * strip under the finger, and a forward step that crossfaded over a 24px nudge
- * was plainly a different thing to the same move made by hand. Two halves of
- * one strip cannot keep different clocks without a seam opening between them,
- * so there is one duration and one easing, and the distance is the width the
- * swipe pulls back by.
- */
-/*
- * A spring rather than a curve, for the same reason the sheets here use one:
- * a step that is dragged and a step that is confirmed should be governed by
- * the same physics, or the button and the finger produce two different moves.
- *
- * Softer than the sheets' own `STACK_SPRING` (300/40), which is tuned for a
- * panel snapping home, but not by as much as it first was: at a stiffness of
- * 80 the glide was smooth and a beat too slow to sit behind a tap. Critical
- * damping — the point where a spring settles without ever crossing its
- * target — is `2 * sqrt(stiffness * mass)`, about 21.9 here. Sitting just
- * under it keeps the settle even without a card that slides past the edge and
- * comes back, which on a question would read as a wobble rather than a move.
- */
-const STEP_SLIDE = { type: "spring", stiffness: 120, damping: 21, mass: 1 } as const;
-
-/**
- * Breathing room between two question cards while they share the stage. It is
- * the same 24px rhythm as the surface padding, and part of the travel itself —
- * not a margin on either card — so forward animation and back-swipe expose the
- * exact same gap without changing either card's resting width.
- */
-const STEP_GAP = 24;
-
-/**
- * For the screens either side of the questions, which have no sibling to slide
- * against: the advice arrives as the progress bar above it closes, and a
- * carousel move on top of that is two things happening at once.
- */
-const STEP_FADE = { duration: 0.32, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] };
-
-/** No transition at all, for a step change a gesture has already performed. */
-const INSTANT = { duration: 0 };
-
-/**
  * What a step needs to know to change places: how far it travels and in which
  * direction — negative going back — and whether a finger has already done the
  * moving. A travel of zero means the step has no sibling to slide against and
  * fades instead.
  */
 type StepMotion = { travel: number; instant: boolean };
-
-/**
- * How the action bar leaves: quietly, unless the screen it is leaving for has
- * a bar of its own to put in its place, in which case there is nothing to show
- * and it goes on the spot. Read at the moment it leaves — see `custom` below.
- */
-const BAR_VARIANTS = {
-  exit: (handsOver: boolean) =>
-    handsOver
-      ? { opacity: 0, transition: INSTANT }
-      : { opacity: 0, y: 16, transition: STEP_FADE },
-};
 
 /**
  * As variants rather than inline props, because that is what lets a step read
@@ -125,28 +74,6 @@ const STEP_VARIANTS = {
     transition: instant ? INSTANT : travel === 0 ? STEP_FADE : STEP_SLIDE,
   }),
 };
-
-/**
- * Both ends of a released swipe: carried the rest of the way when it counts as
- * going back, or returned to where it started when it does not.
- *
- * The same spring the buttons move a step on, so that letting go continues the
- * gesture rather than handing it to something with a different idea of weight.
- * It was a short tween for a while, because a spring stops once it is close
- * enough to call itself at rest and that left a sliver of the outgoing card
- * short of the edge — but the step area cuts its own sides now, so there is no
- * longer an edge to fall short of.
- */
-const SWIPE_RELEASE = STEP_SLIDE;
-
-/**
- * How far a swipe has to travel, or how fast, before it counts as going back.
- * The same pair the sheets dismiss on, a notch shorter: this gesture undoes one
- * answer rather than closing the test, so it should not ask for as much
- * commitment as the one that throws the whole thing away.
- */
-const SWIPE_BACK_OFFSET = 60;
-const SWIPE_BACK_VELOCITY = 300;
 
 export default function HuidtestQuiz({
   shared = null,
@@ -282,45 +209,10 @@ export default function HuidtestQuiz({
   const renderStep = (s: Step) => (
     <>
       {s.kind === "intro" && (
-        // The whole opening on one card: what the test is, the law it works
-        // under, and the gate itself. Split across the surface it read as three
-        // unrelated blocks; together it is one thing to answer.
-        <StepCard>
-          <h2
-            ref={headingRef as React.RefObject<HTMLHeadingElement>}
-            tabIndex={-1}
-            className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em] outline-none"
-          >
-            {INTRO.kop}
-          </h2>
-
-          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-            {INTRO.body}
-          </p>
-
-          {/* A rule where the card turns from telling to asking. The gate is a
-              different kind of thing from the paragraph above it, and a line
-              says so more quietly than white space can at this size. */}
-          <h3 className="mt-6 border-t border-line/30 pt-6 font-sans text-[17px] font-semibold tracking-[-0.01em] text-ink-primary">
-            {INTRO.vraag}
-          </h3>
-
-          <p className="mt-1 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
-            {INTRO.wettelijk}
-          </p>
-
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <CtaButton onClick={() => dispatch({ type: "confirmAge", age: "ok" })}>
-              {INTRO.ja}
-            </CtaButton>
-            <CtaButton
-              variant="outline"
-              onClick={() => dispatch({ type: "confirmAge", age: "minor" })}
-            >
-              {INTRO.nee}
-            </CtaButton>
-          </div>
-        </StepCard>
+        <HuidtestIntro
+          headingRef={headingRef}
+          onConfirm={(age) => dispatch({ type: "confirmAge", age })}
+        />
       )}
 
       {s.kind === "vraag" && (
@@ -340,7 +232,7 @@ export default function HuidtestQuiz({
       )}
 
       {s.kind === "resultaat" && (
-        <Resultaat
+        <ResultGuard
           answers={answers}
           bekekenBank={bekekenBank}
           headingRef={headingRef}
@@ -552,153 +444,17 @@ export default function HuidtestQuiz({
         </m.div>
       </div>
 
-      {/* One bar for every question, mounted once and left alone. It used to be
-          rendered inside the question, which cost it twice over: it remounted
-          on every step, so it replayed its entrance and resized as it went, and
-          it sat under whatever transform moved the step, which is what detached
-          its `sticky` from the scrolling surface mid-swipe.
-
-          Out here it is a fixture — the questions slide past it and it does not
-          move. Which also means it can no longer come and go with the answer:
-          the way on is always there, and says so by being disabled until there
-          is something to confirm.
-
-          It does still have to leave when the questions do, and swiping back
-          to the age gate is where that showed: the bar was simply gone the
-          frame the step changed, while the card it belonged to was still on
-          its way out. Now it drops and fades on the way. `popLayout` hands
-          its height back at the start rather than the end, which is what the
-          step area grows into — so the space closes while the bar is still
-          visibly leaving, instead of after it has blinked out.
-
-          Except into the advice, which brings a bar of its own. There the two
-          are the same fixture with different buttons on it, and playing one
-          out while the other comes in is a handover made visible for no
-          reason — `popLayout` takes the leaving one out of the flow to close
-          the gap, so it spent its fade lying across the photo of the bed. It
-          goes on the spot instead, and the advice's own bar is already
-          standing where it stood. */}
-      <AnimatePresence initial={false} mode="popLayout" custom={step.kind === "resultaat"}>
-        {step.kind === "vraag" && (
-        <StickyActions
-          key="quiz-actions"
-          className="mt-7 shrink-0 md:mt-4"
-          variants={BAR_VARIANTS}
-          exit="exit"
-        >
-          <div className="flex items-center gap-3 md:justify-between">
-            {/* First in the DOM so the primary action is reached before the
-                secondary back action. CSS order keeps back visually left. */}
-            <CtaButton
-              className="order-2 flex-1 md:flex-none"
-              disabled={!currentAnswer}
-              onClick={() => dispatch({ type: "advance", index: step.index })}
-            >
-              Volgende
-            </CtaButton>
-
-            {/* Thumb-height, thumb-width, and beside the button it undoes rather
-                than at the top of a sheet. Unlike the decorative CTA arrows
-                removed elsewhere, this icon communicates the control's only
-                action: returning to the previous question. */}
-            <button
-              type="button"
-              onClick={() => back()}
-              aria-label="Terug naar de vorige vraag"
-              className="order-1 flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink-primary/25 text-ink-strong transition-colors duration-150 hover:border-ink-primary md:hidden"
-            >
-              <svg width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M13.5 8h-9m0 0L8 4m-3.5 4L8 12"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-            </button>
-
-            {/* The panel's own back, at the button's own baseline rather than
-                pinned above the questions: up there it moved every time the
-                bar under it changed height, which on a panel tall enough to
-                never scroll is a jump with nothing to blame it on. Mounted for
-                every question rather than only once the stack allows it — the
-                stack always does, since a step this bar is drawn on has always
-                come from somewhere, so a condition here would never once have
-                been false in practice. */}
-            <button
-              type="button"
-              onClick={() => back()}
-              className="order-1 hidden min-h-[44px] cursor-pointer items-center gap-2 rounded-full px-2 font-sans text-[15px] tracking-[-0.01em] text-zinc-500 transition-colors duration-150 hover:text-zinc-900 md:inline-flex"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M10 3L5 8l5 5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Terug
-            </button>
-
-          </div>
-        </StickyActions>
-        )}
-      </AnimatePresence>
+      <HuidtestQuestionActions
+        visible={step.kind === "vraag"}
+        handsOver={step.kind === "resultaat"}
+        canConfirm={Boolean(currentAnswer)}
+        // The narrowing is only for the type checker: the bar is not drawn on
+        // anything but a question, so this cannot be called on another screen.
+        onNext={() => {
+          if (step.kind === "vraag") dispatch({ type: "advance", index: step.index });
+        }}
+        onBack={() => back()}
+      />
     </div>
-  );
-}
-
-/**
- * The result needs a complete answer set. Anything less means the quiz was
- * entered halfway — a stale panel, a hand-edited link — and the honest response
- * is to start over rather than advise on gaps.
- */
-function Resultaat({
-  answers,
-  bekekenBank,
-  headingRef,
-  onRestart,
-}: {
-  answers: Partial<QuizAnswers>;
-  bekekenBank?: ZonnebankSlug;
-  headingRef: React.RefObject<HTMLHeadingElement | null>;
-  onRestart: () => void;
-}) {
-  const complete = isComplete(answers);
-  const advies = complete ? decide(answers) : null;
-
-  // Nothing is reported from here. Arriving on this screen is a transition, and
-  // the flow reports transitions — which is what makes the result count one
-  // rather than one per render.
-
-  if (!complete || !advies) {
-    return (
-      <div>
-        <h2
-          ref={headingRef as React.RefObject<HTMLHeadingElement>}
-          tabIndex={-1}
-          className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight outline-none"
-        >
-          Deze test is nog niet af
-        </h2>
-        <CtaButton className="mt-6" onClick={onRestart}>
-          Opnieuw doen
-        </CtaButton>
-      </div>
-    );
-  }
-
-  return (
-    <ResultScreen
-      answers={answers}
-      advies={advies}
-      bekekenBank={bekekenBank}
-      headingRef={headingRef}
-      onRestart={onRestart}
-    />
   );
 }
