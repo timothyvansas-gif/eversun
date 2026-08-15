@@ -65,7 +65,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
+            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[180px] lg:w-auto lg:!px-7`}
           >
             Doe de huidtest
           </button>

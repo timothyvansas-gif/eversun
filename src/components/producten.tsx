@@ -121,9 +121,9 @@ function ProductCardItem({ product }: { product: Product }) {
           <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
           <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
-              <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">Sachet {product.sachetPrice}</span>
+              <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">Sachet {product.sachetPrice}</span>
             )}
-            <span className="text-[14px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">{product.containerLabel} {product.containerPrice}</span>
+            <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">{product.containerLabel} {product.containerPrice}</span>
           </div>
         </div>
 
@@ -155,7 +155,7 @@ function ProductCardItem({ product }: { product: Product }) {
           <div className="product-moving-copy flex flex-col gap-[6px]">
             <div className="product-primary-copy flex flex-col gap-[6px]">
               <div className="flex items-center gap-3">
-                <h3 className="min-w-0 text-ink-strong text-[18px] font-medium tracking-[-0.24px] font-display">
+                <h3 className="min-w-0 text-ink-strong text-[20px] font-medium tracking-[-0.24px] font-display">
                   {product.name}
                 </h3>
                 <svg
@@ -173,7 +173,7 @@ function ProductCardItem({ product }: { product: Product }) {
                   <path d="M10 6.25h.01" />
                 </svg>
               </div>
-              <p className="text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
+              <p className="text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans">
                 {product.description}
               </p>
             </div>
@@ -181,7 +181,7 @@ function ProductCardItem({ product }: { product: Product }) {
               <p
                 id={descriptionId}
                 aria-hidden={!isExpanded}
-                className="product-hover-description text-zinc-500 text-[14px] leading-[22px] tracking-[-0.01em] font-sans"
+                className="product-hover-description text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans"
               >
                 {product.hoverDescription}
               </p>
@@ -191,7 +191,7 @@ function ProductCardItem({ product }: { product: Product }) {
             {product.labels.map((label) => (
               <span
                 key={label}
-                className="text-muted text-[14px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
+                className="text-muted text-[15px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
                 style={{ backgroundColor: "#FEF9F5" }}
               >
                 {label}
@@ -317,7 +317,7 @@ export default function Producten() {
           </div>
 
           <div className="mt-4 xl:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-7 md:gap-8">
-            <p className="text-muted text-[14px] leading-[25px] tracking-[-0.01em] font-sans">
+            <p className="text-muted text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15 ml sachets zijn geschikt voor eenmalig gebruik.
             </p>
             <PlanMomentButton />
