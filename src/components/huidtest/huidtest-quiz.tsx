@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, animate, m, useMotionValue, useTransform } from "framer-motion";
-import { trackEvent } from "@/lib/analytics";
 import { quietFocus } from "@/lib/quiet-focus";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
@@ -12,12 +11,12 @@ import { decide } from "@/lib/huidtest/decide";
 import {
   currentAnswer as answerFor,
   isComplete,
-  nextStep,
-  openingStep,
   progressFor,
   stepKey as keyFor,
   type Step,
+  type Transition,
 } from "@/lib/huidtest/flow";
+import { useHuidtestFlow } from "@/components/huidtest/use-huidtest-flow";
 import type { QuizAnswers } from "@/lib/huidtest/types";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
 import { CtaButton } from "@/components/huidtest/cta";
@@ -188,11 +187,32 @@ export default function HuidtestQuiz({
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
 
-  // A shared link is where this render starts: the answers were in the URL
-  // before the first paint. Deriving the opening step from them beats setting
-  // state in an effect, which would paint the intro and replace it a frame on.
-  const [stack, setStack] = useState<Step[]>(() => [openingStep(shared)]);
-  const [answers, setAnswers] = useState<Partial<QuizAnswers>>(() => shared ?? { tattoo: false });
+  // Which way the last move went, so a step leaves the way the next one comes
+  // in. Forward and back looking identical is what makes a wizard feel like it
+  // is shuffling rather than moving.
+  const [direction, setDirection] = useState<1 | -1>(1);
+
+  // Whether the step now on screen was carried there by the gesture. Its
+  // entrance would otherwise run a second time over a screen that has finished
+  // arriving, which reads as the question flinching once it lands.
+  const [swipedBack, setSwipedBack] = useState(false);
+
+  // The cause the flow reports is the only thing movement is decided from.
+  // Going back never clears the swipe flag: the gesture raises it before it asks
+  // to go back, and clearing it here would put an entrance animation over a
+  // screen the finger has already carried into place.
+  const onTransition = useCallback(({ cause }: NonNullable<Transition>) => {
+    const forward = cause === "advance" || cause === "restart";
+    setDirection(forward ? 1 : -1);
+    if (forward) setSwipedBack(false);
+  }, []);
+
+  const config = useMemo(
+    () => ({ questions: QUESTIONS, entry, historyBacked }),
+    [entry, historyBacked],
+  );
+  const { state, dispatch } = useHuidtestFlow(shared, config, onTransition);
+  const { stack, answers } = state;
 
   const step = stack[stack.length - 1];
 
@@ -214,12 +234,7 @@ export default function HuidtestQuiz({
   const showProgress =
     resultProgressKey === null || dismissedResultProgressKey !== resultProgressKey;
 
-  // Which way the last move went, so a step leaves the way the next one comes
-  // in. Forward and back looking identical is what makes a wizard feel like it
-  // is shuffling rather than moving.
-  const [direction, setDirection] = useState<1 | -1>(1);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const hasStarted = useRef(false);
 
   // How far the swipe has pulled the current step, and the step behind it
   // riding the same value one screen-width back. The step area is measured off
@@ -268,52 +283,14 @@ export default function HuidtestQuiz({
     [],
   );
 
-  // Whether the step now on screen was carried there by the gesture. Its
-  // entrance would otherwise run a second time over a screen that has finished
-  // arriving, which reads as the question flinching once it lands.
-  const [swipedBack, setSwipedBack] = useState(false);
-
-  const goTo = useCallback(
-    (next: Step) => {
-      setDirection(1);
-      setSwipedBack(false);
-      setStack((current) => [...current, next]);
-      if (historyBacked) window.history.pushState({ huidtest: true }, "");
-    },
-    [historyBacked],
-  );
-
-  const pop = () => {
-    setDirection(-1);
-    setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
-  };
-
   /** `viaSwipe` when the gesture has already moved the step into place. */
   const back = (viaSwipe = false) => {
+    // Raised before the flow can move, not with it: the step animation reads
+    // its exit from the render it is leaving, so a flag set afterwards arrives
+    // one render too late.
     setSwipedBack(viaSwipe);
-
-    // On the route the browser's back button and the one on screen have to
-    // agree; routing this one through history is what guarantees that, rather
-    // than two implementations that have to be kept in line.
-    if (historyBacked) {
-      setDirection(-1);
-      window.history.back();
-      return;
-    }
-    pop();
+    dispatch({ type: "backRequest" });
   };
-
-  useEffect(() => {
-    if (!historyBacked) return;
-
-    const onPopState = () => {
-      setDirection(-1);
-      setStack((current) => (current.length > 1 ? current.slice(0, -1) : current));
-    };
-
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, [historyBacked]);
 
   // Focus follows the screen, so a screen reader announces the new question
   // instead of leaving the cursor on a button that no longer exists. Quietly:
@@ -324,36 +301,7 @@ export default function HuidtestQuiz({
     if (heading) quietFocus(heading);
   }, [step]);
 
-  // One place that reports leaving the quiz, whether the visitor answered their
-  // way here or arrived on a shared link.
-  useEffect(() => {
-    if (step.kind === "exit") trackEvent("huidtest_exit", { reden: step.reason });
-  }, [step]);
-
-  const handleAge = (age: "ok" | "minor") => {
-    if (age === "minor") {
-      goTo({ kind: "exit", reason: "minor" });
-      return;
-    }
-
-    if (!hasStarted.current) {
-      hasStarted.current = true;
-      trackEvent("huidtest_start", { entry });
-    }
-    goTo({ kind: "vraag", index: 0 });
-  };
-
-  const answer = (index: number, id: string) => {
-    const question = QUESTIONS[index];
-
-    setAnswers((prev) => ({ ...prev, [question.key]: id }) as Partial<QuizAnswers>);
-    trackEvent("huidtest_vraag", { vraag: question.key, antwoord: id });
-  };
-
-  const restart = () => {
-    setAnswers({ tattoo: false });
-    goTo({ kind: "vraag", index: 0 });
-  };
+  const restart = () => dispatch({ type: "restart" });
 
   const progress = progressFor(step, answers, QUESTIONS.length);
 
@@ -416,8 +364,13 @@ export default function HuidtestQuiz({
           </p>
 
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <CtaButton onClick={() => handleAge("ok")}>{INTRO.ja}</CtaButton>
-            <CtaButton variant="outline" onClick={() => handleAge("minor")}>
+            <CtaButton onClick={() => dispatch({ type: "confirmAge", age: "ok" })}>
+              {INTRO.ja}
+            </CtaButton>
+            <CtaButton
+              variant="outline"
+              onClick={() => dispatch({ type: "confirmAge", age: "minor" })}
+            >
               {INTRO.nee}
             </CtaButton>
           </div>
@@ -429,9 +382,9 @@ export default function HuidtestQuiz({
           question={QUESTIONS[s.index]}
           headingRef={headingRef}
           selected={answers[QUESTIONS[s.index].key] as string | undefined}
-          onSelect={(id) => answer(s.index, id)}
+          onSelect={(id) => dispatch({ type: "select", index: s.index, id })}
           checkboxChecked={answers.tattoo}
-          onCheckboxChange={(checked) => setAnswers((prev) => ({ ...prev, tattoo: checked }))}
+          onCheckboxChange={(checked) => dispatch({ type: "toggleTattoo", checked })}
           onHeightChange={isMobile ? undefined : recordQuestionHeight}
         />
       )}
@@ -735,7 +688,7 @@ export default function HuidtestQuiz({
             <CtaButton
               className="order-2 flex-1 md:flex-none"
               disabled={!currentAnswer}
-              onClick={() => goTo(nextStep(step.index, answers, QUESTIONS))}
+              onClick={() => dispatch({ type: "advance", index: step.index })}
             >
               Volgende
             </CtaButton>
@@ -812,25 +765,11 @@ function Resultaat({
   onRestart: () => void;
 }) {
   const complete = isComplete(answers);
+  const advies = complete ? decide(answers) : null;
 
-  // Memoised because the effect below reports on it, and an advice rebuilt on
-  // every render is a new object every render — which is a new dependency every
-  // render, which is the result being reported over and over. The screen
-  // re-renders for reasons that have nothing to do with the answers: the
-  // progress bar holds for 560ms and then dismisses itself, and that alone
-  // guarantees a second pass. Tied to the answers instead, it changes when the
-  // advice can actually have changed.
-  const advies = useMemo(() => (isComplete(answers) ? decide(answers) : null), [answers]);
-
-  useEffect(() => {
-    if (advies) {
-      trackEvent("huidtest_resultaat", {
-        bank: advies.bank,
-        stand: advies.stand,
-        product: advies.product,
-      });
-    }
-  }, [advies]);
+  // Nothing is reported from here. Arriving on this screen is a transition, and
+  // the flow reports transitions — which is what makes the result count one
+  // rather than one per render.
 
   if (!complete || !advies) {
     return (

@@ -1,14 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { QUESTIONS } from "@/lib/huidtest/config";
+import { decide } from "@/lib/huidtest/decide";
 import {
   currentAnswer,
+  init,
   isComplete,
   nextStep,
   openingStep,
   progressFor,
   questionCount,
   stepKey,
+  transition,
+  type FlowAction,
+  type FlowConfig,
+  type FlowEffect,
+  type FlowState,
   type Step,
+  type Transition,
 } from "@/lib/huidtest/flow";
 import type { QuizAnswers } from "@/lib/huidtest/types";
 
@@ -252,5 +260,443 @@ describe("currentAnswer", () => {
   it("is undefined on every screen that is not a question", () => {
     expect(currentAnswer({ kind: "intro" }, SAFE, QUESTIONS)).toBeUndefined();
     expect(currentAnswer({ kind: "resultaat" }, SAFE, QUESTIONS)).toBeUndefined();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* The transition engine                                               */
+/* ------------------------------------------------------------------ */
+
+/** The quiz as the route runs it: back travels through browser history. */
+const ROUTE: FlowConfig = { questions: QUESTIONS, entry: "direct", historyBacked: true };
+
+/** The quiz as a panel runs it: the page underneath owns the history. */
+const PANEL: FlowConfig = { ...ROUTE, historyBacked: false };
+
+type Run = {
+  state: FlowState;
+  effects: FlowEffect[];
+  transitions: Transition[];
+  /** The transition of the last action, which is what most tests are about. */
+  last: Transition;
+};
+
+function drive(
+  config: FlowConfig,
+  shared: QuizAnswers | null,
+  actions: FlowAction[],
+): Run {
+  const opening = init(shared);
+  let state = opening.state;
+  const effects: FlowEffect[] = [...opening.effects];
+  const transitions: Transition[] = [];
+
+  for (const action of actions) {
+    const result = transition(state, action, config);
+    state = result.state;
+    effects.push(...result.effects);
+    transitions.push(result.transition);
+  }
+
+  return { state, effects, transitions, last: transitions[transitions.length - 1] ?? null };
+}
+
+/** Answering a question the way the UI does: pick, then confirm. */
+function answerQuestion(key: keyof QuizAnswers, id: string): FlowAction[] {
+  const index = AT[key as (typeof QUESTIONS)[number]["key"]];
+  return [
+    { type: "select", index, id },
+    { type: "advance", index },
+  ];
+}
+
+const TO_RESULT: FlowAction[] = [
+  { type: "confirmAge", age: "ok" },
+  ...answerQuestion("huidreactie", SAFE.huidreactie),
+  ...answerQuestion("haarkleur", SAFE.haarkleur),
+  ...answerQuestion("ervaring", SAFE.ervaring),
+  ...answerQuestion("doel", SAFE.doel),
+  ...answerQuestion("huidgevoel", SAFE.huidgevoel),
+  ...answerQuestion("kleurstijl", SAFE.kleurstijl!),
+];
+
+const step = (run: Run): Step => run.state.stack[run.state.stack.length - 1];
+type TrackEffect = Extract<FlowEffect, { type: "track" }>;
+
+const tracked = (run: Run): TrackEffect[] =>
+  run.effects.filter((e): e is TrackEffect => e.type === "track");
+const named = (run: Run, name: TrackEffect["name"]): TrackEffect[] =>
+  tracked(run).filter((e) => e.name === name);
+
+describe("init", () => {
+  it("opens the intro with no effects when there is nothing shared", () => {
+    const run = drive(ROUTE, null, []);
+    expect(step(run)).toEqual({ kind: "intro" });
+    expect(run.effects).toEqual([]);
+    expect(run.state.answers).toEqual({ tattoo: false });
+    expect(run.state.started).toBe(false);
+  });
+
+  it("opens the result and reports it once, with the advice decide() gives", () => {
+    const run = drive(ROUTE, SAFE, []);
+    expect(step(run)).toEqual({ kind: "resultaat" });
+    expect(run.effects).toEqual([
+      {
+        type: "track",
+        name: "huidtest_resultaat",
+        props: {
+          bank: decide(SAFE).bank,
+          stand: decide(SAFE).stand,
+          product: decide(SAFE).product,
+        },
+      },
+    ]);
+  });
+
+  it("reports nothing for a link whose answers are incomplete", () => {
+    const run = drive(ROUTE, { ...SAFE, kleurstijl: undefined }, []);
+    expect(step(run)).toEqual({ kind: "resultaat" });
+    expect(run.effects).toEqual([]);
+  });
+
+  it("opens the skin type exit and reports it once", () => {
+    const run = drive(ROUTE, { ...SAFE, huidreactie: "type1" }, []);
+    expect(step(run)).toEqual({ kind: "exit", reason: "type1" });
+    expect(run.effects).toEqual([
+      { type: "track", name: "huidtest_exit", props: { reden: "type1" } },
+    ]);
+  });
+
+  it("opens the red hair exit and reports it once", () => {
+    const run = drive(ROUTE, { ...SAFE, haarkleur: "rossig" }, []);
+    expect(step(run)).toEqual({ kind: "exit", reason: "rossig" });
+    expect(run.effects).toEqual([
+      { type: "track", name: "huidtest_exit", props: { reden: "rossig" } },
+    ]);
+  });
+
+  it("never pushes history, on the route as much as in a panel", () => {
+    for (const shared of [null, SAFE, { ...SAFE, huidreactie: "type1" as const }]) {
+      const run = drive(ROUTE, shared, []);
+      expect(run.effects.filter((e) => e.type !== "track")).toEqual([]);
+    }
+  });
+});
+
+describe("the age gate", () => {
+  it("sends a minor to their own exit and reports it", () => {
+    const run = drive(PANEL, null, [{ type: "confirmAge", age: "minor" }]);
+    expect(step(run)).toEqual({ kind: "exit", reason: "minor" });
+    expect(run.effects).toEqual([
+      { type: "track", name: "huidtest_exit", props: { reden: "minor" } },
+    ]);
+  });
+
+  it("does not report a start for a visitor who is turned away", () => {
+    const run = drive(PANEL, null, [{ type: "confirmAge", age: "minor" }]);
+    expect(named(run, "huidtest_start")).toEqual([]);
+    expect(run.state.started).toBe(false);
+  });
+
+  it("reports the start before the first question is pushed", () => {
+    const run = drive(ROUTE, null, [{ type: "confirmAge", age: "ok" }]);
+    expect(step(run)).toEqual({ kind: "vraag", index: 0 });
+    expect(run.effects).toEqual([
+      { type: "track", name: "huidtest_start", props: { entry: "direct" } },
+      { type: "historyPush" },
+    ]);
+  });
+
+  it("carries the entry point the config was given", () => {
+    const run = drive({ ...PANEL, entry: "zonnebank_kaart" }, null, [
+      { type: "confirmAge", age: "ok" },
+    ]);
+    expect(named(run, "huidtest_start")).toEqual([
+      { type: "track", name: "huidtest_start", props: { entry: "zonnebank_kaart" } },
+    ]);
+  });
+
+  it("reports the start once a session, however often the gate is confirmed", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      { type: "backRequest" },
+      { type: "confirmAge", age: "ok" },
+    ]);
+    expect(named(run, "huidtest_start")).toHaveLength(1);
+  });
+});
+
+describe("the safety exits", () => {
+  it("exits on skin type 1 and never reaches an advice", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type1"),
+    ]);
+    expect(step(run)).toEqual({ kind: "exit", reason: "type1" });
+    expect(named(run, "huidtest_resultaat")).toEqual([]);
+  });
+
+  it("exits on red hair and never reaches an advice", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type3"),
+      ...answerQuestion("haarkleur", "rossig"),
+    ]);
+    expect(step(run)).toEqual({ kind: "exit", reason: "rossig" });
+    expect(named(run, "huidtest_resultaat")).toEqual([]);
+  });
+
+  it("reports each exit exactly once", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type1"),
+    ]);
+    expect(named(run, "huidtest_exit")).toHaveLength(1);
+  });
+});
+
+describe("answering a question", () => {
+  it("writes the answer without moving the screen", () => {
+    const before = drive(PANEL, null, [{ type: "confirmAge", age: "ok" }]);
+    const result = transition(
+      before.state,
+      { type: "select", index: AT.huidreactie, id: "type3" },
+      PANEL,
+    );
+
+    expect(result.transition).toBeNull();
+    expect(result.state.answers.huidreactie).toBe("type3");
+  });
+
+  it("hands the stack back by reference when the screen did not change", () => {
+    const before = drive(PANEL, null, [{ type: "confirmAge", age: "ok" }]);
+    const result = transition(
+      before.state,
+      { type: "select", index: AT.huidreactie, id: "type3" },
+      PANEL,
+    );
+
+    expect(result.state.stack).toBe(before.state.stack);
+  });
+
+  it("reports every pick, including picking the same option again", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      { type: "select", index: AT.huidreactie, id: "type3" },
+      { type: "select", index: AT.huidreactie, id: "type3" },
+    ]);
+
+    expect(named(run, "huidtest_vraag")).toEqual([
+      {
+        type: "track",
+        name: "huidtest_vraag",
+        props: { vraag: "huidreactie", antwoord: "type3" },
+      },
+      {
+        type: "track",
+        name: "huidtest_vraag",
+        props: { vraag: "huidreactie", antwoord: "type3" },
+      },
+    ]);
+  });
+
+  it("never lets a pick report an exit or a result", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      { type: "select", index: AT.huidreactie, id: "type1" },
+    ]);
+
+    expect(named(run, "huidtest_exit")).toEqual([]);
+    expect(named(run, "huidtest_resultaat")).toEqual([]);
+  });
+
+  it("toggles the tattoo checkbox silently, without moving the screen", () => {
+    const before = drive(PANEL, null, [{ type: "confirmAge", age: "ok" }]);
+    const result = transition(before.state, { type: "toggleTattoo", checked: true }, PANEL);
+
+    expect(result.effects).toEqual([]);
+    expect(result.transition).toBeNull();
+    expect(result.state.stack).toBe(before.state.stack);
+    expect(result.state.answers.tattoo).toBe(true);
+  });
+});
+
+describe("the run to a result", () => {
+  it("ends on the result and reports it once, with the advice decide() gives", () => {
+    const run = drive(PANEL, null, TO_RESULT);
+    expect(step(run)).toEqual({ kind: "resultaat" });
+    expect(named(run, "huidtest_resultaat")).toEqual([
+      {
+        type: "track",
+        name: "huidtest_resultaat",
+        props: {
+          bank: decide(SAFE).bank,
+          stand: decide(SAFE).stand,
+          product: decide(SAFE).product,
+        },
+      },
+    ]);
+  });
+
+  it("reports one start, six questions and one result, and nothing else", () => {
+    const run = drive(PANEL, null, TO_RESULT);
+    expect(tracked(run).map((e) => (e.type === "track" ? e.name : ""))).toEqual([
+      "huidtest_start",
+      "huidtest_vraag",
+      "huidtest_vraag",
+      "huidtest_vraag",
+      "huidtest_vraag",
+      "huidtest_vraag",
+      "huidtest_vraag",
+      "huidtest_resultaat",
+    ]);
+  });
+
+  it("skips the last question for a sensitive skin", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type3"),
+      ...answerQuestion("haarkleur", "anders"),
+      ...answerQuestion("ervaring", "soms"),
+      ...answerQuestion("doel", "verdiepen"),
+      ...answerQuestion("huidgevoel", "gevoelig"),
+    ]);
+
+    expect(step(run)).toEqual({ kind: "resultaat" });
+    expect(named(run, "huidtest_resultaat")).toHaveLength(1);
+  });
+});
+
+describe("going back", () => {
+  it("removes exactly one step in a panel", () => {
+    const run = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type3"),
+      { type: "backRequest" },
+    ]);
+
+    expect(step(run)).toEqual({ kind: "vraag", index: 0 });
+    expect(run.state.stack).toHaveLength(2);
+    expect(run.last).toEqual({
+      from: { kind: "vraag", index: AT.haarkleur },
+      to: { kind: "vraag", index: 0 },
+      cause: "back",
+    });
+  });
+
+  it("uses no browser history in a panel", () => {
+    const run = drive(PANEL, null, [...TO_RESULT, { type: "backRequest" }]);
+    expect(run.effects.filter((e) => e.type !== "track")).toEqual([]);
+  });
+
+  it("asks history on the route and leaves the stack where it was", () => {
+    const before = drive(ROUTE, null, [{ type: "confirmAge", age: "ok" }]);
+    const result = transition(before.state, { type: "backRequest" }, ROUTE);
+
+    expect(result.effects).toEqual([{ type: "historyBack" }]);
+    expect(result.transition).toBeNull();
+    expect(result.state.stack).toBe(before.state.stack);
+  });
+
+  it("pops on the route only once history answers, and says who asked", () => {
+    const run = drive(ROUTE, null, [
+      { type: "confirmAge", age: "ok" },
+      { type: "backRequest" },
+      { type: "popstate" },
+    ]);
+
+    expect(step(run)).toEqual({ kind: "intro" });
+    expect(run.last).toEqual({
+      from: { kind: "vraag", index: 0 },
+      to: { kind: "intro" },
+      cause: "browser-back",
+    });
+  });
+
+  it("stays put when there is nothing behind the first screen", () => {
+    const before = drive(PANEL, null, []);
+    const result = transition(before.state, { type: "backRequest" }, PANEL);
+
+    expect(result.transition).toBeNull();
+    expect(result.effects).toEqual([]);
+    expect(result.state.stack).toBe(before.state.stack);
+  });
+
+  it("keeps the object identity of every step that stays", () => {
+    const before = drive(PANEL, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type3"),
+    ]);
+    const after = transition(before.state, { type: "backRequest" }, PANEL);
+
+    expect(after.state.stack[0]).toBe(before.state.stack[0]);
+    expect(after.state.stack[1]).toBe(before.state.stack[1]);
+  });
+});
+
+describe("restarting", () => {
+  it("clears the answers apart from the tattoo default and opens question one", () => {
+    const run = drive(PANEL, null, [...TO_RESULT, { type: "restart" }]);
+
+    expect(step(run)).toEqual({ kind: "vraag", index: 0 });
+    expect(run.state.answers).toEqual({ tattoo: false });
+    expect(run.last?.cause).toBe("restart");
+  });
+
+  it("parks question one on top of the result rather than clearing the stack", () => {
+    const finished = drive(PANEL, null, TO_RESULT);
+    const run = drive(PANEL, null, [...TO_RESULT, { type: "restart" }]);
+
+    expect(run.state.stack).toHaveLength(finished.state.stack.length + 1);
+    expect(run.state.stack[run.state.stack.length - 2]).toEqual({ kind: "resultaat" });
+  });
+
+  it("cannot bring the old advice back, because the answers behind it are gone", () => {
+    const run = drive(PANEL, null, [...TO_RESULT, { type: "restart" }, { type: "backRequest" }]);
+
+    expect(step(run)).toEqual({ kind: "resultaat" });
+    expect(isComplete(run.state.answers)).toBe(false);
+    // No second result event: an unfinished result is not a result.
+    expect(named(run, "huidtest_resultaat")).toHaveLength(1);
+  });
+
+  it("does not report a second start", () => {
+    const run = drive(PANEL, null, [...TO_RESULT, { type: "restart" }]);
+    expect(named(run, "huidtest_start")).toHaveLength(1);
+  });
+});
+
+describe("history effects on the route", () => {
+  it("pushes once for every step added to the stack", () => {
+    const run = drive(ROUTE, null, TO_RESULT);
+    const pushes = run.effects.filter((e) => e.type === "historyPush");
+
+    expect(pushes).toHaveLength(run.state.stack.length - 1);
+  });
+
+  it("still balances after a restart and a walk back through history", () => {
+    const run = drive(ROUTE, null, [
+      ...TO_RESULT,
+      { type: "restart" },
+      { type: "backRequest" },
+      { type: "popstate" },
+    ]);
+    const pushes = run.effects.filter((e) => e.type === "historyPush").length;
+    const pops = run.transitions.filter((t) => t?.cause === "browser-back").length;
+
+    expect(pushes - pops).toBe(run.state.stack.length - 1);
+  });
+
+  it("pushes history before it reports the screen it pushed to", () => {
+    const run = drive(ROUTE, null, [
+      { type: "confirmAge", age: "ok" },
+      ...answerQuestion("huidreactie", "type1"),
+    ]);
+
+    const tail = run.effects.slice(-2);
+    expect(tail).toEqual([
+      { type: "historyPush" },
+      { type: "track", name: "huidtest_exit", props: { reden: "type1" } },
+    ]);
   });
 });
