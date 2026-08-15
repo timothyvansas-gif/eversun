@@ -310,15 +310,15 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
                     gap: 4,
                   }}
                 >
-                  <div className="flex" style={{ gap: 4, marginBottom: 8 }}>
+                  <span className="font-sans text-[15px] leading-[24px] text-white/90">
+                    {active.quote}
+                  </span>
+                  <div className="flex" style={{ gap: 4, marginTop: 10 }}>
                     {Array.from({ length: 5 }).map((_, s) => (
                       <StarIcon key={s} size={16} />
                     ))}
                   </div>
-                  <span className="font-sans text-[15px] leading-[24px] text-white/90">
-                    {active.quote}
-                  </span>
-                  <span className="font-sans text-[13px] text-white/50" style={{ marginTop: 12 }}>
+                  <span className="font-sans text-[15px] text-white/50">
                     {active.name}
                   </span>
                 </m.div>
