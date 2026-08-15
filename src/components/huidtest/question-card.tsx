@@ -111,7 +111,7 @@ export default function QuestionCard<K extends QuestionKey>({
               tabIndex={isSelected || (!selected && index === 0) ? 0 : -1}
               onClick={() => onSelect(option.id as string)}
               onKeyDown={(event) => handleArrows(event, index)}
-              className={`flex min-h-[56px] w-full cursor-pointer items-center gap-3 rounded-[12px] border px-5 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
+              className={`relative flex min-h-[56px] w-full cursor-pointer items-center rounded-[12px] border px-5 pr-8 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
                 isSelected
                   ? "border-accent bg-white text-ink-strong"
                   : "border-line/50 bg-white/60 text-ink-strong hover:border-[#312019] hover:bg-white"
@@ -119,11 +119,11 @@ export default function QuestionCard<K extends QuestionKey>({
             >
               <span className="flex-1">{option.label}</span>
 
-              {/* The mark holds its space whether or not it is drawn, so
-                  choosing an answer does not reflow the label it sits beside. */}
+              {/* The mark is removed from the flex flow so it does not steal
+                  width from long answer labels on narrow screens. */}
               <span
                 aria-hidden="true"
-                className={`flex size-5 shrink-0 items-center justify-center rounded-full transition-all duration-150 ${
+                className={`absolute right-2 top-2 flex size-5 items-center justify-center rounded-full transition-[opacity,transform] duration-150 ${
                   isSelected ? "bg-accent opacity-100 scale-100" : "opacity-0 scale-75"
                 }`}
               >
