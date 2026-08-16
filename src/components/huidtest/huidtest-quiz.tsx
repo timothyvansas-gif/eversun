@@ -131,8 +131,25 @@ export default function HuidtestQuiz({
 
   const step = stack[stack.length - 1];
 
+  /**
+   * The screen the furniture around the step area should be dressed for.
+   *
+   * The same as the step itself, except in the one window where those two
+   * honestly differ: a swipe that has been let go and is still travelling. The
+   * cards have to wait for that to land — the incoming one is being carried by
+   * the peek layer and only becomes the step once it is standing where it
+   * belongs. The progress bar and the action bar are not being carried by
+   * anything, so waiting with the cards only made them arrive late, which is
+   * the lag between a swipe and the button that does the same thing.
+   *
+   * Only for what is drawn. Anything that decides, reports or moves reads
+   * `step`, because until the animation lands that is still where the quiz is.
+   */
+  const shownStep = stage.previewStep ?? step;
+
   // Each arrival at a result gets its own hold, so restarting and coming back
-  // to one does not inherit the last one's dismissal.
+  // to one does not inherit the last one's dismissal. Off the real step: a
+  // swipe never travels towards a result, so there is nothing to anticipate.
   const resultProgressKey = step.kind === "resultaat" ? stack.length : null;
 
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -164,14 +181,14 @@ export default function HuidtestQuiz({
 
   const restart = () => dispatch({ type: "restart" });
 
-  const progress = progressFor(step, answers, QUESTIONS.length);
+  const progress = progressFor(shownStep, answers, QUESTIONS.length);
 
   const stepKey = keyFor(step);
 
   /** What a swipe has behind this step to pull back in. */
   const peekTarget = stack[stack.length - 2];
 
-  const currentAnswer = answerFor(step, answers, QUESTIONS);
+  const currentAnswer = answerFor(shownStep, answers, QUESTIONS);
 
   const renderStep = (s: Step) => (
     <>
@@ -241,12 +258,21 @@ export default function HuidtestQuiz({
       />
 
       <HuidtestQuestionActions
-        visible={step.kind === "vraag"}
-        handsOver={step.kind === "resultaat"}
+        visible={shownStep.kind === "vraag"}
+        handsOver={shownStep.kind === "resultaat"}
         canConfirm={Boolean(currentAnswer)}
+        // Dressed for the screen being travelled to, but acting on the one the
+        // quiz is actually on — and while those two differ the bar does not
+        // act at all. It is showing the answer to a question the flow has not
+        // reached yet, so a tap landing in the few hundred milliseconds a
+        // released swipe is still in the air would confirm a different
+        // question than the one whose answer it is offering. The bar is idle
+        // for that window either way: before this, it sat there disabled.
+        //
         // The narrowing is only for the type checker: the bar is not drawn on
         // anything but a question, so this cannot be called on another screen.
         onNext={() => {
+          if (stage.previewStep) return;
           if (step.kind === "vraag") dispatch({ type: "advance", index: step.index });
         }}
         onBack={() => back()}

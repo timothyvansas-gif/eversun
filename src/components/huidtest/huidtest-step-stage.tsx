@@ -64,10 +64,21 @@ const STEP_VARIANTS = {
 export type HuidtestStage = {
   /** Hand over the cause of a change the flow has just made. */
   noteTransition: (cause: TransitionCause) => void;
+  /**
+   * The step a released swipe is on its way to, for as long as it is still on
+   * its way — `null` at every other moment.
+   *
+   * Only the card has a reason to wait for the animation to land. Everything
+   * outside the step area should be reading this instead of the flow's own
+   * step, or it moves a spring's worth of time after the finger let go. See
+   * the release below.
+   */
+  previewStep: Step | null;
   /** For the stage element and the back button. Nothing else reads these. */
   direction: 1 | -1;
   swipedBack: boolean;
   setSwipedBack: (swiped: boolean) => void;
+  setPreviewStep: (step: Step | null) => void;
 };
 
 export function useHuidtestStage(): HuidtestStage {
@@ -81,6 +92,11 @@ export function useHuidtestStage(): HuidtestStage {
   // arriving, which reads as the question flinching once it lands.
   const [swipedBack, setSwipedBack] = useState(false);
 
+  // Where a released swipe is headed, known from the moment the finger lifts
+  // rather than from the moment the card arrives. Held beside the other two
+  // because everything that reads it lives outside the step area.
+  const [previewStep, setPreviewStep] = useState<Step | null>(null);
+
   // The cause the flow reports is the only thing movement is decided from.
   // Going back never clears the swipe flag: the gesture raises it before it asks
   // to go back, and clearing it here would put an entrance animation over a
@@ -91,7 +107,7 @@ export function useHuidtestStage(): HuidtestStage {
     if (forward) setSwipedBack(false);
   };
 
-  return { noteTransition, direction, swipedBack, setSwipedBack };
+  return { noteTransition, previewStep, direction, swipedBack, setSwipedBack, setPreviewStep };
 }
 
 export function HuidtestStepStage({
@@ -132,7 +148,7 @@ export function HuidtestStepStage({
    */
   onBack: (viaSwipe?: boolean) => void;
 }) {
-  const { direction, swipedBack, setSwipedBack } = stage;
+  const { direction, swipedBack, setSwipedBack, setPreviewStep } = stage;
 
   // How far the swipe has pulled the current step, and the step behind it
   // riding the same value one screen-width back. The step area is measured off
@@ -284,6 +300,18 @@ export function HuidtestStepStage({
             return;
           }
 
+          // Announce where this is going before it gets there. Only the two
+          // cards have a reason to wait for the animation below: the progress
+          // bar and the action bar are outside the swap, and holding them back
+          // with it is what made a swipe feel a beat slower than the button
+          // that does the same thing — the bar and the button jumped once the
+          // card had already landed, rather than moving with it.
+          //
+          // The flow itself stays where it is until the animation is done. This
+          // is a statement about what is about to be true, not a step change,
+          // and nothing that decides anything may read it.
+          setPreviewStep(peekTarget ?? null);
+
           // Carry the gesture through to the edge before the step changes, so
           // the screen the finger was pulling in is already where it lands.
           // The swap then happens on a still frame: same content, one from
@@ -294,6 +322,10 @@ export function HuidtestStepStage({
             SWIPE_RELEASE,
           ).then(() => {
             onBack(true);
+            // Dropped in the same batch the flow moves in, so there is never a
+            // frame where the announcement has been withdrawn and the step it
+            // announced has not yet arrived.
+            setPreviewStep(null);
             dragX.set(0);
             setPeekStep(null);
 
