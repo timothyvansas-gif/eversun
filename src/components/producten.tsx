@@ -250,7 +250,16 @@ function ProductCardItem({ product }: { product: Product }) {
                   met een kapitaal, dus dat is de massa waar het icoon naast
                   staat — op de x-hoogte gemikt hing hij zichtbaar te laag. */}
               <div className="flex items-baseline gap-3">
-                <h3 className="card-title min-w-0 text-ink-strong">
+                {/* Eén regel, afgekapt als de naam niet past. Een omslaande
+                    titel maakt de kaart hoger, en omdat de carrousel al zijn
+                    kaarten uitrekt naar de langste betalen alle andere producten
+                    mee voor één lange naam.
+
+                    De volledige naam blijft in het aria-label van de kaart
+                    staan, dus schermlezers horen hem heel; wie kijkt niet. Dat
+                    is de prijs — bij "White 2 Bronze Coconut" valt de kap
+                    middenin het laatste woord. */}
+                <h3 className="card-title min-w-0 truncate text-ink-strong">
                   {product.name}
                 </h3>
                 <svg
