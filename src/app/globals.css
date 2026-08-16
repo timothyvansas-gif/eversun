@@ -20,7 +20,7 @@
   --color-muted: #76684a;
   /* The one orange: buttons, status dot, pin, review stars, hero rules. There
      used to be a second, duller #e15e1d on the dot and the pin. */
-  --color-accent: #f35b04;
+  --color-accent: #ff4d00;
   --color-line: #d5be9c;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */
