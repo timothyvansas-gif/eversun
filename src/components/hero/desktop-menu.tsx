@@ -16,6 +16,46 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
  * button (top-right). It does not push or cover the hero — the photo stays
  * visible — mirroring the mobile menu's items in a compact card.
  */
+
+/**
+ * How far a row steps aside when the pointer reaches it. Half a character at
+ * this size: enough to register as the row answering, small enough that running
+ * down the list does not read as the column coming apart.
+ */
+const NAV_ITEM_TRAVEL = 8;
+
+/**
+ * The glide, and the settle at the end of it.
+ *
+ * A spring rather than a duration, because the ask was for damping and a curve
+ * cannot give it: a tween arrives at a fixed time no matter where the row was
+ * when the pointer turned around, so sweeping down the list snaps every
+ * half-finished row back to a clock it never started on. A spring carries the
+ * velocity the row already had into the move that interrupts it, which is what
+ * makes the return read as the same object coming back rather than a second
+ * animation cancelling the first.
+ *
+ * Stiffer and lighter than the sheets' own `STACK_SPRING` (300/40), which is
+ * tuned for a panel the size of the screen. Critical damping — the point where
+ * a spring settles without ever crossing its target — is `2 * sqrt(stiffness *
+ * mass)`, about 32 here. Sitting under it leaves roughly a 3% overshoot, which
+ * over 8px is a quarter of a pixel: invisible as a bounce, but it is what makes
+ * the landing feel soft instead of parked.
+ */
+const NAV_ITEM_SPRING = { type: "spring", stiffness: 260, damping: 24, mass: 1 } as const;
+
+/**
+ * One row of the menu. Shared by the section links and WhatsApp below them,
+ * which sit in the same column and should not answer the pointer differently.
+ *
+ * Only colour is left to CSS. The travel is framer's, and the two must not both
+ * claim `transform` — a CSS transition on a property framer rewrites every
+ * frame fights it for the same value.
+ */
+const NAV_ITEM_CLASS =
+  "py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 " +
+  "transition-colors duration-300 hover:text-nav-ink focus-visible:text-nav-ink";
+
 export default function DesktopMenu({
   open,
   onClose,
@@ -84,28 +124,34 @@ export default function DesktopMenu({
         >
           <nav aria-label="Hoofdmenu" className="flex flex-col">
             {NAV_ITEMS.map((label) => (
-              <a
+              <m.a
                 key={label}
                 href={resolveNavTarget(label)}
                 onClick={(e) => handleNav(e, label)}
-                className="py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-colors duration-300 hover:text-nav-ink focus-visible:text-nav-ink"
+                whileHover={{ x: NAV_ITEM_TRAVEL }}
+                whileFocus={{ x: NAV_ITEM_TRAVEL }}
+                transition={NAV_ITEM_SPRING}
+                className={NAV_ITEM_CLASS}
               >
                 {label}
-              </a>
+              </m.a>
             ))}
 
             <div className="my-3 h-px w-full bg-nav-ink/10" />
 
-            <a
+            <m.a
               href={WHATSAPP_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClose}
-              className="flex items-center gap-2.5 py-2 text-[18px] font-semibold tracking-tight text-nav-ink/85 transition-colors duration-300 hover:text-nav-ink focus-visible:text-nav-ink"
+              whileHover={{ x: NAV_ITEM_TRAVEL }}
+              whileFocus={{ x: NAV_ITEM_TRAVEL }}
+              transition={NAV_ITEM_SPRING}
+              className={`flex items-center gap-2.5 ${NAV_ITEM_CLASS}`}
             >
               WhatsApp
               <Image src={whatsappIcon} alt="" width={20} height={20} className="h-5 w-5" style={{ filter: "brightness(0) invert(93%)" }} />
-            </a>
+            </m.a>
 
             <div className="mt-1 flex flex-col gap-0.5">
               <p className="text-[16px] leading-[24px] font-medium text-nav-ink/65">Ever Sun Zonnestudio</p>
