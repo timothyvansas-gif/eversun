@@ -12,6 +12,7 @@ import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
 import { BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { useHoverBlob } from "@/components/ui/hover-blob";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 
 export default function AfspraakOverlay({
@@ -33,6 +34,7 @@ export default function AfspraakOverlay({
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const whatsappBlob = useHoverBlob();
 
   useEffect(() => {
     // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
@@ -108,9 +110,16 @@ export default function AfspraakOverlay({
                 rel="noopener noreferrer"
                 className={`${BTN_PILL_ACCENT} w-full justify-center gap-2 min-h-[48px] mt-4`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
+                {...whatsappBlob.hoverProps}
               >
-                <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
-                Open WhatsApp
+                {whatsappBlob.blob}
+                {/* The gap lived on the anchor, which is now the blob's
+                    container rather than the label's row — so it moves in here
+                    with the two things it was ever spacing apart. */}
+                <span className="relative z-10 flex items-center gap-2">
+                  <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
+                  Open WhatsApp
+                </span>
               </a>
 
               <div className="mt-6 pt-6 border-t border-line/50 text-center">

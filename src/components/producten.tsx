@@ -9,6 +9,7 @@ import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 import { BTN_BOOKING_DESKTOP_WIDTH, BTN_CTA_HEIGHT, BTN_PILL_ACCENT } from "@/lib/button-styles";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
+import { useHoverBlob } from "@/components/ui/hover-blob";
 import { PRODUCTEN, type Product } from "@/data/producten-data";
 
 const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
@@ -34,6 +35,7 @@ const PRODUCT_BACKDROP = [
 
 function PlanMomentButton() {
   const appointment = useAppointmentLauncher();
+  const blob = useHoverBlob();
 
   return (
     <>
@@ -42,8 +44,10 @@ function PlanMomentButton() {
         // Filled at every breakpoint, so the section keeps one clear action
         // whether the pill fills the mobile column or hugs its desktop label.
         className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
+        {...blob.hoverProps}
       >
-        Plan je moment
+        {blob.blob}
+        <span className="relative z-10">Plan je moment</span>
       </button>
       <AfspraakOverlay isOpen={appointment.qrOpen} onClose={appointment.closeQr} />
       <PlanJeMomentSheet isOpen={appointment.sheetOpen} onClose={appointment.closeSheet} />

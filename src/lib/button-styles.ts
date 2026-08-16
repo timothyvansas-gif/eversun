@@ -35,12 +35,20 @@ export const BTN_PILL_DARK_OUTLINE =
 
 /**
  * Filled variant of the same pill, for when the CTA carries a section on its
- * own. Medium weight like the other accent buttons (hero, contact). Filled
- * CTAs rest orange and turn page black on hover; the hero's CTA
- * deliberately owns its cursor-origin blob instead.
+ * own. Medium weight like the other accent buttons (hero, contact).
+ *
+ * Filled CTAs rest orange and fill page black from the cursor on hover. That
+ * fill is not here: it is an element, not a colour, so it comes from
+ * `useHoverBlob` and the consumer drops it in. What this string does carry is
+ * `relative overflow-hidden`, because a button wearing it and forgetting those
+ * two would let the blob escape its own pill — which is the one way to get this
+ * wrong that looks like a rendering bug rather than a missing effect.
+ *
+ * No `hover:bg-void` any more. Left alongside the blob it repainted the whole
+ * pill on the first frame, and the fill then had nothing left to arrive over.
  */
 export const BTN_PILL_ACCENT =
-  "inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-void active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+  "relative overflow-hidden inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";

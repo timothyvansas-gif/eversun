@@ -12,6 +12,7 @@ import {
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
+import { useHoverBlob } from "@/components/ui/hover-blob";
 import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
 import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
@@ -51,6 +52,7 @@ function AfspraakButton({
   className?: string;
 }) {
   const appointment = useAppointmentLauncher();
+  const bookingBlob = useHoverBlob();
 
   return (
     <>
@@ -59,8 +61,10 @@ function AfspraakButton({
           <button
             onClick={appointment.open}
             className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
+            {...bookingBlob.hoverProps}
           >
-            Plan je moment
+            {bookingBlob.blob}
+            <span className="relative z-10">Plan je moment</span>
           </button>
           <button
             type="button"

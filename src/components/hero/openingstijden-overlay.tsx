@@ -9,6 +9,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
+import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
@@ -20,26 +21,49 @@ import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
  * overlay keeps working wherever nothing is stacked on top of it.
  */
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
+  const blob = useHoverBlob();
+
+  // `relative overflow-hidden` so the fill is clipped to the pill. Both shapes
+  // below share this string, which is the point: whichever one this renders,
+  // it has to be the same button.
   const className =
-    "mt-7 flex w-full items-center justify-center bg-accent font-sans font-medium text-[15px] text-surface-page hover:bg-void active:scale-[0.98]";
+    "relative overflow-hidden mt-7 flex w-full items-center justify-center bg-accent font-sans font-medium text-[15px] text-surface-page active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
     transition: "transform 0.2s ease, background-color 0.2s ease, color 0.2s ease",
   } as const;
 
-  const content = "Plan je moment";
+  const content = (
+    <>
+      {blob.blob}
+      <span className="relative z-10">Plan je moment</span>
+    </>
+  );
 
   if (!onPlanJeMoment) {
     return (
-      <a href={WHATSAPP_BOOKING_URL} target="_blank" rel="noopener noreferrer" className={className} style={style}>
+      <a
+        href={WHATSAPP_BOOKING_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        style={style}
+        {...blob.hoverProps}
+      >
         {content}
       </a>
     );
   }
 
   return (
-    <button type="button" onClick={onPlanJeMoment} className={`${className} cursor-pointer`} style={style}>
+    <button
+      type="button"
+      onClick={onPlanJeMoment}
+      className={`${className} cursor-pointer`}
+      style={style}
+      {...blob.hoverProps}
+    >
       {content}
     </button>
   );

@@ -8,6 +8,7 @@ import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/an
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
 import { FloatingField } from "@/components/ui/floating-field";
+import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useContactForm } from "@/hooks/use-contact-form";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
@@ -108,10 +109,13 @@ function ContactDetails() {
 
 /** The section CTA pill, same size and type scale as the one under producten. */
 function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
+  const blob = useHoverBlob({ disabled: isSubmitting });
+
   return (
     <button
       type="submit"
       disabled={isSubmitting}
+      {...blob.hoverProps}
       // Width is content-driven from sm up. The label keeps a floor of its own
       // so swapping to the shorter submitting state does not resize the pill.
       className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
@@ -119,7 +123,8 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
           spinner). Re-measure it if the label changes. */}
-      <span className="flex min-w-[114px] items-center justify-center gap-2.5">
+      {blob.blob}
+      <span className="relative z-10 flex min-w-[114px] items-center justify-center gap-2.5">
         {isSubmitting && (
           <span
             aria-hidden

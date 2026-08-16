@@ -3,8 +3,7 @@
 import dynamic from "next/dynamic";
 import { m } from "framer-motion";
 import { useState } from "react";
-
-const BLOB_SIZE = 560;
+import { useHoverBlob } from "@/components/ui/hover-blob";
 
 // Nobody sees the quiz until they ask for it, so it stays out of the hero's
 // bundle until the button is pressed.
@@ -12,8 +11,13 @@ const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-ove
 
 export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
   const [huidtestOpen, setHuidtestOpen] = useState(false);
-  const [primaryHovered, setPrimaryHovered] = useState(false);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+
+  // The same fill every other accent button uses, in white rather than ink.
+  // It was written here first and then copied outwards, which is exactly how
+  // one button quietly becomes two kinds of button — so the hero reads from
+  // the shared one now and only keeps what is genuinely its own: a label that
+  // has to darken, because white on white is nothing at all.
+  const primary = useHoverBlob({ color: "bg-white" });
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
@@ -22,13 +26,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           thing, and these are a pair. */}
       <button
         className="relative flex w-full items-center justify-center overflow-hidden rounded-full bg-accent px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
-        onMouseEnter={(event) => {
-          if (!window.matchMedia("(hover: hover)").matches) return;
-          const rect = event.currentTarget.getBoundingClientRect();
-          setOrigin({ x: event.clientX - rect.left, y: event.clientY - rect.top });
-          setPrimaryHovered(true);
-        }}
-        onMouseLeave={() => setPrimaryHovered(false)}
+        {...primary.hoverProps}
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -37,19 +35,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           }
         }}
       >
-        <m.span
-          aria-hidden
-          className="pointer-events-none absolute rounded-full bg-white"
-          style={{
-            width: BLOB_SIZE,
-            height: BLOB_SIZE,
-            left: origin.x - BLOB_SIZE / 2,
-            top: origin.y - BLOB_SIZE / 2,
-          }}
-          initial={false}
-          animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
-          transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
-        />
+        {primary.blob}
         {/* The label darkens as the blob arrives under it, since white on white
             is nothing at all. Driven off the same state as the blob rather than
             a CSS :hover, because that state is already gated on a real pointer —
@@ -65,8 +51,8 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
         <m.span
           className="relative z-10"
           initial={false}
-          animate={{ color: primaryHovered ? "#0b0b0b" : "#ffffff" }}
-          transition={{ duration: 0.2, delay: primaryHovered ? 0.05 : 0.22 }}
+          animate={{ color: primary.hovered ? "#0b0b0b" : "#ffffff" }}
+          transition={{ duration: 0.2, delay: primary.hovered ? 0.05 : 0.22 }}
         >
           Plan je moment
         </m.span>
