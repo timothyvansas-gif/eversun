@@ -35,9 +35,9 @@ const PROGRESS_EXIT = {
  * Whether the bar is still on screen.
  *
  * Out here rather than inside the component because it is not only the bar's
- * own business: on a phone the result's action bar comes up out of the sheet's
- * bottom edge as this one closes, and a second timer counting to the same beat
- * is a second thing to fall out of step with.
+ * own business: the result's action bar arrives as this one closes, and a
+ * second timer counting to the same beat is a second thing to fall out of step
+ * with.
  *
  * `resultKey` identifies the arrival at a result, or `null` on any other
  * screen. A key rather than a flag because the quiz can reach a result more

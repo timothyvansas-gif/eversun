@@ -157,18 +157,17 @@ export default function HuidtestQuiz({
   /**
    * Whether the result's action bar may come up yet.
    *
-   * On a phone it waits for the progress bar to close. The advice is the
-   * payoff and should arrive as one move — it glides in the full width of the
-   * stage — and a button rising out of the sheet's bottom edge at the same
-   * moment travels sideways with the card and upwards out of the edge at once,
-   * which reads as the bar arriving on its own errand. It comes up into the
-   * room the closing bar hands back instead, once the screen is standing still.
+   * It waits for the progress bar to close, on both surfaces. The advice is
+   * the payoff and should arrive as one move — the card glides in the full
+   * width of the stage — so a bar arriving on the same beat is a second thing
+   * happening rather than part of that arrival. It comes up into the room the
+   * closing progress bar hands back, once the screen is standing still.
    *
-   * In the panel there is no edge to come from: the bar fades where the
-   * question's bar stood, so there is nothing to wait for and waiting would
-   * only leave a hole where a button already was.
+   * How it arrives still differs by surface, and that stays with the bar
+   * itself: up out of the sheet's bottom edge on a phone, a fade where it
+   * stands in the panel, which has no edge to come from.
    */
-  const actionsReady = !isMobile || !progressVisible;
+  const actionsReady = !progressVisible;
 
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -278,7 +277,7 @@ export default function HuidtestQuiz({
 
       <HuidtestQuestionActions
         visible={shownStep.kind === "vraag"}
-        handsOver={shownStep.kind === "resultaat"}
+        leavesOnTheSpot={shownStep.kind === "resultaat"}
         canConfirm={Boolean(currentAnswer)}
         questionNumber={shownStep.kind === "vraag" ? shownStep.index + 1 : null}
         questionTotal={questionCount(answers, QUESTIONS.length)}

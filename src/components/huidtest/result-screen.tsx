@@ -50,8 +50,7 @@ export default function ResultScreen({
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   /**
    * Whether the bar below may come up yet. Decided by the quiz, which is the
-   * one place that knows both what surface this is on and where the progress
-   * bar above has got to.
+   * one place that knows where the progress bar above has got to.
    */
   actionsReady: boolean;
   onRestart: () => void;
@@ -244,10 +243,10 @@ export default function ResultScreen({
           message: what is switched on above should still be visible at the
           moment of sending, not four hundred pixels up the page.
 
-          It waits for its cue on a phone — `visible` is false until then, so
-          there is no bar at all rather than a hidden one holding its space,
-          and it comes up out of the bottom edge under its own entrance once
-          the advice has landed. See `actionsReady` in the quiz. */}
+          It waits for its cue — `visible` is false until then, so there is no
+          bar at all rather than a hidden one holding its space, and it makes
+          its own entrance once the advice has landed and the progress bar
+          above has closed. See `actionsReady` in the quiz. */}
       <StickyActions
         visible={actionsReady}
         backgroundClassName="bg-surface-page/70 md:bg-surface-page/95"

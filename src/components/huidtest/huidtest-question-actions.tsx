@@ -6,13 +6,13 @@ import { StickyActions } from "@/components/huidtest/sticky-actions";
 import { INSTANT, STEP_FADE } from "@/components/huidtest/motion";
 
 /**
- * How the action bar leaves: quietly, unless the screen it is leaving for has
- * a bar of its own to put in its place, in which case there is nothing to show
- * and it goes on the spot. Read at the moment it leaves — see `custom` below.
+ * How the action bar leaves: dropping and fading, unless the screen it is
+ * leaving for has to land on a still stage, in which case it goes on the spot.
+ * Read at the moment it leaves — see `custom` below.
  */
 const BAR_VARIANTS = {
-  exit: (handsOver: boolean) =>
-    handsOver
+  exit: (onTheSpot: boolean) =>
+    onTheSpot
       ? { opacity: 0, transition: INSTANT }
       : { opacity: 0, y: 16, transition: STEP_FADE },
 };
@@ -36,20 +36,20 @@ const BAR_VARIANTS = {
  * than the end, which is what the step area grows into — so the space closes
  * while the bar is still visibly leaving, instead of after it has blinked out.
  *
- * Except into the advice, where it goes on the spot — for a different reason on
- * each surface, which is why one flag covers both. In the panel the advice
- * brings a bar of its own on the same beat: the two are the same fixture with
- * different buttons on it, and playing one out while the other comes in is a
- * handover made visible for no reason — `popLayout` takes the leaving one out
- * of the flow to close the gap, so it spent its fade lying across the photo of
- * the bed. On a phone the advice's bar deliberately waits for the progress bar
- * to close, so there is no handover to hide; what there is instead is a card
- * gliding in the full width of the stage, and a bar playing itself out under
- * that is the second move this screen is trying not to have.
+ * Except into the advice, where it goes on the spot. The advice's own bar waits
+ * for the progress bar above it to close, on both surfaces, so there is no
+ * handover left to hide: what there is instead is a card gliding in the full
+ * width of the stage, and a bar playing itself out under that is exactly the
+ * second move that screen is trying not to have.
+ *
+ * It used to be the opposite argument for the same result — the advice brought
+ * its bar on the very same beat, and `popLayout` takes the leaving one out of
+ * the flow to close the gap, so its fade was spent lying across the photo of
+ * the bed. Worth keeping in mind if the wait above is ever taken out again.
  */
 export function HuidtestQuestionActions({
   visible,
-  handsOver,
+  leavesOnTheSpot,
   canConfirm,
   questionNumber,
   questionTotal,
@@ -58,8 +58,8 @@ export function HuidtestQuestionActions({
 }: {
   /** The bar belongs to the questions, and leaves with them. */
   visible: boolean;
-  /** Whether the screen being left for brings an action bar of its own. */
-  handsOver: boolean;
+  /** Whether the screen being left for has to land with nothing else moving. */
+  leavesOnTheSpot: boolean;
   canConfirm: boolean;
   /** 1-based. `null` off a question, where there is nothing to count. */
   questionNumber: number | null;
@@ -68,7 +68,7 @@ export function HuidtestQuestionActions({
   onBack: () => void;
 }) {
   return (
-    <AnimatePresence initial={false} mode="popLayout" custom={handsOver}>
+    <AnimatePresence initial={false} mode="popLayout" custom={leavesOnTheSpot}>
       {visible && (
         <StickyActions
           key="quiz-actions"
