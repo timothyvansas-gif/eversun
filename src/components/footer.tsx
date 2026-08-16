@@ -8,7 +8,7 @@ export default function Footer() {
     >
       <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between">
         <p className="text-sm font-medium">
-          <span className="text-ink">Ever Sun © {new Date().getFullYear()}</span>
+          <span className="text-zinc-500">Ever Sun © {new Date().getFullYear()}</span>
           <span className="text-muted">
             &nbsp; – &nbsp;<FooterCredit />
           </span>
