@@ -39,7 +39,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
       >
         <m.span
           aria-hidden
-          className="pointer-events-none absolute rounded-full bg-void"
+          className="pointer-events-none absolute rounded-full bg-white"
           style={{
             width: BLOB_SIZE,
             height: BLOB_SIZE,
@@ -50,7 +50,26 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           animate={{ scale: primaryHovered ? 1 : 0, opacity: primaryHovered ? 1 : 0 }}
           transition={{ duration: 0.75, ease: [0.25, 1, 0.35, 1] }}
         />
-        <span className="relative z-10">Plan je moment</span>
+        {/* The label darkens as the blob arrives under it, since white on white
+            is nothing at all. Driven off the same state as the blob rather than
+            a CSS :hover, because that state is already gated on a real pointer —
+            a tap must not leave the label dark on orange.
+
+            The two directions are not symmetric. Coming in, the blob's ease
+            covers the centre of the button within about a tenth of a second, so
+            the colour follows almost immediately; the moment before it lands is
+            dark text on orange, which reads better than the white it replaces.
+            Going out is the one that can break: the blob holds its white for a
+            beat while it shrinks, and a label that turned white with it would
+            disappear into it. So the way back waits for the fade. */}
+        <m.span
+          className="relative z-10"
+          initial={false}
+          animate={{ color: primaryHovered ? "#0b0b0b" : "#ffffff" }}
+          transition={{ duration: 0.2, delay: primaryHovered ? 0.05 : 0.22 }}
+        >
+          Plan je moment
+        </m.span>
       </button>
 
       {/* The second way in, beside booking rather than under it: someone who
