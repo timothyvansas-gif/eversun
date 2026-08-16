@@ -36,12 +36,16 @@ const BAR_VARIANTS = {
  * than the end, which is what the step area grows into — so the space closes
  * while the bar is still visibly leaving, instead of after it has blinked out.
  *
- * Except into the advice, which brings a bar of its own. There the two are the
- * same fixture with different buttons on it, and playing one out while the
- * other comes in is a handover made visible for no reason — `popLayout` takes
- * the leaving one out of the flow to close the gap, so it spent its fade lying
- * across the photo of the bed. It goes on the spot instead, and the advice's
- * own bar is already standing where it stood.
+ * Except into the advice, where it goes on the spot — for a different reason on
+ * each surface, which is why one flag covers both. In the panel the advice
+ * brings a bar of its own on the same beat: the two are the same fixture with
+ * different buttons on it, and playing one out while the other comes in is a
+ * handover made visible for no reason — `popLayout` takes the leaving one out
+ * of the flow to close the gap, so it spent its fade lying across the photo of
+ * the bed. On a phone the advice's bar deliberately waits for the progress bar
+ * to close, so there is no handover to hide; what there is instead is a card
+ * gliding in the full width of the stage, and a bar playing itself out under
+ * that is the second move this screen is trying not to have.
  */
 export function HuidtestQuestionActions({
   visible,

@@ -11,6 +11,9 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
  * on the intro and on both exits too, because a bar that came and went would
  * move everything under it twice per screen. The number it shows is worked out
  * by `flow.ts`; this file only knows how to draw it and how to leave.
+ *
+ * When it leaves is a hook rather than state inside the component, because the
+ * result's own action bar waits for the same moment — see `useProgressVisible`.
  */
 
 /** Let the completed bar register before the result gets the space back. */
@@ -28,20 +31,21 @@ const PROGRESS_EXIT = {
   },
 };
 
-export function HuidtestProgress({
-  progress,
-  resultKey,
-}: {
-  /** 0–100. Rounded for `aria-valuenow`, used unrounded for the fill. */
-  progress: number;
-  /**
-   * Identifies the arrival at a result, or `null` on any other screen. It is a
-   * key rather than a flag because the quiz can reach a result more than once —
-   * restarting parks question one on top of the old one — and each arrival
-   * deserves its own hold rather than inheriting the last one's dismissal.
-   */
-  resultKey: number | null;
-}) {
+/**
+ * Whether the bar is still on screen.
+ *
+ * Out here rather than inside the component because it is not only the bar's
+ * own business: on a phone the result's action bar comes up out of the sheet's
+ * bottom edge as this one closes, and a second timer counting to the same beat
+ * is a second thing to fall out of step with.
+ *
+ * `resultKey` identifies the arrival at a result, or `null` on any other
+ * screen. A key rather than a flag because the quiz can reach a result more
+ * than once — restarting parks question one on top of the old one — and each
+ * arrival deserves its own hold rather than inheriting the last one's
+ * dismissal.
+ */
+export function useProgressVisible(resultKey: number | null): boolean {
   const shouldReduceMotion = useReducedMotion();
 
   // Keep the completed bar visible for one quiet beat. On the result it then
@@ -58,7 +62,19 @@ export function HuidtestProgress({
     return () => window.clearTimeout(timer);
   }, [resultKey, shouldReduceMotion]);
 
-  const show = resultKey === null || dismissed !== resultKey;
+  return resultKey === null || dismissed !== resultKey;
+}
+
+export function HuidtestProgress({
+  progress,
+  show,
+}: {
+  /** 0–100. Rounded for `aria-valuenow`, used unrounded for the fill. */
+  progress: number;
+  /** From `useProgressVisible`, which the result's action bar reads as well. */
+  show: boolean;
+}) {
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     // The completed bar gets one quiet beat on the result, then leaves its

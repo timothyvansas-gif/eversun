@@ -41,12 +41,19 @@ export default function ResultScreen({
   advies,
   bekekenBank: bekekenBankSlug,
   headingRef,
+  actionsReady,
   onRestart,
 }: {
   answers: QuizAnswers;
   advies: Advies;
   bekekenBank?: ZonnebankSlug;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
+  /**
+   * Whether the bar below may come up yet. Decided by the quiz, which is the
+   * one place that knows both what surface this is on and where the progress
+   * bar above has got to.
+   */
+  actionsReady: boolean;
   onRestart: () => void;
 }) {
   const [sachet, setSachet] = useState(false);
@@ -235,8 +242,14 @@ export default function ResultScreen({
 
           The sachet line rides along because this button is what sends the
           message: what is switched on above should still be visible at the
-          moment of sending, not four hundred pixels up the page. */}
+          moment of sending, not four hundred pixels up the page.
+
+          It waits for its cue on a phone — `visible` is false until then, so
+          there is no bar at all rather than a hidden one holding its space,
+          and it comes up out of the bottom edge under its own entrance once
+          the advice has landed. See `actionsReady` in the quiz. */}
       <StickyActions
+        visible={actionsReady}
         backgroundClassName="bg-surface-page/70 md:bg-surface-page/95"
         className="mt-6 shrink-0 md:mt-4 md:pt-5 md:pb-5"
       >

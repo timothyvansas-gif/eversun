@@ -20,7 +20,7 @@ import {
   HuidtestStepStage,
   useHuidtestStage,
 } from "@/components/huidtest/huidtest-step-stage";
-import { HuidtestProgress } from "@/components/huidtest/huidtest-progress";
+import { HuidtestProgress, useProgressVisible } from "@/components/huidtest/huidtest-progress";
 import { HuidtestIntro } from "@/components/huidtest/huidtest-intro";
 import { HuidtestQuestionActions } from "@/components/huidtest/huidtest-question-actions";
 import { ResultGuard } from "@/components/huidtest/result-guard";
@@ -152,6 +152,23 @@ export default function HuidtestQuiz({
   // to one does not inherit the last one's dismissal. Off the real step: a
   // swipe never travels towards a result, so there is nothing to anticipate.
   const resultProgressKey = step.kind === "resultaat" ? stack.length : null;
+  const progressVisible = useProgressVisible(resultProgressKey);
+
+  /**
+   * Whether the result's action bar may come up yet.
+   *
+   * On a phone it waits for the progress bar to close. The advice is the
+   * payoff and should arrive as one move — it glides in the full width of the
+   * stage — and a button rising out of the sheet's bottom edge at the same
+   * moment travels sideways with the card and upwards out of the edge at once,
+   * which reads as the bar arriving on its own errand. It comes up into the
+   * room the closing bar hands back instead, once the screen is standing still.
+   *
+   * In the panel there is no edge to come from: the bar fades where the
+   * question's bar stood, so there is nothing to wait for and waiting would
+   * only leave a hole where a button already was.
+   */
+  const actionsReady = !isMobile || !progressVisible;
 
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -221,6 +238,7 @@ export default function HuidtestQuiz({
           answers={answers}
           bekekenBank={bekekenBank}
           headingRef={headingRef}
+          actionsReady={actionsReady}
           onRestart={restart}
         />
       )}
@@ -242,7 +260,7 @@ export default function HuidtestQuiz({
     // sticky element cannot be held anywhere its containing block does not
     // reach, so it simply scrolled away with the questions.
     <div ref={rootRef} className="relative flex w-full shrink-0 flex-col min-h-full">
-      <HuidtestProgress progress={progress} resultKey={resultProgressKey} />
+      <HuidtestProgress progress={progress} show={progressVisible} />
 
       <HuidtestStepStage
         stage={stage}

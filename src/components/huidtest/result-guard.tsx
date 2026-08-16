@@ -24,11 +24,14 @@ export function ResultGuard({
   answers,
   bekekenBank,
   headingRef,
+  actionsReady,
   onRestart,
 }: {
   answers: Partial<QuizAnswers>;
   bekekenBank?: ZonnebankSlug;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
+  /** Passed straight through. Whether the advice's action bar may come up yet. */
+  actionsReady: boolean;
   onRestart: () => void;
 }) {
   const complete = isComplete(answers);
@@ -57,6 +60,7 @@ export function ResultGuard({
       advies={advies}
       bekekenBank={bekekenBank}
       headingRef={headingRef}
+      actionsReady={actionsReady}
       onRestart={onRestart}
     />
   );
