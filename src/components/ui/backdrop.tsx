@@ -11,8 +11,8 @@ export const BACKDROP_SCRIM: React.CSSProperties = {
 };
 
 /**
- * Full-screen dim + blur scrim behind an overlay. Render it conditionally
- * inside an <AnimatePresence> — it fades in and out with the shared timing.
+ * Dim + blur scrim behind an overlay. Render it conditionally inside an
+ * <AnimatePresence> — it fades in and out with the shared timing.
  *
  * Logic-less: the caller owns the open state. z-index (and cursor) come through
  * `className`; `scrollLock` opts into the Lenis scroll guard the modals use
@@ -21,6 +21,7 @@ export const BACKDROP_SCRIM: React.CSSProperties = {
 export function Backdrop({
   onClick,
   className = "",
+  pin = "fixed",
   scrollLock = false,
   transition = { duration: 0.25 },
   opacity,
@@ -29,6 +30,17 @@ export function Backdrop({
   onClick?: () => void;
   /** z-index, cursor, etc. */
   className?: string;
+  /**
+   * Which box the scrim fills. `fixed` covers the viewport, which is what a
+   * full-page overlay wants and so is the default.
+   *
+   * `absolute` fills the nearest positioned ancestor instead, for a scrim that
+   * belongs to one surface rather than to the page. The huidtest's booking
+   * sheet is the case: it slides up inside the test's own panel and has to dim
+   * that panel only, because the page behind it is already dimmed by the test.
+   * A second full-page scrim there is a backdrop on a backdrop.
+   */
+  pin?: "fixed" | "absolute";
   /** Adds data-lenis-prevent so the smooth-scroll layer stays put underneath. */
   scrollLock?: boolean;
   transition?: Transition;
@@ -50,7 +62,7 @@ export function Backdrop({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={transition}
-      className={`fixed inset-0 ${className}`}
+      className={`${pin} inset-0 ${className}`}
       style={opacity ? { ...BACKDROP_SCRIM, opacity } : BACKDROP_SCRIM}
     />
   );

@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, m } from "framer-motion";
 import { DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import whatsappIcon from "@/images/whatsapp.svg";
+import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
 import { CtaLink } from "@/components/huidtest/cta";
 import { StepCard } from "@/components/huidtest/step-card";
@@ -17,9 +18,15 @@ import { BOEKEN, TELEFOON } from "@/lib/huidtest/config";
  *
  * The site's own QR overlay was the obvious thing to reuse, and it was wrong
  * here: it brought its own full-page scrim, so opening it from the test put a
- * backdrop on a backdrop and dimmed the panel the visitor was reading. This
- * slides up from the bottom edge of that same panel instead — one surface, one
- * dim, and the advice stays legible above it.
+ * backdrop on a backdrop over a page the test had already dimmed once. This
+ * slides up from the bottom edge of the panel instead and dims that panel
+ * alone — one surface, one dim.
+ *
+ * The scrim itself is the site's shared `Backdrop`, pinned to the surface. It
+ * was the QR overlay's scope that was wrong, never its look, and the
+ * hand-rolled scrim that stood here for a while — 35% black, no blur — made
+ * the test the one corner of the site that dimmed differently from the rest
+ * of it.
  *
  * It covers the action bar on the way up, which is the point: the button that
  * opened it should not still be sitting there waiting to be pressed again.
@@ -77,17 +84,20 @@ export function BookingSheet({
     <AnimatePresence>
       {isOpen && (
       <>
-      {/* Only as far as the surface goes. The page behind the test is already
-          dimmed by the test's own backdrop; dimming it twice is what this
-          component exists to stop. */}
-      <m.div
+      {/* The site's own scrim, held to the surface rather than to the page.
+          It used to be a hand-rolled div at 35% black with no blur, which is
+          how the one overlay in the test came to dim differently from every
+          overlay outside it — the panel went pale grey while the page around
+          it sat under the usual dark blur. Same component now, so the two
+          cannot drift apart again; `pin` is the only thing this case needs to
+          say for itself, because the page behind is already dimmed by the
+          test and a second full-page scrim would be a backdrop on a
+          backdrop. */}
+      <Backdrop
         onClick={onClose}
         aria-hidden="true"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.25 }}
-        className={`${pin} inset-0 z-10 cursor-pointer bg-black/35`}
+        pin={pin}
+        className="z-10 cursor-pointer"
       />
 
       {/* The site's own sheet motion, so this arrives the way every other sheet
