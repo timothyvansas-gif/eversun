@@ -94,9 +94,27 @@ export default function HuidtestOverlay({
       {/* Desktop only. The sheet closes by dragging it back down or tapping the
           page behind it, the way the site's other sheets do; a × on top of that
           is a second control for a gesture that is already there. The panel has
-          no such gesture, so it keeps one. Escape closes either. */}
+          no such gesture, so it keeps one. Escape closes either.
+
+          It steps back while the booking sheet is up. That sheet dims the panel
+          rather than the page, so this × sat inside the dimmed area looking
+          like a greyed-out control that could still be pressed — two crosses
+          within a few hundred pixels, one of which closes the thing you are
+          reading rather than the thing on top of it. `isBehind` is the same
+          value that already hands the focus trap over, so the two can never
+          disagree about which surface is in front.
+
+          Faded rather than unmounted, and its row keeps its box either way: the
+          panel's whole column is measured from here down, so taking the row out
+          would lift every screen in the quiz by its height at the exact moment
+          a sheet is sliding up over it. */}
       {!isMobile && (
-        <div className="flex shrink-0 items-center justify-end px-4 pt-3 sm:px-6">
+        <div
+          inert={isBehind}
+          className={`flex shrink-0 items-center justify-end px-4 pt-3 transition-opacity duration-200 sm:px-6 ${
+            isBehind ? "pointer-events-none opacity-0" : "opacity-100"
+          }`}
+        >
           <CloseButton onClick={onClose} label="Huidtest sluiten" />
         </div>
       )}
