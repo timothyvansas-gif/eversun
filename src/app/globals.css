@@ -203,6 +203,12 @@ body {
      below. */
   .product-card {
     --product-reveal-distance: 142px;
+    /* Alleen de waarde vóór hydratie. De kaart meet zijn eigen kop op en
+       overschrijft dit per kaart (zie DETAIL_GAP in producten.tsx) — er stonden
+       hier drie handgemeten varianten per breakpoint, en die gingen allemaal uit
+       van een titel van één regel. De detailtekst is in rust toch verborgen, dus
+       deze waarde is nooit in beeld; hij staat er zodat de eerste paint een
+       geldige positie heeft. */
     --product-detail-offset: 105px;
     /* Flush with the card's rounded surface rather than inset, and above both
        the info panel (z-10) and the price labels (z-20). */
@@ -214,16 +220,9 @@ body {
     position: relative;
   }
 
-  @media (max-width: 359px) {
-    .product-card {
-      --product-detail-offset: 127px;
-    }
-  }
-
   @media (min-width: 768px) {
     .product-card {
       --product-reveal-distance: 120px;
-      --product-detail-offset: 83px;
     }
   }
 
@@ -265,13 +264,21 @@ body {
       will-change: transform;
     }
 
+    /* De witte strook die de verborgen detailtekst afdekt en de labels draagt.
+       Hij liep vanaf de onderrand omhoog over een vaste hoogte; die maat gold
+       alleen zolang elk paneel even hoog én even vol was. De carrousel rekt zijn
+       kaarten uit naar de langste, dus bij een kortere kop zakte de onderrand
+       weg onder de tekst en piepte de detailtekst door de kier. Hij begint nu
+       waar de inhoud ophoudt (gemeten in producten.tsx) en loopt door tot
+       onderaan, hoe ver het paneel ook is uitgerekt. De waarde hieronder geldt
+       alleen vóór hydratie. */
     .product-card[data-has-hover-description="true"] .product-info-panel::after {
       position: absolute;
       z-index: 2;
+      top: var(--product-mask-top, 116px);
       right: 0;
       bottom: 0;
       left: 0;
-      height: 71px;
       background: #ffffff;
       content: "";
     }
@@ -285,14 +292,9 @@ body {
     }
 
     @media (min-width: 768px) {
-      .product-card[data-has-hover-description="true"] .product-info-panel::after {
-        height: 79px;
-      }
-
       .product-card[data-has-hover-description="true"] .product-category-labels {
         bottom: 32px;
       }
-
     }
 
     .product-card[data-has-hover-description="true"] .product-price-labels {

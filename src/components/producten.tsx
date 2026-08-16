@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from "next/image";
 import dynamic from "next/dynamic";
-import { useState, type CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
 import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
@@ -55,6 +55,13 @@ function PlanMomentButton() {
   );
 }
 
+/**
+ * De ruimte tussen de korte omschrijving en de detailtekst eronder, in de
+ * geopende staat. Hetzelfde ritme als de `gap-[6px]` die titel en omschrijving
+ * al scheidt, zodat de derde alinea niet als een losse blok leest.
+ */
+const DETAIL_GAP = 6;
+
 function ProductCardItem({ product }: { product: Product }) {
   const [isPointerInside, setIsPointerInside] = useState(false);
   const [isPinnedOpen, setIsPinnedOpen] = useState(false);
@@ -64,6 +71,57 @@ function ProductCardItem({ product }: { product: Product }) {
   const isExpanded = isPinnedOpen || isPointerExpanded;
   const descriptionId = `product-details-${product.id}`;
 
+  const cardRef = useRef<HTMLDivElement>(null);
+  const primaryCopyRef = useRef<HTMLDivElement>(null);
+
+  // Waar de detailtekst begint. Stond als vaste 105px in de CSS, met een eigen
+  // waarde per breakpoint — een met de hand gemeten getal dat uitging van een
+  // titel van één regel. "White 2 Bronze Coconut" slaat op mobiel om, waardoor
+  // de kop erboven tot 116px liep en de detailtekst er elf pixels overheen
+  // begon. Het getal meten in plaats van het op te schrijven laat het meelopen
+  // met elke naam, elk breakpoint en elke tekstgrootte die de bezoeker instelt.
+  //
+  // Rechtstreeks op de node in plaats van via state: dit hoeft niets opnieuw te
+  // renderen, en een ResizeObserver die state schrijft doet dat bij elke
+  // resize-frame van de carrousel.
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    const copy = primaryCopyRef.current;
+    const panel = copy?.closest<HTMLElement>(".product-info-panel");
+    if (!card || !copy || !panel) return;
+
+    const apply = () => {
+      const rect = copy.getBoundingClientRect();
+
+      // Waar de detailtekst begint, gemeten vanaf de kop waar hij onder hangt.
+      card.style.setProperty(
+        "--product-detail-offset",
+        `${Math.ceil(rect.height) + DETAIL_GAP}px`,
+      );
+
+      // Waar de witte maskerstrook begint, gemeten vanaf de paneeltop — een
+      // ander referentiepunt, want het masker hoort bij het paneel en de
+      // detailtekst bij de meebewegende kop.
+      //
+      // Het masker had een vaste hoogte vanaf de onderrand. Dat werkte zolang
+      // elk paneel even hoog was én even vol: zodra de carrousel de kaarten
+      // uitrekt naar de langste, zakt die onderrand weg onder de tekst en
+      // ontstaat er een kier waar de verborgen detailtekst doorheen piept.
+      // Vanaf de inhoud gemeten sluit hij altijd aan, hoe hoog het paneel ook
+      // wordt uitgerekt.
+      card.style.setProperty(
+        "--product-mask-top",
+        `${Math.ceil(rect.bottom - panel.getBoundingClientRect().top) + DETAIL_GAP}px`,
+      );
+    };
+    apply();
+
+    const observer = new ResizeObserver(apply);
+    observer.observe(copy);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, []);
+
   const closeDetails = () => {
     setIsPinnedOpen(false);
     setIsPointerDismissed(true);
@@ -71,6 +129,7 @@ function ProductCardItem({ product }: { product: Product }) {
 
   return (
     <div
+      ref={cardRef}
       className={`${CAROUSEL_CARD_CLASS} product-card focus-ring-clipped select-none flex flex-col`}
       data-has-hover-description={Boolean(product.hoverDescription)}
       data-expanded={isExpanded}
@@ -112,7 +171,12 @@ function ProductCardItem({ product }: { product: Product }) {
         }
       }}
     >
-      <div className="product-card-surface flex flex-col bg-transparent rounded-[12px] overflow-hidden flex-1">
+      {/* `flex-auto`, niet `flex-1`. Die twee verschillen alleen in hun basis, en
+          vanaf nul meldt dit vlak de kaart erboven dat het geen hoogte nodig
+          heeft — waarna de kaart het paneel eronder terugknijpt tot diens
+          ondergrens en de tekst alsnog afkapt. Vanaf `auto` bereikt de echte
+          inhoudshoogte de kaart. */}
+      <div className="product-card-surface flex flex-col bg-transparent rounded-[12px] overflow-hidden flex-auto">
         {/* Image */}
         {/* Studio-backdrop in plaats van een vlakke vulling: wand die in een
             vloertje overloopt. Blijft binnen het zandpalet, zodat een productfoto
@@ -143,7 +207,22 @@ function ProductCardItem({ product }: { product: Product }) {
             deel hoort qua hit-testing bij de foto, niet bij dit paneel: wie de
             cursor daarheen beweegt, sluit de kaart. */}
         <div
-          className={`product-info-panel flex flex-col gap-[6px] rounded-[12px] px-6 pt-4 pb-6 md:pt-6 md:pb-8 ${product.hoverDescription ? "h-[209px] min-[360px]:h-[187px] md:h-[181px] flex-none" : "flex-1"}`}
+          // De labelstrook onderin is een ::after van 71px (79 op desktop) die
+          // over de inhoud heen wordt getekend. Die reserve stond nergens in de
+          // layout: het paneel had een vaste hoogte die uitging van een titel
+          // van één regel, en "White 2 Bronze Coconut" slaat op mobiel om —
+          // waarna zijn derde omschrijvingsregel half achter die voet verdween.
+          //
+          // De reserve staat nu als padding onder de tekst, dus de inhoud kan er
+          // niet meer onder lopen en duwt het paneel op waar dat nodig is. De
+          // `min-h` blijft als ondergrens, zodat korte kaarten niet inzakken.
+          //
+          // `flex-auto` en niet `flex-1`: die twee verschillen alleen in hun
+          // basis, en vanaf nul meldt dit vlak de kaart erboven dat het geen
+          // hoogte nodig heeft. Vanaf `auto` bereikt de echte inhoudshoogte de
+          // kaart, en omdat de carrousel zijn kaarten uitrekt komen alle panelen
+          // daarna alsnog op één hoogte uit.
+          className={`product-info-panel flex flex-col gap-[6px] rounded-[12px] px-6 pt-4 md:pt-6 ${product.hoverDescription ? "pb-[71px] md:pb-[79px] min-h-[209px] min-[360px]:min-h-[187px] md:min-h-[181px] flex-auto shrink-0" : "pb-6 md:pb-8 flex-1"}`}
           onPointerEnter={(event) => {
             if (event.pointerType !== "mouse") return;
             setIsPointerInside(true);
@@ -157,14 +236,26 @@ function ProductCardItem({ product }: { product: Product }) {
           }}
         >
           <div className="product-moving-copy flex flex-col gap-[6px]">
-            <div className="product-primary-copy flex flex-col gap-[6px]">
-              <div className="flex items-center gap-3">
+            <div ref={primaryCopyRef} className="product-primary-copy flex flex-col gap-[6px]">
+              {/* `items-baseline`, niet `items-center`: gecentreerd zakt het
+                  icoon naar het midden van het hele titelblok, dus bij een naam
+                  die omslaat hangt het tussen de twee regels in. Op de baseline
+                  hoort het bij de eerste regel, en blijft het daar staan hoeveel
+                  regels de kop ook wordt.
+                  Een svg heeft zelf geen baseline; de flexbox gebruikt dan zijn
+                  onderrand, en dat zet de cirkel volledig bóven de schriftlijn.
+                  De 2px zet hem terug tot zijn midden op het midden van de
+                  kaphoogte ligt (15,4px bij deze 22px PT Serif, dus 11,8px onder
+                  de regeltop). Kaphoogte en niet x-hoogte: productnamen beginnen
+                  met een kapitaal, dus dat is de massa waar het icoon naast
+                  staat — op de x-hoogte gemikt hing hij zichtbaar te laag. */}
+              <div className="flex items-baseline gap-3">
                 <h3 className="card-title min-w-0 text-ink-strong">
                   {product.name}
                 </h3>
                 <svg
                   aria-hidden="true"
-                  className="ml-auto size-5 shrink-0 text-zinc-500 md:hidden"
+                  className="ml-auto translate-y-[2px] size-5 shrink-0 text-zinc-500 md:hidden"
                   viewBox="0 0 20 20"
                   fill="none"
                   stroke="currentColor"
