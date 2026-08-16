@@ -47,6 +47,8 @@ export function HuidtestQuestionActions({
   visible,
   handsOver,
   canConfirm,
+  questionNumber,
+  questionTotal,
   onNext,
   onBack,
 }: {
@@ -55,6 +57,9 @@ export function HuidtestQuestionActions({
   /** Whether the screen being left for brings an action bar of its own. */
   handsOver: boolean;
   canConfirm: boolean;
+  /** 1-based. `null` off a question, where there is nothing to count. */
+  questionNumber: number | null;
+  questionTotal: number;
   onNext: () => void;
   onBack: () => void;
 }) {
@@ -76,6 +81,11 @@ export function HuidtestQuestionActions({
               onClick={onNext}
             >
               Volgende
+              {questionNumber !== null && (
+                <span className="font-normal text-[15px]">
+                  {questionNumber}/{questionTotal}
+                </span>
+              )}
             </CtaButton>
 
             {/* Thumb-height, thumb-width, and beside the button it undoes rather

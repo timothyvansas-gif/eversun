@@ -9,6 +9,7 @@ import { QUESTIONS } from "@/lib/huidtest/config";
 import {
   currentAnswer as answerFor,
   progressFor,
+  questionCount,
   stepKey as keyFor,
   type Step,
   type Transition,
@@ -261,6 +262,8 @@ export default function HuidtestQuiz({
         visible={shownStep.kind === "vraag"}
         handsOver={shownStep.kind === "resultaat"}
         canConfirm={Boolean(currentAnswer)}
+        questionNumber={shownStep.kind === "vraag" ? shownStep.index + 1 : null}
+        questionTotal={questionCount(answers, QUESTIONS.length)}
         // Dressed for the screen being travelled to, but acting on the one the
         // quiz is actually on — and while those two differ the bar does not
         // act at all. It is showing the answer to a question the flow has not
