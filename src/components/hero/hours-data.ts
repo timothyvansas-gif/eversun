@@ -1,12 +1,11 @@
-export const HOURS = [
-  { day: "Maandag", hours: "Gesloten", note: "Morgen open om 10:00" },
-  { day: "Dinsdag", hours: "10:00 – 21:00", note: "na 21:00: Morgen open om 10:00" },
-  { day: "Woensdag", hours: "10:00 – 21:00", note: "na 21:00: Morgen open om 10:00" },
-  { day: "Donderdag", hours: "10:00 – 21:00", note: "na 21:00: Morgen open om 10:00" },
-  { day: "Vrijdag", hours: "10:00 – 21:00", note: "na 21:00: Morgen open om 10:00" },
-  { day: "Zaterdag", hours: "10:00 – 16:00", note: "na 16:00: Morgen open om 10:00" },
-  { day: "Zondag", hours: "10:00 – 16:00", note: "na 16:00: Dinsdag open om 10:00" },
-];
+import { OPENING_HOURS } from "@/lib/opening-hours";
+
+/**
+ * The hours table's own view of the schedule. The data itself moved to
+ * `@/lib/opening-hours`, where the structured data in `layout.tsx` can reach it
+ * too; this stays the shape the overlay already renders.
+ */
+export const HOURS = OPENING_HOURS;
 
 export function getCurrentDayIndex(now: Date = new Date()): number {
   const parts = new Intl.DateTimeFormat("en-US", {

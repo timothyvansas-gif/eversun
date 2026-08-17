@@ -14,6 +14,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
+import { ADDRESS, PHONE_DISPLAY, PHONE_E164 } from "@/lib/site";
 
 /**
  * Opens the "Plan je moment" sheet on top of this one when the caller passes a
@@ -72,7 +73,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
 function AddressInfo() {
   return (
     <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-[6px]">
-      Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-dotted underline-offset-6 md:no-underline">06 25306491</a>
+      {ADDRESS.street}, {ADDRESS.city} · <a href={`tel:${PHONE_E164}`} className="text-zinc-600 underline decoration-dotted underline-offset-6 md:no-underline">{PHONE_DISPLAY}</a>
     </p>
   );
 }
