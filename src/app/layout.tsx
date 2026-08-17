@@ -3,6 +3,8 @@ import { Inter, PT_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
 import { SOCIAL_IMAGE, TWITTER_IMAGE } from "@/lib/social-metadata";
+import { buildSiteJsonLd } from "@/lib/structured-data";
+import { BASE_URL } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,24 +22,9 @@ const ptSerif = PT_Serif({
   subsets: ["latin"],
 });
 
-const BASE_URL = "https://www.eversun-assen.nl";
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BeautySalon",
-  name: "Ever Sun",
-  url: BASE_URL,
-  telephone: "+31625306491",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Kloekhorststraat 4a",
-    addressLocality: "Assen",
-    postalCode: "9401 BD",
-    addressCountry: "NL",
-  },
-  openingHours: ["Tu-Fr 10:00-21:00", "Sa-Su 10:00-16:00"],
-  priceRange: "€€",
-};
+// The studio, its hours, its prices and the FAQ, as one schema.org graph built
+// from the same data the page renders. See `@/lib/structured-data`.
+const jsonLd = buildSiteJsonLd();
 
 export const metadata: Metadata = {
   title: "Ever Sun | Zonnebank & Zonnestudio Assen",
