@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import logoBackground from "@/images/people/logo-background.webp";
 import teamAisha from "@/images/people/team-aisha.webp";
 import teamDummy from "@/images/people/team-dummy.webp";
@@ -11,7 +11,14 @@ import { CAROUSEL_NAV_QUERY } from "@/lib/breakpoints";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
 
-const teamMembers = [
+/**
+ * `description` is optional on purpose. Three of these cards carried the
+ * layout placeholder ("Hier gaan we een kort stukje tekst plaatsen…") in
+ * production, where it was indexed along with everything else and could be
+ * quoted straight back at the studio. A card without a line is quiet; a card
+ * with that line is wrong. Fill them in and the text returns.
+ */
+const teamMembers: { id: number; name: string; image: StaticImageData; description?: string }[] = [
   {
     id: 1,
     name: "Aisha",
@@ -22,19 +29,16 @@ const teamMembers = [
     id: 2,
     name: "Sofie",
     image: teamDummy,
-    description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 3,
     name: "Chloe",
     image: teamDummy2,
-    description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   },
   {
     id: 4,
     name: "Yara",
     image: teamDummy,
-    description: "Hier gaan we een kort stukje tekst plaatsen van de medewerker. Lachen gieren brullen natuurlijk.",
   }
 ];
 
@@ -134,9 +138,11 @@ export default function OverOns() {
                   <h3 className="card-title text-nav-ink">
                     {member.name}
                   </h3>
-                  <p className="text-on-dark-muted text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
-                    {member.description}
-                  </p>
+                  {member.description && (
+                    <p className="text-on-dark-muted text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
+                      {member.description}
+                    </p>
+                  )}
                 </div>
               </div>
               ))}
