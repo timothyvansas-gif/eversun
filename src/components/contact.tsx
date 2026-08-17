@@ -13,17 +13,24 @@ import { useContactForm } from "@/hooks/use-contact-form";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
 import { BTN_CTA_HEIGHT, BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { groupOpeningHours } from "@/lib/opening-hours";
+import {
+  ADDRESS,
+  EMAIL,
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  MAPS_URL,
+  PHONE_DISPLAY,
+  PHONE_E164,
+} from "@/lib/site";
 import { stackedSheetHeight, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const OpeningstijdenOverlay = dynamic(() => import("@/components/hero/openingstijden-overlay"));
 const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 
-const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w";
-
 const SOCIALS = [
-  { label: "Facebook", href: "https://www.facebook.com/eversun.assen/", icon: facebookIcon },
-  { label: "Instagram", href: "https://www.instagram.com/ever_sun_assen/", icon: instagramIcon },
+  { label: "Facebook", href: FACEBOOK_URL, icon: facebookIcon },
+  { label: "Instagram", href: INSTAGRAM_URL, icon: instagramIcon },
 ];
 
 function DetailBlock({
@@ -58,22 +65,22 @@ function ContactDetails() {
       {/* Full width until sm: at 15px the address measures ~160px, which does
           not fit a half column on a 375px phone and would break mid-address. */}
       <DetailBlock label="E-mail" className="col-span-2 sm:col-span-1">
-        <a href="mailto:info@eversun-assen.nl" className={DETAIL_LINK}>
-          info@eversun-assen.nl
+        <a href={`mailto:${EMAIL}`} className={DETAIL_LINK}>
+          {EMAIL}
         </a>
       </DetailBlock>
 
       <DetailBlock label="Telefoon">
-        <a href="tel:+31625306491" className={DETAIL_LINK}>
-          06 25 30 64 91
+        <a href={`tel:${PHONE_E164}`} className={DETAIL_LINK}>
+          {PHONE_DISPLAY}
         </a>
       </DetailBlock>
 
       <DetailBlock label="Adres">
         <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK}>
-          Kloekhorststraat 4a
+          {ADDRESS.street}
           <br />
-          9401 BD Assen
+          {ADDRESS.postalCode} {ADDRESS.city}
         </a>
       </DetailBlock>
 
@@ -103,6 +110,22 @@ function ContactDetails() {
           ))}
         </div>
       </div>
+
+      {/* Last, and spanning both columns: a full-width block placed earlier
+          pushes itself onto its own row and leaves the half column beside the
+          address empty. The hours lived only in the overlay before, behind a
+          click, so the page never said out loud when the studio is open —
+          three grouped lines here, the day-by-day table stays one tap away. */}
+      <DetailBlock label="Openingstijden" className="col-span-2">
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5">
+          {groupOpeningHours().map((groep) => (
+            <div key={groep.label} className="contents">
+              <dt className="text-zinc-600">{groep.label}</dt>
+              <dd className="text-ink-primary">{groep.hours}</dd>
+            </div>
+          ))}
+        </dl>
+      </DetailBlock>
     </div>
   );
 }
@@ -207,8 +230,8 @@ function SuccessPanel({ onReset }: { onReset: () => void }) {
       <p className="mt-2.5 max-w-[380px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
         Dank je wel. We lezen het zo snel mogelijk en reageren meestal binnen één werkdag. Haast?
         Bel gerust even op{" "}
-        <a href="tel:+31625306491" className={`${DETAIL_LINK} whitespace-nowrap sm:whitespace-normal text-ink-strong`}>
-          06 25 30 64 91
+        <a href={`tel:${PHONE_E164}`} className={`${DETAIL_LINK} whitespace-nowrap sm:whitespace-normal text-ink-strong`}>
+          {PHONE_DISPLAY}
         </a>
         .
       </p>
