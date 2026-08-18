@@ -9,7 +9,7 @@ import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useContactForm } from "@/hooks/use-contact-form";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { CONTACT_FIELD_IDS, CONTACT_LIMITS } from "@/lib/contact-validation";
-import { BTN_CTA_HEIGHT, BTN_PILL_ACCENT } from "@/lib/button-styles";
+import { BTN_CTA_HEIGHT, BTN_FILL_LABEL, BTN_PILL_BRAND } from "@/lib/button-styles";
 import { groupOpeningHours } from "@/lib/opening-hours";
 import {
   ADDRESS,
@@ -104,17 +104,19 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       {...blob.hoverProps}
       // Width is content-driven from sm up. The label keeps a floor of its own
       // so swapping to the shorter submitting state does not resize the pill.
-      className={`${BTN_PILL_ACCENT} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
+      className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto md:py-[10px]`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
           spinner). Re-measure it if the label changes. */}
       {blob.blob}
-      <span className="relative z-10 flex min-w-[114px] items-center justify-center gap-2.5">
+      <span className={`${BTN_FILL_LABEL} flex min-w-[114px] items-center justify-center gap-2.5 group-hover/cta:text-surface-page`}>
+        {/* The ring is drawn in the label's own colour, so it flips with it:
+            on yellow it is ink, and cream once the dark fill has arrived. */}
         {isSubmitting && (
           <span
             aria-hidden
-            className="h-4 w-4 animate-spin rounded-full border-2 border-surface-page/40 border-t-surface-page"
+            className="h-4 w-4 animate-spin rounded-full border-2 border-current/40 border-t-current"
           />
         )}
         {isSubmitting ? "Versturen…" : "Verstuur bericht"}

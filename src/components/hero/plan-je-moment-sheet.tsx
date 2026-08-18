@@ -12,7 +12,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Backdrop } from "@/components/ui/backdrop";
-import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { BTN_FILL_LABEL, BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { stackDepthForDrag, scrimOpacityForDrag, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
@@ -39,7 +39,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       target="_blank"
       rel="noopener noreferrer"
       {...blob.hoverProps}
-      className="w-full bg-accent font-sans font-medium text-[15px] text-surface-page active:scale-[0.98] relative overflow-hidden"
+      className="group/cta w-full bg-brand font-sans font-medium text-[15px] text-ink-primary active:scale-[0.98] relative overflow-hidden"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
@@ -53,9 +53,9 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       {/* Absolutely positioned, so it sits out of the subgrid's auto-placement
           and cannot claim a column of its own. */}
       {blob.blob}
-      <span className="relative z-10 col-start-2 flex items-center gap-3">
+      <span className={`${BTN_FILL_LABEL} col-start-2 flex items-center gap-3 group-hover/cta:text-surface-page`}>
         <span className="inline-flex w-[18px] h-[18px] items-center justify-center shrink-0">
-          <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
+          <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 transition-[filter] duration-200 delay-[220ms] group-hover/cta:invert group-hover/cta:delay-[50ms]" />
         </span>
         <span className="whitespace-nowrap">Via WhatsApp</span>
       </span>

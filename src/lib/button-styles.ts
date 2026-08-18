@@ -34,37 +34,50 @@ export const BTN_PILL_DARK_OUTLINE =
   "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /**
- * Filled variant of the same pill, for when the CTA carries a section on its
- * own. Medium weight like the other accent buttons (hero, contact).
+ * The filled CTA, in the brand yellow.
  *
- * Filled CTAs rest orange and fill page black from the cursor on hover. That
- * fill is not here: it is an element, not a colour, so it comes from
- * `useHoverBlob` and the consumer drops it in. What this string does carry is
- * `relative overflow-hidden`, because a button wearing it and forgetting those
- * two would let the blob escape its own pill — which is the one way to get this
- * wrong that looks like a rendering bug rather than a missing effect.
+ * That yellow is the site's own: it is what the "2 banken" label on a bed card
+ * is drawn in. The buttons rested orange until now, which put the loudest
+ * colour on the page on every call to action at once; yellow carries them and
+ * leaves orange to mean something — a selected answer, an open studio.
  *
- * No `hover:bg-void` any more. Left alongside the blob it repainted the whole
- * pill on the first frame, and the fill then had nothing left to arrive over.
- */
-export const BTN_PILL_ACCENT =
-  "relative overflow-hidden inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
-
-/**
- * The same filled pill in the brand yellow, for the bed cards.
+ * The label is ink rather than page cream, because yellow is a light fill and
+ * white on it is unreadable. It still has to invert as the dark hover fill
+ * arrives underneath: `group/cta` is here for that, and `BTN_FILL_LABEL` is the
+ * other half.
  *
- * That yellow is already on those cards — it is what the "2 banken" label is
- * drawn in — so the booking button now belongs to the card it sits on rather
- * than repeating the page's orange a fourth time. The label is ink rather than
- * page cream: yellow is a light fill, and white on it is unreadable.
+ * Carries `relative overflow-hidden` because the fill is an element rather than
+ * a colour — it comes from `useHoverBlob` and the consumer drops it in — and a
+ * button that forgets those two lets the blob escape its own pill, which is the
+ * one way to get this wrong that reads as a rendering bug.
  *
- * Carries `relative overflow-hidden` for the same reason as the accent pill:
- * the hover blob is an element and has to be clipped to the button. The label
- * has to invert as that dark fill arrives — see the bed card, which drives it
- * off the hook's own hover state.
+ * The transition deliberately leaves `color` out: the label owns its own
+ * timing, and two `transition-property` declarations on one element resolve by
+ * stylesheet order rather than by intent.
  */
 export const BTN_PILL_BRAND =
-  "relative overflow-hidden inline-flex items-center bg-brand text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+  "group/cta relative overflow-hidden inline-flex items-center bg-brand text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color] duration-150";
+
+/**
+ * The label inside a filled CTA: the timing of its flip, not its colours.
+ *
+ * A filled button's label has to change colour as the blob arrives under it, or
+ * it disappears into the fill. The two directions are not symmetric. Coming in,
+ * the blob's ease covers the centre of the button within about a tenth of a
+ * second, so the colour follows almost immediately. Going out, the blob holds
+ * its colour for a beat while it shrinks, and a label that turned with it would
+ * vanish — so the way back waits for the fade.
+ *
+ * Hover rather than a JS pointer flag: Tailwind's hover variant is already
+ * behind `(hover: hover)`, so a tap cannot leave the label stuck in the
+ * inverted state. The named group is what ties it to its own button and not to
+ * whatever card it happens to sit inside.
+ *
+ * Add the two colours per button — they differ by fill: `group-hover/cta:` the
+ * one the blob brings, plain the one it rests on.
+ */
+export const BTN_FILL_LABEL =
+  "relative z-10 transition-colors duration-200 delay-[220ms] group-hover/cta:delay-[50ms]";
 
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";

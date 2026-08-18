@@ -1,6 +1,6 @@
 "use client";
 
-import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { BTN_FILL_LABEL, BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { useHoverBlob } from "@/components/ui/hover-blob";
 
 /**
@@ -23,7 +23,7 @@ const BASE =
 const VARIANTS = {
   // No `hover:bg-void` here any more: it repainted the pill on the first frame
   // and left the fill nothing to arrive over.
-  accent: "bg-accent text-surface-page",
+  accent: "group/cta bg-brand text-ink-primary",
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
   // transition below carries border-color.
@@ -70,7 +70,9 @@ export function CtaButton({
       {filled ? (
         <>
           {blob.blob}
-          <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+          <span className={`${BTN_FILL_LABEL} inline-flex items-center gap-2 group-hover/cta:text-surface-page`}>
+            {children}
+          </span>
         </>
       ) : (
         children
@@ -103,7 +105,9 @@ export function CtaLink({
           {/* The gap comes along: these links carry an icon beside their label,
               and the spacing that used to sit on the anchor now has to sit on
               the row that actually holds the two of them. */}
-          <span className="relative z-10 inline-flex items-center gap-2">{children}</span>
+          <span className={`${BTN_FILL_LABEL} inline-flex items-center gap-2 group-hover/cta:text-surface-page`}>
+            {children}
+          </span>
         </>
       ) : (
         children

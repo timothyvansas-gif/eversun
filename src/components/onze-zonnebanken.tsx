@@ -2,7 +2,7 @@
 
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
-import { BTN_CTA_HEIGHT, BTN_PILL_BRAND } from "@/lib/button-styles";
+import { BTN_CTA_HEIGHT, BTN_FILL_LABEL, BTN_PILL_BRAND } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -49,28 +49,14 @@ function AfspraakButton({
       <div className={className}>
         <button
           onClick={appointment.open}
-          className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
+          className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:w-auto lg:!px-8`}
           {...bookingBlob.hoverProps}
         >
           {bookingBlob.blob}
-          {/* The label lightens as the dark blob arrives under it, the same
-              move the hero makes in reverse: ink on yellow at rest, cream once
-              the fill is there. Driven off the hook's hover state rather than a
-              CSS :hover, which is already gated on a real pointer — a tap must
-              not leave a cream label on yellow.
-
-              The two directions are not symmetric. Coming in, the blob covers
-              the centre within about a tenth of a second, so the colour follows
-              almost at once; going out it holds its dark for a beat while it
-              shrinks, so the way back waits for the fade. */}
-          <m.span
-            className="relative z-10"
-            initial={false}
-            animate={{ color: bookingBlob.hovered ? "#faf4ec" : "#0b0b0b" }}
-            transition={{ duration: 0.2, delay: bookingBlob.hovered ? 0.05 : 0.22 }}
-          >
+          {/* Ink on yellow at rest, cream once the dark fill is there. */}
+          <span className={`${BTN_FILL_LABEL} group-hover/cta:text-surface-page`}>
             Plan je moment
-          </m.span>
+          </span>
         </button>
       </div>
 

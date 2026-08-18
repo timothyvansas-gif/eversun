@@ -11,7 +11,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
 import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { BTN_FILL_LABEL, BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { ADDRESS, PHONE_DISPLAY, PHONE_E164 } from "@/lib/site";
@@ -28,7 +28,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
   // below share this string, which is the point: whichever one this renders,
   // it has to be the same button.
   const className =
-    "relative overflow-hidden mt-7 flex w-full items-center justify-center bg-accent font-sans font-medium text-[15px] text-surface-page active:scale-[0.98]";
+    "group/cta relative overflow-hidden mt-7 flex w-full items-center justify-center bg-brand font-sans font-medium text-[15px] text-ink-primary active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
@@ -38,7 +38,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
   const content = (
     <>
       {blob.blob}
-      <span className="relative z-10">Plan je moment</span>
+      <span className={`${BTN_FILL_LABEL} group-hover/cta:text-surface-page`}>Plan je moment</span>
     </>
   );
 
