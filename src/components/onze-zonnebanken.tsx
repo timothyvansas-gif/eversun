@@ -55,13 +55,12 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        {/* Row-reverse on mobile rather than reordering the two buttons: this
-            way the DOM keeps "Plan je moment" first everywhere, which is what
-            makes it the one Enter submits and the one a screen reader meets
-            first, and `row-reverse` only flips where that first child lands
-            on screen. From lg the row already reads left to right, so the
-            reverse is undone there rather than carried along by accident. */}
-        <div className="flex w-full flex-row-reverse gap-3 lg:w-auto lg:flex-row">
+        {/* No row-reverse any more: the filled button is first in the DOM —
+            which is what makes it the one Enter submits and the one a screen
+            reader meets first — and it now reads first on screen too, at every
+            width. The reverse used to flip only the mobile row, putting the
+            outline button on the left there and nowhere else. */}
+        <div className="flex w-full gap-3 lg:w-auto">
           <button
             onClick={appointment.open}
             className={`${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
