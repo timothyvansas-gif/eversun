@@ -1,12 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { animate, useMotionValue } from "framer-motion";
 import { animateScrollTo, prefersAnimatedScroll, scrollBehavior } from "@/lib/animate-scroll";
-import facebookIcon from "@/images/socials/social-facebook.svg";
-import instagramIcon from "@/images/socials/social-instagram.svg";
 import { FloatingField } from "@/components/ui/floating-field";
 import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useContactForm } from "@/hooks/use-contact-form";
@@ -17,8 +14,6 @@ import { groupOpeningHours } from "@/lib/opening-hours";
 import {
   ADDRESS,
   EMAIL,
-  FACEBOOK_URL,
-  INSTAGRAM_URL,
   MAPS_URL,
   PHONE_DISPLAY,
   PHONE_E164,
@@ -27,11 +22,6 @@ import { stackedSheetHeight, STACK_SPRING } from "@/components/hero/sheet-stack"
 
 const OpeningstijdenOverlay = dynamic(() => import("@/components/hero/openingstijden-overlay"));
 const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
-
-const SOCIALS = [
-  { label: "Facebook", href: FACEBOOK_URL, icon: facebookIcon },
-  { label: "Instagram", href: INSTAGRAM_URL, icon: instagramIcon },
-];
 
 function DetailBlock({
   label,
@@ -84,39 +74,12 @@ function ContactDetails() {
         </a>
       </DetailBlock>
 
-      {/* Hidden on mobile: the slide-in menu already carries the social links
-          there, and dropping this block also clears the lone item that was
-          left dangling on the last grid row. */}
-      <div className="hidden sm:block">
-        <p className="font-sans text-[15px] font-medium leading-[24px] tracking-[-0.01em] text-ink-primary">Volg ons</p>
-        <div className="mt-2 flex items-center gap-2">
-          {SOCIALS.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={social.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-ink-primary transition-colors duration-200 hover:bg-accent"
-            >
-              <Image
-                src={social.icon}
-                alt=""
-                width={18}
-                height={18}
-                className="h-[18px] w-[18px] brightness-0 invert"
-              />
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* Last, and spanning both columns: a full-width block placed earlier
-          pushes itself onto its own row and leaves the half column beside the
-          address empty. The hours lived only in the overlay before, behind a
-          click, so the page never said out loud when the studio is open —
-          three grouped lines here, the day-by-day table stays one tap away. */}
-      <DetailBlock label="Openingstijden" className="col-span-2">
+      {/* Where the social links used to sit. Those are still one tap away in
+          the slide-in menu, and the hours earn the slot: they were the one
+          thing a visitor came to this block for that it did not say. Full
+          width until sm, where the label and the range no longer fit beside
+          each other in half a column on a phone. */}
+      <DetailBlock label="Openingstijden" className="col-span-2 sm:col-span-1">
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5">
           {groupOpeningHours().map((groep) => (
             <div key={groep.label} className="contents">
