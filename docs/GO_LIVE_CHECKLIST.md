@@ -96,6 +96,31 @@ Controleer minimaal:
 - Gebruik Facebook Sharing Debugger en kies **Scrape Again** om oude previews
   uit de Facebook-cache te verwijderen.
 
+### AI-crawlers: robots.txt is niet het enige gate
+
+`robots.txt` staat GPTBot, ClaudeBot, PerplexityBot e.a. expliciet toe (zie
+`src/app/robots.ts`), maar Cloudflare kan die crawlers al blokkeren vóórdat
+de request `robots.txt` bereikt. Dat gebeurt buiten de applicatiecode om en is
+dus met geen enkele lokale of `workers.dev`-test te zien — pas te controleren
+zodra het echte domein op Cloudflare draait.
+
+1. Cloudflare-dashboard, zone `eversun-assen.nl`:
+   - **Security → Bots**: check of "Block AI Bots" aanstaat, ook als
+     onderdeel van een preset die niet bewust is aangezet.
+   - **Security → WAF → Custom rules**: een losse regel die op user-agent
+     filtert (bv. bevat "GPTBot" → Block) zit hier, niet bij Bots.
+   - **Security → Settings**: Bot Fight Mode / Security Level kan agressief
+     user-agents weigeren zonder een expliciete AI-regel.
+2. Test met echte crawler-user-agents:
+   ```bash
+   curl -s -o /dev/null -w "%{http_code}\n" -A "Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/gptbot)" https://www.eversun-assen.nl/
+   curl -s -o /dev/null -w "%{http_code}\n" -A "Mozilla/5.0 (compatible; ClaudeBot/1.0; +https://www.anthropic.com/claudebot)" https://www.eversun-assen.nl/
+   curl -s -o /dev/null -w "%{http_code}\n" -A "Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)" https://www.eversun-assen.nl/
+   ```
+   200 = doorgelaten. 403, of een Cloudflare-uitdagingspagina in de body
+   (`curl -s ... | head -50`), betekent geblokkeerd ondanks een toestemmende
+   `robots.txt`.
+
 Na een geslaagde controle mag de social image-URL desgewenst van de
 `workers.dev`-URL naar de canonieke `www`-URL worden gezet. Functioneel is dat
 niet noodzakelijk; de absolute Worker-URL is juist tijdens de migratie
