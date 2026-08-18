@@ -125,13 +125,13 @@ export default function QuestionCard<K extends QuestionKey>({
               <span
                 aria-hidden="true"
                 className={`absolute right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full transition-[opacity,transform] duration-150 ${
-                  isSelected ? "bg-brand opacity-100 scale-100" : "opacity-0 scale-75"
+                  isSelected ? "bg-brand text-white opacity-100 scale-100" : "opacity-0 scale-75"
                 }`}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <path
                     d="M2.5 6.2l2.2 2.2 4.8-4.8"
-                    stroke="var(--color-ink-primary)"
+                    stroke="currentColor"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
