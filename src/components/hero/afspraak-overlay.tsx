@@ -102,11 +102,14 @@ export default function AfspraakOverlay({
                 Of gewoon vanaf dit scherm.
               </p>
 
+              {/* No arrow here — a QR-code fallback link, not a CTA pill — so
+                  it keeps its own fill swap on hover rather than losing it
+                  along with the other CTAs when they moved to the arrow. */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_CTA} w-full justify-center gap-2 min-h-[48px] mt-4`}
+                className={`${BTN_PILL_CTA} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-ink-primary hover:text-surface-page`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 {/* The gap lived on the anchor, which is now the blob's

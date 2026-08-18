@@ -8,6 +8,7 @@ import { HOURS, getCurrentDayIndex } from "@/components/hero/hours-data";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
+import { CtaLabel } from "@/components/ui/cta-arrow";
 import { Backdrop } from "@/components/ui/backdrop";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
@@ -27,16 +28,16 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
   // `relative overflow-hidden` as well, to clip a fill that grew from the
   // cursor; the hover is a colour swap now and clips nothing.
   const className =
-    "mt-7 flex w-full items-center justify-center rounded-full bg-cta font-sans font-medium text-[15px] text-white hover:bg-ink-primary hover:text-surface-page active:scale-[0.98]";
+    "group/cta mt-7 flex w-full items-center justify-center rounded-full bg-cta font-sans font-medium text-[15px] text-white active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
-    transition: "transform 0.2s ease, background-color 0.2s ease, color 0.2s ease",
+    transition: "transform 0.2s ease",
   } as const;
 
   const content = (
     <>
-      <span>Plan je moment</span>
+      <CtaLabel hold>Plan je moment</CtaLabel>
     </>
   );
 
@@ -123,10 +124,10 @@ function RouteButton() {
       href="https://www.google.com/maps/search/?api=1&query=Ever+Sun+Assen&query_place_id=ChIJAe9RzRwlyEcR1wglglnLp4w"
       target="_blank"
       rel="noopener noreferrer"
-      className={`mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-zinc-600 rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
+      className={`group/cta mt-3 md:mt-7 flex w-full md:w-fit items-center justify-center py-3 font-sans font-medium text-[15px] text-zinc-600 rounded-full ${BTN_OUTLINE_BORDER} px-8 active:scale-[0.98] transition-[transform,border-color] duration-200`}
       style={{ minHeight: "48px" }}
     >
-      Route naar Ever Sun
+      <CtaLabel hold>Route naar Ever Sun</CtaLabel>
     </a>
   );
 }

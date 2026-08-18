@@ -9,6 +9,7 @@ import {
   BTN_PILL,
   BTN_PILL_CTA,
 } from "@/lib/button-styles";
+import { CtaLabel } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -63,23 +64,23 @@ function AfspraakButton({
         <div className="flex w-full gap-3 lg:w-auto">
           <button
             onClick={appointment.open}
-            className={`${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
           >
             {/* White on the orange at rest, cream once the dark fill is there. */}
-            <span>
-              Plan je moment
-            </span>
+            <CtaLabel hold>Plan je moment</CtaLabel>
           </button>
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-7 lg:min-w-[180px] lg:w-auto`}
+            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-7 lg:min-w-[208px] lg:w-auto`}
           >
             {/* Shorter on mobile, where the two buttons now split the card's
                 width between them and "Doe de huidtest" was the one crowding
                 its neighbour. Unchanged from lg, where each has the room. */}
-            <span className="lg:hidden">Huidtest</span>
-            <span className="hidden lg:inline">Doe de huidtest</span>
+            <CtaLabel hold>
+              <span className="lg:hidden">Huidtest</span>
+              <span className="hidden lg:inline">Doe de huidtest</span>
+            </CtaLabel>
           </button>
         </div>
       </div>

@@ -26,12 +26,12 @@ export const BTN_PILL =
   `inline-flex items-center text-zinc-600 text-[15px] font-medium font-sans tracking-[-0.01em] ${BTN_OUTLINE_BORDER} rounded-full px-[18px] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-colors duration-150`;
 
 /**
- * Strong outlined CTA: a clear dark edge at rest that fills to the same dark
- * colour on hover. Used where a card needs a booking action without competing
- * with the page's filled primary CTA.
+ * Strong outlined CTA: a clear dark edge, no fill. Used where a card needs a
+ * booking action without competing with the page's filled primary CTA. It used
+ * to fill dark on hover; hover is the arrow now, like every other CTA.
  */
 export const BTN_PILL_DARK_OUTLINE =
-  "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+  "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";
 
 /**
  * The filled CTA, in the orange.
@@ -46,16 +46,15 @@ export const BTN_PILL_DARK_OUTLINE =
  * where ink would have cleared 5.9:1. On the yellow it was the other way round
  * and ink was the only readable option.
  *
- * Hover is a plain colour swap to the dark fill, label to cream along with it.
- * It used to be a circle that grew from wherever the cursor crossed the edge
- * (`useHoverBlob`, now gone), which is why this string once carried
- * `relative overflow-hidden`, a named group, and a companion constant for the
- * label's timing. All of that existed to serve the blob; a button that changes
- * colour needs none of it, and both colours can sit here rather than being
- * repeated at every use site.
+ * The orange holds through hover: the whole hover is `CtaArrow` sliding in, so
+ * pair this with `group/cta` and a `CtaLabel`. Two earlier hovers left traces
+ * worth knowing about — a circle that grew from wherever the cursor crossed the
+ * edge (`useHoverBlob`), which is why this string once carried
+ * `relative overflow-hidden` and a named group, and after it a plain swap to
+ * the dark fill. Neither is here now, so nothing but `transform` transitions.
  */
 export const BTN_PILL_CTA =
-  "inline-flex items-center bg-cta text-white text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+  "inline-flex items-center bg-cta text-white text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";
 
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";

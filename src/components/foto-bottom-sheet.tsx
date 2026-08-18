@@ -9,6 +9,7 @@ import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { BTN_PILL } from "@/lib/button-styles";
 import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
+import { CtaLabel } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
@@ -147,9 +148,9 @@ export default function FotoBottomSheet({
                 <div className="hidden md:flex items-center gap-3 shrink-0">
                   <button
                     onClick={() => setQrOpen(true)}
-                    className={`${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0`}
+                    className={`group/cta ${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0 justify-center min-w-[200px]`}
                   >
-                    Plan je moment
+                    <CtaLabel hold>Plan je moment</CtaLabel>
                   </button>
                   <CloseButton onClick={handleClose} />
                 </div>
