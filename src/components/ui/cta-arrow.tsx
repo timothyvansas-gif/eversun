@@ -9,7 +9,7 @@
  * together keep the pair centred and the button's box untouched, so nothing
  * around it reflows on hover.
  *
- * Half of (arrow + gap) is 14px: a 20px arrow, 8px clear of the label. Change
+ * Half of (arrow + gap) is 12px: a 20px arrow, 4px clear of the label. Change
  * either and this number changes with it.
  *
  * `transition-[translate]`, not `transition-transform`: in Tailwind v4
@@ -23,7 +23,7 @@ export function CtaArrow() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 left-full ml-2 flex items-center translate-x-4 opacity-0 transition-[translate,opacity] duration-300 ease-out motion-reduce:transition-none group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
+      className="pointer-events-none absolute inset-y-0 left-full ml-1 flex items-center translate-x-4 opacity-0 transition-[translate,opacity] duration-300 ease-out motion-reduce:transition-none group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
     >
       <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
@@ -39,16 +39,16 @@ export function CtaArrow() {
  * Two ways to make room, neither of which resizes the button:
  *
  * - default: the label slides left by half the pair's width, so label and arrow
- *   stay centred together and the arrow eats 14px of the right padding.
+ *   stay centred together and the arrow eats 12px of the right padding.
  * - `hold`: the label does not move at all. Steadier — nothing shifts under the
- *   cursor — but the arrow then reaches 28px into the right padding, and the
+ *   cursor — but the arrow then reaches 24px into the right padding, and the
  *   pair sits off-centre by that much. Only for buttons with the room; see
  *   ARROW_REACH below.
  */
 export function CtaLabel({ children, className = "", hold = false }: { children: React.ReactNode; className?: string; hold?: boolean }) {
   return (
     <span
-      className={`relative flex items-center ${hold ? "" : "transition-[translate] duration-300 ease-out motion-reduce:transition-none group-hover/cta:-translate-x-[14px]"} ${className}`}
+      className={`relative flex items-center ${hold ? "" : "transition-[translate] duration-300 ease-out motion-reduce:transition-none group-hover/cta:-translate-x-[12px]"} ${className}`}
     >
       {children}
       <CtaArrow />
@@ -57,9 +57,9 @@ export function CtaLabel({ children, className = "", hold = false }: { children:
 }
 
 /**
- * How far past the label the arrow reaches, in px: 8px gap + 20px arrow. The
+ * How far past the label the arrow reaches, in px: 4px gap + 20px arrow. The
  * default variant halves it by sliding the label; `hold` pays it in full. A
  * button needs at least this much slack between its label and its right edge or
  * the pill's own curve starts cutting into the arrow.
  */
-export const ARROW_REACH = 28;
+export const ARROW_REACH = 24;

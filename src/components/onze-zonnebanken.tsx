@@ -64,7 +64,7 @@ function AfspraakButton({
         <div className="flex w-full gap-3 lg:w-auto">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:flex-none lg:!px-6`}
           >
             {/* White on the orange at rest, cream once the dark fill is there. */}
             <CtaLabel hold>Plan je moment</CtaLabel>
@@ -72,7 +72,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-7 lg:min-w-[208px] lg:w-auto`}
+            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-6 lg:min-w-[178px] lg:w-auto`}
           >
             {/* Shorter on mobile, where the two buttons now split the card's
                 width between them and "Doe de huidtest" was the one crowding

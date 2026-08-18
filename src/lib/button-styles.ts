@@ -58,7 +58,7 @@ export const BTN_PILL_CTA =
 
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";
-export const BTN_BOOKING_DESKTOP_WIDTH = "md:min-w-[220px]";
+export const BTN_BOOKING_DESKTOP_WIDTH = "md:min-w-[190px]";
 
 /**
  * Minimum comfortable tap area for a small icon control: 44×44, per Apple HIG
