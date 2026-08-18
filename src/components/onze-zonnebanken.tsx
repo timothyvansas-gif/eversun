@@ -78,7 +78,7 @@ function AfspraakButton({
                 width between them and "Doe de huidtest" was the one crowding
                 its neighbour. Unchanged from lg, where each has the room. */}
             <CtaLabel hold>
-              <span className="lg:hidden">Huidtest</span>
+              <span className="lg:hidden">Mijn huidtest</span>
               <span className="hidden lg:inline">Doe de huidtest</span>
             </CtaLabel>
           </button>
@@ -174,13 +174,14 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoError={handleVideoError}
         />
         <div className="mt-3 md:mt-0">
-          {/* The "2 banken" chip that used to sit on the image is folded in
-              here instead, so the count survives without a label competing
-              with the media for space. */}
-          <h3 className="card-title text-zinc-900">
-            {data.title}
-            {data.double && " 2x"}
-          </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="card-title text-zinc-900">{data.title}</h3>
+            {data.tag && (
+              <span className="shrink-0 whitespace-nowrap text-[13px] font-semibold leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
+                {data.tag}
+              </span>
+            )}
+          </div>
           <div className="mt-2">
             <SessionDetails minuten={data.minuten} prijs={data.prijs} />
           </div>

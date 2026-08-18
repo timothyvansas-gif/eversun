@@ -81,6 +81,11 @@ export default function ZonnebankMedia({
           </video>
         )}
       </div>
+      {data.badge && (
+        <span className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-white text-ink-primary">
+          {data.badge}
+        </span>
+      )}
       {/* Withdrawn when the clip cannot be played — a broken source, or a fetch
           that never arrived. A control that promises a state it cannot reach is
           worse than no control; the still image carries the card on its own.
@@ -101,11 +106,19 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          className={`group/toggle absolute bottom-3 right-3 md:bottom-5 md:right-5 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
-          {/* Circle only — the icons below sit outside it, as siblings, so
+          {/* Mirrors the badge across the card: the drawn circle sits the same
+              distance from its edge as the label does from the other. The
+              button is offset 4px less than that — 12 against the badge's 16,
+              20 against its 24 — because `inset-1` below already holds the
+              circle 4px inside the 48px tap area. Matching the button's offset
+              to the badge's would put the circle 4px further out than it looks
+              like it should be.
+
+              Circle only — the icons below sit outside it, as siblings, so
               they never inherit its hover scale. The scale grow gets its own
               fast timing on this span; background keeps the 1283ms
               tied to the video crossfade below.
