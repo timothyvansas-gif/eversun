@@ -77,7 +77,7 @@ export default function FaqOverlay({ isOpen, onClose }: { isOpen: boolean; onClo
           <h2 className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em]">
             {TITLE}
           </h2>
-          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+          <p className="mt-1.5 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
             Prijzen, openingstijden, reserveren en betalen, kort beantwoord.
           </p>
 
