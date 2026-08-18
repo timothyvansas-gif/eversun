@@ -9,6 +9,7 @@ import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
 import facebookIcon from "@/images/socials/social-facebook.svg";
 import instagramIcon from "@/images/socials/social-instagram.svg";
+import { MENU_DURATION, MENU_EASE } from "@/lib/menu-motion";
 import { MOBILE_MENU_ID, NAV_ITEMS } from "@/lib/nav-items";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { TAP_TARGET } from "@/lib/button-styles";
@@ -133,7 +134,14 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
         data-lenis-prevent
         initial={{ x: "100%" }}
         animate={{ x: isOpen ? "0%" : "100%" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        // Shared with the page push behind it — see menu-motion. The panel and
+        // <main> are one gesture, and a panel with its own timing arrives
+        // ahead of the page it is supposed to be pushing.
+        transition={{ duration: MENU_DURATION, ease: MENU_EASE }}
+        // The panel is a full-screen layer of text and images; promoting it
+        // before the gesture starts means the first frame is a composite
+        // rather than a paint.
+        style={{ willChange: "transform" }}
         id={MOBILE_MENU_ID}
         role="dialog"
         aria-modal="true"

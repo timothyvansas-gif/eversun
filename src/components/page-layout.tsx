@@ -6,6 +6,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import MotionProvider from "@/components/motion-provider";
 import { DESKTOP_NAV_QUERY } from "@/lib/breakpoints";
+import { MENU_PUSH_TRANSITION } from "@/lib/menu-motion";
 import HeroSection from "@/components/hero";
 import StickyHeader from "@/components/sticky-header";
 import MobileMenu from "@/components/mobile-menu";
@@ -20,8 +21,6 @@ const OnzeZonnebanken = dynamic(() => import("@/components/onze-zonnebanken"));
 const Producten = dynamic(() => import("@/components/producten"));
 const OverOns = dynamic(() => import("@/components/over-ons"));
 const Contact = dynamic(() => import("@/components/contact"));
-
-const PUSH_TRANSITION = "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)";
 
 // Declarative Framer Motion is governed by the shared MotionProvider. This local
 // preference remains necessary for the page push below: it is a plain inline
@@ -95,12 +94,14 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
           // viewport.
           //
           // Worth the constraint: margin-left animated layout and paint for the
-          // whole page across 800ms, where transform stays on the compositor.
+          // whole page across the push, where transform stays on the compositor.
           transform: isMenuOpen ? "translateX(-95%)" : "none",
           // The push is the largest single movement on the site — the whole page
-          // travelling 95% of the viewport. Under reduced motion the menu simply
-          // takes its place; the page is where it needs to be either way.
-          transition: shouldReduceMotion ? "none" : PUSH_TRANSITION,
+          // travelling 95% of the viewport — and the panel sliding in is the
+          // other half of it, so both read their timing from the same constant.
+          // Under reduced motion the menu simply takes its place; the page is
+          // where it needs to be either way.
+          transition: shouldReduceMotion ? "none" : MENU_PUSH_TRANSITION,
           width: "100%",
         }}
         className="min-h-screen flex flex-col items-center relative z-10"
