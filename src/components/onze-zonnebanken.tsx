@@ -1,14 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
-import {
-  BTN_CTA_HEIGHT,
-  BTN_PILL,
-  BTN_PILL_BRAND,
-} from "@/lib/button-styles";
+import { BTN_CTA_HEIGHT, BTN_PILL_BRAND } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
@@ -18,10 +12,6 @@ import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-// This is only needed after someone asks for advice, so it stays out of the
-// initial bundle for a section that most visitors simply browse.
-const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
 
 function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
   return (
@@ -42,13 +32,11 @@ function AfspraakButton({
   whatsappUrl,
   qrCode,
   title,
-  onStartHuidtest,
   className = "mt-3 md:mt-auto",
 }: {
   whatsappUrl: string;
   qrCode: StaticImageData;
   title: string;
-  onStartHuidtest: () => void;
   className?: string;
 }) {
   const appointment = useAppointmentLauncher();
@@ -56,41 +44,34 @@ function AfspraakButton({
 
   return (
     <>
+      {/* One button now, so there is no row left to lay out: it is full width
+          on a phone and content-width from lg, which the button says itself. */}
       <div className={className}>
-        <div className="flex w-full flex-col gap-3 lg:w-auto lg:flex-row">
-          <button
-            onClick={appointment.open}
-            className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
-            {...bookingBlob.hoverProps}
-          >
-            {bookingBlob.blob}
-            {/* The label lightens as the dark blob arrives under it, the same
-                move the hero makes in reverse: ink on yellow at rest, cream
-                once the fill is there. Driven off the hook's hover state rather
-                than a CSS :hover, which is already gated on a real pointer — a
-                tap must not leave a cream label on yellow.
+        <button
+          onClick={appointment.open}
+          className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:!px-7`}
+          {...bookingBlob.hoverProps}
+        >
+          {bookingBlob.blob}
+          {/* The label lightens as the dark blob arrives under it, the same
+              move the hero makes in reverse: ink on yellow at rest, cream once
+              the fill is there. Driven off the hook's hover state rather than a
+              CSS :hover, which is already gated on a real pointer — a tap must
+              not leave a cream label on yellow.
 
-                The two directions are not symmetric. Coming in, the blob covers
-                the centre within about a tenth of a second, so the colour
-                follows almost at once; going out it holds its dark for a beat
-                while it shrinks, so the way back waits for the fade. */}
-            <m.span
-              className="relative z-10"
-              initial={false}
-              animate={{ color: bookingBlob.hovered ? "#faf4ec" : "#0b0b0b" }}
-              transition={{ duration: 0.2, delay: bookingBlob.hovered ? 0.05 : 0.22 }}
-            >
-              Plan je moment
-            </m.span>
-          </button>
-          <button
-            type="button"
-            onClick={onStartHuidtest}
-            className={`${BTN_PILL} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[180px] lg:w-auto lg:!px-7`}
+              The two directions are not symmetric. Coming in, the blob covers
+              the centre within about a tenth of a second, so the colour follows
+              almost at once; going out it holds its dark for a beat while it
+              shrinks, so the way back waits for the fade. */}
+          <m.span
+            className="relative z-10"
+            initial={false}
+            animate={{ color: bookingBlob.hovered ? "#faf4ec" : "#0b0b0b" }}
+            transition={{ duration: 0.2, delay: bookingBlob.hovered ? 0.05 : 0.22 }}
           >
-            Doe de huidtest
-          </button>
-        </div>
+            Plan je moment
+          </m.span>
+        </button>
       </div>
 
       <AfspraakOverlay
@@ -133,7 +114,6 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function ZonnebankCard({ data }: { data: Zonnebank }) {
-  const [huidtestOpen, setHuidtestOpen] = useState(false);
   const {
     cardRef,
     videoRef,
@@ -216,15 +196,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           whatsappUrl={data.whatsappUrl}
           qrCode={data.qrCode}
           title={data.title}
-          onStartHuidtest={() => setHuidtestOpen(true)}
         />
       </div>
-      <HuidtestOverlay
-        isOpen={huidtestOpen}
-        onClose={() => setHuidtestOpen(false)}
-        entry="zonnebank_kaart"
-        bekekenBank={data.slug}
-      />
     </CardWrapper>
   );
 }
