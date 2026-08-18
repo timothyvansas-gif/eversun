@@ -13,6 +13,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { BEHIND_LIFT, BEHIND_SCALE, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import { HUIDTEST_PANEL_WIDTH } from "@/components/huidtest/panel-metrics";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
+import { HuidtestViewportProgress } from "@/components/huidtest/huidtest-progress";
 import { HuidtestSurfaceContext } from "@/components/huidtest/surface-context";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
 
@@ -72,6 +73,12 @@ export default function HuidtestOverlay({
   const isMobile = useMediaQuery(MOBILE_QUERY);
   const dragControls = useDragControls();
   const [mounted, setMounted] = useState(false);
+
+  // Where the test is, reported up by the quiz so the bar can be drawn out here
+  // on a phone. It has to be a sibling of the sheet rather than something
+  // inside it: only out here does it sit in this component's `AnimatePresence`,
+  // which is what keeps it alive long enough to fade when the sheet closes.
+  const [progress, setProgress] = useState({ value: 0, show: false });
 
   useScrollLock(isOpen);
   useFocusTrap(panelRef, isOpen && !isBehind, onClose);
@@ -141,7 +148,17 @@ export default function HuidtestOverlay({
           className="huidtest-panel-scroll flex flex-1 flex-col overflow-y-auto overflow-x-clip overscroll-contain px-6 pt-0 md:pt-4"
         >
           <HuidtestSurfaceContext.Provider value={{ element: surface, stackDepth }}>
-            <HuidtestQuiz entry={entry} bekekenBank={bekekenBank} onClose={onClose} />
+            {/* The sheet stops at 92svh, so its own top edge is not the top of
+                anything the reader can see. On a phone the quiz hands the
+                numbers up and the bar is drawn beside the sheet instead, in the
+                strip of dimmed page above it. */}
+            <HuidtestQuiz
+              entry={entry}
+              bekekenBank={bekekenBank}
+              progressPlacement={isMobile ? "surface" : "inline"}
+              onProgress={setProgress}
+              onClose={onClose}
+            />
           </HuidtestSurfaceContext.Provider>
         </div>
       </div>
@@ -156,6 +173,15 @@ export default function HuidtestOverlay({
               plan-je-moment's z-[60], which is what stacks on top of this when
               the advice is booked. */}
           <Backdrop onClick={onClose} className="z-[54] cursor-pointer" scrollLock />
+
+          {/* Outside both sheet wrappers on purpose: those carry the stack's
+              transform, and a `fixed` element inside a transformed ancestor is
+              positioned against that ancestor rather than the window. A direct
+              child of this AnimatePresence, too — not wrapped in one of its own
+              — so it hears the close and can fade with it. */}
+          {isMobile && (
+            <HuidtestViewportProgress progress={progress.value} show={progress.show} />
+          )}
 
           {isMobile ? (
             /* Two elements, because two transforms have to live side by side:

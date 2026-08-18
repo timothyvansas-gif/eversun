@@ -65,6 +65,123 @@ export function useProgressVisible(resultKey: number | null): boolean {
   return resultKey === null || dismissed !== resultKey;
 }
 
+/**
+ * The track and its fill, without any opinion about where the bar sits.
+ *
+ * Both placements draw the same thing in the same way and differ only in
+ * height, colour and corner, so the drawing lives here once and the two callers
+ * below hand in the classes that separate them.
+ */
+function ProgressTrack({
+  progress,
+  trackClassName,
+  fillClassName,
+  shouldReduceMotion,
+}: {
+  progress: number;
+  trackClassName: string;
+  fillClassName: string;
+  shouldReduceMotion: boolean | null;
+}) {
+  return (
+    <div
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(progress)}
+      aria-label="Voortgang van de huidtest"
+      className={`w-full overflow-hidden ${trackClassName}`}
+    >
+      {/* A full-width bar slid left behind the track's clip, rather than
+          a narrow one that grows. Two reasons, and the second is why it
+          is not a scaleX either: width animates layout every frame where
+          a transform stays on the compositor, and scaling a 6px pill
+          sideways squashes its round cap into an ellipse. Translating
+          keeps the cap circular and hides the other end off-track. */}
+      <div
+        className={`h-full w-full ${fillClassName}`}
+        style={{
+          transform: `translateX(-${100 - progress}%)`,
+          transition: shouldReduceMotion
+            ? "none"
+            : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
+        }}
+      />
+    </div>
+  );
+}
+
+/**
+ * The bar pinned to the top edge of the window, for a surface whose own top
+ * edge is not the top of anything the reader can see — the mobile sheet stops
+ * at 92svh, and the strip of dimmed page above it was doing nothing.
+ *
+ * Drawn by the surface rather than by the quiz, and that placement is the whole
+ * reason this is a separate export. Inside the quiz it could only ever be a
+ * portal, and a portal unmounts with its owner: when the sheet closes, the quiz
+ * and the bar go at once, so the bar's own exit never got a frame and it
+ * vanished the instant the slide-out finished. As a sibling of the sheet it
+ * sits in the surface's own `<AnimatePresence>`, which holds it long enough to
+ * fade with everything else.
+ *
+ * Kept mounted for as long as the surface is open, and hidden by animating its
+ * opacity rather than by unmounting. That is not a style choice either: an
+ * `<AnimatePresence>` around it would install a presence context of its own and
+ * shadow the surface's, so the bar would never hear that the surface is
+ * leaving — which is the original bug wearing a different hat. One `animate`
+ * covers the result screen, where the bar goes and the sheet stays, and `exit`
+ * covers the close, where both go.
+ *
+ * Colours are picked for that dimmed strip, where the inline bar's 5%-ink track
+ * would vanish: the site's ink for the track, the CTA orange for the fill.
+ */
+export function HuidtestViewportProgress({
+  progress,
+  show,
+}: {
+  progress: number;
+  /** From `useProgressVisible`, by way of whoever is drawing this. */
+  show: boolean;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    // z-[56] clears the sheet at z-[55] and stays under the booking sheet's
+    // z-[60]. Nothing here is focusable, so sitting outside the test's `inert`
+    // subtree costs the focus trap nothing.
+    //
+    // It leaves ahead of the sheet rather than with it. Matching the sheet's
+    // own 0.28s left the bar still legible at the top of a window the sheet had
+    // nearly finished vacating, which read as it hanging on; going first, and
+    // easing out so most of the fade happens in the first frames, puts it away
+    // while the slide is still the thing being watched.
+    <m.div
+      aria-hidden={!show}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: show ? 1 : 0 }}
+      exit={{ opacity: 0 }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : { duration: 0.16, ease: "easeOut" }
+      }
+      className="pointer-events-none fixed inset-x-0 top-0 z-[56]"
+    >
+      {/* Square and full-bleed: a pill's rounded ends sitting flush against the
+          window's own edges read as a mistake rather than as a shape. Thinner
+          than the inline bar as well — full-bleed it spans four times the
+          width, and the same 6px across all of that reads as a band rather
+          than as a measure. */}
+      <ProgressTrack
+        progress={progress}
+        trackClassName="h-[3px] bg-ink-primary"
+        fillClassName="bg-cta"
+        shouldReduceMotion={shouldReduceMotion}
+      />
+    </m.div>
+  );
+}
+
 export function HuidtestProgress({
   progress,
   show,
@@ -93,30 +210,12 @@ export function HuidtestProgress({
           }
           className="shrink-0 overflow-hidden"
         >
-          <div
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(progress)}
-            aria-label="Voortgang van de huidtest"
-            className="h-[6px] w-full overflow-hidden rounded-full bg-ink-primary/5"
-          >
-            {/* A full-width bar slid left behind the track's clip, rather than
-                a narrow one that grows. Two reasons, and the second is why it
-                is not a scaleX either: width animates layout every frame where
-                a transform stays on the compositor, and scaling a 6px pill
-                sideways squashes its round cap into an ellipse. Translating
-                keeps the cap circular and hides the other end off-track. */}
-            <div
-              className="h-full w-full rounded-full bg-ink-primary"
-              style={{
-                transform: `translateX(-${100 - progress}%)`,
-                transition: shouldReduceMotion
-                  ? "none"
-                  : "transform 400ms cubic-bezier(0.22,1,0.36,1)",
-              }}
-            />
-          </div>
+          <ProgressTrack
+            progress={progress}
+            trackClassName="h-[6px] rounded-full bg-ink-primary/5"
+            fillClassName="rounded-full bg-ink-primary"
+            shouldReduceMotion={shouldReduceMotion}
+          />
         </m.div>
       )}
     </AnimatePresence>

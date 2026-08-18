@@ -68,6 +68,8 @@ export default function HuidtestQuiz({
   entry = "direct",
   bekekenBank,
   historyBacked = false,
+  progressPlacement = "inline",
+  onProgress,
   onClose,
 }: {
   /**
@@ -86,6 +88,19 @@ export default function HuidtestQuiz({
    * hijacked it would send someone browsing away instead of back a question.
    */
   historyBacked?: boolean;
+  /**
+   * Where the progress bar is drawn. Handed in rather than worked out from a
+   * media query here, because the answer is not "is this a phone" but "is the
+   * top of this quiz also the top of the screen", and only whoever mounted the
+   * quiz knows that.
+   *
+   * `inline` draws it here, at the top of the quiz's own column. `surface`
+   * draws nothing and leaves it to whoever is showing the test — see
+   * `HuidtestViewportProgress`, and `onProgress` for the numbers it needs.
+   */
+  progressPlacement?: "inline" | "surface";
+  /** Progress, for a surface that draws the bar itself. */
+  onProgress?: (state: { value: number; show: boolean }) => void;
   /** Lets a panel close itself from inside the quiz. */
   onClose?: () => void;
 }) {
@@ -200,6 +215,13 @@ export default function HuidtestQuiz({
 
   const progress = progressFor(shownStep, answers, QUESTIONS.length);
 
+  // Reported up whenever the surface is the one drawing the bar. The numbers
+  // stay the quiz's — it is the only thing that knows where the test is — while
+  // where they are painted stays the surface's business.
+  useEffect(() => {
+    onProgress?.({ value: progress, show: progressVisible });
+  }, [onProgress, progress, progressVisible]);
+
   const stepKey = keyFor(step);
 
   /** What a swipe has behind this step to pull back in. */
@@ -259,7 +281,9 @@ export default function HuidtestQuiz({
     // sticky element cannot be held anywhere its containing block does not
     // reach, so it simply scrolled away with the questions.
     <div ref={rootRef} className="relative flex w-full shrink-0 flex-col min-h-full">
-      <HuidtestProgress progress={progress} show={progressVisible} />
+      {progressPlacement === "inline" && (
+        <HuidtestProgress progress={progress} show={progressVisible} />
+      )}
 
       <HuidtestStepStage
         stage={stage}
