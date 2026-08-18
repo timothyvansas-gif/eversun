@@ -34,50 +34,28 @@ export const BTN_PILL_DARK_OUTLINE =
   "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /**
- * The filled CTA, in the brand yellow.
+ * The filled CTA, in the orange.
  *
- * That yellow is the site's own: it is what the "2 banken" label on a bed card
- * is drawn in. The buttons rested orange until now, which put the loudest
- * colour on the page on every call to action at once; yellow carries them and
- * leaves orange to mean something — a selected answer, an open studio.
+ * Painted with `bg-cta`, which is where that colour lives now — see the token
+ * in globals.css. The buttons spent a spell in the brand yellow; that yellow is
+ * still the site's own, on the "2 banken" label and the parking card, and those
+ * are `brand` rather than `cta` precisely so a change here leaves them alone.
  *
- * The label is ink rather than page cream, because yellow is a light fill and
- * white on it is unreadable. It still has to invert as the dark hover fill
- * arrives underneath: `group/cta` is here for that, and `BTN_FILL_LABEL` is the
- * other half.
+ * The label is white, by design decision. Worth knowing what that costs: white
+ * on #ff4d00 measures 3.3:1, under the 4.5:1 WCAG AA asks for at this size,
+ * where ink would have cleared 5.9:1. On the yellow it was the other way round
+ * and ink was the only readable option.
  *
- * Carries `relative overflow-hidden` because the fill is an element rather than
- * a colour — it comes from `useHoverBlob` and the consumer drops it in — and a
- * button that forgets those two lets the blob escape its own pill, which is the
- * one way to get this wrong that reads as a rendering bug.
- *
- * The transition deliberately leaves `color` out: the label owns its own
- * timing, and two `transition-property` declarations on one element resolve by
- * stylesheet order rather than by intent.
+ * Hover is a plain colour swap to the dark fill, label to cream along with it.
+ * It used to be a circle that grew from wherever the cursor crossed the edge
+ * (`useHoverBlob`, now gone), which is why this string once carried
+ * `relative overflow-hidden`, a named group, and a companion constant for the
+ * label's timing. All of that existed to serve the blob; a button that changes
+ * colour needs none of it, and both colours can sit here rather than being
+ * repeated at every use site.
  */
-export const BTN_PILL_BRAND =
-  "group/cta relative overflow-hidden inline-flex items-center bg-brand text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color] duration-150";
-
-/**
- * The label inside a filled CTA: the timing of its flip, not its colours.
- *
- * A filled button's label has to change colour as the blob arrives under it, or
- * it disappears into the fill. The two directions are not symmetric. Coming in,
- * the blob's ease covers the centre of the button within about a tenth of a
- * second, so the colour follows almost immediately. Going out, the blob holds
- * its colour for a beat while it shrinks, and a label that turned with it would
- * vanish — so the way back waits for the fade.
- *
- * Hover rather than a JS pointer flag: Tailwind's hover variant is already
- * behind `(hover: hover)`, so a tap cannot leave the label stuck in the
- * inverted state. The named group is what ties it to its own button and not to
- * whatever card it happens to sit inside.
- *
- * Add the two colours per button — they differ by fill: `group-hover/cta:` the
- * one the blob brings, plain the one it rests on.
- */
-export const BTN_FILL_LABEL =
-  "relative z-10 transition-colors duration-200 delay-[220ms] group-hover/cta:delay-[50ms]";
+export const BTN_PILL_CTA =
+  "inline-flex items-center bg-cta text-white text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer hover:bg-ink-primary hover:text-surface-page active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";

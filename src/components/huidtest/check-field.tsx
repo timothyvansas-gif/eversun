@@ -38,7 +38,7 @@ export function CheckField({
         // once the text wraps.
         className={`mt-[2px] flex size-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors duration-150 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
           checked
-            ? "border-ink-primary bg-ink-primary text-white"
+            ? "border-accent bg-accent text-white"
             : `${OUTLINE_BORDER_COLOR} bg-white/60 group-hover:border-ink-primary`
         }`}
       >

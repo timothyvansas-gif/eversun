@@ -4,7 +4,6 @@ import Link from "next/link";
 import { EXIT_MINOR, EXIT_ROSSIG, EXIT_TYPE1, TELEFOON } from "@/lib/huidtest/config";
 import type { ExitReason } from "@/lib/huidtest/types";
 import { ctaClass, CtaButton, CTA_TRANSITION } from "@/components/huidtest/cta";
-import { useHoverBlob } from "@/components/ui/hover-blob";
 import { StepCard } from "@/components/huidtest/step-card";
 
 /**
@@ -40,7 +39,6 @@ export default function ExitScreen({
   // The route's version of that button is a Link built from `ctaClass`, not a
   // CtaButton, so the fill has to be wired up by hand here. Without this the
   // filled variant would be the one button on the site with no hover at all.
-  const linkBlob = useHoverBlob();
 
   return (
     <StepCard>
@@ -79,9 +77,7 @@ export default function ExitScreen({
             href="/"
             className={ctaClass(terugVariant)}
             style={CTA_TRANSITION}
-            {...(terugVariant === "accent" ? linkBlob.hoverProps : {})}
           >
-            {terugVariant === "accent" && linkBlob.blob}
             <span className="relative z-10">{terugLabel}</span>
           </Link>
         )}

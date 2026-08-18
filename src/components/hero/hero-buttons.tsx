@@ -2,8 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { useHoverBlob } from "@/components/ui/hover-blob";
-import { BTN_FILL_LABEL } from "@/lib/button-styles";
 
 // Nobody sees the quiz until they ask for it, so it stays out of the hero's
 // bundle until the button is pressed.
@@ -12,21 +10,18 @@ const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-ove
 export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { onOpenAfspraak: () => void; onOpenPlanJeMoment: () => void }) {
   const [huidtestOpen, setHuidtestOpen] = useState(false);
 
-  // The same fill every other accent button uses, in white rather than ink.
-  // It was written here first and then copied outwards, which is exactly how
-  // one button quietly becomes two kinds of button — so the hero reads from
-  // the shared one now and only keeps what is genuinely its own: a label that
-  // has to darken, because white on white is nothing at all.
-  const primary = useHoverBlob({ color: "bg-white" });
-
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
       {/* Width is content-driven from sm up. Mobile fills the column instead:
           two stacked CTAs of different widths read as two different kinds of
           thing, and these are a pair. */}
+      {/* Hover fills white here, where every other CTA fills dark — this one
+          sits on a photograph, and the dark fill the others use would sink into
+          it. The label darkens to match, because white on white is nothing at
+          all. Those two colours are all this button keeps of its own; the rest
+          of the shape it shares. */}
       <button
-        className="group/cta relative flex w-full items-center justify-center overflow-hidden rounded-full bg-accent px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
-        {...primary.hoverProps}
+        className="flex w-full items-center justify-center rounded-full bg-cta px-0 sm:w-auto sm:px-10 lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer hover:bg-white hover:text-ink-primary active:scale-[0.98] transition-[transform,background-color,color] duration-200"
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -35,12 +30,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           }
         }}
       >
-        {primary.blob}
-        {/* The label darkens as the white blob arrives under it, since white on
-            white is nothing at all. The timing of that flip is shared with every
-            other filled button — see BTN_FILL_LABEL — and only the two colours
-            are the hero's own, because this is the one that fills white. */}
-        <span className={`${BTN_FILL_LABEL} group-hover/cta:text-ink-primary`}>
+        <span>
           Plan je moment
         </span>
       </button>

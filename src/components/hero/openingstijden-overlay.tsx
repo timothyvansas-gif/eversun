@@ -9,9 +9,8 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
-import { useHoverBlob } from "@/components/ui/hover-blob";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { BTN_FILL_LABEL, BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { BEHIND_SCALE, BEHIND_LIFT, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 import { ADDRESS, PHONE_DISPLAY, PHONE_E164 } from "@/lib/site";
@@ -22,13 +21,13 @@ import { ADDRESS, PHONE_DISPLAY, PHONE_E164 } from "@/lib/site";
  * overlay keeps working wherever nothing is stacked on top of it.
  */
 function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) {
-  const blob = useHoverBlob();
 
-  // `relative overflow-hidden` so the fill is clipped to the pill. Both shapes
-  // below share this string, which is the point: whichever one this renders,
-  // it has to be the same button.
+  // Both shapes below share this string, which is the point: whichever one
+  // this renders, it has to be the same button. It used to carry
+  // `relative overflow-hidden` as well, to clip a fill that grew from the
+  // cursor; the hover is a colour swap now and clips nothing.
   const className =
-    "group/cta relative overflow-hidden mt-7 flex w-full items-center justify-center bg-brand font-sans font-medium text-[15px] text-ink-primary active:scale-[0.98]";
+    "mt-7 flex w-full items-center justify-center rounded-full bg-cta font-sans font-medium text-[15px] text-white hover:bg-ink-primary hover:text-surface-page active:scale-[0.98]";
   const style = {
     minHeight: "48px",
     borderRadius: "9999px",
@@ -37,8 +36,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
 
   const content = (
     <>
-      {blob.blob}
-      <span className={`${BTN_FILL_LABEL} group-hover/cta:text-surface-page`}>Plan je moment</span>
+      <span>Plan je moment</span>
     </>
   );
 
@@ -50,7 +48,6 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
         rel="noopener noreferrer"
         className={className}
         style={style}
-        {...blob.hoverProps}
       >
         {content}
       </a>
@@ -63,7 +60,6 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
       onClick={onPlanJeMoment}
       className={`${className} cursor-pointer`}
       style={style}
-      {...blob.hoverProps}
     >
       {content}
     </button>

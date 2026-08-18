@@ -11,8 +11,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
-import { BTN_FILL_LABEL, BTN_PILL_BRAND } from "@/lib/button-styles";
-import { useHoverBlob } from "@/components/ui/hover-blob";
+import { BTN_PILL_CTA } from "@/lib/button-styles";
 import { WHATSAPP_BOOKING_URL } from "@/lib/whatsapp";
 
 export default function AfspraakOverlay({
@@ -34,7 +33,6 @@ export default function AfspraakOverlay({
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
-  const whatsappBlob = useHoverBlob();
 
   useEffect(() => {
     // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
@@ -108,18 +106,18 @@ export default function AfspraakOverlay({
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_BRAND} w-full justify-center gap-2 min-h-[48px] mt-4`}
+                className={`${BTN_PILL_CTA} w-full justify-center gap-2 min-h-[48px] mt-4`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
-                {...whatsappBlob.hoverProps}
               >
-                {whatsappBlob.blob}
                 {/* The gap lived on the anchor, which is now the blob's
                     container rather than the label's row — so it moves in here
                     with the two things it was ever spacing apart. */}
-                <span className={`${BTN_FILL_LABEL} flex items-center gap-2 group-hover/cta:text-surface-page`}>
-                  {/* Black on yellow, inverted to white once the dark fill is
-                      under it — the mark follows the label it stands next to. */}
-                  <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 transition-[filter] duration-200 delay-[220ms] group-hover/cta:invert group-hover/cta:delay-[50ms]" />
+                <span className="flex items-center gap-2">
+                  {/* White, like the label beside it. `brightness-0 invert`
+                      is how a coloured mark is forced to flat white. It used to
+                      flip from black on hover; with a white label at rest there
+                      is nothing to flip to. */}
+                  <Image src={whatsappIcon} alt="" width={18} height={18} className="w-[18px] h-[18px] brightness-0 invert" />
                   Open WhatsApp
                 </span>
               </a>

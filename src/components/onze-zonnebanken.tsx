@@ -6,14 +6,12 @@ import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
   BTN_CTA_HEIGHT,
-  BTN_FILL_LABEL,
   BTN_PILL,
-  BTN_PILL_BRAND,
+  BTN_PILL_CTA,
 } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
 import ZonnebankMedia from "@/components/zonnebank-media";
-import { useHoverBlob } from "@/components/ui/hover-blob";
 import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
 import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
@@ -53,7 +51,6 @@ function AfspraakButton({
   className?: string;
 }) {
   const appointment = useAppointmentLauncher();
-  const bookingBlob = useHoverBlob();
 
   return (
     <>
@@ -67,12 +64,10 @@ function AfspraakButton({
         <div className="flex w-full flex-row-reverse gap-3 lg:w-auto lg:flex-row">
           <button
             onClick={appointment.open}
-            className={`${BTN_PILL_BRAND} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
-            {...bookingBlob.hoverProps}
+            className={`${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[214px] lg:w-auto lg:flex-none lg:!px-7`}
           >
-            {bookingBlob.blob}
-            {/* Ink on yellow at rest, cream once the dark fill is there. */}
-            <span className={`${BTN_FILL_LABEL} group-hover/cta:text-surface-page`}>
+            {/* White on the orange at rest, cream once the dark fill is there. */}
+            <span>
               Plan je moment
             </span>
           </button>

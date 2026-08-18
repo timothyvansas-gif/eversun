@@ -1,7 +1,6 @@
 "use client";
 
-import { BTN_FILL_LABEL, BTN_OUTLINE_BORDER } from "@/lib/button-styles";
-import { useHoverBlob } from "@/components/ui/hover-blob";
+import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 
 /**
  * The huidtest's two buttons.
@@ -18,12 +17,13 @@ import { useHoverBlob } from "@/components/ui/hover-blob";
  */
 
 const BASE =
-  "relative overflow-hidden inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
+  "inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
 
 const VARIANTS = {
-  // No `hover:bg-void` here any more: it repainted the pill on the first frame
-  // and left the fill nothing to arrive over.
-  accent: "group/cta bg-brand text-ink-primary",
+  // Back to a plain hover swap, and to the same pair the site's other filled
+  // CTAs use. The growing fill this replaced needed the pill to stay unpainted
+  // on the first frame so it had something to arrive over; nothing arrives now.
+  accent: "bg-cta text-white hover:bg-ink-primary hover:text-surface-page",
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
   // transition below carries border-color.
@@ -35,7 +35,7 @@ const VARIANTS = {
 // was the one property that snapped: swiping back to an answered question lit
 // the button in a single frame while its colours were still easing.
 const TRANSITION =
-  "transform 150ms ease, background-color 150ms ease, border-color 150ms ease, opacity 150ms ease";
+  "transform 150ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease, opacity 150ms ease";
 
 export function ctaClass(variant: keyof typeof VARIANTS, extra = ""): string {
   return `${BASE} ${VARIANTS[variant]} ${extra}`;
@@ -56,7 +56,6 @@ export function CtaButton({
 }: {
   variant?: keyof typeof VARIANTS;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const blob = useHoverBlob({ disabled: props.disabled });
   const filled = variant === "accent";
 
   return (
@@ -64,13 +63,11 @@ export function CtaButton({
       type="button"
       className={ctaClass(variant, className)}
       style={CTA_TRANSITION}
-      {...(filled ? blob.hoverProps : {})}
       {...props}
     >
       {filled ? (
         <>
-          {blob.blob}
-          <span className={`${BTN_FILL_LABEL} inline-flex items-center gap-2 group-hover/cta:text-surface-page`}>
+          <span className="inline-flex items-center gap-2">
             {children}
           </span>
         </>
@@ -89,23 +86,20 @@ export function CtaLink({
 }: {
   variant?: keyof typeof VARIANTS;
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const blob = useHoverBlob();
   const filled = variant === "accent";
 
   return (
     <a
       className={ctaClass(variant, className)}
       style={CTA_TRANSITION}
-      {...(filled ? blob.hoverProps : {})}
       {...props}
     >
       {filled ? (
         <>
-          {blob.blob}
           {/* The gap comes along: these links carry an icon beside their label,
               and the spacing that used to sit on the anchor now has to sit on
               the row that actually holds the two of them. */}
-          <span className={`${BTN_FILL_LABEL} inline-flex items-center gap-2 group-hover/cta:text-surface-page`}>
+          <span className="inline-flex items-center gap-2">
             {children}
           </span>
         </>

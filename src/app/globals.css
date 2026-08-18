@@ -21,6 +21,13 @@
   /* The one orange: buttons, status dot, pin, review stars, hero rules. There
      used to be a second, duller #e15e1d on the dot and the pin. */
   --color-accent: #ff4d00;
+  /* What a filled call-to-action is painted in. Its own name rather than
+     `accent` at each use site: this colour has now been switched twice, and
+     both times it sat copied across four components while the yellow labels
+     and the parking card — which are `brand` and stay that way — read as part
+     of the same change. One token means the next switch is one line, and it
+     cannot take the labels with it. */
+  --color-cta: var(--color-accent);
   --color-line: #d5be9c;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */
