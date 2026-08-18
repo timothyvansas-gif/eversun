@@ -32,9 +32,9 @@ export default function ExitScreen({
   const copy = reason === "minor" ? EXIT_MINOR : personalCopy;
   const terugLabel = reason === "minor" ? EXIT_MINOR.cta : personalCopy.ctaSecundair;
 
-  // Filled when it is the only way on (the minor exit), outline when it stands
-  // beside the WhatsApp button — one primary per screen, either way.
-  const terugVariant = reason === "minor" ? "accent" : "outline";
+  // Filled on every exit reason: this pill is the only way on regardless of
+  // which one fired, so it gets the same weight as the minor exit's always did.
+  const terugVariant = "accent";
 
   // The route's version of that button is a Link built from `ctaClass`, not a
   // CtaButton, so the fill has to be wired up by hand here. Without this the
