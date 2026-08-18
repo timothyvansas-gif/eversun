@@ -106,28 +106,26 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`group absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          className={`group/toggle absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
           {/* Circle only — the icons below sit outside it, as siblings, so
               they never inherit its hover scale. The scale grow gets its own
-              fast timing on this span; background/shadow keep the 1283ms
+              fast timing on this span; background keeps the 1283ms
               tied to the video crossfade below. */}
           <span
             aria-hidden="true"
-            className={`absolute inset-0 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.16)] scale-100 group-hover:scale-110 ${
-              isVideoActive && !isVideoLoading
-                ? "bg-void shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
-                : "bg-white"
+            className={`absolute inset-0 rounded-full scale-100 group-hover/toggle:scale-110 ${
+              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white"
             }`}
             style={{
               // Tailwind v4's scale-* utilities set the standalone CSS `scale`
               // property, not `transform` — listing `transform` here left the
               // hover grow untransitioned (it jumped straight to 110%).
-              transitionProperty: "background-color, box-shadow, scale",
-              transitionDuration: "1283ms, 1283ms, 300ms",
-              transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1), cubic-bezier(0.22,1,0.36,1), ease-out",
+              transitionProperty: "background-color, scale",
+              transitionDuration: "1283ms, 300ms",
+              transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1), ease-out",
             }}
           />
           <span
