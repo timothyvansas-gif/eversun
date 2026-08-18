@@ -82,7 +82,7 @@ export default function ZonnebankMedia({
         )}
       </div>
       {data.badge && (
-        <span className="absolute bottom-6 left-6 md:bottom-6 md:left-6 text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-brand text-ink-primary">
+        <span className="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-white text-ink-primary">
           {data.badge}
         </span>
       )}
@@ -106,17 +106,35 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`group/toggle absolute bottom-4 right-4 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          className={`group/toggle absolute bottom-3 right-3 md:bottom-5 md:right-5 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
-          {/* Circle only — the icons below sit outside it, as siblings, so
+          {/* Mirrors the badge across the card: the drawn circle sits the same
+              distance from its edge as the label does from the other. The
+              button is offset 4px less than that — 12 against the badge's 16,
+              20 against its 24 — because `inset-1` below already holds the
+              circle 4px inside the 48px tap area. Matching the button's offset
+              to the badge's would put the circle 4px further out than it looks
+              like it should be.
+
+              Circle only — the icons below sit outside it, as siblings, so
               they never inherit its hover scale. The scale grow gets its own
               fast timing on this span; background keeps the 1283ms
-              tied to the video crossfade below. */}
+              tied to the video crossfade below.
+
+              `inset-1` rather than `inset-0`: the drawn circle is 40px inside a
+              button that stays 48, so the mark is smaller without touching the
+              tap area — which has to clear 44 (see TAP_TARGET).
+
+              The icons went 22 → 20 with it. Their stroke is authored at 1.25
+              in the SVG and rides along with the box, so it now draws at about
+              1.14px. Left alone on purpose: raising the number in the file to
+              hold the old weight would change what the marks are drawn with
+              everywhere they are used. */}
           <span
             aria-hidden="true"
-            className={`absolute inset-0 rounded-full scale-100 group-hover/toggle:scale-110 ${
+            className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 ${
               isVideoActive && !isVideoLoading ? "bg-void" : "bg-white"
             }`}
             style={{
@@ -142,7 +160,7 @@ export default function ZonnebankMedia({
             }`}
             aria-hidden="true"
           >
-            <Image src={sunIcon} alt="" width={22} height={22} />
+            <Image src={sunIcon} alt="" width={20} height={20} />
           </span>
           <span
             className={`absolute flex items-center justify-center transition-[opacity,transform] duration-[1283ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -152,7 +170,7 @@ export default function ZonnebankMedia({
             }`}
             aria-hidden="true"
           >
-            <Image src={sunsetIcon} alt="" width={22} height={18} />
+            <Image src={sunsetIcon} alt="" width={20} height={16} />
           </span>
         </button>
       )}
