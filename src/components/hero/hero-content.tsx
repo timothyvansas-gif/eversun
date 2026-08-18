@@ -225,7 +225,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   // font size, against (viewport - 48px) of room — so lowering
                   // the floors lets it govern down to 320px and the line breaks
                   // on the comma instead. Only widths below 427px change.
-                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] lg:text-[66px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2] text-hero-ink"
+                  className="font-display font-normal tracking-[-0.02em] lg:tracking-[-3px] text-[clamp(24px,7.5vw,88px)] leading-[clamp(30px,10vw,94px)] mb-[2px] lg:mb-0 lg:text-[66px] lg:leading-[1.2] 2xl:text-[74px] 2xl:leading-[1.2] text-hero-ink"
                   style={{ marginLeft: "-3px" }}
                 >
                   Een gouden gloed die blijft,{" "}<br className="hidden lg:inline" />
@@ -264,7 +264,7 @@ export default function HeroContent({ onOpenMenu, isMenuOpen, onOpenOpeningstijd
                   rest of the left column, so the fade cannot sit on the shared
                   parent. The wrapper below keeps the row's own geometry —
                   justify-between still measures the same two children. */}
-              <div className="mt-10 lg:mt-14 flex flex-row items-center justify-between w-full gap-6">
+              <div className="mt-8 lg:mt-14 flex flex-row items-center justify-between w-full gap-6">
                 <m.div
                   className="w-full sm:w-auto"
                   variants={fadeUp}
