@@ -210,9 +210,14 @@ export function HuidtestProgress({
           }
           className="shrink-0 overflow-hidden"
         >
+          {/* This same bar draws on the mobile /huidtest route as well as the
+              desktop panel, where its 5%-ink track came from. White is a
+              desktop-only override: on mobile the bar sits directly on the
+              page's cream, where solid white would be a hard-edged block
+              rather than a track. */}
           <ProgressTrack
             progress={progress}
-            trackClassName="h-[6px] rounded-full bg-ink-primary/5"
+            trackClassName="h-[6px] rounded-full bg-ink-primary/5 md:bg-white/60"
             fillClassName="rounded-full bg-ink-primary"
             shouldReduceMotion={shouldReduceMotion}
           />
