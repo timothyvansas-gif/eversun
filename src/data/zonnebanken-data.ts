@@ -21,7 +21,6 @@ export type Zonnebank = {
   desktopVideo?: string;
   alt: string;
   title: string;
-  badge?: string;
   tag?: string;
   description: string[];
   minuten: string;
@@ -56,8 +55,7 @@ const BANKEN: ZonnebankInput[] = [
     mobileVideo: "/videos/zonnebanken/prestige-1600-toggle-mobile.mp4?v=10",
     desktopVideo: "/videos/zonnebanken/prestige-1600-toggle-desktop.mp4?v=8",
     alt: "Ergoline Prestige 1600 zonnebad",
-    badge: "2 banken",
-    tag: "Populair",
+    tag: "2 banken",
     description: [
       "Het rode Beauty Light stimuleert de doorbloeding van je huid, zodat je kleur dieper wordt en je huid verzorgd blijft.",
       "Met Personal Sunstyle stel je de intensiteit zelf in: sensitive als je huid rustig wil beginnen, medium of intensive voor meer kracht.",
@@ -85,7 +83,7 @@ const BANKEN: ZonnebankInput[] = [
     mobileVideo: "/videos/zonnebanken/blue-vision-toggle-mobile.mp4?v=10",
     desktopVideo: "/videos/zonnebanken/blue-vision-toggle-desktop.mp4?v=8",
     alt: "Ergoline Blue Vision zonnebad",
-    badge: "2 banken",
+    tag: "2 banken",
     description: [
       "Het blauwe licht activeert de pigmentcellen in je huid al voor het zonnen.\nJe kleur komt daardoor sneller en dieper op gang.",
       "120 blauwe LEDs doen dat werk. Kies op het display sensitive, medium of intensive, net wat je huid vandaag aankan.",

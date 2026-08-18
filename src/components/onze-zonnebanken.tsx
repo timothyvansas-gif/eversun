@@ -78,7 +78,7 @@ function AfspraakButton({
                 width between them and "Doe de huidtest" was the one crowding
                 its neighbour. Unchanged from lg, where each has the room. */}
             <CtaLabel hold>
-              <span className="lg:hidden">Mijn huidtest</span>
+              <span className="lg:hidden">Huidtest</span>
               <span className="hidden lg:inline">Doe de huidtest</span>
             </CtaLabel>
           </button>

@@ -53,7 +53,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
             instead of on its own full-width row and the long label was the one
             crowding "Plan je moment". Unchanged from sm, where each has room. */}
         <CtaLabel hold>
-          <span className="sm:hidden">Mijn huidtest</span>
+          <span className="sm:hidden">Huidtest</span>
           <span className="hidden sm:inline">Doe de huidtest</span>
         </CtaLabel>
       </button>
