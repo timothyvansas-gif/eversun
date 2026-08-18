@@ -80,6 +80,27 @@ export default function HuidtestOverlay({
   // which is what keeps it alive long enough to fade when the sheet closes.
   const [progress, setProgress] = useState({ value: 0, show: false });
 
+  // Whether the quiz currently has more than fits, which is what decides
+  // whether the whole sheet can be dragged away or only its grabber can. See
+  // `dragListener` below.
+  const [scroller, setScroller] = useState<HTMLDivElement | null>(null);
+  const [contentOverflows, setContentOverflows] = useState(false);
+
+  useEffect(() => {
+    if (!scroller) return;
+
+    // Both boxes, because either one moving changes the answer: the sheet is a
+    // fixed 92svh so the viewport resizes it, and the content grows and shrinks
+    // with every screen the test moves to.
+    const measure = () => setContentOverflows(scroller.scrollHeight > scroller.clientHeight + 1);
+    const observer = new ResizeObserver(measure);
+    observer.observe(scroller);
+    if (scroller.firstElementChild) observer.observe(scroller.firstElementChild);
+    measure();
+
+    return () => observer.disconnect();
+  }, [scroller]);
+
   useScrollLock(isOpen);
   useFocusTrap(panelRef, isOpen && !isBehind, onClose);
 
@@ -135,6 +156,7 @@ export default function HuidtestOverlay({
           // It turns on only after the progress bar has fully left the visible
           // scroll area, so the mask can never wash over that indicator.
           // Writing it on the element also avoids a React render per scroll.
+          ref={setScroller}
           data-scrolled="false"
           onScroll={(event) => {
             const scroller = event.currentTarget;
@@ -211,11 +233,17 @@ export default function HuidtestOverlay({
                 animate={{ y: 0 }}
                 exit={{ y: "100%", transition: SHEET_EXIT }}
                 transition={STACK_SPRING}
-                // Dragging starts from the grabber only: the quiz scrolls, and a
-                // drag listener on the whole surface would swallow that scroll.
                 drag="y"
                 dragControls={dragControls}
-                dragListener={false}
+                // The whole surface is draggable, the way the site's other
+                // sheets are — but only while there is nothing to scroll. That
+                // is the condition rather than "which screen is this": the
+                // listener's problem was never the result screen by name, it
+                // was that a drag on a scrolling box swallows the scroll, and
+                // on a short phone a question can overflow just as the advice
+                // does. When it does overflow the grabber still starts a drag,
+                // which is the whole reason that strip has a hit area.
+                dragListener={!contentOverflows}
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={{ top: 0, bottom: DRAG_ELASTIC }}
                 onDragEnd={(_, info) => {
