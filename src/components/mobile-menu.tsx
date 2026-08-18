@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { m } from "framer-motion";
 import Image from "next/image";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { quietFocus } from "@/lib/quiet-focus";
 import { useScrollNav } from "@/hooks/use-scroll-nav";
 import whatsappIcon from "@/images/whatsapp.svg";
@@ -25,6 +25,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
   const { scrollToNav } = useScrollNav();
   const [canShare, setCanShare] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // The same trap the hero overlays use. This panel claimed `aria-modal="true"`
   // while Tab walked straight out of it into the page behind — which is pushed
@@ -129,19 +130,32 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
     // `pointer-events-none` keeps the invisible frame from intercepting taps;
     // the panel re-enables them for itself.
     <div className="fixed inset-0 z-[200] overflow-x-clip pointer-events-none lg:hidden">
-      <m.div
+      <div
         ref={panelRef}
         data-lenis-prevent
-        initial={{ x: "100%" }}
-        animate={{ x: isOpen ? "0%" : "100%" }}
-        // Shared with the page push behind it — see menu-motion. The panel and
-        // <main> are one gesture, and a panel with its own timing arrives
-        // ahead of the page it is supposed to be pushing.
-        transition={{ duration: MENU_DURATION, ease: MENU_EASE }}
-        // The panel is a full-screen layer of text and images; promoting it
-        // before the gesture starts means the first frame is a composite
-        // rather than a paint.
-        style={{ willChange: "transform" }}
+        // A CSS transition rather than Framer, even though the timing is the
+        // same either way. The page push and the header beside it are plain
+        // transitions, and Framer starts a frame later than a style flush does
+        // — one frame of 900ms across 95vw is a visible few pixels of daylight
+        // between this panel's edge and the page it is pushing. Same engine,
+        // same tick.
+        //
+        // On `translate` rather than `transform`, matching the header: it is
+        // the property the shared timing is written against there, and keeping
+        // both on it means neither can drift on a transform someone adds later.
+        style={{
+          translate: isOpen ? "0 0" : "100% 0",
+          // Motion here is the menu arriving, not something the visitor asked
+          // to watch. Framer's reducedMotion policy used to cover this element;
+          // a CSS transition sits outside it, so the gate has to be explicit.
+          transitionProperty: shouldReduceMotion ? "none" : "translate",
+          transitionDuration: `${MENU_DURATION * 1000}ms`,
+          transitionTimingFunction: `cubic-bezier(${MENU_EASE.join(", ")})`,
+          // The panel is a full-screen layer of text and images; promoting it
+          // before the gesture starts means the first frame is a composite
+          // rather than a paint.
+          willChange: "translate",
+        }}
         id={MOBILE_MENU_ID}
         role="dialog"
         aria-modal="true"
@@ -272,7 +286,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
             06 25306491
           </a>
         </div>
-      </m.div>
+      </div>
     </div>
   );
 }
