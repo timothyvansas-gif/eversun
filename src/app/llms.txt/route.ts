@@ -71,7 +71,7 @@ ${uren}
 ## Zonnebanken en prijzen
 
 Alle banken zijn van Ergoline. Een sessie duurt 20 minuten en wordt per keer
-afgerekend; er zijn geen strippenkaarten of abonnementen. Betalen kan met pin,
+afgerekend; er zijn geen abonnementen. Betalen kan met pin,
 contant, creditcard, Apple Pay en Google Pay.
 
 ${banken}

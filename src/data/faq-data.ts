@@ -36,7 +36,7 @@ const urenZin = groupOpeningHours()
 export const FAQ: FaqItem[] = [
   {
     vraag: "Wat kost een zonnebanksessie bij Ever Sun?",
-    antwoord: `Een sessie duurt 20 minuten en kost ${goedkoopste} tot ${duurste}, afhankelijk van de bank. De Ergoline 600 light is de voordeligste, de Blue Vision de meest uitgebreide. Je rekent per sessie af; we werken niet met strippenkaarten of abonnementen.`,
+    antwoord: `Een sessie duurt 20 minuten en kost ${goedkoopste} tot ${duurste}, afhankelijk van de bank. De Ergoline 600 light is de voordeligste, de Blue Vision de meest uitgebreide. Je rekent per sessie af; we werken niet met abonnementen.`,
   },
   {
     vraag: "Moet ik reserveren of kan ik binnenlopen?",
