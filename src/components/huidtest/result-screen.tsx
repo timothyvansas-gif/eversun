@@ -113,7 +113,7 @@ export default function ResultScreen({
           Say when the independent answer confirms it — and, more importantly,
           when it does not — before explaining the recommendation itself. */}
       {bekekenBank && (
-        <p className="mt-1.5 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-ink-strong">
+        <p className="mt-1.5 max-w-[58ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
           {bekekenBank.slug === bank.slug
             ? RESULTAAT.bekekenBankBevestiging(bekekenBank.title)
             : RESULTAAT.bekekenBankAlternatief(bekekenBank.title, bank.title)}
@@ -151,7 +151,7 @@ export default function ResultScreen({
             {bank.title}
           </h3>
           <div className="flex items-center gap-3 font-sans leading-tight tracking-[-0.01em]">
-            <span className="text-[14px] text-muted">{bank.minuten}</span>
+            <span className="text-[14px] text-zinc-600">{bank.minuten}</span>
             <span className="text-[15px] font-semibold text-ink-strong">{bank.prijs}</span>
           </div>
           {advies.stand && (
