@@ -298,7 +298,7 @@ function ProductCardItem({ product }: { product: Product }) {
                     staan, dus schermlezers horen hem heel; wie kijkt niet. Dat
                     is de prijs — bij "White 2 Bronze Coconut" valt de kap
                     middenin het laatste woord. */}
-                <h3 className="card-title min-w-0 truncate text-ink-strong">
+                <h3 className="card-title min-w-0 truncate text-ink-strong mt-[6px] md:mt-0">
                   {product.name}
                 </h3>
                 <svg
