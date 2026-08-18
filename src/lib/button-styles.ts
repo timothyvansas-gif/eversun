@@ -50,6 +50,22 @@ export const BTN_PILL_DARK_OUTLINE =
 export const BTN_PILL_ACCENT =
   "relative overflow-hidden inline-flex items-center bg-accent text-surface-page text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
 
+/**
+ * The same filled pill in the brand yellow, for the bed cards.
+ *
+ * That yellow is already on those cards — it is what the "2 banken" label is
+ * drawn in — so the booking button now belongs to the card it sits on rather
+ * than repeating the page's orange a fourth time. The label is ink rather than
+ * page cream: yellow is a light fill, and white on it is unreadable.
+ *
+ * Carries `relative overflow-hidden` for the same reason as the accent pill:
+ * the hover blob is an element and has to be clipped to the button. The label
+ * has to invert as that dark fill arrives — see the bed card, which drives it
+ * off the hook's own hover state.
+ */
+export const BTN_PILL_BRAND =
+  "relative overflow-hidden inline-flex items-center bg-brand text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-[transform,background-color,color] duration-150";
+
 /** Shared geometry for the section-level CTAs. */
 export const BTN_CTA_HEIGHT = "min-h-[48px]";
 export const BTN_BOOKING_DESKTOP_WIDTH = "md:min-w-[220px]";
