@@ -40,8 +40,9 @@ function PlanMomentButton() {
     <>
       <button
         onClick={appointment.open}
-        // Filled at every breakpoint, so the section keeps one clear action
-        // whether the pill fills the mobile column or hugs its desktop label.
+        // Desktop-only now (see the call site), but still built mobile-first:
+        // the classes below are what it would need on a phone if that ever
+        // changes, rather than being written as if `md:` were the only case.
         className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         <CtaLabel hold>Plan je moment</CtaLabel>
@@ -421,7 +422,12 @@ export default function Producten() {
             <p className="text-muted text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
               Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15 ml sachets zijn geschikt voor eenmalig gebruik.
             </p>
-            <PlanMomentButton />
+            {/* Desktop only, by request. `contents` rather than a `hidden`
+                block: the wrapper stays out of the flex row's own layout, so
+                the button still sits exactly where a direct child would. */}
+            <div className="hidden md:contents">
+              <PlanMomentButton />
+            </div>
           </div>
         </div>
       </div>
