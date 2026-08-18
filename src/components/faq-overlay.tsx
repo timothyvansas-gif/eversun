@@ -2,107 +2,152 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { m, AnimatePresence } from "framer-motion";
+import { AnimatePresence, m, useDragControls } from "framer-motion";
 import FaqList from "@/components/faq-list";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CloseButton } from "@/components/ui/close-button";
 import { Backdrop } from "@/components/ui/backdrop";
-import { STACK_SPRING } from "@/components/hero/sheet-stack";
+import { DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 
 const TITLE = "Veelgestelde vragen";
 
 /**
- * The FAQ as a sheet on mobile and a panel on desktop, built on the same
- * geometry as the openingstijden overlay so the two read as one family — same
- * scrim, same spring, same drag-to-dismiss, same close control.
+ * The questions as a layer over the page, built to the huidtest's pattern: a
+ * panel down the right-hand side on desktop, the site's usual sheet up from the
+ * bottom on a phone, and the answers on a white card inside the cream surface.
  *
- * It does not stack on another sheet, so none of the depth machinery from that
- * one is here.
+ * Same reason as the test for keeping the page behind it — "moet ik
+ * reserveren?" comes up while reading about the beds, and sending someone to
+ * another page to answer it takes away what they were looking at. The route at
+ * /veelgestelde-vragen still exists, for shared links and for everything that
+ * cannot click.
+ *
+ * One instance switched on a media query rather than two variants hidden with
+ * CSS, so a question opened on a phone is still open after a rotate.
  */
+
+/** Matches the other sheets: a slide out, quicker than the spring coming in. */
+const SHEET_EXIT = { duration: 0.28, ease: [0.36, 0, 0.66, 0] as [number, number, number, number] };
+
+/** How far a drag has to travel, or how fast, before it counts as a dismissal. */
+const DISMISS_OFFSET = 80;
+const DISMISS_VELOCITY = 400;
+
+/** The width of the huidtest's panel. The two open onto the same page edge and
+ *  a second, nearly-equal width would read as a mistake rather than a choice. */
+const PANEL_WIDTH = 600;
+
 export default function FaqOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const dragControls = useDragControls();
   const [mounted, setMounted] = useState(false);
 
+  useScrollLock(isOpen);
+  useFocusTrap(panelRef, isOpen, onClose);
+
   useEffect(() => {
+    // SSR hydration guard: intentionally set once on mount to enable client-only portal render.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
-  useFocusTrap(overlayRef, isOpen, onClose);
-  useScrollLock(isOpen);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    overlayRef.current?.focus({ preventScroll: true });
-  }, [isOpen]);
-
   if (!mounted) return null;
 
-  // Portalled to <body> for the same reason as the other overlays: rendered
-  // inside <main> it could never clear the sticky header, which sits outside it.
+  const contents = (
+    <>
+      {/* Desktop only, like the test: the sheet closes by dragging it back down
+          or tapping the page behind it, and a × on top of that is a second
+          control for a gesture that is already there. The panel has no such
+          gesture, so it keeps one. Escape closes either. */}
+      {!isMobile && (
+        <div className="flex shrink-0 items-center justify-end px-4 pt-3 sm:px-6">
+          <CloseButton onClick={onClose} label="Vragen sluiten" />
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain px-6 pt-0 pb-6 md:pt-4">
+        {/* The white sheet every huidtest step is written on, same radius and
+            padding: the questions have to read as one thing rather than as text
+            floating on the site's cream. */}
+        <div className="rounded-2xl bg-white px-6 py-6">
+          <h2 className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em]">
+            {TITLE}
+          </h2>
+          <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+            Prijzen, openingstijden, reserveren en betalen, kort beantwoord.
+          </p>
+
+          <div className="mt-6 border-t border-line/30 pt-2">
+            <FaqList />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
-          <Backdrop onClick={onClose} className="z-[55]" scrollLock />
+          <Backdrop onClick={onClose} className="z-[54] cursor-pointer" scrollLock />
 
-          <div ref={overlayRef} tabIndex={-1} className="outline-none">
-            {/* Mobile: bottom sheet */}
+          {isMobile ? (
             <m.div
+              ref={panelRef}
               data-lenis-prevent
               role="dialog"
               aria-modal="true"
               aria-label={TITLE}
-              className="md:hidden fixed bottom-0 inset-x-0 z-[55] flex max-h-[85vh] flex-col rounded-t-[20px] bg-surface-page"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
-              exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
+              exit={{ y: "100%", transition: SHEET_EXIT }}
               transition={STACK_SPRING}
+              // Dragging starts from the grabber only: the list scrolls, and a
+              // drag listener on the whole surface would swallow that scroll.
               drag="y"
+              dragControls={dragControls}
+              dragListener={false}
               dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={{ top: 0, bottom: 0.4 }}
+              dragElastic={{ top: 0, bottom: DRAG_ELASTIC }}
               onDragEnd={(_, info) => {
-                if (info.offset.y > 80 || info.velocity.y > 400) onClose();
+                if (info.offset.y > DISMISS_OFFSET || info.velocity.y > DISMISS_VELOCITY) onClose();
               }}
-              style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
+              // One height, whichever answers are open: sized to content the
+              // sheet would grow and shrink under the reader as they tap.
+              className="fixed inset-x-0 bottom-0 z-[55] flex h-[92svh] flex-col rounded-t-[20px] bg-surface-page"
             >
-              <div className="flex shrink-0 justify-center pt-3 cursor-grab active:cursor-grabbing">
-                <div className="w-10 h-1 rounded-full bg-ink/20" />
+              {/* The strip the sheet is dragged by, not just the mark drawn on
+                  it: a 4px bar asks for a thumb placed to the pixel. */}
+              <div
+                onPointerDown={(event) => dragControls.start(event)}
+                className="flex shrink-0 cursor-grab justify-center pt-3 pb-6 active:cursor-grabbing"
+              >
+                <div className="h-1 w-10 rounded-full bg-ink/20" />
               </div>
-              <div className="shrink-0 px-6 pt-5 pb-1">
-                <h2 className="card-title text-zinc-900">{TITLE}</h2>
-              </div>
-              {/* The list scrolls, the header stays. `overscroll-contain` so
-                  reaching the end of it does not hand the gesture to the page
-                  underneath, and `touch-pan-y` so a scroll here is never
-                  mistaken for the drag that dismisses the sheet. */}
-              <div className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-6 pt-3">
-                <FaqList />
-              </div>
-            </m.div>
 
-            {/* Desktop: modal panel */}
+              {contents}
+            </m.div>
+          ) : (
             <m.div
+              ref={panelRef}
               data-lenis-prevent
               role="dialog"
               aria-modal="true"
               aria-label={TITLE}
-              className="hidden md:flex fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[55] w-[min(560px,calc(100vw-4rem))] max-h-[80vh] flex-col rounded-2xl bg-surface-page"
-              initial={{ opacity: 0, scale: 0.88, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
-              transition={{ type: "spring", damping: 14, stiffness: 260 }}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%", transition: SHEET_EXIT }}
+              transition={STACK_SPRING}
+              style={{ maxWidth: PANEL_WIDTH }}
+              className="fixed inset-y-0 right-0 z-[55] flex w-full flex-col bg-surface-page shadow-[0_0_60px_rgba(0,0,0,0.25)]"
             >
-              <div className="relative shrink-0 px-8 pt-8 pb-1">
-                <CloseButton onClick={onClose} className="absolute top-4 right-4" />
-                <h2 className="card-title text-zinc-900">{TITLE}</h2>
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-8 pt-3 pb-8">
-                <FaqList />
-              </div>
+              {contents}
             </m.div>
-          </div>
+          )}
         </>
       )}
     </AnimatePresence>,

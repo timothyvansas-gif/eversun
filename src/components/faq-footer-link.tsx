@@ -32,7 +32,7 @@ export default function FaqFooterLink() {
         }}
         className="font-sans text-sm font-medium text-zinc-500 underline decoration-zinc-300 decoration-1 underline-offset-6 transition-colors duration-150 hover:text-ink-strong hover:decoration-ink-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
-        Veelgestelde vragen
+        FAQ
       </a>
 
       <FaqOverlay isOpen={isOpen} onClose={() => setIsOpen(false)} />

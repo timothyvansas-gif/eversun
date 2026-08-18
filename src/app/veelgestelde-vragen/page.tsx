@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Veelgestelde vragen | Ever Sun",
     description:
-      "Prijzen, openingstijden, reserveren en betalen bij Ever Sun — zonnestudio in Assen.",
+      "Prijzen, openingstijden, reserveren en betalen bij Ever Sun, zonnestudio in Assen.",
     url: "/veelgestelde-vragen",
     siteName: "Ever Sun",
     locale: "nl_NL",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Veelgestelde vragen | Ever Sun",
     description:
-      "Prijzen, openingstijden, reserveren en betalen bij Ever Sun — zonnestudio in Assen.",
+      "Prijzen, openingstijden, reserveren en betalen bij Ever Sun, zonnestudio in Assen.",
     images: [TWITTER_IMAGE],
   },
 };
@@ -44,8 +44,10 @@ export default function VeelgesteldeVragenPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd()) }}
       />
+      {/* Same frame as /huidtest: the site's cream, one column of 640, and the
+          content on the white card the test writes its steps on. */}
       <main className="min-h-screen bg-surface-page px-6 py-12 sm:py-16">
-        <div className="mx-auto w-full max-w-[720px]">
+        <div className="mx-auto w-full max-w-[640px]">
           <Link
             href="/"
             className="font-sans text-[15px] text-muted underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:text-ink-strong hover:decoration-ink-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
@@ -53,25 +55,27 @@ export default function VeelgesteldeVragenPage() {
             Terug naar Ever Sun
           </Link>
 
-          <h1 className="mt-8 font-display text-[clamp(28px,3.75vw,48px)] font-medium leading-none tracking-[-0.01em] text-ink-strong xl:tracking-[-0.015em]">
-            Veelgestelde vragen
-          </h1>
-          <p className="mt-3 max-w-[520px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-muted">
-            Prijzen, openingstijden, reserveren en betalen — kort beantwoord. Staat je vraag er niet
-            tussen?{" "}
-            <Link
-              href="/#contact"
-              className="text-muted underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:text-ink-strong hover:decoration-ink-strong"
-            >
-              Stuur ons een bericht
-            </Link>
-            .
-          </p>
+          <div className="mt-6 rounded-2xl bg-white px-6 py-6">
+            <h1 className="font-display text-ink-primary text-[clamp(24px,4.5vw,32px)] font-medium leading-tight tracking-[-0.01em]">
+              Veelgestelde vragen
+            </h1>
+            <p className="mt-3 max-w-[54ch] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+              Prijzen, openingstijden, reserveren en betalen, kort beantwoord. Staat je vraag er
+              niet tussen?{" "}
+              <Link
+                href="/#contact"
+                className="text-zinc-600 underline decoration-line decoration-1 underline-offset-6 transition-colors duration-150 hover:text-ink-strong hover:decoration-ink-strong"
+              >
+                Stuur ons een bericht
+              </Link>
+              .
+            </p>
 
-          {/* Nothing opens by default here: the page is the list, and a first
-              row standing open only makes the rest look like an afterthought. */}
-          <div className="mt-10">
-            <FaqList defaultOpenIndex={-1} />
+            {/* Nothing opens by default here: the page is the list, and a first
+                row standing open only makes the rest look like an afterthought. */}
+            <div className="mt-6 border-t border-line/30 pt-2">
+              <FaqList defaultOpenIndex={-1} />
+            </div>
           </div>
         </div>
       </main>

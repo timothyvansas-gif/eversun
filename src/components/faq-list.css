@@ -1,0 +1,43 @@
+/*
+ * The FAQ rows' open/close animation, in a plain stylesheet rather than in
+ * globals.css on purpose.
+ *
+ * globals.css goes through Tailwind, and its parser drops any rule whose
+ * selector it does not recognise: `::details-content` is new enough that both
+ * these blocks disappeared from the compiled CSS without a warning. Imported
+ * straight into the component, they survive.
+ *
+ * A native <details> has no height to animate from — it is laid out at zero and
+ * then at full size, with nothing in between. `::details-content` is the box
+ * the browser wraps the open content in, and `interpolate-size` is what allows
+ * a transition to `auto` at all. Together they give the rows a real open and
+ * close without giving up the element's built-in keyboard and screen-reader
+ * behaviour.
+ *
+ * Browsers that do not know the pseudo-element ignore all of this and keep the
+ * instant open, which is the right fallback rather than a broken one.
+ */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.faq-row::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    block-size 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease-out,
+    content-visibility 280ms allow-discrete;
+}
+
+.faq-row[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-row::details-content {
+    transition: none;
+  }
+}
