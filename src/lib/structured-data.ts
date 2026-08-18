@@ -61,7 +61,7 @@ function zonnebankenCatalog(): JsonLdNode {
       url: `${BASE_URL}/#banken`,
       itemOffered: {
         "@type": "Service",
-        name: `${bank.title} — sessie van ${bank.minuten}`,
+        name: `${bank.title}, sessie van ${bank.minuten}`,
         serviceType: "Zonnebanksessie",
         description: bank.description.join(" ").replace(/\n/g, " "),
         provider: { "@id": STUDIO_ID },

@@ -34,14 +34,14 @@ function build(): string {
 
   const banken = ZONNEBANKEN.map(
     (bank) =>
-      `- **${bank.title}** — ${bank.prijs} voor ${bank.minuten}. ${bank.description
+      `- **${bank.title}**: ${bank.prijs} voor ${bank.minuten}. ${bank.description
         .join(" ")
         .replace(/\n/g, " ")}`,
   ).join("\n");
 
   const producten = PRODUCTEN.map(
     (product) =>
-      `- **${product.name}** (${product.labels.join(", ")}) — ${product.containerLabel} € ${
+      `- **${product.name}** (${product.labels.join(", ")}): ${product.containerLabel} € ${
         product.containerPrice
       }${product.sachetPrice ? `, sachet 15 ml € ${product.sachetPrice}` : ""}. ${
         product.description

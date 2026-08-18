@@ -40,7 +40,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     vraag: "Moet ik reserveren of kan ik binnenlopen?",
-    antwoord: `Binnenlopen mag altijd tijdens onze openingstijden. Wil je zeker weten dat je bank vrij is, stuur dan even een WhatsApp of bel ${PHONE_DISPLAY} — dan staat hij voor je klaar en sta je niet te wachten.`,
+    antwoord: `Binnenlopen mag altijd tijdens onze openingstijden. Wil je zeker weten dat je bank vrij is, stuur dan even een WhatsApp of bel ${PHONE_DISPLAY}, dan staat hij voor je klaar en sta je niet te wachten.`,
   },
   {
     vraag: "Wat zijn de openingstijden?",
@@ -58,7 +58,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     vraag: "Welke zonnebanken staan er in de studio?",
-    antwoord: `Zes banken in vier modellen, allemaal van Ergoline: ${ZONNEBANKEN.map((bank) => bank.title).join(", ")}. De lampen vervangen we preventief, dus een sessie geeft altijd dezelfde kracht — ook aan het eind van de levensduur van een lamp.`,
+    antwoord: `Zes banken in vier modellen, allemaal van Ergoline: ${ZONNEBANKEN.map((bank) => bank.title).join(", ")}. De lampen vervangen we preventief, dus een sessie geeft altijd dezelfde kracht, ook aan het eind van de levensduur van een lamp.`,
   },
   {
     vraag: "Welke bank past bij mijn huid?",
@@ -68,7 +68,7 @@ export const FAQ: FaqItem[] = [
   {
     vraag: "Hoe vaak kan ik zonnen?",
     antwoord:
-      "Nooit twee sessies op dezelfde dag: je huid heeft minstens 24 uur nodig om de kleur op te bouwen. Hoe vaak per week verstandig is, hangt af van je huidtype — daar geven we je in de studio persoonlijk advies over.",
+      "Nooit twee sessies op dezelfde dag: je huid heeft minstens 24 uur nodig om de kleur op te bouwen. Hoe vaak per week verstandig is, hangt af van je huidtype. Daar geven we je in de studio persoonlijk advies over.",
   },
   {
     vraag: "Verkopen jullie ook zonnecosmetica?",
