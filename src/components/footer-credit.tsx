@@ -55,7 +55,9 @@ export default function FooterCredit() {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="text-zinc-600 underline decoration-zinc-400 decoration-1 underline-offset-6 hover:decoration-ink-strong focus-visible:decoration-ink-strong rounded-sm transition-colors duration-150 cursor-pointer"
+        // Same colours as the FAQ link beside it in the footer row: zinc-500
+        // resting, zinc-300 underline, both to ink-strong on hover.
+        className="text-zinc-500 underline decoration-zinc-300 decoration-1 underline-offset-6 hover:text-ink-strong hover:decoration-ink-strong focus-visible:decoration-ink-strong rounded-sm transition-colors duration-150 cursor-pointer"
       >
         Realisatie
       </button>
