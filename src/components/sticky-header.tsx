@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import Logo from "@/components/logo";
+import { MENU_DURATION, MENU_EASE } from "@/lib/menu-motion";
 import { MOBILE_MENU_ID } from "@/lib/nav-items";
 import { TAP_TARGET } from "@/lib/button-styles";
 import HamburgerIcon from "@/components/hamburger-icon";
@@ -58,17 +59,26 @@ export default function StickyHeader({
     <header
       inert={inert}
       style={{
-        // Both movements on one property: the reveal on Y, the menu push on X.
-        // The push used to be a margin-left animation, which laid out and
-        // painted the bar on every frame alongside the page doing the same.
-        transform: `translateX(${isMenuOpen ? "-95%" : "0"}) translateY(${isShown ? "0" : "-100%"})`,
+        // Two movements, two properties, because they are two different things
+        // on two different clocks. The menu push rides the standalone
+        // `translate` property so it can share the menu's exact timing; the
+        // reveal-on-scroll keeps its own on `transform`. Both are still pure
+        // translations on the compositor — the push used to be a margin-left
+        // animation, which laid out and painted the bar every frame.
+        //
+        // On one property they could only have one timing, and this bar was
+        // left on the old 800ms expo while the panel and the page moved to the
+        // shared curve. Expo covers most of its distance in the first third, so
+        // the header shot aside ahead of them and opened a gap under itself.
+        translate: isMenuOpen ? "-95% 0" : "0 0",
+        transform: `translateY(${isShown ? "0" : "-100%"})`,
         // Neither is a movement the visitor asked for — the bar arriving on
         // scroll, and the menu shoving it aside. Under reduced motion it is
         // simply there or not; `pointer-events-none` and the off-screen offset
         // already handle the rest.
-        transitionProperty: shouldReduceMotion ? "none" : "transform",
-        transitionDuration: "800ms",
-        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+        transitionProperty: shouldReduceMotion ? "none" : "translate, transform",
+        transitionDuration: `${MENU_DURATION * 1000}ms, 800ms`,
+        transitionTimingFunction: `cubic-bezier(${MENU_EASE.join(", ")}), cubic-bezier(0.16, 1, 0.3, 1)`,
       }}
       className={`fixed top-0 left-0 right-0 z-50 bg-void backdrop-blur-sm h-14 flex items-center lg:hidden ${
         isShown ? "" : "pointer-events-none"
