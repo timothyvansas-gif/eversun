@@ -59,6 +59,25 @@ function PlanMomentButton() {
  */
 const DETAIL_GAP = 6;
 
+/**
+ * Afstand van de bovenkant van `el` tot die van `ancestor`, in layoutpixels.
+ *
+ * `offsetTop` meet tot de dichtstbijzijnde gepositioneerde voorouder, en dat is
+ * hier niet altijd het paneel: de meebewegende tekstkolom ertussen is zelf
+ * `position: relative`. De keten aflopen telt die tussenstappen op. Anders dan
+ * `getBoundingClientRect()` blijven offsets ongevoelig voor de `translateY` die
+ * de open kaart draagt.
+ */
+function offsetWithin(el: HTMLElement, ancestor: HTMLElement) {
+  let total = 0;
+  let node: HTMLElement | null = el;
+  while (node && node !== ancestor) {
+    total += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return total;
+}
+
 function ProductCardItem({ product }: { product: Product }) {
   const [isPointerInside, setIsPointerInside] = useState(false);
   const [isPinnedOpen, setIsPinnedOpen] = useState(false);
@@ -70,6 +89,7 @@ function ProductCardItem({ product }: { product: Product }) {
 
   const cardRef = useRef<HTMLDivElement>(null);
   const primaryCopyRef = useRef<HTMLDivElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   // Waar de detailtekst begint. Stond als vaste 105px in de CSS, met een eigen
   // waarde per breakpoint — een met de hand gemeten getal dat uitging van een
@@ -84,17 +104,21 @@ function ProductCardItem({ product }: { product: Product }) {
   useLayoutEffect(() => {
     const card = cardRef.current;
     const copy = primaryCopyRef.current;
+    const detail = detailRef.current;
     const panel = copy?.closest<HTMLElement>(".product-info-panel");
     if (!card || !copy || !panel) return;
 
     const apply = () => {
-      const rect = copy.getBoundingClientRect();
+      // `offsetTop`/`offsetHeight` en niet `getBoundingClientRect()`: de kop
+      // hangt onder een vlak dat in de open staat een `translateY` draagt, en
+      // rects tellen die transform mee. Meet de kaart terwijl hij openstaat —
+      // en dat gebeurt, want de ResizeObserver vuurt bij elke hermeting van de
+      // carrousel — dan komen de maten er dus verschoven uit. De offsets zijn
+      // layoutwaarden en negeren transforms, dus ze meten wat er in rust staat.
+      const copyHeight = copy.offsetHeight;
 
       // Waar de detailtekst begint, gemeten vanaf de kop waar hij onder hangt.
-      card.style.setProperty(
-        "--product-detail-offset",
-        `${Math.ceil(rect.height) + DETAIL_GAP}px`,
-      );
+      card.style.setProperty("--product-detail-offset", `${copyHeight + DETAIL_GAP}px`);
 
       // Waar de witte maskerstrook begint, gemeten vanaf de paneeltop — een
       // ander referentiepunt, want het masker hoort bij het paneel en de
@@ -108,14 +132,32 @@ function ProductCardItem({ product }: { product: Product }) {
       // wordt uitgerekt.
       card.style.setProperty(
         "--product-mask-top",
-        `${Math.ceil(rect.bottom - panel.getBoundingClientRect().top) + DETAIL_GAP}px`,
+        `${offsetWithin(copy, panel) + copyHeight + DETAIL_GAP}px`,
       );
+
+      // Hoever de tekst omhoog schuift bij openen. Stond als vast getal per
+      // breakpoint in de CSS, en dat getal moest twee kanten op kloppen: te
+      // klein en de laatste regel bleef achter de witte voet hangen, te groot
+      // en er viel een gat tussen de tekst en de labels eronder. Elke regel
+      // tekst die erbij komt — een langere omschrijving, een sessieregel, een
+      // bezoeker die zijn tekst groter zet — verschuift dat optimum.
+      //
+      // De verborgen tekst begint precies op de maskerrand (zie hierboven: dat
+      // is dezelfde som), dus hij is vrij zodra hij zijn eigen hoogte is
+      // opgeschoven. Plus dezelfde `DETAIL_GAP` als adempauze boven de rand.
+      if (detail) {
+        card.style.setProperty(
+          "--product-reveal-distance",
+          `${detail.offsetHeight + DETAIL_GAP}px`,
+        );
+      }
     };
     apply();
 
     const observer = new ResizeObserver(apply);
     observer.observe(copy);
     observer.observe(panel);
+    if (detail) observer.observe(detail);
     return () => observer.disconnect();
   }, []);
 
@@ -279,13 +321,19 @@ function ProductCardItem({ product }: { product: Product }) {
               </p>
             </div>
             {product.hoverDescription && (
-              <p
+              <div
+                ref={detailRef}
                 id={descriptionId}
                 aria-hidden={!isExpanded}
-                className="product-hover-description text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans"
+                className="product-hover-description flex flex-col gap-[6px] text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans"
               >
-                {product.hoverDescription}
-              </p>
+                <p>{product.hoverDescription}</p>
+                {product.sessions && (
+                  <p>
+                    ±{product.sessions.count} sessies · €{product.sessions.pricePerSession} per sessie
+                  </p>
+                )}
+              </div>
             )}
           </div>
           <div className="product-category-labels flex flex-wrap gap-[6px] mt-auto pt-3">

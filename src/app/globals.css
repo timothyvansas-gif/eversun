@@ -209,6 +209,12 @@ body {
      into .focus-ring-clipped now (see that rule, also unlayered) and tunes it
      below. */
   .product-card {
+    /* Hoever de tekst omhoog schuift bij openen. Alleen de waarde vóór
+       hydratie: de kaart meet de verborgen tekst op en overschrijft dit per
+       kaart (zie producten.tsx). Hier stonden twee handgemeten getallen per
+       breakpoint, en die moesten twee kanten op kloppen — te klein en de
+       laatste regel bleef achter de witte voet, te groot en er viel een gat
+       boven de labels. Elke extra regel tekst verschoof dat optimum. */
     --product-reveal-distance: 142px;
     /* Alleen de waarde vóór hydratie. De kaart meet zijn eigen kop op en
        overschrijft dit per kaart (zie DETAIL_GAP in producten.tsx) — er stonden
@@ -225,12 +231,6 @@ body {
     /* Anchors the ring pseudo-element. Every absolutely positioned descendant
        already has a nearer positioned ancestor, so nothing else re-anchors. */
     position: relative;
-  }
-
-  @media (min-width: 768px) {
-    .product-card {
-      --product-reveal-distance: 120px;
-    }
   }
 
   .product-card[data-expanded="true"] .product-hover-description {

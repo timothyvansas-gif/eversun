@@ -35,6 +35,9 @@ export type Product = {
   sachetPrice?: string;
   containerLabel: string;
   containerPrice: string;
+  /** Geschat aantal sessies uit een volle fles of tube, met de prijs die dat per
+   *  sessie oplevert. Alleen voor de zonproducten; verzorging kent geen sessie. */
+  sessions?: { count: number; pricePerSession: string };
 };
 
 export type ProductSlug =
@@ -88,6 +91,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Voor hem", "Beschermt tattoos"],
     sachetPrice: "4,99",
     containerLabel: "Tube",
+    sessions: { count: 13, pricePerSession: "2,30" },
     containerPrice: "29,99",
   },
   {
@@ -100,6 +104,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Zonder bronzer", "Hydraterend"],
     sachetPrice: "4,99",
     containerLabel: "Fles",
+    sessions: { count: 16, pricePerSession: "2,80" },
     containerPrice: "44,99",
   },
   {
@@ -112,6 +117,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Directe kleur", "Anti oranje"],
     sachetPrice: "4,99",
     containerLabel: "Fles",
+    sessions: { count: 16, pricePerSession: "3,10" },
     containerPrice: "49,99",
   },
   {
@@ -138,6 +144,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Voor gevorderden", "Zeer donker"],
     sachetPrice: "8,50",
     containerLabel: "Fles",
+    sessions: { count: 14, pricePerSession: "6,10" },
     containerPrice: "84,99",
   },
   {
@@ -150,6 +157,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Gevoelige huid", "Parfumvrij"],
     sachetPrice: "4,99",
     containerLabel: "Fles",
+    sessions: { count: 16, pricePerSession: "1,85" },
     containerPrice: "29,99",
   },
   {
@@ -165,6 +173,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Voor hem", "Diepe bronzer"],
     sachetPrice: "5,49",
     containerLabel: "Tube",
+    sessions: { count: 13, pricePerSession: "2,70" },
     containerPrice: "34,99",
   },
   {
@@ -177,6 +186,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Zonder bronzer", "Gouden glans"],
     sachetPrice: "8,49",
     containerLabel: "Fles",
+    sessions: { count: 16, pricePerSession: "4,35" },
     containerPrice: "69,99",
   },
   {
@@ -192,6 +202,7 @@ export const PRODUCTEN: Product[] = [
     labels: ["Kleurbehoud", "Anti oranje"],
     sachetPrice: "12,99",
     containerLabel: "Fles",
+    sessions: { count: 26, pricePerSession: "5,10" },
     containerPrice: "134,99",
   },
 ];
