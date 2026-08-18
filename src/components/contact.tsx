@@ -421,13 +421,22 @@ export default function Contact() {
               <p className="mt-3 max-w-[411px] font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
                 Vraag over een bank of een product? Stuur een bericht, of loop langs tijdens
                 onze{" "}
+                {/* The word stays either way; only the way in changes. On
+                    desktop the openingstijden already sit in the details block
+                    below this paragraph, in full, so a second route to a sheet
+                    holding the same table is a click that lands where the eye
+                    already is. On mobile that block is further down the scroll,
+                    which is what the sheet is for. Two elements rather than one
+                    conditional: `hidden` keeps the spare out of the
+                    accessibility tree as well, so neither reading repeats. */}
                 <button
                   type="button"
                   onClick={() => setIsOpeningstijdenOpen(true)}
-                  className={`${DETAIL_LINK} inline cursor-pointer text-zinc-600`}
+                  className={`${DETAIL_LINK} inline cursor-pointer text-zinc-600 lg:hidden`}
                 >
                   openingstijden.
                 </button>
+                <span className="hidden lg:inline">openingstijden.</span>
               </p>
 
             </div>
