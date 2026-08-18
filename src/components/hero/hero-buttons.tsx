@@ -26,7 +26,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           dark fill sank into it — and both fills are now gone, so the CTAs no
           longer need a per-surface hover colour at all. */}
       <button
-        className="group/cta flex w-full items-center justify-center rounded-full bg-cta px-0 sm:w-auto sm:px-10 lg:min-w-[225px] lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
+        className="group/cta flex w-full items-center justify-center rounded-full bg-cta px-0 sm:w-auto sm:px-10 lg:min-w-[210px] lg:px-12 min-h-[48px] sm:min-h-[56px] lg:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer active:scale-[0.98] transition-transform duration-200"
         onClick={() => {
           if (window.innerWidth < 768) {
             onOpenPlanJeMoment();
@@ -43,7 +43,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           only the border opacity changes on hover. Full width on mobile like
           the button above it, content-width from sm up. */}
       <button
-        className="group/cta flex w-full sm:w-auto justify-center items-center rounded-full sm:px-10 lg:min-w-[225px] min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
+        className="group/cta flex w-full sm:w-auto justify-center items-center rounded-full sm:px-10 lg:min-w-[210px] min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
         onClick={() => setHuidtestOpen(true)}
       >
         <CtaLabel hold>Doe de huidtest</CtaLabel>
