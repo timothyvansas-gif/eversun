@@ -46,7 +46,7 @@ export default function HeroButtons({ onOpenAfspraak, onOpenPlanJeMoment }: { on
           only the border opacity changes on hover. Sized to its own label
           rather than sharing the row's growth, on mobile same as from sm up. */}
       <button
-        className="group/cta flex flex-none justify-center items-center rounded-full px-6 sm:w-auto sm:px-10 lg:min-w-[210px] min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
+        className="group/cta flex flex-none justify-center items-center rounded-full px-8 sm:w-auto sm:px-10 lg:min-w-[210px] min-h-[48px] sm:min-h-[56px] font-sans font-medium text-[14px] md:text-[16px] text-white cursor-pointer border border-white/30 hover:border-white active:scale-[0.98] transition-[transform,border-color] duration-200"
         onClick={() => setHuidtestOpen(true)}
       >
         {/* Short on mobile, where it now sits beside a growing neighbour

@@ -72,7 +72,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-6 lg:min-w-[178px] lg:w-auto`}
+            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[178px] lg:w-auto lg:!px-6`}
           >
             {/* Shorter on mobile, where the two buttons now split the card's
                 width between them and "Doe de huidtest" was the one crowding
