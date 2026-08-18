@@ -80,7 +80,11 @@ function ContactDetails() {
           width until sm, where the label and the range no longer fit beside
           each other in half a column on a phone. */}
       <DetailBlock label="Openingstijden" className="col-span-2 sm:col-span-1">
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5">
+        {/* On a phone this block spans both columns, so it borrows the grid it
+            sits in: same two halves, same gap, and the times land under the
+            address instead of at their own arbitrary offset. From sm it is back
+            in a half column of its own, where the label sets the width. */}
+        <dl className="grid grid-cols-2 gap-x-5 gap-y-0.5 sm:grid-cols-[auto_1fr] sm:gap-x-4">
           {groupOpeningHours().map((groep) => (
             <div key={groep.label} className="contents">
               <dt className="text-zinc-600">{groep.label}</dt>
