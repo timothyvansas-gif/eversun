@@ -300,6 +300,10 @@ function ContactForm() {
           error={errors.message}
           maxLength={CONTACT_LIMITS.messageMax}
           multiline
+          // One row shorter than the field's own default: the freed 24px goes
+          // to the gap below the button instead, so the disclaimer does not
+          // crowd it once its baseline is pulled up to meet the left column.
+          rows={5}
           required
           className="sm:col-span-2"
         />
@@ -338,7 +342,15 @@ function ContactForm() {
         </p>
       )}
 
-      <p className="mt-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600">
+      {/* xl:mt-5 rather than the mt-3 every other breakpoint gets: from xl the
+          left column's copy stops re-wrapping and this line's baseline can be
+          pinned to "Zaterdag & zondag" below it — measured, not guessed, and
+          only holds once the wrap has settled. The textarea gave up a row
+          (see MessageField above) so the gap above this line stays a real gap
+          instead of the two nearly touching. Below xl the columns' line counts
+          still shift with the viewport, so there is no fixed offset to pin
+          there; it keeps the plain mt-3. */}
+      <p className="mt-3 font-sans text-[15px] leading-[24px] tracking-[-0.01em] text-zinc-600 xl:mt-5">
         We gebruiken je gegevens alleen om je bericht te beantwoorden.
       </p>
     </form>
