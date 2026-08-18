@@ -3,7 +3,7 @@
 import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 /**
- * A checkbox drawn the same way a chosen answer is: an accent square with a
+ * A checkbox drawn the same way a chosen answer is: a brand-yellow square with a
  * quiet white mark.
  *
  * The native control could not get there. `accent-color` paints the browser's
@@ -38,7 +38,7 @@ export function CheckField({
         // once the text wraps.
         className={`mt-[2px] flex size-5 shrink-0 items-center justify-center rounded-[6px] border transition-colors duration-150 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
           checked
-            ? "border-accent bg-accent"
+            ? "border-brand bg-brand"
             : `${OUTLINE_BORDER_COLOR} bg-white/60 group-hover:border-ink-primary`
         }`}
       >
@@ -51,7 +51,9 @@ export function CheckField({
         >
           <path
             d="M2.5 6.2l2.2 2.2 4.8-4.8"
-            stroke="var(--color-surface-page)"
+            // Ink, not cream: the box is yellow now, and a light tick on it
+            // is a tick nobody can see.
+            stroke="var(--color-ink-primary)"
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"

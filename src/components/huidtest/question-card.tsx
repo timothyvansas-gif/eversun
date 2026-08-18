@@ -114,7 +114,7 @@ export default function QuestionCard<K extends QuestionKey>({
               onKeyDown={(event) => handleArrows(event, index)}
               className={`relative flex min-h-[56px] w-full cursor-pointer items-center rounded-[12px] border px-5 pr-8 py-3 text-left font-sans text-[15px] leading-[24px] tracking-[-0.01em] transition-colors duration-150 ${
                 isSelected
-                  ? "border-accent bg-white text-ink-strong"
+                  ? "border-brand bg-white text-ink-strong"
                   : `${OUTLINE_BORDER_COLOR} bg-white/60 text-ink-strong hover:border-ink-primary hover:bg-white`
               }`}
             >
@@ -125,13 +125,13 @@ export default function QuestionCard<K extends QuestionKey>({
               <span
                 aria-hidden="true"
                 className={`absolute right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded-full transition-[opacity,transform] duration-150 ${
-                  isSelected ? "bg-accent opacity-100 scale-100" : "opacity-0 scale-75"
+                  isSelected ? "bg-brand opacity-100 scale-100" : "opacity-0 scale-75"
                 }`}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                   <path
                     d="M2.5 6.2l2.2 2.2 4.8-4.8"
-                    stroke="var(--color-surface-page)"
+                    stroke="var(--color-ink-primary)"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
