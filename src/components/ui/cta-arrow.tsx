@@ -26,7 +26,7 @@ export function CtaArrow() {
       className="pointer-events-none absolute inset-y-0 left-full ml-1 flex items-center translate-x-4 opacity-0 transition-[translate,opacity] duration-300 ease-out motion-reduce:transition-none group-hover/cta:translate-x-0 group-hover/cta:opacity-100"
     >
       <svg className="shrink-0" width="20" height="20" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d="M2.5 8h9m0 0L8 4m3.5 4L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
       </svg>
     </span>
   );
