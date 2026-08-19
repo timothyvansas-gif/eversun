@@ -51,3 +51,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Beeldmasters: grote exports/raws waar de webassets uit komen.
+# De geoptimaliseerde versies staan los in src/images en gaan wel mee.
+/src/images/studio/
