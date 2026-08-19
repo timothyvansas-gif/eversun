@@ -56,17 +56,20 @@ function AfspraakButton({
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} gap-1.5 w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
           >
-            <CtaLabel hold>Plan je moment</CtaLabel>
-            {/* Eigen flex-rij met eigen gap-1.5: een tekst-spatie vóór dit span
-                zou wegvallen als "begin van de regel" binnen dit flex-item,
-                dus de streep krijgt links en rechts allebei een echte
-                gap in plaats van op whitespace te vertrouwen. */}
-            <span className="lg:hidden inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
-              <span aria-hidden="true">–</span>
-              <span>{minuten} · {prijs}</span>
-            </span>
+            {/* Duur/prijs staan binnen CtaLabel, niet ernaast: de hover-pijl
+                ankert op de rechterrand van dit label, dus een zusje ernaast
+                zou eronder verdwijnen zodra de pijl inschuift — zichtbaar op
+                elke breedte onder lg waar een muis wél hovert. De gap-1.5
+                hoort daarom hier: tekst-whitespace tussen flex-items valt weg. */}
+            <CtaLabel hold className="gap-1.5">
+              Plan je moment
+              <span className="lg:hidden inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
+                <span aria-hidden="true">–</span>
+                <span>{minuten} · {prijs}</span>
+              </span>
+            </CtaLabel>
           </button>
           <span className="hidden lg:block">
             <SessionDetails minuten={minuten} prijs={prijs} />

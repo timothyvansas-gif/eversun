@@ -6,7 +6,7 @@ import imageBig from "@/images/image-big.webp";
 import imageRight from "@/images/image-right.webp";
 import moreIcon from "@/images/camera-03.svg";
 import FotoBottomSheet, { sheetPhotos } from "@/components/foto-bottom-sheet";
-import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -97,7 +97,12 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full ${BTN_OUTLINE_BORDER} !text-ink-primary transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
+            // Niet BTN_OUTLINE_BORDER: die zet ook text-zinc-600 met een
+            // hover naar zinc-900, en het label moet hier de vaste
+            // icoonkleur houden. Alleen de rand-hover overnemen, zodat de
+            // knop nog steeds zichtbaar reageert zonder !important dat de
+            // hover uit de gedeelde constante zou overschrijven.
+            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full border ${OUTLINE_BORDER_COLOR} hover:border-ink-primary text-ink-primary transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
