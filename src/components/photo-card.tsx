@@ -81,7 +81,7 @@ export default function PhotoCard() {
             />
           </button>
           <button
-            className={`md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full ${BTN_OUTLINE_BORDER} bg-surface-page px-[14px] py-1.5`}
+            className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full text-ink-primary bg-white px-[14px] py-1.5"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
@@ -97,7 +97,7 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full ${BTN_OUTLINE_BORDER} transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
+            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full ${BTN_OUTLINE_BORDER} !text-ink-primary transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
