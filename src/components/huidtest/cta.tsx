@@ -20,10 +20,12 @@ const BASE =
   "inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
 
 const VARIANTS = {
-  // Back to a plain hover swap, and to the same pair the site's other filled
-  // CTAs use. The growing fill this replaced needed the pill to stay unpainted
-  // on the first frame so it had something to arrive over; nothing arrives now.
-  accent: "bg-cta text-white hover:bg-ink-primary hover:text-surface-page",
+  // Orange at rest, dark on hover. Which hover a filled CTA gets depends on
+  // whether it has the arrow: the ones carrying `group/cta` and a `CtaLabel`
+  // let the arrow do the whole hover and keep the orange, and the ones without
+  // it — this button, and the two WhatsApp links — need something to happen on
+  // hover, so they take the ink fill instead. See BTN_PILL_CTA.
+  accent: "bg-cta text-white hover:bg-ink-primary",
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
   // transition below carries border-color.

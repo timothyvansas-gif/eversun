@@ -36,7 +36,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="w-full bg-cta font-sans font-medium text-[15px] text-white hover:bg-ink-primary hover:text-surface-page active:scale-[0.98]"
+      className="w-full bg-cta font-sans font-medium text-[15px] text-white hover:bg-ink-primary active:scale-[0.98]"
       style={{
         display: "grid",
         gridTemplateColumns: "subgrid",
@@ -44,7 +44,7 @@ function WhatsAppButton({ whatsappUrl }: { whatsappUrl: string }) {
         alignItems: "center",
         minHeight: "48px",
         borderRadius: "9999px",
-        transition: "transform 0.2s ease, background-color 0.2s ease, color 0.2s ease",
+        transition: "transform 0.2s ease, background-color 0.2s ease",
       }}
     >
       <span className="col-start-2 flex items-center gap-3">

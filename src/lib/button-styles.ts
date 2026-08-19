@@ -46,12 +46,17 @@ export const BTN_PILL_DARK_OUTLINE =
  * where ink would have cleared 5.9:1. On the yellow it was the other way round
  * and ink was the only readable option.
  *
- * The orange holds through hover: the whole hover is `CtaArrow` sliding in, so
- * pair this with `group/cta` and a `CtaLabel`. Two earlier hovers left traces
+ * The orange holds through hover *when there is an arrow*: pair this with
+ * `group/cta` and a `CtaLabel` and the arrow sliding in is the whole hover.
+ * Without the arrow a filled CTA would have no hover at all, so those add
+ * `hover:bg-ink-primary` and swap to the ink fill instead — the huidtest CTA
+ * and the two WhatsApp links are the ones that do. Two earlier hovers left traces
  * worth knowing about — a circle that grew from wherever the cursor crossed the
  * edge (`useHoverBlob`), which is why this string once carried
  * `relative overflow-hidden` and a named group, and after it a plain swap to
- * the dark fill. Neither is here now, so nothing but `transform` transitions.
+ * the dark fill. The blob is gone for good; the dark fill is back, but only on
+ * the arrow-less CTAs named above and written at their own use site, so this
+ * string itself still transitions nothing but `transform`.
  */
 export const BTN_PILL_CTA =
   "inline-flex items-center bg-cta text-white text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";

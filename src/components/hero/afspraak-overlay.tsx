@@ -109,7 +109,7 @@ export default function AfspraakOverlay({
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${BTN_PILL_CTA} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-ink-primary hover:text-surface-page`}
+                className={`${BTN_PILL_CTA} w-full justify-center gap-2 min-h-[48px] mt-4 hover:bg-ink-primary`}
                 style={{ transition: "background-color 150ms ease, transform 150ms ease" }}
               >
                 {/* The gap lived on the anchor, which is now the blob's
