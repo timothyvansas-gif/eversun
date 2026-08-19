@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import imageBig from "@/images/links-home.webp";
-import FotoBottomSheet, { sheetPhotos } from "@/components/foto-bottom-sheet";
+import FotoBottomSheet from "@/components/foto-bottom-sheet";
 
 /**
  * Inline, niet als <Image>: het bronbestand had stroke="#0B0B0B" ingebakken,
@@ -24,31 +24,12 @@ import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const preloaded = useRef(new Set<string>());
-
-  const preloadImage = useCallback((src: string) => {
-    if (preloaded.current.has(src)) return;
-    preloaded.current.add(src);
-    const img = new window.Image();
-    img.src = src;
-  }, []);
-
-  // Preload the gallery only when the visitor signals intent (hover, touch or
-  // keyboard focus on the card) instead of on every page load. Same full-size
-  // images — only the timing changes — so the sheet still opens instantly once
-  // intent is shown, without costing ~0.5MB up front for visitors who never
-  // open it.
-  const preloadAll = useCallback(() => {
-    sheetPhotos.forEach((p) => preloadImage(p.src.src));
-  }, [preloadImage]);
 
   return (
     <>
       <div
         className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-[12px] flex flex-col justify-between"
         style={{ padding: 'clamp(24px, 4vw, 40px)' }}
-        onPointerEnter={preloadAll}
-        onFocusCapture={preloadAll}
       >
         {/* One photo, at every width. It used to be a three-tile mosaic — a wide
             one over two halves on phones, a wide beside a single from md — and
