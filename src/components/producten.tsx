@@ -1,19 +1,12 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import dynamic from "next/dynamic";
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useHorizontalScroller } from "@/hooks/use-horizontal-scroller";
-import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { CAROUSEL_TRACK_CLASS, CAROUSEL_CARD_CLASS, CAROUSEL_BLEED_STYLE } from "@/lib/carousel";
-import { BTN_BOOKING_DESKTOP_WIDTH, BTN_CTA_HEIGHT, BTN_PILL_CTA } from "@/lib/button-styles";
 import { CarouselNavButton } from "@/components/ui/carousel-nav-button";
-import { CtaLabel } from "@/components/ui/cta-arrow";
 import { PRODUCTEN, type Product } from "@/data/producten-data";
-
-const AfspraakOverlay = dynamic(() => import("@/components/hero/afspraak-overlay"));
-const PlanJeMomentSheet = dynamic(() => import("@/components/hero/plan-je-moment-sheet"));
 
 // Cyclorama: de naadloze doorloop van achterwand naar vloer uit een productstudio.
 // Vier lagen, van voor naar achter. De horizon zit rond 70%, net onder de voet
@@ -32,25 +25,6 @@ const PRODUCT_BACKDROP = [
   // 4. Achterwand, de diepste tint bovenin en oplopend naar de horizon.
   "linear-gradient(180deg, #EEE1CD 0%, #F2E8D8 42%, #F6F0E6 70%, #F4ECE0 100%)",
 ].join(", ");
-
-function PlanMomentButton() {
-  const appointment = useAppointmentLauncher();
-
-  return (
-    <>
-      <button
-        onClick={appointment.open}
-        // Filled at every breakpoint, so the section keeps one clear action
-        // whether the pill fills the mobile column or hugs its desktop label.
-        className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
-      >
-        <CtaLabel hold>Plan je moment</CtaLabel>
-      </button>
-      <AfspraakOverlay isOpen={appointment.qrOpen} onClose={appointment.closeQr} />
-      <PlanJeMomentSheet isOpen={appointment.sheetOpen} onClose={appointment.closeSheet} />
-    </>
-  );
-}
 
 /**
  * De ruimte tussen de korte omschrijving en de detailtekst eronder, in de
@@ -465,12 +439,9 @@ export default function Producten() {
             )}
           </div>
 
-          <div className="mt-4 xl:mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-7 md:gap-8">
-            <p className="text-muted text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
-              Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15 ml sachets zijn geschikt voor eenmalig gebruik.
-            </p>
-            <PlanMomentButton />
-          </div>
+          <p className="mt-4 xl:mt-6 text-muted text-[14px] leading-[22px] tracking-[-0.01em] font-sans">
+            Uitsluitend verkrijgbaar in de zonnestudio voor passend advies op maat. 15 ml sachets zijn geschikt voor eenmalig gebruik.
+          </p>
         </div>
       </div>
     </section>

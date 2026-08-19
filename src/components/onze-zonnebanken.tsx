@@ -59,7 +59,7 @@ function AfspraakButton({
             className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} gap-2 w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
           >
             <CtaLabel hold>Plan je moment</CtaLabel>
-            <span className="lg:hidden text-[15px] font-normal leading-none text-white/70 font-sans tracking-[-0.01em] whitespace-nowrap">
+            <span className="lg:hidden text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
               – {minuten} · {prijs}
             </span>
           </button>
