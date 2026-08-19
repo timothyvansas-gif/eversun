@@ -6,11 +6,8 @@ import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
-import { BTN_PILL } from "@/lib/button-styles";
 import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
-import { CtaLabel } from "@/components/ui/cta-arrow";
-import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
@@ -49,7 +46,6 @@ export default function FotoBottomSheet({
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
-  const [qrOpen, setQrOpen] = useState(false);
   const [canDrag, setCanDrag] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia(MOBILE_QUERY).matches : false
   );
@@ -69,10 +65,8 @@ export default function FotoBottomSheet({
 
   useScrollLock(isOpen);
 
-  // Paused while the QR overlay is open on top: that overlay has its own
-  // focus trap, and without the guard one Escape would close both layers.
   useEffect(() => {
-    if (!isOpen || qrOpen) return;
+    if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -100,12 +94,11 @@ export default function FotoBottomSheet({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, qrOpen, onClose]);
+  }, [isOpen, onClose]);
 
   if (!mounted) return null;
 
   const handleClose = () => {
-    setQrOpen(false);
     onClose();
   };
 
@@ -152,13 +145,7 @@ export default function FotoBottomSheet({
                     Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-dotted underline-offset-6">06 25306491</a>
                   </p>
                 </div>
-                <div className="hidden md:flex items-center gap-3 shrink-0">
-                  <button
-                    onClick={() => setQrOpen(true)}
-                    className={`group/cta ${BTN_PILL} !px-[28px] py-[10px] flex-shrink-0 justify-center min-w-[200px]`}
-                  >
-                    <CtaLabel hold>Plan je moment</CtaLabel>
-                  </button>
+                <div className="hidden md:flex shrink-0">
                   <CloseButton onClick={handleClose} />
                 </div>
               </div>
@@ -201,7 +188,6 @@ export default function FotoBottomSheet({
         </>
       )}
     </AnimatePresence>
-    <AfspraakOverlay isOpen={qrOpen} onClose={() => setQrOpen(false)} />
     </>,
     document.body
   );
