@@ -9,15 +9,14 @@ import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { Backdrop } from "@/components/ui/backdrop";
 import { CloseButton } from "@/components/ui/close-button";
-import dummyImg from "@/images/impressie/dummy.webp";
-import dummy2Img from "@/images/impressie/dummy-2.webp";
-import dummy3Img from "@/images/impressie/dummy-3.webp";
-import dummy4Img from "@/images/impressie/dummy-4.webp";
 import tafelImg from "@/images/tafel.webp";
 import bankRoodImg from "@/images/bank-rood.webp";
 import stoelHoekImg from "@/images/stoel-hoek.webp";
 import liggendImg from "@/images/liggend.webp";
 import blueImg from "@/images/blue.webp";
+import deurenImg from "@/images/deuren.webp";
+import bankLiggendImg from "@/images/bank-liggend.webp";
+import ergolineNeonImg from "@/images/ergoline-neon.webp";
 import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
@@ -37,7 +36,7 @@ type SheetPhoto = { src: StaticImageData; alt: string; focus?: string };
 
 // Order is reading order, nothing else. arrangeForSlots fits this list to the
 // mosaic below, so adding, removing or reordering photos cannot put a portrait
-// shot in a wide tile. Dummies are placeholders and go as real photos arrive.
+// shot in a wide tile.
 export const sheetPhotos: SheetPhoto[] = [
   { src: bankRoodImg, alt: "Een Ergoline-zonnebank in de cabine, badend in rood en paars licht" },
   {
@@ -67,23 +66,36 @@ export const sheetPhotos: SheetPhoto[] = [
   // Closes that row of three on desktop. Upright, so the full-width phone tile
   // keeps a band across the middle of the stack.
   { src: zakjesImg, alt: "Een stapel Ergoline-verfrissingsdoekjes, fresh & clean" },
-  // Ninth, so it lands on a wide tile: the leestafel is a long, low shot and a
-  // single would crop it to a strip. Its index moves whenever a photo is added
-  // above it — the wide slots are the pattern's, not this photo's.
+  // Negende, dus op de brede tegel: deze foto moet liggend blijven, en dat is
+  // de enige tegelvorm die dat op desktop garandeert.
+  { src: bankLiggendImg, alt: "Een Ergoline-zonnebank in paars en roze licht, met de rotswand ernaast" },
+  // Bewust in de smalle 5/6-tegel ernaast: op desktop staat de leestafel dus
+  // staand. Dat snijdt deze lange lage foto tot de middelste helft van zijn
+  // breedte — de tafel met tijdschriften blijft, de randen vallen weg. Op
+  // mobiel is de tegel 16/9 en zie je hem alsnog liggend.
   { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
-  { src: dummyImg, alt: "Impressie van de zonnestudio" },
-  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  { src: dummyImg, alt: "Impressie van de zonnestudio" },
-  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
+  // Dezelfde rij nog een keer, met de gang op de brede tegel in plaats van de
+  // leestafel. Op 2,02 is dit de breedste foto van de set, dus de brede tegel
+  // kost hem alleen wat aan de zijkanten.
+  { src: deurenImg, alt: "De gang langs de cabines, met open deuren en gekleurd licht" },
+  // Sluit de sheet af op de laatste staande tegel. Staand van zichzelf, dus op
+  // desktop past hij bijna zonder uitsnede; op mobiel is de tegel 16/9 en wordt
+  // het een band over het midden.
+  {
+    src: ergolineNeonImg,
+    alt: "Het Ergoline-logo in roze neon boven de zonnebank",
+    // Op mobiel overleeft maar 42% van de hoogte. Gecentreerd begint die band
+    // op 29% en snijdt dwars door het logo, dat op 14 tot 44% zit — je leest
+    // dan "goline". Op 20% begint de band op 12% en past het logo er heel in,
+    // met het bedieningspaneel eronder nog mee.
+    focus: "center 20%",
+  },
 ];
 
-// Column spans on the desktop grid, repeating every eight tiles: a wide one
-// beside a single, then two rows of three singles. Every row adds up to the
-// full three columns, so the mosaic never leaves a hole and no tile has to be
-// reordered to fill one.
+// Column spans on the desktop grid, repeating every ten tiles: a wide one
+// beside a single, two rows of three singles, then twice more a wide beside a
+// single. Every row adds up to the full three columns, so the mosaic never
+// leaves a hole and no tile has to be reordered to fill one.
 //
 // The pattern used to run [2,1,1,1,1,1,2], with a second wide tile closing each
 // cycle. That put a wide slot at index 6 — and the phone pairs need two singles
@@ -94,7 +106,11 @@ export const sheetPhotos: SheetPhoto[] = [
 // Rows are all the same height — the variety comes from the wide tiles, not
 // from differing row heights. The singles carry the aspect ratio and so set
 // that height; a wide tile is left to stretch into it.
-const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 1, 1];
+// De staart [2, 1] hangt aan de cyclus van acht die er stond: index 0 tot en
+// met 9 houden exact dezelfde spans, alleen komt er onderaan een tweede rij bij
+// van een brede naast een smalle. Zonder die staart was index 10 smal en liet
+// de laatste rij een kolom open.
+const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 1, 1, 2, 1];
 
 // Phones get one column of 16/9 tiles. These two are the exception: they share
 // a single slot side by side, half width each, so the scroll opens with a wide
