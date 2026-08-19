@@ -95,13 +95,7 @@ export default function RootLayout({
             top: 0,
             left: 0,
             right: 0,
-            // Tijdelijk een ondergrens: op live loopt de hero bij het laden
-            // door tot achter de statusbalk, terwijl deze strook hem juist
-            // moet vullen. Twee mogelijke oorzaken — de strook is nul hoog
-            // omdat iOS de inset nog niet meldt, of de pagina schildert daar
-            // helemaal niet en je ziet Safari's eigen strook. Met 47px erin
-            // wijst zwart op het eerste en de foto op het tweede.
-            height: "max(env(safe-area-inset-top), 47px)",
+            height: "env(safe-area-inset-top)",
             background: "var(--color-void)",
             zIndex: 9999,
           }}
