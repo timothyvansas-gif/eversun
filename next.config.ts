@@ -23,6 +23,13 @@ const nextConfig: NextConfig = {
     // Meteen ook één formaat minder verschil tussen dev en productie: dit was
     // de enige reden dat de sheet lokaal anders schilderde dan live.
     formats: ["image/webp"],
+    // Next' standaardladder springt van 1200 naar 1920. De brede tegel in de
+    // fotosheet is 805px en heeft op retina dus 1610px nodig: hij pakte 1920 en
+    // schaalde dat op uit bronnen die zelf 1700px zijn — 2,4 miljoen pixels per
+    // tegel om te decoderen, tegen 0,83 miljoen voor een smalle. Met 1620 erbij
+    // valt de opschaling weg en scheelt het ~30% pixels, zonder scherpte in te
+    // leveren. De rest van de ladder blijft ongemoeid.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1620, 1920, 2048, 3840],
     qualities: [75, 80, 90],
   },
   // Inline the page CSS into the HTML <head> instead of a render-blocking
