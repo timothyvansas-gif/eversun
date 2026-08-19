@@ -15,11 +15,18 @@ import dummyImg from "@/images/impressie/dummy.webp";
 import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
+import tafelImg from "@/images/tafel.webp";
 
-// Placeholder set, so the four dummies just cycle. The length is a multiple of
-// LG_SPANS' cycle, which is what keeps the last row of the desktop grid full.
+// Mostly still placeholders, so the dummies cycle around the real photos. The
+// length is a multiple of LG_SPANS' cycle, which is what keeps the last row of
+// the desktop grid full — a real photo therefore replaces a dummy rather than
+// being appended.
+//
+// Index 0 is a wide tile, and wide is where a landscape photo belongs: the
+// singles carry the aspect ratio (lg:aspect-[5/6], portrait) and a landscape
+// shot dropped in one would be cropped to its middle third.
 export const sheetPhotos = [
-  dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img, dummy3Img,
+  tafelImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img, dummy3Img,
   dummy4Img, dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img,
 ];
 
