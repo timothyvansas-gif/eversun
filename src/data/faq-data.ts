@@ -36,9 +36,25 @@ const duurste = formatEuro(Math.max(...prijzen));
 
 const sachet = PRODUCTEN.find((product) => product.sachetPrice)?.sachetPrice;
 
-const urenZin = groupOpeningHours()
+/**
+ * De groepen bevatten ook de dag waarop de studio dicht is — "Gesloten" als
+ * uren-waarde, zie `OpeningDay`. Die hoort niet in een opsomming achter "We
+ * zijn open op", dus open en gesloten gaan uit elkaar en krijgen elk hun eigen
+ * zin. Allebei afgeleid uit dezelfde data, zodat een roosterwijziging de twee
+ * helften niet uit elkaar kan laten lopen.
+ */
+const GESLOTEN = "Gesloten";
+const uurGroepen = groupOpeningHours();
+
+const urenZin = uurGroepen
+  .filter((groep) => groep.hours !== GESLOTEN)
   .map((groep) => `${groep.label.toLowerCase()} ${groep.hours.replace(" – ", " tot ")}`)
   .join(", ");
+
+const geslotenDagen = uurGroepen
+  .filter((groep) => groep.hours === GESLOTEN)
+  .map((groep) => groep.label.toLowerCase())
+  .join(" en ");
 
 export const FAQ: FaqItem[] = [
   {
@@ -52,7 +68,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     vraag: "Wat zijn de openingstijden?",
-    antwoord: `We zijn open op ${urenZin}. Maandag zijn we gesloten.`,
+    antwoord: `We zijn open op ${urenZin}.${geslotenDagen ? ` Op ${geslotenDagen} zijn we gesloten.` : ""}`,
   },
   {
     vraag: "Hoe kan ik betalen?",
