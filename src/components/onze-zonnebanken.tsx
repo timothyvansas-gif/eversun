@@ -64,15 +64,20 @@ function AfspraakButton({
         <div className="flex w-full gap-3 lg:w-auto">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:flex-none lg:!px-6`}
+            // Swaps the orange for zinc-900 on this card's booking button,
+            // rather than touching bg-cta everywhere else it's used.
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:flex-none lg:!px-6 !bg-zinc-900`}
           >
-            {/* White on the orange at rest, cream once the dark fill is there. */}
+            {/* White label throughout; the fill above swapped from orange to
+                zinc-900. */}
             <CtaLabel hold>Plan je moment</CtaLabel>
           </button>
           <button
             type="button"
             onClick={onStartHuidtest}
-            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[178px] lg:w-auto lg:!px-6`}
+            // Darker edge than BTN_PILL's default border-ink-primary/20, to
+            // match the filled button's zinc-900 next to it.
+            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[178px] lg:w-auto lg:!px-6 !border-zinc-900`}
           >
             {/* Shorter on mobile, where the two buttons now split the card's
                 width between them and "Doe de huidtest" was the one crowding

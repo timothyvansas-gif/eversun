@@ -106,7 +106,9 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
       disabled={isSubmitting}
       // Width is content-driven from sm up. The label keeps a floor of its own
       // so swapping to the shorter submitting state does not resize the pill.
-      className={`${isSubmitting ? "" : "group/cta"} ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto sm:min-w-[196px] md:py-[10px]`}
+      // Swaps the orange for zinc-900, same as the zonnebankcards and the
+      // "Plan je moment" pill under producten.
+      className={`${isSubmitting ? "" : "group/cta"} ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} relative w-full justify-center py-3 !px-[28px] disabled:cursor-not-allowed disabled:active:scale-100 sm:w-auto sm:min-w-[196px] md:py-[10px] !bg-zinc-900`}
     >
       {/* 114px is this label's own resting width, so the pill keeps its size
           when the text swaps to the shorter "Versturen…" (108px including the
