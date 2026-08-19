@@ -31,7 +31,7 @@ describe("formatEuro", () => {
 
   it("round-trips the cards' own strings", () => {
     for (const bank of ZONNEBANKEN) {
-      expect(formatEuro(parseEuro(bank.prijs))).toBe(bank.prijs);
+      expect(formatEuro(parseEuro(bank.prijs))).toBe(`€ ${bank.prijs}`);
     }
   });
 });

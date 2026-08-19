@@ -1,6 +1,7 @@
 /**
- * The prices on the cards are display strings — "€ 18,00", with a comma, the
- * way a Dutch price is written. schema.org wants "18.00", and the FAQ wants to
+ * The prices on the cards are display strings — "18,00", with a comma, the
+ * way a Dutch price is written (no € sign — the cards add that themselves
+ * where they still show one). schema.org wants "18.00", and the FAQ wants to
  * say "van € 12,00 tot € 19,50" without a second list of numbers to keep in
  * step.
  *
@@ -8,7 +9,7 @@
  * bank and it lives where the bank is described.
  */
 
-/** "€ 18,00" → 18. Returns NaN if the string holds no number. */
+/** "18,00" → 18. Returns NaN if the string holds no number. */
 export function parseEuro(price: string): number {
   const digits = price.replace(/[^\d,.-]/g, "").replace(",", ".");
   return digits === "" ? NaN : Number(digits);

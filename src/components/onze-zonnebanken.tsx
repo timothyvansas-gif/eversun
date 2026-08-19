@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
   BTN_CTA_HEIGHT,
-  BTN_PILL,
   BTN_PILL_CTA,
 } from "@/lib/button-styles";
 import { CtaLabel } from "@/components/ui/cta-arrow";
@@ -18,10 +15,6 @@ import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
 import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
-
-// This is only needed after someone asks for advice, so it stays out of the
-// initial bundle for a section that most visitors simply browse.
-const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
 
 function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
   return (
@@ -42,13 +35,15 @@ function AfspraakButton({
   whatsappUrl,
   qrCode,
   title,
-  onStartHuidtest,
+  minuten,
+  prijs,
   className = "mt-3 md:mt-auto",
 }: {
   whatsappUrl: string;
   qrCode: StaticImageData;
   title: string;
-  onStartHuidtest: () => void;
+  minuten: string;
+  prijs: string;
   className?: string;
 }) {
   const appointment = useAppointmentLauncher();
@@ -56,34 +51,21 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        {/* No row-reverse any more: the filled button is first in the DOM —
-            which is what makes it the one Enter submits and the one a screen
-            reader meets first — and it now reads first on screen too, at every
-            width. The reverse used to flip only the mobile row, putting the
-            outline button on the left there and nowhere else. */}
-        <div className="flex w-full gap-3 lg:w-auto">
+        {/* Mobiel: duur/prijs staan in de knop zelf, onder het label.
+            Desktop: knop links, duur/prijs los ernaast, 16px gap. */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
           <button
             onClick={appointment.open}
-            // Swaps the orange for zinc-900 on this card's booking button,
-            // rather than touching bg-cta everywhere else it's used.
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} flex-1 justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:flex-none lg:!px-6 !bg-zinc-900`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} gap-2 w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
           >
-            {/* White label throughout; the fill above swapped from orange to
-                zinc-900. */}
             <CtaLabel hold>Plan je moment</CtaLabel>
+            <span className="lg:hidden text-[15px] font-normal leading-none text-white/70 font-sans tracking-[-0.01em] whitespace-nowrap">
+              – {minuten} · {prijs}
+            </span>
           </button>
-          <button
-            type="button"
-            onClick={onStartHuidtest}
-            // Darker edge than BTN_PILL's default border-ink-primary/20, to
-            // match the filled button's zinc-900 next to it. lg:min-w is
-            // narrower than it was for "Doe de huidtest" (178px), but still
-            // wider than "Huidtest" alone needs — reads better next to the
-            // filled pill than a button that hugs its own padding exactly.
-            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[132px] lg:w-auto lg:!px-6 !border-zinc-900`}
-          >
-            <CtaLabel hold>Huidtest</CtaLabel>
-          </button>
+          <span className="hidden lg:block">
+            <SessionDetails minuten={minuten} prijs={prijs} />
+          </span>
         </div>
       </div>
 
@@ -127,7 +109,6 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
 }
 
 function ZonnebankCard({ data }: { data: Zonnebank }) {
-  const [huidtestOpen, setHuidtestOpen] = useState(false);
   const {
     cardRef,
     videoRef,
@@ -184,41 +165,38 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               </span>
             )}
           </div>
-          <div className="mt-2">
-            <SessionDetails minuten={data.minuten} prijs={data.prijs} />
-          </div>
         </div>
-        {data.description.map((paragraph, i) => (
-          <p
-            key={i}
-            className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""}`}
-          >
-            {/* A \n in the copy is a desktop-only break: the <br> is display:none
-                below xl, where the sentences read better as one flowing block.
-                The leading space keeps them apart on mobile and collapses at the
-                start of the broken line on desktop. */}
-            {paragraph.split("\n").map((sentence, j) => (
-              <span key={j}>
-                {j > 0 && <br className="hidden xl:inline" />}
-                {j > 0 && " "}
-                {sentence}
-              </span>
-            ))}
-          </p>
-        ))}
+        {/* Eigen (kleinere) gap op desktop, los van de gap-[30px] die de
+            kaart verder voor media/titel/knop gebruikt — anders staan de
+            alinea's onderling te ver uit elkaar. */}
+        <div className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-3">
+          {data.description.map((paragraph, i) => (
+            <p
+              key={i}
+              className={`text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans ${i === 0 ? "mt-[2px] md:mt-0 xl:-mt-3" : ""}`}
+            >
+              {/* A \n in the copy is a desktop-only break: the <br> is display:none
+                  below xl, where the sentences read better as one flowing block.
+                  The leading space keeps them apart on mobile and collapses at the
+                  start of the broken line on desktop. */}
+              {paragraph.split("\n").map((sentence, j) => (
+                <span key={j}>
+                  {j > 0 && <br className="hidden xl:inline" />}
+                  {j > 0 && " "}
+                  {sentence}
+                </span>
+              ))}
+            </p>
+          ))}
+        </div>
         <AfspraakButton
           whatsappUrl={data.whatsappUrl}
           qrCode={data.qrCode}
           title={data.title}
-          onStartHuidtest={() => setHuidtestOpen(true)}
+          minuten={data.minuten}
+          prijs={data.prijs}
         />
       </div>
-      <HuidtestOverlay
-        isOpen={huidtestOpen}
-        onClose={() => setHuidtestOpen(false)}
-        entry="zonnebank_kaart"
-        bekekenBank={data.slug}
-      />
     </CardWrapper>
   );
 }

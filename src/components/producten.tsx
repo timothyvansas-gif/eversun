@@ -42,9 +42,7 @@ function PlanMomentButton() {
         onClick={appointment.open}
         // Filled at every breakpoint, so the section keeps one clear action
         // whether the pill fills the mobile column or hugs its desktop label.
-        // Swaps the orange for zinc-900, same as the zonnebankcards and the
-        // contact form's submit button.
-        className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0 !bg-zinc-900`}
+        className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} ${BTN_BOOKING_DESKTOP_WIDTH} !px-[28px] w-full md:w-auto justify-center py-3 md:py-[10px] shrink-0`}
       >
         <CtaLabel hold>Plan je moment</CtaLabel>
       </button>
@@ -332,7 +330,7 @@ function ProductCardItem({ product }: { product: Product }) {
                 <p>{product.hoverDescription}</p>
                 {product.sessions && (
                   <p>
-                    ±{product.sessions.count} sessies · €{product.sessions.pricePerSession} per sessie
+                    ±{product.sessions.count} sessies · {product.sessions.pricePerSession} per sessie
                   </p>
                 )}
               </div>

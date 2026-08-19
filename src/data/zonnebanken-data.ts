@@ -61,7 +61,7 @@ const BANKEN: ZonnebankInput[] = [
       "Met Personal Sunstyle stel je de intensiteit zelf in: sensitive als je huid rustig wil beginnen, medium of intensive voor meer kracht.",
     ],
     minuten: "20 min",
-    prijs: "€ 18,00",
+    prijs: "18,00",
   },
   {
     slug: "ergoline-770-medium",
@@ -74,7 +74,7 @@ const BANKEN: ZonnebankInput[] = [
       "48 lampen en verder geen extra's. Fijn als je al weet hoe je huid reageert en gewoon een stevige, betrouwbare sessie wil.",
     ],
     minuten: "20 min",
-    prijs: "€ 14,00",
+    prijs: "14,00",
   },
   {
     slug: "ergoline-blue-vision",
@@ -89,7 +89,7 @@ const BANKEN: ZonnebankInput[] = [
       "120 blauwe LEDs doen dat werk. Kies op het display sensitive, medium of intensive, net wat je huid vandaag aankan.",
     ],
     minuten: "20 min",
-    prijs: "€ 19,50",
+    prijs: "19,50",
   },
   {
     slug: "ergoline-600-light",
@@ -103,7 +103,7 @@ const BANKEN: ZonnebankInput[] = [
       "Verstelbare ligvlakken en armsteunen, plus ventilatie die de temperatuur aangenaam houdt. Je stapt er ontspannen weer uit.",
     ],
     minuten: "20 min",
-    prijs: "€ 12,00",
+    prijs: "12,00",
   },
 ];
 
