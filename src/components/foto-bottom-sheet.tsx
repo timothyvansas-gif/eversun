@@ -21,6 +21,7 @@ import productenDisplayImg from "@/images/producten-display.webp";
 import candyTheeImg from "@/images/candy-thee.webp";
 import koffieImg from "@/images/koffie.webp";
 import balieBloemenImg from "@/images/balie-bloemen.webp";
+import balieAchterImg from "@/images/balie-achter.webp";
 import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
@@ -41,15 +42,22 @@ type SheetPhoto = {
   alt: string;
   focus?: string;
   /**
-   * Alleen op telefoons tonen, waar tegels in paren naast elkaar kunnen staan.
+   * Beperk deze foto tot één van de twee layouts. Zonder dit veld staat hij
+   * overal.
+   *
+   * `"mobile"` voor tegels die alleen bestaan waar ze in paren naast elkaar
+   * kunnen staan; `"desktop"` voor tegels die alleen in het mozaïek passen.
+   * Dezelfde foto mag twee keer in de lijst staan met elk een eigen waarde —
+   * dan verschijnt hij in beide layouts precies één keer, op een plek die daar
+   * klopt.
    *
    * Verbergen met een class is niet genoeg: een lazy `next/image` in een
    * display:none-tegel wordt gewoon opgehaald, dus een telefoon zou betalen
-   * voor een tegel die niemand ziet. De tegel valt daarom helemaal uit de boom
-   * vanaf md. Veilig om de boom hierop te vertakken: de sheet rendert pas na
-   * `mounted`, dus er is geen servermarkup om het mee oneens te zijn.
+   * voor een tegel die niemand ziet. De tegel valt daarom helemaal uit de boom.
+   * Veilig om de boom hierop te vertakken: de sheet rendert pas na `mounted`,
+   * dus er is geen servermarkup om het mee oneens te zijn.
    */
-  mobileOnly?: boolean;
+  only?: "mobile" | "desktop";
 };
 
 // Order is reading order, nothing else. arrangeForSlots fits this list to the
@@ -121,6 +129,20 @@ export const sheetPhotos: SheetPhoto[] = [
     // met het bedieningspaneel eronder nog mee.
     focus: "center 20%",
   },
+  // Opent een nieuwe rij op de brede tegel. De smalle plek ernaast blijft
+  // voorlopig leeg: daar komt nog een staande foto. Zolang die er niet is, is
+  // dit de laatste desktoprij en houdt de rechterkolom dus een gat — geen tegel
+  // erachter die erdoor verschuift.
+  { src: balieAchterImg, alt: "Achter de balie, met het scherm en de lounge op de achtergrond" },
+  // Dezelfde koffiefoto als in het paar hieronder, maar dit is de desktopplek:
+  // de smalle tegel naast balie-achter. Twee regels voor één foto, elk met hun
+  // eigen `only`, zodat hij op de telefoon niet dubbel opduikt.
+  {
+    src: koffieImg,
+    alt: "De koffiemachine van Douwe Egberts met het keuzescherm",
+    focus: "center top",
+    only: "desktop",
+  },
   // Alleen op de telefoon, als paar onderaan. Allebei staand, dus in een halve
   // tegel houden ze hun vorm; op desktop is er geen plek waar ze die vorm
   // krijgen zonder de rijen overhoop te gooien.
@@ -131,9 +153,9 @@ export const sheetPhotos: SheetPhoto[] = [
     // 15,5% en dan valt het rode DE-logo er net boven weg — dat zit in de
     // bovenste paar procent. Vanaf de bovenrand staat het er wel op.
     focus: "center top",
-    mobileOnly: true,
+    only: "mobile",
   },
-  { src: balieBloemenImg, alt: "Verse bloemen en parfums op de balie", mobileOnly: true },
+  { src: balieBloemenImg, alt: "Verse bloemen en parfums op de balie", only: "mobile" },
 ];
 
 // Column spans on the desktop grid: a wide one beside a single, a row of three
@@ -148,8 +170,16 @@ export const sheetPhotos: SheetPhoto[] = [
 // wide tile per cycle is the price of the second pair.
 //
 // Rows are all the same height — the variety comes from the wide tiles, not
-// from differing row heights. The singles carry the aspect ratio and so set
-// that height; a wide tile is left to stretch into it.
+// from differing row heights. De smalle tegels dragen de verhouding en zetten
+// daarmee die hoogte; een brede tegel rekt daarin mee.
+//
+// Een brede tegel draagt daarnaast zelf lg:aspect-[1.7] als terugval. Zolang er
+// een smalle naast staat doet die niets — grid stretcht het item naar de
+// rijhoogte en dat wint van de verhouding. Staat een brede tegel alleen in zijn
+// rij, bijvoorbeeld omdat de plek ernaast bewust vrij is gehouden voor een foto
+// die nog moet komen, dan is er niets dat de rij hoogte geeft en klapte hij
+// zonder deze regel dicht tot nul. Vanaf 1280 is 1.7 exact; daaronder scheelt
+// het een pixel of twee met de rijen die wel een partner hebben.
 // De cyclus is even lang als de lijst zelf: veertien tegels, achttien kolommen,
 // zes volle rijen. Zodra er een rij tussen komt schuift alles erachter een plek
 // op, en dan moet dit patroon mee — een brede tegel op de verkeerde index laat
@@ -172,7 +202,7 @@ const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1];
 const MOBILE_PAIRS: readonly (readonly [number, number])[] = [
   [1, 2],
   [7, 8],
-  [14, 15],
+  [16, 17],
 ];
 
 const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start && i <= end);
@@ -182,7 +212,7 @@ const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start &
 // file's own width and height, which is all arrangeForSlots needs to keep a
 // portrait shot out of a wide tile.
 //
-// mobileOnly-foto's doen daar niet aan mee. Ze bestaan op desktop niet, dus ze
+// Foto's met only "mobile" doen daar niet aan mee. Ze bestaan op desktop niet, dus ze
 // horen er ook geen slot te bezetten: deden ze dat wel, dan kon zo'n staande
 // foto op een brede slot vallen en ging de sorteerder de rest van de lijst
 // verschuiven om hem daar weg te houden — precies het paar dat op de telefoon
@@ -190,7 +220,7 @@ const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start &
 //
 // Ze houden dus hun geschreven plek, en de rest wordt eromheen op het patroon
 // gepast. `desktopSlot` telt daarbij alleen de foto's die desktop wél haalt, zo
-// schuift een mobileOnly-foto de spans van alles erachter niet op.
+// schuift een telefoon-only foto de spans van alles erachter niet op.
 const withShape = (photo: SheetPhoto) => ({
   ...photo,
   width: photo.src.width,
@@ -198,21 +228,21 @@ const withShape = (photo: SheetPhoto) => ({
 });
 
 const fittedForDesktop = arrangeForSlots(
-  sheetPhotos.filter((photo) => !photo.mobileOnly).map(withShape),
+  sheetPhotos.filter((photo) => photo.only !== "mobile").map(withShape),
   LG_SPANS,
 );
 
 const arranged = (() => {
   let next = 0;
   return sheetPhotos.map((photo) =>
-    photo.mobileOnly ? withShape(photo) : fittedForDesktop[next++]
+    photo.only === "mobile" ? withShape(photo) : fittedForDesktop[next++]
   );
 })();
 
 /** Index in het desktoprooster, of -1 voor een foto die daar niet bestaat. */
 const desktopSlot = (() => {
   let next = 0;
-  return sheetPhotos.map((photo) => (photo.mobileOnly ? -1 : next++));
+  return sheetPhotos.map((photo) => (photo.only === "mobile" ? -1 : next++));
 })();
 
 export default function FotoBottomSheet({
@@ -225,7 +255,7 @@ export default function FotoBottomSheet({
   const sheetRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   // Eén bron voor "dit is een telefoon": hij bepaalt of het paneel te slepen is
-  // en welke foto's er bestaan. mobileOnly-tegels mogen niet alleen verborgen
+  // en welke foto's er bestaan. Beperkte tegels mogen niet alleen verborgen
   // worden, ze moeten uit de boom blijven.
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia(MOBILE_QUERY).matches : false
@@ -284,7 +314,7 @@ export default function FotoBottomSheet({
   };
 
   const tiles = arranged.map((photo, i) => {
-    if (photo.mobileOnly && !isMobile) return null;
+    if (photo.only === "mobile" ? !isMobile : photo.only === "desktop" && isMobile) return null;
     const slot = desktopSlot[i];
     const wide = slot >= 0 && LG_SPANS[slot % LG_SPANS.length] === 2;
     const paired = isPaired(i);
@@ -302,7 +332,7 @@ export default function FotoBottomSheet({
         // that wrapper is gone.
         className={`relative w-full shrink-0 ${
           paired ? "h-full md:h-auto md:aspect-[16/9]" : "aspect-[16/9]"
-        } ${wide ? "lg:col-span-2 lg:aspect-auto" : "lg:aspect-[5/6]"}`}
+        } ${wide ? "lg:col-span-2 lg:aspect-[1.7]" : "lg:aspect-[5/6]"}`}
       >
         <Image
           src={photo.src}
@@ -343,9 +373,11 @@ export default function FotoBottomSheet({
     );
   });
 
-  // Wat er werkelijk te zien is, niet wat er in de lijst staat: mobileOnly-foto's
+  // Wat er werkelijk te zien is, niet wat er in de lijst staat: een beperkte foto
   // bestaan vanaf md niet, en dan moet de kop ze ook niet meetellen.
-  const visibleCount = sheetPhotos.filter((photo) => isMobile || !photo.mobileOnly).length;
+  const visibleCount = sheetPhotos.filter(
+    (photo) => photo.only === undefined || photo.only === (isMobile ? "mobile" : "desktop")
+  ).length;
 
   // Pairs are wrapped, everything else goes in as its own cell. Walking the
   // list rather than slicing around fixed indices keeps this honest when a
