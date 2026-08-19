@@ -261,7 +261,23 @@ export default function FotoBottomSheet({
               role="dialog"
               aria-modal="true"
               aria-label="Binnenkijken bij Ever Sun"
-              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 max-h-[95dvh] flex flex-col"
+              // will-change-transform is not a superstition here. The scrim
+              // behind this panel carries backdrop-filter: blur(2px) over the
+              // whole viewport, and this panel is opaque and painted straight
+              // on top of it at the same z-index. A backdrop-filter makes the
+              // browser re-sample everything beneath it; while the panel shares
+              // an invalidation region with that layer, its re-paint and the
+              // re-blur need not land in the same frame, and a frame that
+              // misses shows as a ghost across the photos while scrolling.
+              //
+              // framer already promotes this panel to its own layer while the
+              // open spring runs — and drops it again the moment the spring
+              // settles, which is exactly when the flicker starts. This keeps
+              // the promotion for as long as the sheet is open, which is the
+              // only time it exists at all: AnimatePresence unmounts the panel
+              // on close, so nothing holds a full-screen layer in the
+              // background.
+              className="fixed bottom-0 inset-x-0 bg-surface-page rounded-t-[20px] z-50 max-h-[95dvh] flex flex-col will-change-transform"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
