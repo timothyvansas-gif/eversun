@@ -20,7 +20,7 @@
   --color-muted: #76684a;
   /* The one orange: buttons, status dot, pin, review stars, hero rules. There
      used to be a second, duller #e15e1d on the dot and the pin. */
-  --color-accent: #ff4d00;
+  --color-accent: #eb5d41;
   /* What a filled call-to-action is painted in. Its own name rather than
      `accent` at each use site: this colour has now been switched twice, and
      both times it sat copied across four components while the yellow labels
