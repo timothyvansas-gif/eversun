@@ -228,9 +228,9 @@ function ProductCardItem({ product }: { product: Product }) {
           <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
           <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
             {product.sachetPrice && (
-              <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-white text-ink-primary">Sachet {product.sachetPrice}</span>
+              <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-[#FDC43F] text-ink-primary">Sachet {product.sachetPrice}</span>
             )}
-            <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-white text-ink-primary">{product.containerLabel} {product.containerPrice}</span>
+            <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-[#FDC43F] text-ink-primary">{product.containerLabel} {product.containerPrice}</span>
           </div>
         </div>
 
