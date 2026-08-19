@@ -224,12 +224,25 @@ export default function FotoBottomSheet({
           quality={80}
           className="object-cover rounded-[12px]"
           style={photo.focus ? { objectPosition: photo.focus } : undefined}
+          // Pixels, niet vw, zodra het rooster niet meer meegroeit. De grid zit
+          // vast op max-w-[1280px] met px-8, dus vanaf een viewport van 1280 is
+          // een single altijd 395px en een brede tegel 805px, hoe breed het
+          // scherm daarna ook wordt. Met 33vw bleef de browser doorrekenen: op
+          // 1920 bij dpr 2 haalde een tegel van 395px een variant van 1920px op
+          // en een brede tegel er een van 3840 — bijna zes keer zoveel pixels
+          // om te decoderen als er getoond worden, opgeschaald uit bronnen die
+          // zelf maar 1700px zijn. Zestien tegels die bij een snelle scroll
+          // tegelijk opnieuw gedecodeerd moeten worden, halen dat niet binnen
+          // een frame.
+          //
+          // Tussen lg en 1280 groeit het rooster nog wel mee, vandaar dat daar
+          // een vw-waarde blijft staan.
           sizes={
             paired
-              ? "(max-width: 767px) 50vw, (max-width: 1023px) 50vw, 33vw"
+              ? "(min-width: 1280px) 400px, (min-width: 1024px) 31vw, 50vw"
               : wide
-                ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 66vw"
-                : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                ? "(min-width: 1280px) 810px, (min-width: 1024px) 63vw, (min-width: 768px) 50vw, 100vw"
+                : "(min-width: 1280px) 400px, (min-width: 1024px) 31vw, (min-width: 768px) 50vw, 100vw"
           }
         />
       </div>
