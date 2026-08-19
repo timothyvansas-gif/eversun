@@ -3,8 +3,23 @@
 import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import imageBig from "@/images/links-home.webp";
-import moreIcon from "@/images/camera-03.svg";
 import FotoBottomSheet, { sheetPhotos } from "@/components/foto-bottom-sheet";
+
+/**
+ * Inline, niet als <Image>: het bronbestand had stroke="#0B0B0B" ingebakken,
+ * dus het icoon kon de kleur van zijn knop niet volgen. Met currentColor
+ * bepaalt de tekstkleur van de knop nu ook het icoon, en scheelt het een
+ * request.
+ */
+function CameraIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+      <path d="M2 7.8C2 6.11984 2 5.27976 2.32698 4.63803C2.6146 4.07354 3.07354 3.6146 3.63803 3.32698C4.27976 3 5.11984 3 6.8 3H17.2C18.8802 3 19.7202 3 20.362 3.32698C20.9265 3.6146 21.3854 4.07354 21.673 4.63803C22 5.27976 22 6.11984 22 7.8V16.2C22 17.8802 22 18.7202 21.673 19.362C21.3854 19.9265 20.9265 20.3854 20.362 20.673C19.7202 21 18.8802 21 17.2 21H6.8C5.11984 21 4.27976 21 3.63803 20.673C3.07354 20.3854 2.6146 19.9265 2.32698 19.362C2 18.7202 2 17.8802 2 16.2V7.8Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 export default function PhotoCard() {
@@ -72,7 +87,7 @@ export default function PhotoCard() {
             aria-label="Alle foto's bekijken"
           >
             Alle foto&apos;s
-            <Image src={moreIcon} width={16} height={16} alt="" />
+            <CameraIcon size={16} />
           </button>
         </div>
         <div className="flex items-end justify-between">
@@ -83,17 +98,19 @@ export default function PhotoCard() {
             </p>
           </div>
           <button
-            // Niet BTN_OUTLINE_BORDER: die zet ook text-zinc-600 met een
-            // hover naar zinc-900, en het label moet hier de vaste
-            // icoonkleur houden. Alleen de rand-hover overnemen, zodat de
-            // knop nog steeds zichtbaar reageert zonder !important dat de
-            // hover uit de gedeelde constante zou overschrijven.
-            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full border ${OUTLINE_BORDER_COLOR} hover:border-ink-primary text-ink-primary transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
+            // Niet BTN_OUTLINE_BORDER: die hovert naar zinc-900, en hier gaan
+            // label en icoon naar ink-primary. In rust dragen ze de kleur van
+            // de bodytekst ernaast (zinc-500), zodat de knop meeleest met de
+            // kaart in plaats van erbovenop te liggen. Het icoon volgt vanzelf:
+            // CameraIcon tekent met currentColor. Alleen de rand-hover uit de
+            // gedeelde constante overnemen, zonder !important dat die hover zou
+            // moeten overschrijven.
+            className={`hidden md:flex items-center gap-2 text-sm font-medium whitespace-nowrap ml-4 cursor-pointer rounded-full border ${OUTLINE_BORDER_COLOR} hover:border-ink-primary text-zinc-500 hover:text-ink-primary transition-colors duration-150 px-[20px] py-[10px] translate-y-[10px]`}
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
             Alle foto&apos;s
-            <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
+            <CameraIcon size={20} />
           </button>
         </div>
       </div>
