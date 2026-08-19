@@ -56,11 +56,16 @@ function AfspraakButton({
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} gap-2 w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} gap-1.5 w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
           >
             <CtaLabel hold>Plan je moment</CtaLabel>
-            <span className="lg:hidden text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
-              – {minuten} · {prijs}
+            {/* Eigen flex-rij met eigen gap-1.5: een tekst-spatie vóór dit span
+                zou wegvallen als "begin van de regel" binnen dit flex-item,
+                dus de streep krijgt links en rechts allebei een echte
+                gap in plaats van op whitespace te vertrouwen. */}
+            <span className="lg:hidden inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
+              <span aria-hidden="true">–</span>
+              <span>{minuten} · {prijs}</span>
             </span>
           </button>
           <span className="hidden lg:block">
