@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "framer-motion";
 import Image, { type StaticImageData } from "next/image";
@@ -18,6 +18,9 @@ import bankRoodImg from "@/images/bank-rood.webp";
 import stoelHoekImg from "@/images/stoel-hoek.webp";
 import liggendImg from "@/images/liggend.webp";
 import blueImg from "@/images/blue.webp";
+import kopImg from "@/images/kop.webp";
+import kop2Img from "@/images/kop2.webp";
+import zakjesImg from "@/images/zakjes.webp";
 import wastafelsImg from "@/images/wastafels.webp";
 
 /**
@@ -50,36 +53,48 @@ export const sheetPhotos: SheetPhoto[] = [
   // a 5/6 single, on phones the right half of the pair — both upright, so it is
   // the one slot in the sheet that costs it almost no crop.
   { src: stoelHoekImg, alt: "Een witte kuipstoel bij de spiegelwand, met dispenser en spiegel" },
-  // Straight under the pair on phones. Its desktop slot is still open — a
-  // single crops this shot to an upright window — so it may yet move.
+  // Straight under the pair on phones, in the row of three singles on desktop.
   { src: liggendImg, alt: "Een geopende zonnebank in de cabine, met marmerwand en speakers" },
   // Beside the shot above it: same row of singles on desktop, straight under it
   // on phones. At 1.83 against a 5/6 tile, desktop keeps an upright slice
   // through the middle of the bed — the phone tile shows the whole frame.
   { src: blueImg, alt: "Een zonnebank in blauw licht, met de marmerwand ernaast" },
-  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  // Eighth, so it lands on a wide tile: the leestafel is a long, low shot and a
+  // Sixth and seventh: the second phone pair, and on desktop the first two of
+  // the row of three singles below. Both upright, so neither crops much either
+  // way.
+  { src: kopImg, alt: "Het bedieningspaneel aan de kop van de zonnebank, met speakers" },
+  { src: kop2Img, alt: "De kop van de zonnebank in blauw licht, met de marmerwand" },
+  // Closes that row of three on desktop. Upright, so the full-width phone tile
+  // keeps a band across the middle of the stack.
+  { src: zakjesImg, alt: "Een stapel Ergoline-verfrissingsdoekjes, fresh & clean" },
+  // Ninth, so it lands on a wide tile: the leestafel is a long, low shot and a
   // single would crop it to a strip. Its index moves whenever a photo is added
   // above it — the wide slots are the pattern's, not this photo's.
   { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
   { src: dummyImg, alt: "Impressie van de zonnestudio" },
+  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
   { src: dummy3Img, alt: "Impressie van de zonnestudio" },
   { src: dummy4Img, alt: "Impressie van de zonnestudio" },
   { src: dummyImg, alt: "Impressie van de zonnestudio" },
   { src: dummy2Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
 ];
 
-// Column spans on the desktop grid, repeating every seven tiles: a wide one
-// beside a single, then three singles, then a single beside a wide. Every row
-// adds up to the full three columns, so the mosaic never leaves a hole and no
-// tile has to be reordered to fill one.
+// Column spans on the desktop grid, repeating every eight tiles: a wide one
+// beside a single, then two rows of three singles. Every row adds up to the
+// full three columns, so the mosaic never leaves a hole and no tile has to be
+// reordered to fill one.
+//
+// The pattern used to run [2,1,1,1,1,1,2], with a second wide tile closing each
+// cycle. That put a wide slot at index 6 — and the phone pairs need two singles
+// side by side there, since a pair member lands in its own cell on desktop and
+// an upright photo in a wide tile is cropped to a band across its middle. One
+// wide tile per cycle is the price of the second pair.
 //
 // Rows are all the same height — the variety comes from the wide tiles, not
 // from differing row heights. The singles carry the aspect ratio and so set
 // that height; a wide tile is left to stretch into it.
-const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 2];
+const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 1, 1];
 
 // Phones get one column of 16/9 tiles. These two are the exception: they share
 // a single slot side by side, half width each, so the scroll opens with a wide
@@ -91,16 +106,21 @@ const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 2];
 // so it drops out of the layout and the tablet and desktop grids receive the
 // two tiles as their own cells. The mosaic above lg is untouched.
 //
-// Indices, not a count: they are positions in `arranged`, so the pair stays put
-// if photos are added after it.
-const MOBILE_PAIR_START = 1;
-const MOBILE_PAIR_END = 2;
+// Indices, not counts: they are positions in `arranged`, so a pair stays put if
+// photos are added after it. Both members of a pair must sit in single slots on
+// desktop — see LG_SPANS.
+const MOBILE_PAIRS: readonly (readonly [number, number])[] = [
+  [1, 2],
+  [5, 6],
+];
+
+const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start && i <= end);
 
 // Photos are written above in reading order and fitted to the pattern here, so
 // nobody has to count slots while adding one. A static import carries the
 // file's own width and height, which is all arrangeForSlots needs to keep a
-// portrait shot out of a wide tile. Every photo in the sheet is landscape
-// today, so this currently returns the list untouched.
+// portrait shot out of a wide tile. Every photo below is written into a slot
+// that already suits it, so this currently returns the list untouched.
 const arranged = arrangeForSlots(
   sheetPhotos.map((photo) => ({ ...photo, width: photo.src.width, height: photo.src.height })),
   LG_SPANS,
@@ -173,7 +193,7 @@ export default function FotoBottomSheet({
 
   const tiles = arranged.map((photo, i) => {
     const wide = LG_SPANS[i % LG_SPANS.length] === 2;
-    const paired = i >= MOBILE_PAIR_START && i <= MOBILE_PAIR_END;
+    const paired = isPaired(i);
     return (
       <div
         key={i}
@@ -208,6 +228,25 @@ export default function FotoBottomSheet({
       </div>
     );
   });
+
+  // Pairs are wrapped, everything else goes in as its own cell. Walking the
+  // list rather than slicing around fixed indices keeps this honest when a
+  // third pair shows up.
+  const cells: ReactNode[] = [];
+  for (let i = 0; i < tiles.length; ) {
+    const pair = MOBILE_PAIRS.find(([start]) => start === i);
+    if (!pair) {
+      cells.push(tiles[i]);
+      i++;
+      continue;
+    }
+    cells.push(
+      <div key={`pair-${pair[0]}`} className="aspect-[16/9] grid grid-cols-2 gap-2 md:contents">
+        {tiles.slice(pair[0], pair[1] + 1)}
+      </div>
+    );
+    i = pair[1] + 1;
+  }
 
   return createPortal(
     <>
@@ -261,14 +300,7 @@ export default function FotoBottomSheet({
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                {tiles.slice(0, MOBILE_PAIR_START)}
-                <div
-                  key="mobile-pair"
-                  className="aspect-[16/9] grid grid-cols-2 gap-2 md:contents"
-                >
-                  {tiles.slice(MOBILE_PAIR_START, MOBILE_PAIR_END + 1)}
-                </div>
-                {tiles.slice(MOBILE_PAIR_END + 1)}
+                {cells}
               </div>
             </m.div>
           </div>
