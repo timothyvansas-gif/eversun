@@ -17,6 +17,8 @@ import blueImg from "@/images/blue.webp";
 import deurenImg from "@/images/deuren.webp";
 import bankLiggendImg from "@/images/bank-liggend.webp";
 import ergolineNeonImg from "@/images/ergoline-neon.webp";
+import productenDisplayImg from "@/images/producten-display.webp";
+import candyTheeImg from "@/images/candy-thee.webp";
 import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
@@ -58,9 +60,22 @@ export const sheetPhotos: SheetPhoto[] = [
   // on phones. At 1.83 against a 5/6 tile, desktop keeps an upright slice
   // through the middle of the bed — the phone tile shows the whole frame.
   { src: blueImg, alt: "Een zonnebank in blauw licht, met de marmerwand ernaast" },
-  // Sixth and seventh: the second phone pair, and on desktop the first two of
-  // the row of three singles below. Both upright, so neither crops much either
-  // way.
+  // Een eigen rij tussen de twee rijen van drie: de schappen liggend op de
+  // brede tegel, de snoepetagere staand ernaast. Op mobiel zijn het allebei
+  // volle 16/9-tegels, dus daar staan ze gewoon liggend onder elkaar.
+  { src: productenDisplayImg, alt: "De schappen met verzorgingsproducten voor en na het zonnen" },
+  {
+    src: candyTheeImg,
+    alt: "Een etagere met snoep en een kistje thee op de leestafel",
+    // Op mobiel blijft 44% van de hoogte over. Gecentreerd is dat 28 tot 72%:
+    // de onderkant van de bovenste schaal en de stam, met het snoep net onder
+    // de rand. Op 70% schuift de band naar 39 tot 83% en staan de schaal met
+    // snoep en het theekistje er allebei heel in. Op desktop snijdt deze foto
+    // maar 5% van zijn hoogte weg, dus daar verandert het nauwelijks iets.
+    focus: "center 70%",
+  },
+  // Het tweede telefoonpaar, en op desktop de eerste twee van de rij van drie
+  // singles eronder. Allebei staand, dus geen van beide snijdt veel weg.
   { src: kopImg, alt: "Het bedieningspaneel aan de kop van de zonnebank, met speakers" },
   { src: kop2Img, alt: "De kop van de zonnebank in blauw licht, met de marmerwand" },
   // Closes that row of three on desktop. Upright, so the full-width phone tile
@@ -92,10 +107,10 @@ export const sheetPhotos: SheetPhoto[] = [
   },
 ];
 
-// Column spans on the desktop grid, repeating every ten tiles: a wide one
-// beside a single, two rows of three singles, then twice more a wide beside a
-// single. Every row adds up to the full three columns, so the mosaic never
-// leaves a hole and no tile has to be reordered to fill one.
+// Column spans on the desktop grid: a wide one beside a single, a row of three
+// singles, that pair again, nog een rij van drie, en dan twee rijen met een
+// brede naast een smalle. Every row adds up to the full three columns, so the
+// mosaic never leaves a hole and no tile has to be reordered to fill one.
 //
 // The pattern used to run [2,1,1,1,1,1,2], with a second wide tile closing each
 // cycle. That put a wide slot at index 6 — and the phone pairs need two singles
@@ -106,11 +121,11 @@ export const sheetPhotos: SheetPhoto[] = [
 // Rows are all the same height — the variety comes from the wide tiles, not
 // from differing row heights. The singles carry the aspect ratio and so set
 // that height; a wide tile is left to stretch into it.
-// De staart [2, 1] hangt aan de cyclus van acht die er stond: index 0 tot en
-// met 9 houden exact dezelfde spans, alleen komt er onderaan een tweede rij bij
-// van een brede naast een smalle. Zonder die staart was index 10 smal en liet
-// de laatste rij een kolom open.
-const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 1, 1, 2, 1];
+// De cyclus is even lang als de lijst zelf: veertien tegels, achttien kolommen,
+// zes volle rijen. Zodra er een rij tussen komt schuift alles erachter een plek
+// op, en dan moet dit patroon mee — een brede tegel op de verkeerde index laat
+// een rij een kolom openhouden. Wie hier een foto toevoegt, telt de rijen na.
+const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1];
 
 // Phones get one column of 16/9 tiles. These two are the exception: they share
 // a single slot side by side, half width each, so the scroll opens with a wide
@@ -127,7 +142,7 @@ const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 1, 1, 2, 1];
 // desktop — see LG_SPANS.
 const MOBILE_PAIRS: readonly (readonly [number, number])[] = [
   [1, 2],
-  [5, 6],
+  [7, 8],
 ];
 
 const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start && i <= end);
