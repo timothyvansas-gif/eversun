@@ -76,16 +76,13 @@ function AfspraakButton({
             type="button"
             onClick={onStartHuidtest}
             // Darker edge than BTN_PILL's default border-ink-primary/20, to
-            // match the filled button's zinc-900 next to it.
-            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[178px] lg:w-auto lg:!px-6 !border-zinc-900`}
+            // match the filled button's zinc-900 next to it. lg:min-w is
+            // narrower than it was for "Doe de huidtest" (178px), but still
+            // wider than "Huidtest" alone needs — reads better next to the
+            // filled pill than a button that hugs its own padding exactly.
+            className={`group/cta ${BTN_PILL} ${BTN_CTA_HEIGHT} flex-none justify-center !px-8 lg:min-w-[132px] lg:w-auto lg:!px-6 !border-zinc-900`}
           >
-            {/* Shorter on mobile, where the two buttons now split the card's
-                width between them and "Doe de huidtest" was the one crowding
-                its neighbour. Unchanged from lg, where each has the room. */}
-            <CtaLabel hold>
-              <span className="lg:hidden">Huidtest</span>
-              <span className="hidden lg:inline">Doe de huidtest</span>
-            </CtaLabel>
+            <CtaLabel hold>Huidtest</CtaLabel>
           </button>
         </div>
       </div>
