@@ -14,6 +14,8 @@ import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
 import tafelImg from "@/images/tafel.webp";
+import bankRoodImg from "@/images/studio/bank-rood.webp";
+import stoelHoekImg from "@/images/studio/stoel-hoek.webp";
 import wastafelsImg from "@/images/wastafels.webp";
 
 /**
@@ -32,7 +34,7 @@ type SheetPhoto = { src: StaticImageData; alt: string; focus?: string };
 // mosaic below, so adding, removing or reordering photos cannot put a portrait
 // shot in a wide tile. Dummies are placeholders and go as real photos arrive.
 export const sheetPhotos: SheetPhoto[] = [
-  { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
+  { src: bankRoodImg, alt: "Een Ergoline-zonnebank in de cabine, badend in rood en paars licht" },
   {
     src: wastafelsImg,
     alt: "De wastafels met zwarte glazen kommen en een verlichte spiegel",
@@ -42,18 +44,22 @@ export const sheetPhotos: SheetPhoto[] = [
     // does not sit hard against the left wall.
     focus: "15% center",
   },
+  // The first upright photo in the sheet. Third on purpose: on desktop that is
+  // a 5/6 single, on phones the right half of the pair — both upright, so it is
+  // the one slot in the sheet that costs it almost no crop.
+  { src: stoelHoekImg, alt: "Een witte kuipstoel bij de spiegelwand, met dispenser en spiegel" },
+  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
+  { src: dummyImg, alt: "Impressie van de zonnestudio" },
+  // Seventh, so it lands on the second wide tile of the pattern: the leestafel
+  // is a long, low shot and a single tile would crop it to a strip.
+  { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
   { src: dummy2Img, alt: "Impressie van de zonnestudio" },
   { src: dummy3Img, alt: "Impressie van de zonnestudio" },
   { src: dummy4Img, alt: "Impressie van de zonnestudio" },
   { src: dummyImg, alt: "Impressie van de zonnestudio" },
   { src: dummy2Img, alt: "Impressie van de zonnestudio" },
   { src: dummy3Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  { src: dummyImg, alt: "Impressie van de zonnestudio" },
-  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
-  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  { src: dummyImg, alt: "Impressie van de zonnestudio" },
 ];
 
 // Column spans on the desktop grid, repeating every seven tiles: a wide one
@@ -65,6 +71,21 @@ export const sheetPhotos: SheetPhoto[] = [
 // from differing row heights. The singles carry the aspect ratio and so set
 // that height; a wide tile is left to stretch into it.
 const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 2];
+
+// Phones get one column of 16/9 tiles. These two are the exception: they share
+// a single slot side by side, half width each, so the scroll opens with a wide
+// shot and then a pair of upright ones instead of another letterbox.
+//
+// The pair sits in a wrapper that carries the 16/9 itself, which is what keeps
+// its height exactly that of a full-width tile — no viewport arithmetic, no
+// second aspect ratio to keep in sync. From md the wrapper is display:contents,
+// so it drops out of the layout and the tablet and desktop grids receive the
+// two tiles as their own cells. The mosaic above lg is untouched.
+//
+// Indices, not a count: they are positions in `arranged`, so the pair stays put
+// if photos are added after it.
+const MOBILE_PAIR_START = 1;
+const MOBILE_PAIR_END = 2;
 
 // Photos are written above in reading order and fitted to the pattern here, so
 // nobody has to count slots while adding one. A static import carries the
@@ -141,6 +162,44 @@ export default function FotoBottomSheet({
     onClose();
   };
 
+  const tiles = arranged.map((photo, i) => {
+    const wide = LG_SPANS[i % LG_SPANS.length] === 2;
+    const paired = i >= MOBILE_PAIR_START && i <= MOBILE_PAIR_END;
+    return (
+      <div
+        key={i}
+        // One aspect utility per breakpoint, never two competing at the same
+        // one: which of a pair wins comes down to the order Tailwind emits
+        // them, not the order they are written here.
+        //
+        // Below lg every tile is 16/9 whatever its photo is: one column, one
+        // shape, so the scroll keeps an even rhythm. The paired tiles are the
+        // exception on phones — they take their height from the wrapper that
+        // holds them and only pick up an aspect of their own from md, where
+        // that wrapper is gone.
+        className={`relative w-full shrink-0 ${
+          paired ? "h-full md:h-auto md:aspect-[16/9]" : "aspect-[16/9]"
+        } ${wide ? "lg:col-span-2 lg:aspect-auto" : "lg:aspect-[5/6]"}`}
+      >
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          fill
+          placeholder="blur"
+          className="object-cover rounded-[12px]"
+          style={photo.focus ? { objectPosition: photo.focus } : undefined}
+          sizes={
+            paired
+              ? "(max-width: 767px) 50vw, (max-width: 1023px) 50vw, 33vw"
+              : wide
+                ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 66vw"
+                : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+          }
+        />
+      </div>
+    );
+  });
+
   return createPortal(
     <>
     <AnimatePresence>
@@ -189,42 +248,18 @@ export default function FotoBottomSheet({
                 </div>
               </div>
               <div
-                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 content-start overflow-y-auto min-h-0"
+                className="w-full max-w-[1280px] mx-auto px-6 md:px-8 pb-4 md:pb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 content-start overflow-y-auto min-h-0"
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                {arranged.map((photo, i) => {
-                  const wide = LG_SPANS[i % LG_SPANS.length] === 2;
-                  return (
-                    <div
-                      key={i}
-                      // One aspect utility per breakpoint, never two competing
-                      // at the same one: which of a pair wins comes down to the
-                      // order Tailwind emits them, not the order they are
-                      // written here.
-                      //
-                      // Below lg every tile is 16/9 whatever its photo is: one
-                      // column, one shape, so the scroll keeps an even rhythm.
-                      className={`relative w-full shrink-0 aspect-[16/9] ${
-                        wide ? "lg:col-span-2 lg:aspect-auto" : "lg:aspect-[5/6]"
-                      }`}
-                    >
-                      <Image
-                        src={photo.src}
-                        alt={photo.alt}
-                        fill
-                        placeholder="blur"
-                        className="object-cover rounded-[12px]"
-                        style={photo.focus ? { objectPosition: photo.focus } : undefined}
-                        sizes={
-                          wide
-                            ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 66vw"
-                            : "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                        }
-                      />
-                    </div>
-                  );
-                })}
+                {tiles.slice(0, MOBILE_PAIR_START)}
+                <div
+                  key="mobile-pair"
+                  className="aspect-[16/9] grid grid-cols-2 gap-2 md:contents"
+                >
+                  {tiles.slice(MOBILE_PAIR_START, MOBILE_PAIR_END + 1)}
+                </div>
+                {tiles.slice(MOBILE_PAIR_END + 1)}
               </div>
             </m.div>
           </div>
