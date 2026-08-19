@@ -14,8 +14,10 @@ import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
 import tafelImg from "@/images/tafel.webp";
-import bankRoodImg from "@/images/studio/bank-rood.webp";
-import stoelHoekImg from "@/images/studio/stoel-hoek.webp";
+import bankRoodImg from "@/images/bank-rood.webp";
+import stoelHoekImg from "@/images/stoel-hoek.webp";
+import liggendImg from "@/images/liggend.webp";
+import blueImg from "@/images/blue.webp";
 import wastafelsImg from "@/images/wastafels.webp";
 
 /**
@@ -48,13 +50,20 @@ export const sheetPhotos: SheetPhoto[] = [
   // a 5/6 single, on phones the right half of the pair — both upright, so it is
   // the one slot in the sheet that costs it almost no crop.
   { src: stoelHoekImg, alt: "Een witte kuipstoel bij de spiegelwand, met dispenser en spiegel" },
+  // Straight under the pair on phones. Its desktop slot is still open — a
+  // single crops this shot to an upright window — so it may yet move.
+  { src: liggendImg, alt: "Een geopende zonnebank in de cabine, met marmerwand en speakers" },
+  // Beside the shot above it: same row of singles on desktop, straight under it
+  // on phones. At 1.83 against a 5/6 tile, desktop keeps an upright slice
+  // through the middle of the bed — the phone tile shows the whole frame.
+  { src: blueImg, alt: "Een zonnebank in blauw licht, met de marmerwand ernaast" },
   { src: dummy3Img, alt: "Impressie van de zonnestudio" },
   { src: dummy4Img, alt: "Impressie van de zonnestudio" },
-  { src: dummyImg, alt: "Impressie van de zonnestudio" },
-  // Seventh, so it lands on the second wide tile of the pattern: the leestafel
-  // is a long, low shot and a single tile would crop it to a strip.
+  // Eighth, so it lands on a wide tile: the leestafel is a long, low shot and a
+  // single would crop it to a strip. Its index moves whenever a photo is added
+  // above it — the wide slots are the pattern's, not this photo's.
   { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
-  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
+  { src: dummyImg, alt: "Impressie van de zonnestudio" },
   { src: dummy3Img, alt: "Impressie van de zonnestudio" },
   { src: dummy4Img, alt: "Impressie van de zonnestudio" },
   { src: dummyImg, alt: "Impressie van de zonnestudio" },
