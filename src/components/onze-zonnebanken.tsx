@@ -56,9 +56,26 @@ function AfspraakButton({
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6 lg:border lg:border-line lg:bg-transparent lg:text-zinc-900 lg:hover:border-[#312019]`}
+            // Inline, want BTN_PILL_CTA zet zelf transition-transform en de
+            // volgorde waarin twee transition-utilities landen is niet de
+            // bronvolgorde. Onder lg is er geen rand om te animeren, dus daar
+            // kost de extra property niets.
+            style={{ transition: "transform 150ms ease, border-color 150ms ease" }}
           >
-            {/* Duur/prijs staan binnen CtaLabel, niet ernaast: de hover-pijl
+            {/* Vanaf lg geen vulling maar een rand in --color-line (#d5be9c),
+                zoals deze knop het grootste deel van zijn leven had. Het label
+                gaat dan mee naar zinc-900, want wit op een doorzichtige knop
+                is niets. Onder lg blijft de gevulde oranje staan: daar draagt
+                de knop ook duur en prijs, en die regel heeft een gevulde
+                achtergrond nodig om leesbaar te blijven op de kaartfoto.
+
+                De rand komt er alleen bij op lg en verbreedt de knop niet:
+                border-box rekent hem binnen min-w en min-h. Op hover gaat hij
+                naar #312019, het warme donkerbruin dat deze knop hiervoor ook
+                had — geen token, want die kleur bestaat verder nergens meer.
+
+                Duur/prijs staan binnen CtaLabel, niet ernaast: de hover-pijl
                 ankert op de rechterrand van dit label, dus een zusje ernaast
                 zou eronder verdwijnen zodra de pijl inschuift — zichtbaar op
                 elke breedte onder lg waar een muis wél hovert. De gap-1.5
