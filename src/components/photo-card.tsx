@@ -39,7 +39,7 @@ export default function PhotoCard() {
   // intent is shown, without costing ~0.5MB up front for visitors who never
   // open it.
   const preloadAll = useCallback(() => {
-    sheetPhotos.forEach((p) => preloadImage(p.src));
+    sheetPhotos.forEach((p) => preloadImage(p.src.src));
   }, [preloadImage]);
 
   return (

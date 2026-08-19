@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import { arrangeForSlots, type Slot } from "@/lib/sheet-layout";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { MOBILE_QUERY } from "@/lib/breakpoints";
 import { Backdrop } from "@/components/ui/backdrop";
@@ -13,18 +14,46 @@ import dummy2Img from "@/images/impressie/dummy-2.webp";
 import dummy3Img from "@/images/impressie/dummy-3.webp";
 import dummy4Img from "@/images/impressie/dummy-4.webp";
 import tafelImg from "@/images/tafel.webp";
+import wastafelsImg from "@/images/wastafels.webp";
 
-// Mostly still placeholders, so the dummies cycle around the real photos. The
-// length is a multiple of LG_SPANS' cycle, which is what keeps the last row of
-// the desktop grid full — a real photo therefore replaces a dummy rather than
-// being appended.
-//
-// Index 0 is a wide tile, and wide is where a landscape photo belongs: the
-// singles carry the aspect ratio (lg:aspect-[5/6], portrait) and a landscape
-// shot dropped in one would be cropped to its middle third.
-export const sheetPhotos = [
-  tafelImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img, dummy3Img,
-  dummy4Img, dummyImg, dummy2Img, dummy3Img, dummy4Img, dummyImg, dummy2Img,
+/**
+ * A photo, what it shows, and where to hold it while cropping.
+ *
+ * The alt is per photo rather than generated, so a screen reader gets the room
+ * instead of "impressie 7".
+ *
+ * `focus` is an object-position value and only matters where the tile crops
+ * hard — a landscape shot in a single tile loses half its width, and a centred
+ * crop lands wherever it lands. Leave it off and the crop stays centred.
+ */
+type SheetPhoto = { src: StaticImageData; alt: string; focus?: string };
+
+// Order is reading order, nothing else. arrangeForSlots fits this list to the
+// mosaic below, so adding, removing or reordering photos cannot put a portrait
+// shot in a wide tile. Dummies are placeholders and go as real photos arrive.
+export const sheetPhotos: SheetPhoto[] = [
+  { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
+  {
+    src: wastafelsImg,
+    alt: "De wastafels met zwarte glazen kommen en een verlichte spiegel",
+    // In a single tile only half this photo's width survives. Centred, that
+    // half is the wall to the right of the bowls; held near the left edge it is
+    // both bowls, the candles and the mirror. 15% rather than 0 so the frame
+    // does not sit hard against the left wall.
+    focus: "15% center",
+  },
+  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
+  { src: dummyImg, alt: "Impressie van de zonnestudio" },
+  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
+  { src: dummyImg, alt: "Impressie van de zonnestudio" },
+  { src: dummy2Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy3Img, alt: "Impressie van de zonnestudio" },
+  { src: dummy4Img, alt: "Impressie van de zonnestudio" },
+  { src: dummyImg, alt: "Impressie van de zonnestudio" },
 ];
 
 // Column spans on the desktop grid, repeating every seven tiles: a wide one
@@ -35,7 +64,17 @@ export const sheetPhotos = [
 // Rows are all the same height — the variety comes from the wide tiles, not
 // from differing row heights. The singles carry the aspect ratio and so set
 // that height; a wide tile is left to stretch into it.
-const LG_SPANS = [2, 1, 1, 1, 1, 1, 2];
+const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 1, 2];
+
+// Photos are written above in reading order and fitted to the pattern here, so
+// nobody has to count slots while adding one. A static import carries the
+// file's own width and height, which is all arrangeForSlots needs to keep a
+// portrait shot out of a wide tile. Every photo in the sheet is landscape
+// today, so this currently returns the list untouched.
+const arranged = arrangeForSlots(
+  sheetPhotos.map((photo) => ({ ...photo, width: photo.src.width, height: photo.src.height })),
+  LG_SPANS,
+);
 
 export default function FotoBottomSheet({
   isOpen,
@@ -154,7 +193,7 @@ export default function FotoBottomSheet({
                 style={{ overscrollBehavior: "contain" }}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                {sheetPhotos.map((photo, i) => {
+                {arranged.map((photo, i) => {
                   const wide = LG_SPANS[i % LG_SPANS.length] === 2;
                   return (
                     <div
@@ -163,16 +202,20 @@ export default function FotoBottomSheet({
                       // at the same one: which of a pair wins comes down to the
                       // order Tailwind emits them, not the order they are
                       // written here.
+                      //
+                      // Below lg every tile is 16/9 whatever its photo is: one
+                      // column, one shape, so the scroll keeps an even rhythm.
                       className={`relative w-full shrink-0 aspect-[16/9] ${
                         wide ? "lg:col-span-2 lg:aspect-auto" : "lg:aspect-[5/6]"
                       }`}
                     >
                       <Image
-                        src={photo}
-                        alt={`Impressie Ever Sun zonnestudio ${i + 1}`}
+                        src={photo.src}
+                        alt={photo.alt}
                         fill
                         placeholder="blur"
                         className="object-cover rounded-[12px]"
+                        style={photo.focus ? { objectPosition: photo.focus } : undefined}
                         sizes={
                           wide
                             ? "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 66vw"
