@@ -71,7 +71,7 @@ export default function PhotoCard() {
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
-            Meer foto&apos;s
+            Alle foto&apos;s
             <Image src={moreIcon} width={16} height={16} alt="" />
           </button>
         </div>
@@ -92,7 +92,7 @@ export default function PhotoCard() {
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
-            Meer foto&apos;s
+            Alle foto&apos;s
             <Image src={moreIcon} width={20} height={20} alt="Meer foto's bekijken" />
           </button>
         </div>
