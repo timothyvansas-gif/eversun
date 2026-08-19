@@ -18,9 +18,11 @@
      failed 1.4.3 on every background it sits on (page, white cards, product
      tags). Same hue, lower luminance: 4.99:1 at worst. */
   --color-muted: #76684a;
-  /* The one orange: buttons, status dot, pin, review stars, hero rules. There
-     used to be a second, duller #e15e1d on the dot and the pin. */
-  --color-accent: #eb5d41;
+  /* The one orange: buttons, status dot, pin, review stars, hero rules. This
+     is the studio's own orange, and it was on the dot and the pin before it
+     was on anything else — the brighter oranges it briefly ran through
+     (#f35b04, #ff4d00, #eb5d41) all read hotter than the brand does. */
+  --color-accent: #e15e1d;
   /* What a filled call-to-action is painted in. Its own name rather than
      `accent` at each use site: this colour has now been switched twice, and
      both times it sat copied across four components while the yellow labels
