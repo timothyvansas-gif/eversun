@@ -12,10 +12,13 @@
  * middle — so as soon as the set is mixed, the list has to be ordered by hand
  * against a pattern nobody can see while adding photos.
  *
- * `arrangeForSlots` takes that job. Photos go in in reading order, slots are
- * filled with something that fits, and the pattern is never violated. With an
- * all-landscape set — which is every photo in the sheet today — it returns the
- * input untouched, so this changes nothing until the first portrait arrives.
+ * `arrangeForSlots` takes that job, and takes only that job: a wide slot gets a
+ * landscape photo. Everything else is left where it was written. A single slot
+ * is 5/6 — upright, but not so narrow that a landscape shot in it is a problem;
+ * the whole sheet was landscapes in singles before any portrait existed. So
+ * singles have no preference, and a portrait sitting in one stays put instead of
+ * being pulled forward to the first single on the grid, which would quietly
+ * renumber every photo after it the moment one portrait joined the set.
  */
 
 /** How many columns a slot takes on the desktop grid. */
@@ -27,13 +30,16 @@ export type Shaped = { width: number; height: number };
 const isLandscape = (p: Shaped) => p.width >= p.height;
 
 /**
- * Orders `photos` so each one lands in a slot it suits.
+ * Orders `photos` so no portrait lands in a wide slot, moving as little as
+ * possible to get there.
  *
- * Wide slots (2 columns) prefer landscape, single slots prefer portrait, and
- * either takes the next photo of the other kind rather than leave a hole — a
- * hole would shift every tile after it and break the row sums the pattern
- * depends on. Relative order within each shape is preserved, so a photo never
- * jumps ahead of another of its own kind.
+ * A wide slot keeps the photo written at its own index when that photo is
+ * landscape; otherwise it borrows the earliest landscape still unplaced. Once
+ * the landscapes run out a wide slot takes a portrait rather than stand empty —
+ * a hole would shift every tile after it and break the row sums the pattern
+ * depends on. Whatever is left fills the remaining slots in reading order, so
+ * relative order within each shape survives and a hand-placed photo keeps its
+ * position unless its slot cannot hold it.
  *
  * `spans` is the repeating slot pattern; it cycles for as many photos as there
  * are.
@@ -41,29 +47,38 @@ const isLandscape = (p: Shaped) => p.width >= p.height;
 export function arrangeForSlots<T extends Shaped>(photos: T[], spans: Slot[]): T[] {
   if (spans.length === 0) return [...photos];
 
-  const landscape = photos.filter(isLandscape);
-  const portrait = photos.filter((p) => !isLandscape(p));
+  const out: (T | undefined)[] = new Array(photos.length);
+  const placed = new Array(photos.length).fill(false);
+  const wideSlots = photos.map((_, i) => i).filter((i) => spans[i % spans.length] === 2);
 
-  let l = 0;
-  let p = 0;
+  const take = (index: number) => {
+    placed[index] = true;
+    return photos[index];
+  };
 
-  return photos.map((_, i) => {
-    const wantsLandscape = spans[i % spans.length] === 2;
-    const first = wantsLandscape ? landscape : portrait;
-    const second = wantsLandscape ? portrait : landscape;
-    const firstIndex = wantsLandscape ? l : p;
-    const secondIndex = wantsLandscape ? p : l;
-
-    if (firstIndex < first.length) {
-      if (wantsLandscape) l++;
-      else p++;
-      return first[firstIndex];
-    }
-
-    // Nothing of the preferred shape left. Take the other rather than leave the
-    // slot empty; the crop is the lesser of the two problems.
-    if (wantsLandscape) p++;
-    else l++;
-    return second[secondIndex];
+  // A wide slot whose own photo is landscape needs no help at all.
+  const borrowing = wideSlots.filter((i) => {
+    if (!isLandscape(photos[i])) return true;
+    out[i] = take(i);
+    return false;
   });
+
+  // The rest borrow the earliest landscape still going. If there is none left,
+  // leave the slot to the fill below rather than reach for a portrait early:
+  // grabbing one here would move photos that were fine where they were.
+  for (const slot of borrowing) {
+    const donor = photos.findIndex((p, i) => !placed[i] && isLandscape(p));
+    if (donor === -1) break;
+    out[slot] = take(donor);
+  }
+
+  // Everything still unplaced drops into the empty slots in reading order.
+  let next = 0;
+  for (let slot = 0; slot < out.length; slot++) {
+    if (out[slot]) continue;
+    while (placed[next]) next++;
+    out[slot] = take(next);
+  }
+
+  return out as T[];
 }

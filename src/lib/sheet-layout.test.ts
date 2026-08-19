@@ -42,6 +42,14 @@ describe("arrangeForSlots", () => {
     expect(arranged.filter((id) => id.startsWith("P"))).toEqual(["P0", "P1", "P2"]);
   });
 
+  it("leaves a portrait where it was written when its slot is a single", () => {
+    // The sheet's own case: one portrait, hand-placed third. A single is 5/6,
+    // so it holds that photo fine and nothing needs to move — pulling it to the
+    // first single would renumber every photo behind it.
+    const photos = [wide("L0"), wide("L1"), tall("P0"), wide("L2"), wide("L3"), wide("L4"), wide("L5")];
+    expect(ids(arrangeForSlots(photos, SPANS))).toEqual(ids(photos));
+  });
+
   it("returns every photo exactly once", () => {
     const photos = [wide("L0"), tall("P0"), tall("P1"), wide("L1"), wide("L2"), tall("P2"), wide("L3"), tall("P3")];
     expect(ids(arrangeForSlots(photos, SPANS)).sort()).toEqual(ids(photos).sort());
