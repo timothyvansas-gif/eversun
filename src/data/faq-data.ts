@@ -21,6 +21,13 @@ import { ADDRESS, PHONE_DISPLAY } from "@/lib/site";
 export type FaqItem = {
   vraag: string;
   antwoord: string;
+  /**
+   * Handle for a row whose answer needs live links instead of plain text —
+   * WhatsApp and `tel:`, here. `antwoord` stays the plain sentence regardless:
+   * the JSON-LD and llms.txt only ever read that string, and `faq-list.tsx`
+   * swaps in the interactive version by matching this id.
+   */
+  id?: "reserveren";
 };
 
 const prijzen = ZONNEBANKEN.map((bank) => parseEuro(bank.prijs));
@@ -41,6 +48,7 @@ export const FAQ: FaqItem[] = [
   {
     vraag: "Moet ik reserveren of kan ik binnenlopen?",
     antwoord: `Binnenlopen mag altijd tijdens onze openingstijden. Wil je zeker weten dat je bank vrij is, stuur dan even een WhatsApp of bel ${PHONE_DISPLAY}, dan staat hij voor je klaar en sta je niet te wachten.`,
+    id: "reserveren",
   },
   {
     vraag: "Wat zijn de openingstijden?",
