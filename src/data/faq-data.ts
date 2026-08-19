@@ -73,7 +73,7 @@ export const FAQ: FaqItem[] = [
   {
     vraag: "Hoe kan ik betalen?",
     antwoord:
-      "Met pin, contant, creditcard of contactloos via Apple Pay en Google Pay. Je betaalt in de studio, per sessie.",
+      "Met pin, contant of contactloos via Apple Pay en Google Pay. Je betaalt in de studio, per sessie.",
   },
   {
     vraag: "Vanaf welke leeftijd mag ik onder de zonnebank?",
