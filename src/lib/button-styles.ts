@@ -38,8 +38,8 @@ export const BTN_PILL_DARK_OUTLINE =
  *
  * Painted with `bg-cta`, which is where that colour lives now — see the token
  * in globals.css. The buttons spent a spell in the brand yellow; that yellow is
- * still the site's own, on the "2 banken" label and the parking card, and those
- * are `brand` rather than `cta` precisely so a change here leaves them alone.
+ * still the site's own, on the parking card, and that one is `brand` rather
+ * than `cta` precisely so a change here leaves it alone.
  *
  * The label is white, by design decision. Worth knowing what that costs: white
  * on #ff4d00 measures 3.3:1, under the 4.5:1 WCAG AA asks for at this size,

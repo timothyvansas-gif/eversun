@@ -168,7 +168,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
-              <span className="shrink-0 whitespace-nowrap text-[13px] font-semibold leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
+              <span className="shrink-0 whitespace-nowrap text-[13px] font-normal leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
                 {data.tag}
               </span>
             )}
