@@ -273,7 +273,12 @@ export default function FotoBottomSheet({
     <AnimatePresence>
       {isOpen && (
         <>
-          <Backdrop onClick={handleClose} className="z-50" scrollLock />
+          {/* Zonder blur: dit paneel is ondoorzichtig en beslaat tot 95dvh, dus
+              van de blur zie je alleen een strook bovenaan. Wat hij wel deed was
+              per frame een render surface en een backdrop scope afdwingen onder
+              een scrollend paneel — 432 surfaces over 108 frames, tegen 216
+              zonder. */}
+          <Backdrop onClick={handleClose} className="z-50" blur={false} scrollLock />
 
           <div ref={sheetRef} tabIndex={-1} className="outline-none">
             <m.div

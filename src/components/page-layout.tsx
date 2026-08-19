@@ -126,8 +126,13 @@ export default function PageLayout({ footer }: { footer: React.ReactNode }) {
         data-lenis-prevent
         onClick={() => setIsMenuOpen(false)}
         aria-hidden={!isMenuOpen}
-        className={`fixed inset-0 z-20 cursor-pointer transition-opacity duration-300 ${
-          isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        // invisible, niet alleen opacity-0: op nul blijft dit een geschilderde
+        // laag, en BACKDROP_SCRIM zet er een backdrop-filter op. Die dwong dus
+        // op elke pagina, elk frame, een render surface en een blur-pass af
+        // voor een scrim die niemand ziet. visibility zit in de transition, dus
+        // hij klapt pas om als de fade klaar is en de fade-out blijft heel.
+        className={`fixed inset-0 z-20 cursor-pointer transition-[opacity,visibility] duration-300 ${
+          isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
         }`}
         style={BACKDROP_SCRIM}
       />

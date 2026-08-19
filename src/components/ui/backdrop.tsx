@@ -22,6 +22,7 @@ export function Backdrop({
   onClick,
   className = "",
   pin = "fixed",
+  blur = true,
   scrollLock = false,
   transition = { duration: 0.25 },
   opacity,
@@ -41,6 +42,17 @@ export function Backdrop({
    * A second full-page scrim there is a backdrop on a backdrop.
    */
   pin?: "fixed" | "absolute";
+  /**
+   * Of de scrim ook blurt. Standaard ja — dat is de gedeelde look.
+   *
+   * Zet uit waar een ondoorzichtig paneel de scrim vrijwel helemaal bedekt.
+   * Een backdrop-filter kost de compositor per frame een eigen render surface
+   * plus een backdrop scope; in een trace van de fotosheet was dat 3 van de 4
+   * surfaces per frame, voor een blur die alleen in een strook boven het paneel
+   * te zien is. Scrollende inhoud boven zo'n laag hoeft niet in hetzelfde frame
+   * te landen als de her-blur eronder.
+   */
+  blur?: boolean;
   /** Adds data-lenis-prevent so the smooth-scroll layer stays put underneath. */
   scrollLock?: boolean;
   transition?: Transition;
@@ -63,7 +75,10 @@ export function Backdrop({
       exit={{ opacity: 0 }}
       transition={transition}
       className={`${pin} inset-0 ${className}`}
-      style={opacity ? { ...BACKDROP_SCRIM, opacity } : BACKDROP_SCRIM}
+      style={(() => {
+        const scrim = blur ? BACKDROP_SCRIM : { backgroundColor: BACKDROP_SCRIM.backgroundColor };
+        return opacity ? { ...scrim, opacity } : scrim;
+      })()}
     />
   );
 }
