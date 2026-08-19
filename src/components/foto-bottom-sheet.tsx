@@ -19,6 +19,8 @@ import bankLiggendImg from "@/images/bank-liggend.webp";
 import ergolineNeonImg from "@/images/ergoline-neon.webp";
 import productenDisplayImg from "@/images/producten-display.webp";
 import candyTheeImg from "@/images/candy-thee.webp";
+import koffieImg from "@/images/koffie.webp";
+import balieBloemenImg from "@/images/balie-bloemen.webp";
 import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
@@ -34,7 +36,21 @@ import wastafelsImg from "@/images/wastafels.webp";
  * hard — a landscape shot in a single tile loses half its width, and a centred
  * crop lands wherever it lands. Leave it off and the crop stays centred.
  */
-type SheetPhoto = { src: StaticImageData; alt: string; focus?: string };
+type SheetPhoto = {
+  src: StaticImageData;
+  alt: string;
+  focus?: string;
+  /**
+   * Alleen op telefoons tonen, waar tegels in paren naast elkaar kunnen staan.
+   *
+   * Verbergen met een class is niet genoeg: een lazy `next/image` in een
+   * display:none-tegel wordt gewoon opgehaald, dus een telefoon zou betalen
+   * voor een tegel die niemand ziet. De tegel valt daarom helemaal uit de boom
+   * vanaf md. Veilig om de boom hierop te vertakken: de sheet rendert pas na
+   * `mounted`, dus er is geen servermarkup om het mee oneens te zijn.
+   */
+  mobileOnly?: boolean;
+};
 
 // Order is reading order, nothing else. arrangeForSlots fits this list to the
 // mosaic below, so adding, removing or reordering photos cannot put a portrait
@@ -105,6 +121,19 @@ export const sheetPhotos: SheetPhoto[] = [
     // met het bedieningspaneel eronder nog mee.
     focus: "center 20%",
   },
+  // Alleen op de telefoon, als paar onderaan. Allebei staand, dus in een halve
+  // tegel houden ze hun vorm; op desktop is er geen plek waar ze die vorm
+  // krijgen zonder de rijen overhoop te gooien.
+  {
+    src: koffieImg,
+    alt: "De koffiemachine van Douwe Egberts met het keuzescherm",
+    // De halve tegel toont 69% van de hoogte; gecentreerd begint die band op
+    // 15,5% en dan valt het rode DE-logo er net boven weg — dat zit in de
+    // bovenste paar procent. Vanaf de bovenrand staat het er wel op.
+    focus: "center top",
+    mobileOnly: true,
+  },
+  { src: balieBloemenImg, alt: "Verse bloemen en parfums op de balie", mobileOnly: true },
 ];
 
 // Column spans on the desktop grid: a wide one beside a single, a row of three
@@ -143,6 +172,7 @@ const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1];
 const MOBILE_PAIRS: readonly (readonly [number, number])[] = [
   [1, 2],
   [7, 8],
+  [14, 15],
 ];
 
 const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start && i <= end);
@@ -150,12 +180,40 @@ const isPaired = (i: number) => MOBILE_PAIRS.some(([start, end]) => i >= start &
 // Photos are written above in reading order and fitted to the pattern here, so
 // nobody has to count slots while adding one. A static import carries the
 // file's own width and height, which is all arrangeForSlots needs to keep a
-// portrait shot out of a wide tile. Every photo below is written into a slot
-// that already suits it, so this currently returns the list untouched.
-const arranged = arrangeForSlots(
-  sheetPhotos.map((photo) => ({ ...photo, width: photo.src.width, height: photo.src.height })),
+// portrait shot out of a wide tile.
+//
+// mobileOnly-foto's doen daar niet aan mee. Ze bestaan op desktop niet, dus ze
+// horen er ook geen slot te bezetten: deden ze dat wel, dan kon zo'n staande
+// foto op een brede slot vallen en ging de sorteerder de rest van de lijst
+// verschuiven om hem daar weg te houden — precies het paar dat op de telefoon
+// naast elkaar moest staan, uit elkaar getrokken.
+//
+// Ze houden dus hun geschreven plek, en de rest wordt eromheen op het patroon
+// gepast. `desktopSlot` telt daarbij alleen de foto's die desktop wél haalt, zo
+// schuift een mobileOnly-foto de spans van alles erachter niet op.
+const withShape = (photo: SheetPhoto) => ({
+  ...photo,
+  width: photo.src.width,
+  height: photo.src.height,
+});
+
+const fittedForDesktop = arrangeForSlots(
+  sheetPhotos.filter((photo) => !photo.mobileOnly).map(withShape),
   LG_SPANS,
 );
+
+const arranged = (() => {
+  let next = 0;
+  return sheetPhotos.map((photo) =>
+    photo.mobileOnly ? withShape(photo) : fittedForDesktop[next++]
+  );
+})();
+
+/** Index in het desktoprooster, of -1 voor een foto die daar niet bestaat. */
+const desktopSlot = (() => {
+  let next = 0;
+  return sheetPhotos.map((photo) => (photo.mobileOnly ? -1 : next++));
+})();
 
 export default function FotoBottomSheet({
   isOpen,
@@ -166,7 +224,10 @@ export default function FotoBottomSheet({
 }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
-  const [canDrag, setCanDrag] = useState(() =>
+  // Eén bron voor "dit is een telefoon": hij bepaalt of het paneel te slepen is
+  // en welke foto's er bestaan. mobileOnly-tegels mogen niet alleen verborgen
+  // worden, ze moeten uit de boom blijven.
+  const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.matchMedia(MOBILE_QUERY).matches : false
   );
 
@@ -178,7 +239,7 @@ export default function FotoBottomSheet({
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_QUERY);
-    const update = (e: MediaQueryListEvent) => setCanDrag(e.matches);
+    const update = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
@@ -223,7 +284,9 @@ export default function FotoBottomSheet({
   };
 
   const tiles = arranged.map((photo, i) => {
-    const wide = LG_SPANS[i % LG_SPANS.length] === 2;
+    if (photo.mobileOnly && !isMobile) return null;
+    const slot = desktopSlot[i];
+    const wide = slot >= 0 && LG_SPANS[slot % LG_SPANS.length] === 2;
     const paired = isPaired(i);
     return (
       <div
@@ -279,6 +342,10 @@ export default function FotoBottomSheet({
       </div>
     );
   });
+
+  // Wat er werkelijk te zien is, niet wat er in de lijst staat: mobileOnly-foto's
+  // bestaan vanaf md niet, en dan moet de kop ze ook niet meetellen.
+  const visibleCount = sheetPhotos.filter((photo) => isMobile || !photo.mobileOnly).length;
 
   // Pairs are wrapped, everything else goes in as its own cell. Walking the
   // list rather than slicing around fixed indices keeps this honest when a
@@ -338,7 +405,7 @@ export default function FotoBottomSheet({
               animate={{ y: 0 }}
               exit={{ y: "100%", transition: { duration: 0.28, ease: [0.36, 0, 0.66, 0] } }}
               transition={{ type: "spring", damping: 40, stiffness: 300 }}
-              drag={canDrag ? "y" : false}
+              drag={isMobile ? "y" : false}
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={{ top: 0, bottom: 0.5 }}
               onDragEnd={(_, info) => {
@@ -356,7 +423,7 @@ export default function FotoBottomSheet({
                       Binnenkijken bij Ever Sun
                     </h2>
                     <span className="font-sans text-[15px] text-zinc-600 tracking-[-0.01em] whitespace-nowrap">
-                      {`${sheetPhotos.length} foto's`}
+                      {`${visibleCount} foto's`}
                     </span>
                   </div>
                   <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-1">
