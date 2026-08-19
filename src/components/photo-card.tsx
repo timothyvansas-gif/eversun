@@ -2,8 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import imageBig from "@/images/image-big.webp";
-import imageRight from "@/images/image-right.webp";
+import imageBig from "@/images/links-home.webp";
 import moreIcon from "@/images/camera-03.svg";
 import FotoBottomSheet, { sheetPhotos } from "@/components/foto-bottom-sheet";
 import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
@@ -36,48 +35,35 @@ export default function PhotoCard() {
         onPointerEnter={preloadAll}
         onFocusCapture={preloadAll}
       >
-        {/* The three photo buttons below carry focus-ring-clipped: they run
-            edge to edge inside this rounded, clipping grid, so the site's
-            outward focus ring would be cut off. See globals.css. The "Meer"
-            pill sits 12px inside the clip and keeps the normal ring. */}
-        <div className="relative grid grid-cols-2 grid-rows-[134px_1fr] md:flex xl:flex gap-[1px] mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
+        {/* One photo, at every width. It used to be a three-tile mosaic — a wide
+            one over two halves on phones, a wide beside a single from md — and
+            the grid/flex pair of layouts existed only to arrange those. With a
+            single tile there is nothing left to arrange, so the container is a
+            plain box and the button simply fills it.
+
+            The photo button carries focus-ring-clipped: it runs edge to edge
+            inside this rounded, clipping box, so the site's outward focus ring
+            would be cut off. See globals.css. The "Meer" pill sits 12px inside
+            the clip and keeps the normal ring. */}
+        <div className="relative mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
           <button
-            className="focus-ring-clipped relative col-span-2 w-full h-full md:flex-[536] xl:flex-[536] cursor-pointer"
+            className="focus-ring-clipped relative block w-full h-full cursor-pointer"
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
             <Image
               src={imageBig}
-              alt="Sfeervol interieur van Ever Sun zonnestudio met houten tafel en witte stoelen"
+              alt="De balie van Ever Sun met verse bloemen, verzorgingsproducten en de lounge op de achtergrond"
               fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 536px"
-            />
-          </button>
-          <button
-            className="focus-ring-clipped relative w-full h-full md:block xl:block md:flex-[235] xl:flex-[235] cursor-pointer"
-            onClick={() => setSheetOpen(true)}
-            aria-label="Alle foto's bekijken"
-          >
-            <Image
-              src={imageRight}
-              alt="Interieur detail van de zonnestudio"
-              fill
-              className="object-cover"
-              sizes="235px"
-            />
-          </button>
-          <button
-            className="focus-ring-clipped relative w-full h-full md:hidden cursor-pointer"
-            onClick={() => setSheetOpen(true)}
-            aria-label="Alle foto's bekijken"
-          >
-            <Image
-              src={imageRight}
-              alt="Interieur detail"
-              fill
-              className="object-cover"
-              sizes="50vw"
+              // Phones see only the middle ~50% of this photo — the box is 1.27
+              // wide against the image's 2.53 — and the centre landed on the
+              // white shelf and the glass bowl, the coolest corner of the room.
+              // Shifting the window left to 28% brings the lit lounge into it
+              // and still keeps the vase and bottles at the right edge; 0% was
+              // too far and cut the bottles in half. Both sides are written as
+              // the same arbitrary property so the sm rule reliably wins.
+              className="object-cover [object-position:28%_50%] sm:[object-position:50%_50%]"
+              sizes="(max-width: 768px) 100vw, 772px"
             />
           </button>
           <button
@@ -85,15 +71,15 @@ export default function PhotoCard() {
             onClick={() => setSheetOpen(true)}
             aria-label="Alle foto's bekijken"
           >
-            Meer
-            <Image src={moreIcon} width={16} height={16} alt="Meer foto's bekijken" />
+            Meer foto&apos;s
+            <Image src={moreIcon} width={16} height={16} alt="" />
           </button>
         </div>
         <div className="flex items-end justify-between">
           <div>
             <h3 className="card-title text-zinc-900">Een warm welkom</h3>
             <p className="card-body text-zinc-500 mt-1">
-              De koffie en thee staan klaar: jouw moment van rust begint hier
+              Geen haast, geen verplichting: jouw moment van rust begint hier
             </p>
           </div>
           <button
