@@ -1,6 +1,9 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
+	// Not .open-next/worker.js directly: worker.mjs wraps it and puts the doctype
+	// back in front of every HTML response, which the adapter drops behind a
+	// script tag and so leaves every browser in quirks mode. See worker.mjs.
+	"main": "worker.mjs",
 	"name": "ever-sun",
 	"compatibility_date": "2026-08-08",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],

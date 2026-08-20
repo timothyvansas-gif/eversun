@@ -62,11 +62,14 @@ export const metadata: Metadata = {
   },
 };
 
+// No `viewportFit: "cover"`. Measured on the device, cover buys us nothing —
+// `env(safe-area-inset-top)` reads 0px with it and without it — while opting
+// the page into drawing under the notch. Without it Safari keeps the page
+// inside the safe area and tints the status bar itself, which is all we want.
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#0B0B0B",
-  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -88,6 +91,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
+        {/* Standalone (home-screen) mode only. `black-translucent` above puts the
+            status bar over the page there, and the inset is reported, so this
+            fills it. In a browser tab the inset is 0px — no `viewport-fit=cover`,
+            by the decision above — and Safari tints the bar with `theme-color`
+            instead, so this collapses to nothing and is not what keeps the bar
+            dark. It was mistaken for that for a long time; it never had height
+            on the phone. */}
         <div
           aria-hidden="true"
           style={{
