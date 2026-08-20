@@ -97,23 +97,37 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col font-sans relative" suppressHydrationWarning>
-        {/* Standalone (home-screen) mode only. `black-translucent` above puts the
-            status bar over the page there, and the inset is reported, so this
-            fills it. In a browser tab the inset is 0px — no `viewport-fit=cover`,
-            by the decision above — and Safari tints the bar with `theme-color`
-            instead, so this collapses to nothing and is not what keeps the bar
-            dark. It was mistaken for that for a long time; it never had height
-            on the phone. */}
+        {/* The band that keeps the iOS status bar dark, and it hangs entirely
+            ABOVE the origin every fixed element shares.
+
+            That origin is not the top of the screen. Measured on the device:
+            `innerHeight` 735 against `documentElement.clientHeight` 695, and a
+            `position: fixed` element at `top: 0` sits at the 695-box's top edge
+            — 40px down. The strip Safari hands to the page, and draws the page
+            into, is the 40px above that. Everything aimed at this for months
+            was pinned at `top: 0`, which is already below the problem, which is
+            why none of it ever covered anything.
+
+            `env(safe-area-inset-top)` cannot size this: it measures 0px on the
+            device in every state — quirks mode and standards mode, with
+            `viewport-fit=cover` and without. All four combinations were tried.
+
+            Sitting above the origin is what makes a fixed height safe. When
+            Safari has not opened that overhang the whole band is off-screen and
+            paints nothing; it can never cover page content, only the strip
+            Safari would otherwise show the page through. So the height only has
+            to be generous enough to cover the tallest overhang. */}
         <div
           aria-hidden="true"
           style={{
             position: "fixed",
-            top: 0,
+            top: -96,
             left: 0,
             right: 0,
-            height: "env(safe-area-inset-top)",
+            height: 96,
             background: "var(--color-void)",
             zIndex: 9999,
+            pointerEvents: "none",
           }}
         />
         <SmoothScroll>{children}</SmoothScroll>
