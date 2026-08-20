@@ -78,8 +78,11 @@ export function Backdrop({
       // at the top of the 695-tall box that fixed elements are laid out
       // against, while Safari draws the page into the ~40px above it — so the
       // scrim stopped short and left an undimmed strip with the page showing
-      // through. An absolute scrim belongs to one surface and keeps inset-0.
-      className={`${pin} ${pin === "fixed" ? "inset-x-0 bottom-0 -top-24" : "inset-0"} ${className}`}
+      // through. The overshoot is deliberately generous: a scroll lock pushes
+      // that origin down further still, and anything above it that is not
+      // needed simply hangs off-screen. An absolute scrim belongs to one
+      // surface and keeps inset-0.
+      className={`${pin} ${pin === "fixed" ? "inset-x-0 bottom-0 -top-60" : "inset-0"} ${className}`}
       style={(() => {
         const scrim = blur ? BACKDROP_SCRIM : { backgroundColor: BACKDROP_SCRIM.backgroundColor };
         return opacity ? { ...scrim, opacity } : scrim;

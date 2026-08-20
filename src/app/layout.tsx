@@ -115,16 +115,22 @@ export default function RootLayout({
             Sitting above the origin is what makes a fixed height safe. When
             Safari has not opened that overhang the whole band is off-screen and
             paints nothing; it can never cover page content, only the strip
-            Safari would otherwise show the page through. So the height only has
-            to be generous enough to cover the tallest overhang. */}
+            Safari would otherwise show the page through. Height above what is
+            needed costs nothing — it just hangs further off-screen — so this is
+            deliberately generous rather than measured.
+
+            96px was not: it cleared the overhang while scrolling but fell short
+            with a sheet open, where the scroll lock pushes the origin further
+            down still and the band landed below the status bar instead of over
+            it. Do not trim this back to something that only just fits. */}
         <div
           aria-hidden="true"
           style={{
             position: "fixed",
-            top: -96,
+            top: -240,
             left: 0,
             right: 0,
-            height: 96,
+            height: 240,
             background: "var(--color-void)",
             zIndex: 9999,
             pointerEvents: "none",
