@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, PT_Serif } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/smooth-scroll";
+import SafeAreaDebug from "@/components/safe-area-debug";
 import { SOCIAL_IMAGE, TWITTER_IMAGE } from "@/lib/social-metadata";
 import { buildSiteJsonLd } from "@/lib/structured-data";
 import { BASE_URL } from "@/lib/site";
@@ -62,14 +63,19 @@ export const metadata: Metadata = {
   },
 };
 
-// No `viewportFit: "cover"`. Measured on the device, cover buys us nothing —
-// `env(safe-area-inset-top)` reads 0px with it and without it — while opting
-// the page into drawing under the notch. Without it Safari keeps the page
-// inside the safe area and tints the status bar itself, which is all we want.
+// `viewportFit: "cover"` is what makes `env(safe-area-inset-top)` report a real
+// number, and the strip below is sized on it. The two only work as a pair.
+//
+// Cover was briefly removed on the grounds that it measured 0px with and
+// without — but that measurement was taken while the site was still served in
+// quirks mode, where WebKit hands out no insets at all, so it could not have
+// told the two apart. Do not repeat that test without checking
+// `document.compatMode` first.
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#0B0B0B",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -111,6 +117,8 @@ export default function RootLayout({
           }}
         />
         <SmoothScroll>{children}</SmoothScroll>
+        {/* Tijdelijk, alleen op ?debug=safearea. */}
+        <SafeAreaDebug />
       </body>
     </html>
   );
