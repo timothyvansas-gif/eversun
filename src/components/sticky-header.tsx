@@ -9,6 +9,20 @@ import { TAP_TARGET } from "@/lib/button-styles";
 import HamburgerIcon from "@/components/hamburger-icon";
 import { scrollToTop } from "@/lib/scroll-to-top";
 
+/**
+ * How far down the bar arrives. Was 550, which kept it away until well past the
+ * hero; 80 is just past the point where the hero's own logo has scrolled out,
+ * so the two are never on screen together (that logo sits about 56px down: a
+ * 1.5rem top padding plus its own 32px).
+ *
+ * Earlier also means the bar — fixed, top-0, bg-void — reaches the top of the
+ * screen sooner, and on iOS that is what keeps the status bar dark while
+ * Safari's toolbar is collapsed. That is a side effect worth knowing about, not
+ * the reason it lives here: it narrows the window where the hero photo shows
+ * through the status bar, it does not close it.
+ */
+const REVEAL_AT = 80;
+
 export default function StickyHeader({
   onOpenMenu,
   isMenuOpen,
@@ -25,7 +39,7 @@ export default function StickyHeader({
 
   useEffect(() => {
     const onScroll = () => {
-      setIsVisible(window.scrollY > 550);
+      setIsVisible(window.scrollY > REVEAL_AT);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -80,11 +94,13 @@ export default function StickyHeader({
         transitionDuration: `${MENU_DURATION * 1000}ms, 800ms`,
         transitionTimingFunction: `cubic-bezier(${MENU_EASE.join(", ")}), cubic-bezier(0.16, 1, 0.3, 1)`,
       }}
-      className={`fixed top-0 left-0 right-0 z-50 bg-void backdrop-blur-sm h-14 flex items-center lg:hidden ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-status-bar backdrop-blur-sm h-12 flex items-center lg:hidden ${
         isShown ? "" : "pointer-events-none"
       }`}
     >
       <div className="w-full flex items-center justify-between px-6">
+        {/* 48px, not 56: lighter over the page, and still roomy enough for the
+            44px tap targets its two controls carry. */}
         <button
           onClick={scrollToTop}
           aria-label="Naar begin van de pagina"

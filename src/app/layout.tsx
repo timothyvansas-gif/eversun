@@ -69,6 +69,10 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  // Blijft de ontworpen chrome-kleur. Safari schildert hem niet één op één —
+  // iOS 26 legt er een waas over, waardoor de balk als #020202 uitmeet — dus de
+  // sticky header eronder draagt die uitkomst als --color-status-bar. Verander
+  // deze waarde niet zonder die mee te nemen; dan valt de naad terug.
   themeColor: "#0B0B0B",
 };
 
