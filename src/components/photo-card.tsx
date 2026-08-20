@@ -40,7 +40,7 @@ const MOBILE_CROP = [
   "[object-position:28%_50%]",
   "[object-position:25%_50%]",
   "[object-position:50%_50%]",
-  "[object-position:50%_50%]",
+  "[object-position:10%_50%]",
 ];
 
 // Desktop (sm+) crop per slide — plain center except where tuned. The sm:
