@@ -68,6 +68,7 @@ export default function PhotoCard() {
   const photoBoxRef = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const nextIndex = (active + 1) % PHOTOS.length;
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -181,6 +182,24 @@ export default function PhotoCard() {
               </m.div>
             </AnimatePresence>
           </button>
+
+          {/* Silent fetch for the slide that's coming up next: same fill +
+              sizes + quality as the real render above, so it resolves to the
+              exact same optimizer URL and is already cached by the time
+              AnimatePresence mounts it for real. loading="eager" (not
+              priority) — it should fetch now without claiming to be the
+              page's LCP image or emitting a <link rel=preload>. */}
+          <Image
+            key={`preload-${nextIndex}`}
+            src={PHOTOS[nextIndex].src}
+            alt=""
+            aria-hidden="true"
+            fill
+            loading="eager"
+            sizes="(max-width: 768px) 100vw, 772px"
+            quality={90}
+            className="hidden"
+          />
           <button
             className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full text-ink-primary bg-white px-[14px] py-1.5"
             onClick={() => setSheetOpen(true)}

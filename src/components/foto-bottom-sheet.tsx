@@ -339,13 +339,13 @@ export default function FotoBottomSheet({
           alt={photo.alt}
           fill
           placeholder="blur"
-          // 80 in plaats van de standaard 75, en dat is hier geen smaakkwestie.
+          // 90 in plaats van de standaard 75, en dat is hier geen smaakkwestie.
           // De optimizer zet op zijn antwoorden max-age=315360000, immutable:
           // een browser die een van deze tegels al in AVIF heeft opgehaald,
           // vraagt die URL nooit meer opnieuw op. Alleen een andere URL bereikt
           // wie de sheet al eens open had, en q is de enige parameter die we in
           // de hand hebben — het bestand zelf heeft dezelfde inhoudshash.
-          quality={80}
+          quality={90}
           className="object-cover rounded-[12px]"
           style={photo.focus ? { objectPosition: photo.focus } : undefined}
           // Pixels, niet vw, zodra het rooster niet meer meegroeit. De grid zit
