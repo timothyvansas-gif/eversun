@@ -40,13 +40,6 @@
   /* Page/chrome black — #0B0B0B, not pure #000000, so dark surfaces (sticky
      header, menus, footer, hero fallback) keep a hint of lift. */
   --color-void: var(--color-ink-primary);
-  /* Wat Safari van `theme-color` maakt in de iOS-statusbalk, niet wat wij hem
-     meegeven. Met #0B0B0B in de meta meet die balk #020202: iOS 26 legt er een
-     waas overheen voor de leesbaarheid van de klok. De sticky header raakt die
-     balk met zijn bovenrand, dus als die `void` draagt zie je daar een naad.
-     Alleen voor chrome dat de statusbalk aanraakt — de rest van de donkere
-     vlakken blijft `void`, dat scheelt puur zwart en houdt zijn lift. */
-  --color-status-bar: #020202;
   --color-on-dark-secondary: #808080;
   --color-on-dark-muted: #888888;
   --color-danger: #a6371a;
@@ -59,6 +52,22 @@
   /* PT Serif, loaded as --font-serif in layout.tsx. `font-display` is the only
      utility components should use for it; there is no second alias any more. */
   --font-display: var(--font-serif);
+}
+
+/* Wat Safari van `theme-color` maakt in de iOS-statusbalk, niet wat wij hem
+   meegeven. Met #0B0B0B in de meta meet die balk #020202: iOS 26 legt er een
+   waas overheen voor de leesbaarheid van de klok. De sticky header raakt die
+   balk met zijn bovenrand, dus met `void` staat daar een zichtbare naad.
+   Alleen voor chrome dat de statusbalk aanraakt — de rest van de donkere
+   vlakken blijft `void`, dat scheelt puur zwart en houdt zijn lift.
+
+   Bewust een gewone declaratie en geen @theme-token: een nieuw token in @theme
+   wordt pas uitgestuurd als Tailwind een utility ziet die het gebruikt, en
+   Turbopack laat het in dev bij een herbouw vallen. De variabele is dan
+   ongedefinieerd, de achtergrond transparant, en de balk staat opeens zonder
+   kleur. Zo staat hij er altijd. */
+:root {
+  --color-status-bar: #020202;
 }
 
 html {

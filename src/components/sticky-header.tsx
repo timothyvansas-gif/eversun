@@ -21,6 +21,37 @@ import { scrollToTop } from "@/lib/scroll-to-top";
  * the reason it lives here: it narrows the window where the hero photo shows
  * through the status bar, it does not close it.
  */
+/**
+ * The mark, smaller than the wordmark it sits next to — in this bar only. Every
+ * other Logo keeps its defaults, so nothing else moves.
+ *
+ * `iconScale` scales the mark around its own centre, which pulls its right edge
+ * inward and would leave a wider gap before "EVER SUN". `textOffsetX` takes that
+ * exact amount back off the wordmark, so the gap reads the same as everywhere
+ * else. The two belong together: change one and the other has to follow.
+ */
+const ICON_SCALE = 0.85;
+
+/** The mark's outer circle in viewBox units (`r` on the outermost circle), which
+ *  is what its edge moves by per unit of scale. */
+const ICON_RADIUS = 25.7132;
+
+/** Rendered height of the logo, matching the `h-8` it carries. */
+const LOGO_HEIGHT = 32;
+
+/**
+ * How far the mark's own left edge sits inside the SVG box, in rendered pixels.
+ *
+ * The viewBox is a fixed 192x52 and the mark scales inside it, so shrinking the
+ * mark leaves that much empty box to its left — and the logo would optically sit
+ * further from the screen edge than the hamburger does from its own, while both
+ * are nominally on the same 24px padding. Pulled back off as a negative margin,
+ * both edges land on 24px, level with the hero's buttons.
+ *
+ * Derived rather than typed in, so changing ICON_SCALE keeps the alignment.
+ */
+const MARK_INSET = (26 - ICON_RADIUS * ICON_SCALE) * (LOGO_HEIGHT / 52);
+
 const REVEAL_AT = 80;
 
 export default function StickyHeader({
@@ -94,7 +125,7 @@ export default function StickyHeader({
         transitionDuration: `${MENU_DURATION * 1000}ms, 800ms`,
         transitionTimingFunction: `cubic-bezier(${MENU_EASE.join(", ")}), cubic-bezier(0.16, 1, 0.3, 1)`,
       }}
-      className={`fixed top-0 left-0 right-0 z-50 bg-status-bar backdrop-blur-sm h-12 flex items-center lg:hidden ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-[var(--color-status-bar)] backdrop-blur-sm h-12 flex items-center lg:hidden ${
         isShown ? "" : "pointer-events-none"
       }`}
     >
@@ -104,12 +135,15 @@ export default function StickyHeader({
         <button
           onClick={scrollToTop}
           aria-label="Naar begin van de pagina"
+          style={{ marginLeft: -MARK_INSET }}
           className={`inline-flex items-center ${TAP_TARGET} cursor-pointer active:scale-95 transition-transform duration-200`}
         >
           <Logo
             className="h-8 w-auto"
             textColor="var(--color-nav-ink)"
             iconColor="var(--color-nav-ink)"
+            iconScale={ICON_SCALE}
+            textOffsetX={-ICON_RADIUS * (1 - ICON_SCALE)}
           />
         </button>
 
@@ -118,7 +152,9 @@ export default function StickyHeader({
           aria-label={isMenuOpen ? "Menu sluiten" : "Menu openen"}
           aria-expanded={isMenuOpen}
           aria-controls={MOBILE_MENU_ID}
-          className={`flex flex-col items-end gap-[5px] p-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200`}
+          // -mr-2 cancels this button's own p-2 for layout only: the bars land on
+          // the row's 24px padding while the 44px tap target stays intact.
+          className={`flex flex-col items-end gap-[5px] p-2 -mr-2 ${TAP_TARGET} cursor-pointer active:scale-90 transition-transform duration-200`}
         >
           <HamburgerIcon colorClassName="bg-nav-ink" />
         </button>
