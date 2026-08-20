@@ -6,8 +6,8 @@ import { m, AnimatePresence, useMotionValue, animate, useInView } from "framer-m
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import imageBig from "@/images/links-home.webp";
 import wastafelsImg from "@/images/wastafels.webp";
-import deurenImg from "@/images/deuren.webp";
-import balieAchterImg from "@/images/balie-achter.webp";
+import cabinesMuurWitImg from "@/images/cabines-muur-wit.webp";
+import sachetsImg from "@/images/sachets.webp";
 import FotoBottomSheet from "@/components/foto-bottom-sheet";
 
 /**
@@ -30,8 +30,8 @@ import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 const PHOTOS = [
   { src: imageBig, alt: "De balie van Ever Sun met verse bloemen, verzorgingsproducten en de lounge op de achtergrond" },
   { src: wastafelsImg, alt: "De wastafels van Ever Sun" },
-  { src: deurenImg, alt: "De deuren van Ever Sun" },
-  { src: balieAchterImg, alt: "De balie van Ever Sun, gezien vanaf de achterkant" },
+  { src: sachetsImg, alt: "Sachets in de studio van Ever Sun" },
+  { src: cabinesMuurWitImg, alt: "De gang langs de cabines van Ever Sun" },
 ];
 
 // Per-slide mobile-only object-position: the box is narrower than these
@@ -39,8 +39,8 @@ const PHOTOS = [
 const MOBILE_CROP = [
   "[object-position:28%_50%]",
   "[object-position:25%_50%]",
-  "[object-position:85%_50%]",
-  "[object-position:40%_50%]",
+  "[object-position:50%_50%]",
+  "[object-position:50%_50%]",
 ];
 
 // Desktop (sm+) crop per slide — plain center except where tuned. The sm:
@@ -52,7 +52,7 @@ const DESKTOP_CROP = [
   "sm:[object-position:50%_50%]",
   "sm:[object-position:50%_50%]",
   "sm:[object-position:50%_50%]",
-  "sm:[object-position:50%_10%]",
+  "sm:[object-position:50%_50%]",
 ];
 
 const SLIDE_DURATION = 3.3;

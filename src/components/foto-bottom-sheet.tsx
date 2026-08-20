@@ -14,7 +14,7 @@ import bankRoodImg from "@/images/bank-rood.webp";
 import stoelHoekImg from "@/images/stoel-hoek.webp";
 import liggendImg from "@/images/liggend.webp";
 import blueImg from "@/images/blue.webp";
-import deurenImg from "@/images/deuren.webp";
+import cabinesMuurWitImg from "@/images/cabines-muur-wit.webp";
 import bankLiggendImg from "@/images/bank-liggend.webp";
 import ergolineNeonImg from "@/images/ergoline-neon.webp";
 import productenDisplayImg from "@/images/producten-display.webp";
@@ -114,9 +114,9 @@ export const sheetPhotos: SheetPhoto[] = [
   // mobiel is de tegel 16/9 en zie je hem alsnog liggend.
   { src: tafelImg, alt: "De leestafel van massief hout met tijdschriften" },
   // Dezelfde rij nog een keer, met de gang op de brede tegel in plaats van de
-  // leestafel. Op 2,02 is dit de breedste foto van de set, dus de brede tegel
+  // leestafel. Op 2,11 is dit de breedste foto van de set, dus de brede tegel
   // kost hem alleen wat aan de zijkanten.
-  { src: deurenImg, alt: "De gang langs de cabines, met open deuren en gekleurd licht" },
+  { src: cabinesMuurWitImg, alt: "De gang langs de cabines, met open deuren en gekleurd licht" },
   // Sluit de sheet af op de laatste staande tegel. Staand van zichzelf, dus op
   // desktop past hij bijna zonder uitsnede; op mobiel is de tegel 16/9 en wordt
   // het een band over het midden.
