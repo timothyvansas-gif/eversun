@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { m, AnimatePresence, useMotionValue, animate, useInView } from "framer-motion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import imageBig from "@/images/links-home.webp";
+import wastafelsImg from "@/images/wastafels.webp";
+import deurenImg from "@/images/deuren.webp";
+import balieAchterImg from "@/images/balie-achter.webp";
 import FotoBottomSheet from "@/components/foto-bottom-sheet";
 
 /**
@@ -22,8 +27,105 @@ function CameraIcon({ size }: { size: number }) {
 
 import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
+const PHOTOS = [
+  { src: imageBig, alt: "De balie van Ever Sun met verse bloemen, verzorgingsproducten en de lounge op de achtergrond" },
+  { src: wastafelsImg, alt: "De wastafels van Ever Sun" },
+  { src: deurenImg, alt: "De deuren van Ever Sun" },
+  { src: balieAchterImg, alt: "De balie van Ever Sun, gezien vanaf de achterkant" },
+];
+
+// Per-slide mobile-only object-position: the box is narrower than these
+// photos, so each one needs its own tuned crop on small screens.
+const MOBILE_CROP = [
+  "[object-position:28%_50%]",
+  "[object-position:25%_50%]",
+  "[object-position:85%_50%]",
+  "[object-position:40%_50%]",
+];
+
+// Desktop (sm+) crop per slide — plain center except where tuned. The sm:
+// prefix lives inside each string: Tailwind's static scanner needs the full
+// class token (variant included) as one literal substring in this file, so
+// building it by concatenating "sm:" with the value at runtime wouldn't
+// generate the CSS.
+const DESKTOP_CROP = [
+  "sm:[object-position:50%_50%]",
+  "sm:[object-position:50%_50%]",
+  "sm:[object-position:50%_50%]",
+  "sm:[object-position:50%_10%]",
+];
+
+const SLIDE_DURATION = 3.3;
+const PILL_W = 56;
+const DOT_W = 8;
+const DOT_H = 8;
+const SWIPE_THRESHOLD = 40;
+
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const progress = useMotionValue(0);
+  const photoBoxRef = useRef<HTMLDivElement>(null);
+  const [started, setStarted] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  // amount: 0 — starts the moment the box is even a pixel into the
+  // viewport, not after some fraction of it has scrolled in.
+  const isInView = useInView(photoBoxRef, { once: false, amount: 0 });
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStarted(isInView);
+  }, [isInView]);
+
+  useEffect(() => {
+    // Same rationale as the advies-card slideshow: freeze under reduced
+    // motion instead of auto-advancing, and only run once the card is
+    // actually in view.
+    if (shouldReduceMotion) {
+      progress.set(1);
+      return;
+    }
+
+    if (!started) return;
+
+    progress.set(0);
+    const ctrl = animate(progress, 1, {
+      duration: SLIDE_DURATION,
+      ease: "linear",
+      onComplete: () => setActive((p) => (p + 1) % PHOTOS.length),
+    });
+    return () => ctrl.stop();
+  }, [active, progress, started, shouldReduceMotion]);
+
+  const touchStartXRef = useRef<number | null>(null);
+  const swipedRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const startX = touchStartXRef.current;
+    touchStartXRef.current = null;
+    if (startX === null) return;
+
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+
+    swipedRef.current = true;
+    setActive((p) => (dx < 0 ? (p + 1) % PHOTOS.length : (p - 1 + PHOTOS.length) % PHOTOS.length));
+  };
+
+  const handlePhotoClick = () => {
+    // A swipe fires a click on release too; skip opening the sheet for that
+    // one tap so a swipe doesn't also pop it open.
+    if (swipedRef.current) {
+      swipedRef.current = false;
+      return;
+    }
+    setSheetOpen(true);
+  };
 
   return (
     <>
@@ -41,26 +143,43 @@ export default function PhotoCard() {
             inside this rounded, clipping box, so the site's outward focus ring
             would be cut off. See globals.css. The "Meer" pill sits 12px inside
             the clip and keeps the normal ring. */}
-        <div className="relative mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
+        <div ref={photoBoxRef} className="relative mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
           <button
-            className="focus-ring-clipped relative block w-full h-full cursor-pointer"
-            onClick={() => setSheetOpen(true)}
+            className="focus-ring-clipped relative block w-full h-full cursor-pointer touch-pan-y"
+            onClick={handlePhotoClick}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             aria-label="Alle foto's bekijken"
           >
-            <Image
-              src={imageBig}
-              alt="De balie van Ever Sun met verse bloemen, verzorgingsproducten en de lounge op de achtergrond"
-              fill
-              // Phones see only the middle ~50% of this photo — the box is 1.27
-              // wide against the image's 2.53 — and the centre landed on the
-              // white shelf and the glass bowl, the coolest corner of the room.
-              // Shifting the window left to 28% brings the lit lounge into it
-              // and still keeps the vase and bottles at the right edge; 0% was
-              // too far and cut the bottles in half. Both sides are written as
-              // the same arbitrary property so the sm rule reliably wins.
-              className="object-cover [object-position:28%_50%] sm:[object-position:50%_50%]"
-              sizes="(max-width: 768px) 100vw, 772px"
-            />
+            <AnimatePresence initial={false}>
+              <m.div
+                key={active}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Image
+                  src={PHOTOS[active].src}
+                  alt={PHOTOS[active].alt}
+                  fill
+                  // Phones see only the middle ~50% of this photo — the box is 1.27
+                  // wide against the image's 2.53 — and the centre landed on the
+                  // white shelf and the glass bowl, the coolest corner of the room.
+                  // Shifting the window left to 28% brings the lit lounge into it
+                  // and still keeps the vase and bottles at the right edge; 0% was
+                  // too far and cut the bottles in half. Both sides are written as
+                  // the same arbitrary property so the sm rule reliably wins.
+                  // Each slide gets its own crop below and above the sm
+                  // breakpoint — the two boxes have different proportions,
+                  // so a shift tuned for one axis doesn't carry to the other.
+                  className={`object-cover ${MOBILE_CROP[active]} ${DESKTOP_CROP[active]}`}
+                  sizes="(max-width: 768px) 100vw, 772px"
+                  quality={90}
+                />
+              </m.div>
+            </AnimatePresence>
           </button>
           <button
             className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full text-ink-primary bg-white px-[14px] py-1.5"
@@ -70,6 +189,33 @@ export default function PhotoCard() {
             Alle foto&apos;s
             <CameraIcon size={16} />
           </button>
+
+          {/* Carousel progress: the active slot is a pill that fills left to
+              right over SLIDE_DURATION; the other two are empty ovals. When
+              it completes, that pill shrinks to an oval and the next slot
+              grows into the filling pill — the role moves, the slots don't. */}
+          <div
+            className="absolute bottom-3 left-3 z-10 h-8 flex items-center gap-1.5 pointer-events-none"
+            aria-hidden="true"
+          >
+            {PHOTOS.map((_, i) => {
+              const isActive = i === active;
+              return (
+                <m.div
+                  key={i}
+                  className="relative overflow-hidden rounded-full"
+                  style={{ height: DOT_H, border: "1px solid white" }}
+                  animate={{ width: isActive ? PILL_W : DOT_W }}
+                  transition={{ type: "spring", stiffness: 280, damping: 28 }}
+                >
+                  <m.div
+                    className="absolute inset-0 rounded-full bg-white"
+                    style={{ scaleX: isActive ? progress : 0, transformOrigin: "left" }}
+                  />
+                </m.div>
+              );
+            })}
+          </div>
         </div>
         <div className="flex items-end justify-between">
           <div>
