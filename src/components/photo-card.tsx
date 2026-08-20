@@ -214,7 +214,7 @@ export default function PhotoCard() {
               it completes, that pill shrinks to an oval and the next slot
               grows into the filling pill — the role moves, the slots don't. */}
           <div
-            className="absolute bottom-3 left-3 z-10 h-8 flex items-center gap-1.5 pointer-events-none"
+            className="absolute bottom-3 left-3 md:left-6 z-10 h-8 flex items-center gap-1.5 pointer-events-none"
             aria-hidden="true"
           >
             {PHOTOS.map((_, i) => {
