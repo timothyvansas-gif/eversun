@@ -123,10 +123,8 @@ export const sheetPhotos: SheetPhoto[] = [
   {
     src: ergolineNeonImg,
     alt: "Het Ergoline-logo in roze neon boven de zonnebank",
-    // Op mobiel overleeft maar 42% van de hoogte. Het logo zit nu op 17 tot
-    // 53%, het bedieningspaneel op 57 tot 65% — beide vallen binnen een band
-    // gecentreerd op 41%.
-    focus: "center 41%",
+    // Op mobiel overleeft maar 42% van de hoogte.
+    focus: "center 25%",
   },
   // Opent een nieuwe rij op de brede tegel. De smalle plek ernaast blijft
   // voorlopig leeg: daar komt nog een staande foto. Zolang die er niet is, is
