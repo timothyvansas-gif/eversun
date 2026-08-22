@@ -196,7 +196,7 @@ function ProductCardItem({ product }: { product: Product }) {
           style={{ background: PRODUCT_BACKDROP }}
         >
           <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
-          <div className="product-price-labels absolute bottom-6 left-6 flex gap-[4px]">
+          <div className="product-price-labels absolute bottom-9 left-6 flex gap-[4px]">
             {product.sachetPrice && (
               <span className="text-[15px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-[#FDC43F] text-ink-primary">Sachet {product.sachetPrice}</span>
             )}

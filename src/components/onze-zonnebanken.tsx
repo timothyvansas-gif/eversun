@@ -74,11 +74,11 @@ function AfspraakButton({
             <CtaLabel hold className="max-lg:hidden!">Plan je moment</CtaLabel>
           </button>
           <p className="text-center font-sans text-[15px] text-zinc-600 lg:hidden">
-            De juiste bank voor jou?{" "}
+            De juiste bank voor mij?{" "}
             <button
               type="button"
               onClick={() => setHuidtestOpen(true)}
-              className="cursor-pointer underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
+              className="cursor-pointer underline decoration-zinc-300 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
             >
               Doe de huidtest
             </button>

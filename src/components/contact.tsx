@@ -44,7 +44,7 @@ function DetailBlock({
 }
 
 const DETAIL_LINK =
-  "text-zinc-600 underline decoration-zinc-400 decoration-1 underline-offset-6 hover:text-zinc-900 hover:decoration-ink-strong transition-colors duration-150";
+  "text-zinc-600 underline decoration-zinc-300 decoration-1 underline-offset-6 hover:text-zinc-900 hover:decoration-ink-strong transition-colors duration-150";
 
 function ContactDetails() {
   // Two columns at every width. Stacked, the four blocks run well past the
@@ -206,7 +206,7 @@ function SuccessPanel({ onReset }: { onReset: () => void }) {
       <button
         type="button"
         onClick={onReset}
-        className="mt-6 cursor-pointer font-sans text-[15px] text-ink-strong underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
+        className="mt-6 cursor-pointer font-sans text-[15px] text-ink-strong underline decoration-zinc-300 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
       >
         Nog een bericht sturen
       </button>
