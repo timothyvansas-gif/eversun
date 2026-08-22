@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
   BTN_CTA_HEIGHT,
   BTN_PILL_CTA,
+  BTN_PILL_LIGHT_OUTLINE,
 } from "@/lib/button-styles";
-import { CtaLabel } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
 import PlanJeMomentSheet from "@/components/hero/plan-je-moment-sheet";
+import { CtaLabel } from "@/components/ui/cta-arrow";
 import ZonnebankMedia from "@/components/zonnebank-media";
 import { ZONNEBANKEN, type Zonnebank } from "@/data/zonnebanken-data";
 import { useAppointmentLauncher } from "@/hooks/use-appointment-launcher";
@@ -16,10 +19,28 @@ import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
+const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-overlay"));
+
+function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
+  return (
+    <div className="flex items-center gap-3 text-zinc-600 font-sans">
+      <div className="flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+          <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{minuten}</span>
+      </div>
+      <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{prijs}</span>
+    </div>
+  );
+}
+
 function AfspraakButton({
   whatsappUrl,
   qrCode,
   title,
+  slug,
   minuten,
   prijs,
   className = "mt-3 md:mt-auto",
@@ -27,27 +48,48 @@ function AfspraakButton({
   whatsappUrl: string;
   qrCode: StaticImageData;
   title: string;
+  slug: Zonnebank["slug"];
   minuten: string;
   prijs: string;
   className?: string;
 }) {
   const appointment = useAppointmentLauncher();
+  const [huidtestOpen, setHuidtestOpen] = useState(false);
 
   return (
     <>
       <div className={className}>
-        <div className="flex">
+        <div className="flex w-full flex-col gap-4 lg:flex-row lg:gap-2">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[300px] lg:w-auto lg:!px-6`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !px-6 lg:w-auto lg:min-w-[180px] xl:min-w-[190px]`}
           >
-            <CtaLabel hold className="gap-1.5">
+            <span className="inline-flex items-center gap-1.5 lg:hidden">
               Plan je moment
               <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white font-sans tracking-[-0.01em] whitespace-nowrap">
                 <span aria-hidden="true">–</span>
                 <span>{minuten} · {prijs}</span>
               </span>
-            </CtaLabel>
+            </span>
+            <CtaLabel hold className="max-lg:hidden!">Plan je moment</CtaLabel>
+          </button>
+          <p className="text-center font-sans text-[15px] text-zinc-600 lg:hidden">
+            De juiste bank voor jou?{" "}
+            <button
+              type="button"
+              onClick={() => setHuidtestOpen(true)}
+              className="cursor-pointer underline decoration-zinc-400 decoration-1 underline-offset-6 transition-colors duration-150 hover:decoration-ink-strong"
+            >
+              Doe de huidtest
+            </button>
+            .
+          </p>
+          <button
+            type="button"
+            onClick={() => setHuidtestOpen(true)}
+            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! hover:border-line! max-lg:hidden! lg:w-auto lg:!px-5 xl:min-w-[190px]`}
+          >
+            <CtaLabel hold>Doe de huidtest</CtaLabel>
           </button>
         </div>
       </div>
@@ -68,6 +110,12 @@ function AfspraakButton({
             Voor de {title} kun je ons appen of bellen. Dan plannen we een moment dat jou uitkomt.
           </>
         }
+      />
+      <HuidtestOverlay
+        isOpen={huidtestOpen}
+        onClose={() => setHuidtestOpen(false)}
+        entry="zonnebank_kaart"
+        bekekenBank={slug}
       />
     </>
   );
@@ -148,6 +196,9 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               </span>
             )}
           </div>
+          <div className="mt-2 hidden lg:block">
+            <SessionDetails minuten={data.minuten} prijs={data.prijs} />
+          </div>
           <div className="mt-[10px] flex flex-col gap-3 md:mt-[14px] md:gap-4 lg:mt-[10px]">
             {data.description.map((paragraph) => (
               <p key={paragraph} className="text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
@@ -169,6 +220,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             whatsappUrl={data.whatsappUrl}
             qrCode={data.qrCode}
             title={data.title}
+            slug={data.slug}
             minuten={data.minuten}
             prijs={data.prijs}
             className="mt-[22px] md:mt-[14px] lg:mt-[30px]"

@@ -101,7 +101,7 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-3 lg:right-3 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
