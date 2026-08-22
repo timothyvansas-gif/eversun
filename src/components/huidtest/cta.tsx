@@ -1,6 +1,5 @@
 "use client";
 
-import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
 import { CtaLabel } from "@/components/ui/cta-arrow";
 
 /**
@@ -27,8 +26,10 @@ const VARIANTS = {
   accent: "bg-cta text-white",
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
-  // transition below carries border-color.
-  outline: BTN_OUTLINE_BORDER,
+  // transition below carries border-color. Same border colour as the
+  // outlined CTA on the zonnebank cards (border-line), not the darker
+  // ink-primary edge BTN_OUTLINE_BORDER uses elsewhere.
+  outline: "border border-line/30 text-zinc-600 hover:border-line hover:text-zinc-900",
 } as const;
 
 // Opacity is on this list because the way on spends most of its life waiting.
