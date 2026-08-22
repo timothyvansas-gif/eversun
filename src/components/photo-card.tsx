@@ -7,7 +7,6 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import imageBig from "@/images/links-home.webp";
 import wastafelsImg from "@/images/wastafels.webp";
 import cabinesMuurWitImg from "@/images/cabines-muur-wit.webp";
-import sachetsImg from "@/images/sachets.webp";
 import FotoBottomSheet from "@/components/foto-bottom-sheet";
 
 /**
@@ -30,7 +29,6 @@ import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 const PHOTOS = [
   { src: imageBig, alt: "De balie van Ever Sun met verse bloemen, verzorgingsproducten en de lounge op de achtergrond" },
   { src: wastafelsImg, alt: "De wastafels van Ever Sun" },
-  { src: sachetsImg, alt: "Sachets in de studio van Ever Sun" },
   { src: cabinesMuurWitImg, alt: "De gang langs de cabines van Ever Sun" },
 ];
 
@@ -38,8 +36,10 @@ const PHOTOS = [
 // photos, so each one needs its own tuned crop on small screens.
 const MOBILE_CROP = [
   "[object-position:28%_50%]",
-  "[object-position:25%_50%]",
-  "[object-position:50%_50%]",
+  // Was 25%. Box shows ~76% of this photo's width regardless of X (the
+  // other ~24% stays hidden) — 45% shifts that window right, trading dead
+  // wall on the right for a touch more crop on the candles' side.
+  "[object-position:45%_50%]",
   "[object-position:10%_50%]",
 ];
 
@@ -50,8 +50,11 @@ const MOBILE_CROP = [
 // generate the CSS.
 const DESKTOP_CROP = [
   "sm:[object-position:50%_50%]",
-  "sm:[object-position:50%_50%]",
-  "sm:[object-position:50%_50%]",
+  // From sm up this box is wider than the photo, so only the vertical axis
+  // crops (~152px of slack at the xl size). Centered took ~76px off top and
+  // bottom evenly; 80% takes ~121px off the top instead, shifting the
+  // visible window down toward the sinks and countertop.
+  "sm:[object-position:50%_80%]",
   "sm:[object-position:50%_50%]",
 ];
 
