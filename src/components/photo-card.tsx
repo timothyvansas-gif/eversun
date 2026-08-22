@@ -55,7 +55,7 @@ const DESKTOP_CROP = [
   "sm:[object-position:50%_50%]",
 ];
 
-const SLIDE_DURATION = 3.3;
+const SLIDE_DURATION = 4.5;
 const PILL_W = 56;
 const DOT_W = 8;
 const DOT_H = 8;
