@@ -4,7 +4,7 @@ import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
   BTN_CTA_HEIGHT,
-  BTN_PILL_LIGHT_OUTLINE,
+  BTN_PILL_CTA,
 } from "@/lib/button-styles";
 import { CtaLabel } from "@/components/ui/cta-arrow";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
@@ -39,11 +39,11 @@ function AfspraakButton({
         <div className="flex">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 hover:border-ink-primary lg:min-w-[300px] lg:w-auto lg:!px-6`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[300px] lg:w-auto lg:!px-6`}
           >
             <CtaLabel hold className="gap-1.5">
               Plan je moment
-              <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-ink-primary/70 font-sans tracking-[-0.01em] whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white font-sans tracking-[-0.01em] whitespace-nowrap">
                 <span aria-hidden="true">–</span>
                 <span>{minuten} · {prijs}</span>
               </span>
@@ -119,7 +119,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // Pointer over the card upgrades the clip from metadata to a full
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
-        className="flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[12px] lg:gap-0 lg:p-8 xl:h-full"
+        className="flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 xl:h-full"
       >
         <ZonnebankMedia
           data={data}
@@ -139,7 +139,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}
         />
-        <div className="mt-3 md:mt-0 lg:flex lg:flex-1 lg:flex-col lg:bg-white lg:p-8 lg:rounded-b-[8px]">
+        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
@@ -148,7 +148,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
               </span>
             )}
           </div>
-          <div className="mt-[10px] flex flex-col gap-[10px] md:mt-[14px] md:gap-[14px] lg:mt-[10px] xl:gap-3">
+          <div className="mt-[10px] flex flex-col gap-3 md:mt-[14px] md:gap-4 lg:mt-[10px]">
             {data.description.map((paragraph) => (
               <p key={paragraph} className="text-zinc-600 text-[15px] leading-[24px] tracking-[-0.01em] font-sans">
                 {/* A \n in the copy is a desktop-only break: the <br> is display:none

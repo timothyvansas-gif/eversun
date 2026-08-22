@@ -234,8 +234,12 @@ body {
        laatste regel bleef achter de witte voet, te groot en er viel een gat
        boven de labels. Elke extra regel tekst verschoof dat optimum. */
     --product-reveal-distance: 142px;
+    /* Hetzelfde ritme als de alinea's in de zonnebankcards. De TypeScript
+       meting leest deze variabele ook uit voor de uitschuivende producttekst. */
+    --product-paragraph-gap: 12px;
     /* Alleen de waarde vóór hydratie. De kaart meet zijn eigen kop op en
-       overschrijft dit per kaart (zie DETAIL_GAP in producten.tsx) — er stonden
+       overschrijft dit per kaart, met --product-paragraph-gap in producten.tsx.
+       Er stonden
        hier drie handgemeten varianten per breakpoint, en die gingen allemaal uit
        van een titel van één regel. De detailtekst is in rust toch verborgen, dus
        deze waarde is nooit in beeld; hij staat er zodat de eerste paint een
@@ -251,26 +255,35 @@ body {
     position: relative;
   }
 
+  @media (min-width: 768px) {
+    .product-card {
+      --product-paragraph-gap: 16px;
+    }
+  }
+
   .product-card[data-expanded="true"] .product-hover-description {
     display: block;
   }
 
-  /* Product detail reveal. The information area stays anchored to the bottom.
-     A same-colour extension slides from behind its top edge, so it reads as one
-     continuous white surface instead of two stacked panels. */
+  /* Product detail reveal. Eén witte laag bezit de volledige afgeronde vorm;
+     het inhoudspaneel zelf blijft transparant. Daarmee kan er tijdens openen
+     of sluiten geen tweede — of tijdelijk ontbrekende — radius ontstaan. */
     .product-card[data-has-hover-description="true"] .product-info-panel {
       position: relative;
       z-index: 10;
-      background: #ffffff;
+      border-radius: 0;
+      background: transparent;
     }
 
     .product-card[data-has-hover-description="true"] .product-info-panel::before {
       position: absolute;
-      z-index: -1;
+      z-index: 1;
       top: calc(var(--product-reveal-distance) * -1);
       right: 0;
       left: 0;
-      height: var(--product-reveal-distance);
+      /* Bedekt zowel de uitschuifafstand als het volledige inhoudsvlak. De
+         afgeronde bovenrand is daardoor de enige rand die de gebruiker ziet. */
+      height: calc(100% + (var(--product-reveal-distance) * 2));
       background: #ffffff;
       border-radius: 12px 12px 0 0;
       content: "";
@@ -284,7 +297,7 @@ body {
        no opacity, blur or character-level clipping is involved. */
     .product-card[data-has-hover-description="true"] .product-moving-copy {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       transition: transform 360ms cubic-bezier(0.33, 1, 0.68, 1);
       will-change: transform;
     }
@@ -299,7 +312,7 @@ body {
        alleen vóór hydratie. */
     .product-card[data-has-hover-description="true"] .product-info-panel::after {
       position: absolute;
-      z-index: 2;
+      z-index: 3;
       top: var(--product-mask-top, 116px);
       right: 0;
       bottom: 0;
@@ -310,16 +323,10 @@ body {
 
     .product-card[data-has-hover-description="true"] .product-category-labels {
       position: absolute;
-      z-index: 3;
+      z-index: 4;
       right: 24px;
       bottom: 24px;
       left: 24px;
-    }
-
-    @media (min-width: 768px) {
-      .product-card[data-has-hover-description="true"] .product-category-labels {
-        bottom: 32px;
-      }
     }
 
     .product-card[data-has-hover-description="true"] .product-price-labels {
@@ -330,6 +337,7 @@ body {
 
     .product-card[data-has-hover-description="true"] .product-hover-description {
       position: absolute;
+      z-index: 2;
       top: var(--product-detail-offset);
       right: 0;
       left: 0;

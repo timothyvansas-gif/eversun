@@ -122,7 +122,7 @@ export default function AdviesCard() {
       </div>
 
       <div
-        className="absolute bottom-[52px] xl:bottom-[40px] z-10"
+        className="absolute bottom-[30px] md:bottom-[52px] xl:bottom-[40px] z-10"
         style={{ left: 'clamp(24px, 4vw, 40px)', width: CONTAINER_W, height: THUMB }}
       >
         {/* Ring — static at active slot */}

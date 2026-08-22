@@ -27,13 +27,6 @@ const PRODUCT_BACKDROP = [
 ].join(", ");
 
 /**
- * De ruimte tussen de korte omschrijving en de detailtekst eronder, in de
- * geopende staat. Hetzelfde ritme als de `gap-[6px]` die titel en omschrijving
- * al scheidt, zodat de derde alinea niet als een losse blok leest.
- */
-const DETAIL_GAP = 6;
-
-/**
  * Afstand van de bovenkant van `el` tot die van `ancestor`, in layoutpixels.
  *
  * `offsetTop` meet tot de dichtstbijzijnde gepositioneerde voorouder, en dat is
@@ -90,9 +83,12 @@ function ProductCardItem({ product }: { product: Product }) {
       // carrousel — dan komen de maten er dus verschoven uit. De offsets zijn
       // layoutwaarden en negeren transforms, dus ze meten wat er in rust staat.
       const copyHeight = copy.offsetHeight;
+      const detailGap = Number.parseFloat(
+        getComputedStyle(card).getPropertyValue("--product-paragraph-gap"),
+      ) || 10;
 
       // Waar de detailtekst begint, gemeten vanaf de kop waar hij onder hangt.
-      card.style.setProperty("--product-detail-offset", `${copyHeight + DETAIL_GAP}px`);
+      card.style.setProperty("--product-detail-offset", `${copyHeight + detailGap}px`);
 
       // Waar de witte maskerstrook begint, gemeten vanaf de paneeltop — een
       // ander referentiepunt, want het masker hoort bij het paneel en de
@@ -106,7 +102,7 @@ function ProductCardItem({ product }: { product: Product }) {
       // wordt uitgerekt.
       card.style.setProperty(
         "--product-mask-top",
-        `${offsetWithin(copy, panel) + copyHeight + DETAIL_GAP}px`,
+        `${offsetWithin(copy, panel) + copyHeight + detailGap}px`,
       );
 
       // Hoever de tekst omhoog schuift bij openen. Stond als vast getal per
@@ -118,11 +114,11 @@ function ProductCardItem({ product }: { product: Product }) {
       //
       // De verborgen tekst begint precies op de maskerrand (zie hierboven: dat
       // is dezelfde som), dus hij is vrij zodra hij zijn eigen hoogte is
-      // opgeschoven. Plus dezelfde `DETAIL_GAP` als adempauze boven de rand.
+      // opgeschoven. Plus dezelfde paragraafafstand als adempauze boven de rand.
       if (detail) {
         card.style.setProperty(
           "--product-reveal-distance",
-          `${detail.offsetHeight + DETAIL_GAP}px`,
+          `${detail.offsetHeight + detailGap}px`,
         );
       }
     };
@@ -196,7 +192,7 @@ function ProductCardItem({ product }: { product: Product }) {
             met transparante achtergrond in een ruimte lijkt te staan in plaats
             van op een vlak. Opbouw staat bij PRODUCT_BACKDROP. */}
         <div
-          className="product-card-image w-full aspect-[4/5] md:aspect-auto md:h-[464px] overflow-hidden relative"
+          className="product-card-image relative w-full aspect-[4/5] overflow-hidden md:h-[464px] md:aspect-auto"
           style={{ background: PRODUCT_BACKDROP }}
         >
           <ProductImage src={product.image} alt={product.name} nudgeY={product.imageNudgeY} />
@@ -235,7 +231,7 @@ function ProductCardItem({ product }: { product: Product }) {
           // hoogte nodig heeft. Vanaf `auto` bereikt de echte inhoudshoogte de
           // kaart, en omdat de carrousel zijn kaarten uitrekt komen alle panelen
           // daarna alsnog op één hoogte uit.
-          className={`product-info-panel flex flex-col gap-[6px] rounded-[12px] px-6 pt-4 md:pt-6 ${product.hoverDescription ? "pb-[71px] md:pb-[79px] min-h-[209px] min-[360px]:min-h-[187px] md:min-h-[181px] flex-auto shrink-0" : "pb-6 md:pb-8 flex-1"}`}
+          className={`product-info-panel -mt-3 flex flex-col gap-[6px] px-6 pt-4 md:pt-6 ${product.hoverDescription ? "rounded-none pb-[71px] md:pb-[79px] min-h-[209px] min-[360px]:min-h-[187px] md:min-h-[181px] flex-auto shrink-0" : "rounded-[12px] pb-6 md:pb-8 flex-1"}`}
           onPointerEnter={(event) => {
             if (event.pointerType !== "mouse") return;
             setIsPointerInside(true);
@@ -249,7 +245,7 @@ function ProductCardItem({ product }: { product: Product }) {
           }}
         >
           <div className="product-moving-copy flex flex-col gap-[6px]">
-            <div ref={primaryCopyRef} className="product-primary-copy flex flex-col gap-[6px]">
+            <div ref={primaryCopyRef} className="product-primary-copy flex flex-col gap-[10px]">
               {/* `items-baseline`, niet `items-center`: gecentreerd zakt het
                   icoon naar het midden van het hele titelblok, dus bij een naam
                   die omslaat hangt het tussen de twee regels in. Op de baseline
@@ -299,7 +295,7 @@ function ProductCardItem({ product }: { product: Product }) {
                 ref={detailRef}
                 id={descriptionId}
                 aria-hidden={!isExpanded}
-                className="product-hover-description flex flex-col gap-[6px] text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans"
+                className="product-hover-description flex flex-col gap-3 md:gap-4 text-zinc-500 text-[15px] leading-[22px] tracking-[-0.01em] font-sans"
               >
                 <p>{product.hoverDescription}</p>
                 {product.sessions && (
