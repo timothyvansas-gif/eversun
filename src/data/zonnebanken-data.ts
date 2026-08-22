@@ -85,7 +85,7 @@ const BANKEN: ZonnebankInput[] = [
     alt: "Ergoline Blue Vision zonnebad",
     tag: "2 banken",
     description: [
-      "Het blauwe licht activeert de pigmentcellen in je huid al voor het zonnen.\nJe kleur komt daardoor sneller en dieper op gang.",
+      "Het blauwe licht activeert de pigmentcellen in je huid al voor het zonnen. Je kleur komt daardoor sneller en dieper op gang.",
       "120 blauwe LEDs doen dat werk. Kies op het display sensitive, medium of intensive, net wat je huid vandaag aankan.",
     ],
     minuten: "20 min",

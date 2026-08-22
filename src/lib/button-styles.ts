@@ -33,6 +33,10 @@ export const BTN_PILL =
 export const BTN_PILL_DARK_OUTLINE =
   "inline-flex items-center border border-ink-primary bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";
 
+/** A light outlined CTA for cards on a light surface. */
+export const BTN_PILL_LIGHT_OUTLINE =
+  "inline-flex items-center border border-line bg-transparent text-ink-primary text-[15px] font-medium font-sans tracking-[-0.01em] rounded-full px-[18px] cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 transition-transform duration-150";
+
 /**
  * The filled CTA, in the orange.
  *
