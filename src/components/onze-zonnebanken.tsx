@@ -87,7 +87,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={() => setHuidtestOpen(true)}
-            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! hover:border-line! max-lg:hidden! lg:w-auto lg:!px-5 xl:min-w-[190px]`}
+            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! text-zinc-600! hover:border-line! hover:text-ink-primary! max-lg:hidden! lg:w-auto lg:!px-5 xl:min-w-[190px]`}
           >
             <CtaLabel hold>Doe de huidtest</CtaLabel>
           </button>
