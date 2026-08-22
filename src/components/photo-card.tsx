@@ -238,9 +238,9 @@ export default function PhotoCard() {
         </div>
         <div className="flex items-end justify-between">
           <div>
-            <h3 className="card-title text-zinc-900">Een warm welkom</h3>
+            <h3 className="card-title text-zinc-900">Binnenkijken bij Ever Sun</h3>
             <p className="card-body text-zinc-500 mt-1">
-              Geen haast, geen verplichting: jouw moment van rust begint hier
+              Stap alvast binnen en zie waar jouw moment van rust begint
             </p>
           </div>
           <button
