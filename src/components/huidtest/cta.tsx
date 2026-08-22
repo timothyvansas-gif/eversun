@@ -1,15 +1,13 @@
 "use client";
 
 import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
+import { CtaLabel } from "@/components/ui/cta-arrow";
 
 /**
  * The huidtest's two buttons.
  *
  * They are close cousins of the site's pills but not the same animal, so they
- * live here rather than bending the shared constants: inside the test a button
- * is an answer, and the filled one fills dark from the cursor on hover — the
- * same fill the section CTAs use, so a button does not change species when the
- * test opens over the page.
+ * live here rather than bending the shared constants.
  *
  * The transition is an inline style on purpose. Two `transition-property`
  * utilities on one element resolve by stylesheet order rather than by intent,
@@ -17,15 +15,16 @@ import { BTN_OUTLINE_BORDER } from "@/lib/button-styles";
  */
 
 const BASE =
-  "inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-[28px] py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
+  // 36px, not the original 28px: with `hold` the arrow's 24px reach only had
+  // 4px of clearance before the pill's own curve started cutting into it,
+  // which read as cramped on hover. Equal on both sides, so it stays
+  // symmetric at rest.
+  "group/cta inline-flex min-h-[48px] cursor-pointer items-center justify-center rounded-full px-9 py-3 font-sans text-[15px] font-medium tracking-[-0.01em] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100";
 
 const VARIANTS = {
-  // Orange at rest, dark on hover. Which hover a filled CTA gets depends on
-  // whether it has the arrow: the ones carrying `group/cta` and a `CtaLabel`
-  // let the arrow do the whole hover and keep the orange, and the ones without
-  // it — this button, and the two WhatsApp links — need something to happen on
-  // hover, so they take the ink fill instead. See BTN_PILL_CTA.
-  accent: "bg-cta text-white hover:bg-ink-primary",
+  // Orange stays orange; the arrow is the whole hover, same as BTN_PILL_CTA
+  // everywhere it carries `group/cta` and a `CtaLabel`.
+  accent: "bg-cta text-white",
   // No fill at all, like the outline pills elsewhere on the site: the edge is
   // the button. Its whole hover is that edge darkening, which is why the
   // transition below carries border-color.
@@ -46,9 +45,13 @@ export function ctaClass(variant: keyof typeof VARIANTS, extra = ""): string {
 export const CTA_TRANSITION: React.CSSProperties = { transition: TRANSITION };
 
 /**
- * Only the filled variant fills. The outline one has no background to arrive
- * over — its whole hover is the edge darkening — so it renders nothing extra
- * and keeps its children exactly where they were.
+ * Both variants carry the arrow now, `hold` so the label never moves. The
+ * existing 28px padding already clears ARROW_REACH (24px) on its own, so
+ * `hold` does not need extra padding either — the earlier md:pr-9 bump was
+ * unnecessary and only made the button lopsided at rest; plain, equal
+ * px-[28px] was enough all along. The filled variant's extra span is the
+ * icon/text gap some callers need (e.g. the WhatsApp links); CtaLabel wraps
+ * around it so the arrow still anchors to the button's own trailing edge.
  */
 export function CtaButton({
   variant = "accent",
@@ -67,15 +70,13 @@ export function CtaButton({
       style={CTA_TRANSITION}
       {...props}
     >
-      {filled ? (
-        <>
-          <span className="inline-flex items-center gap-2">
-            {children}
-          </span>
-        </>
-      ) : (
-        children
-      )}
+      <CtaLabel hold>
+        {filled ? (
+          <span className="inline-flex items-center gap-2">{children}</span>
+        ) : (
+          children
+        )}
+      </CtaLabel>
     </button>
   );
 }
@@ -96,18 +97,16 @@ export function CtaLink({
       style={CTA_TRANSITION}
       {...props}
     >
-      {filled ? (
-        <>
-          {/* The gap comes along: these links carry an icon beside their label,
-              and the spacing that used to sit on the anchor now has to sit on
-              the row that actually holds the two of them. */}
-          <span className="inline-flex items-center gap-2">
-            {children}
-          </span>
-        </>
-      ) : (
-        children
-      )}
+      <CtaLabel hold>
+        {filled ? (
+          // The gap comes along: these links carry an icon beside their label,
+          // and the spacing that used to sit on the anchor now has to sit on
+          // the row that actually holds the two of them.
+          <span className="inline-flex items-center gap-2">{children}</span>
+        ) : (
+          children
+        )}
+      </CtaLabel>
     </a>
   );
 }
