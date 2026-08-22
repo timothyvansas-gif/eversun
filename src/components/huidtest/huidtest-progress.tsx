@@ -218,7 +218,7 @@ export function HuidtestProgress({
           <ProgressTrack
             progress={progress}
             trackClassName="h-[6px] rounded-full bg-ink-primary/5 md:bg-white/60"
-            fillClassName="rounded-full bg-ink-primary"
+            fillClassName="rounded-full bg-ink-primary md:bg-cta"
             shouldReduceMotion={shouldReduceMotion}
           />
         </m.div>
