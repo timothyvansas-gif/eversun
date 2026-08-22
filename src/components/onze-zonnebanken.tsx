@@ -16,21 +16,6 @@ import { useZonnebankVideo } from "@/hooks/use-zonnebank-video";
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
-function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
-  return (
-    <div className="flex items-center gap-3 text-zinc-600 font-sans">
-      <div className="flex items-center gap-2">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
-          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-          <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{minuten}</span>
-      </div>
-      <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{prijs}</span>
-    </div>
-  );
-}
-
 function AfspraakButton({
   whatsappUrl,
   qrCode,
@@ -51,22 +36,19 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
+        <div className="flex">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6 lg:!border lg:!border-line lg:!bg-transparent lg:!text-ink-primary lg:hover:!border-ink-primary`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 !border !border-line !bg-transparent !text-ink-primary hover:!border-ink-primary lg:min-w-[300px] lg:w-auto lg:!px-6`}
           >
             <CtaLabel hold className="gap-1.5">
               Plan je moment
-              <span className="lg:hidden inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-ink-primary/70 font-sans tracking-[-0.01em] whitespace-nowrap">
                 <span aria-hidden="true">–</span>
                 <span>{minuten} · {prijs}</span>
               </span>
             </CtaLabel>
           </button>
-          <span className="hidden lg:block">
-            <SessionDetails minuten={minuten} prijs={prijs} />
-          </span>
         </div>
       </div>
 
@@ -161,7 +143,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
-              <span className="shrink-0 whitespace-nowrap text-[13px] font-normal leading-none px-2.5 py-1.5 rounded-full bg-line/30 text-zinc-900">
+                <span className="shrink-0 whitespace-nowrap text-[13px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-line/30 text-zinc-900">
                 {data.tag}
               </span>
             )}
