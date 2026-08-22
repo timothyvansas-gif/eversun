@@ -185,11 +185,19 @@ export function HuidtestViewportProgress({
 export function HuidtestProgress({
   progress,
   show,
+  spacing = true,
 }: {
   /** 0–100. Rounded for `aria-valuenow`, used unrounded for the fill. */
   progress: number;
   /** From `useProgressVisible`, which the result's action bar reads as well. */
   show: boolean;
+  /**
+   * Whether the bar reserves 20px below itself for whatever follows. Stacked
+   * above a question it needs that gap; sitting in a row beside another
+   * control (the desktop panel's close button) it does not — the gap there is
+   * the row's own `gap`, not this bar's margin.
+   */
+  spacing?: boolean;
 }) {
   const shouldReduceMotion = useReducedMotion();
 
@@ -202,12 +210,13 @@ export function HuidtestProgress({
         <m.div
           key="quiz-progress"
           initial={false}
-          animate={{ height: "auto", marginBottom: 20, opacity: 1 }}
-          exit={
-            shouldReduceMotion
-              ? { height: 0, marginBottom: 0, opacity: 0, transition: { duration: 0 } }
-              : { height: 0, marginBottom: 0, opacity: 0, transition: PROGRESS_EXIT }
-          }
+          animate={{ height: "auto", ...(spacing ? { marginBottom: 20 } : {}), opacity: 1 }}
+          exit={{
+            height: 0,
+            ...(spacing ? { marginBottom: 0 } : {}),
+            opacity: 0,
+            transition: shouldReduceMotion ? { duration: 0 } : PROGRESS_EXIT,
+          }}
           className="shrink-0 overflow-hidden"
         >
           {/* This same bar draws on the mobile /huidtest route as well as the

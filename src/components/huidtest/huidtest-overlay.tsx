@@ -13,7 +13,7 @@ import { CloseButton } from "@/components/ui/close-button";
 import { BEHIND_LIFT, BEHIND_SCALE, DRAG_ELASTIC, STACK_SPRING } from "@/components/hero/sheet-stack";
 import { HUIDTEST_PANEL_WIDTH } from "@/components/huidtest/panel-metrics";
 import HuidtestQuiz from "@/components/huidtest/huidtest-quiz";
-import { HuidtestViewportProgress } from "@/components/huidtest/huidtest-progress";
+import { HuidtestProgress, HuidtestViewportProgress } from "@/components/huidtest/huidtest-progress";
 import { HuidtestSurfaceContext } from "@/components/huidtest/surface-context";
 import type { ZonnebankSlug } from "@/lib/whatsapp";
 
@@ -135,14 +135,24 @@ export default function HuidtestOverlay({
           Faded rather than unmounted, and its row keeps its box either way: the
           panel's whole column is measured from here down, so taking the row out
           would lift every screen in the quiz by its height at the exact moment
-          a sheet is sliding up over it. */}
+          a sheet is sliding up over it.
+
+          The progress bar shares this row rather than the scroller below it —
+          `progressPlacement="surface"` on the quiz leaves it undrawn there, and
+          `onProgress` hands this component the numbers to draw it here instead.
+          `gap-6` is the 24px between it and the ×; `spacing={false}` turns off
+          the bar's own bottom margin, which exists for stacking above a
+          question and would otherwise misalign it against the button. */}
       {!isMobile && (
         <div
           inert={isBehind}
-          className={`flex shrink-0 items-center justify-end px-4 pt-3 transition-opacity duration-200 sm:px-6 ${
+          className={`flex shrink-0 items-center gap-6 px-4 pt-3 transition-opacity duration-200 sm:px-6 ${
             isBehind ? "pointer-events-none opacity-0" : "opacity-100"
           }`}
         >
+          <div className="flex-1">
+            <HuidtestProgress progress={progress.value} show={progress.show} spacing={false} />
+          </div>
           <CloseButton onClick={onClose} label="Huidtest sluiten" />
         </div>
       )}
@@ -177,7 +187,7 @@ export default function HuidtestOverlay({
             <HuidtestQuiz
               entry={entry}
               bekekenBank={bekekenBank}
-              progressPlacement={isMobile ? "surface" : "inline"}
+              progressPlacement="surface"
               onProgress={setProgress}
               onClose={onClose}
             />
