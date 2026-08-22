@@ -120,7 +120,7 @@ export default function DesktopMenu({
           exit={{ opacity: 0, scale: 0.96, y: 8, transition: { duration: 0.2, ease: [0.36, 0, 0.66, 0] } }}
           transition={{ type: "spring", damping: 14, stiffness: 260 }}
           style={{ transformOrigin: "top right" }}
-          className="absolute -right-9 -top-4 z-50 w-[340px] rounded-2xl bg-void px-9 pb-9 pt-[58px] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
+          className="absolute -right-9 -top-4 z-50 w-[340px] rounded-2xl bg-[var(--color-status-bar)] px-9 pb-9 pt-[58px] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.6)]"
         >
           <nav aria-label="Hoofdmenu" className="flex flex-col">
             {NAV_ITEMS.map((label) => (

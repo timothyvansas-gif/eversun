@@ -43,8 +43,8 @@ export default function ZonnebankMedia({
   onVideoError: () => void;
 }) {
   return (
-    <div className="group relative min-h-[240px] md:min-h-[280px] xl:min-h-[360px] rounded-[8px] overflow-hidden">
-      <div className="absolute inset-0">
+    <div className="group relative aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[8px] overflow-hidden">
+      <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
         <Image
           src={data.image}
           alt={data.alt}

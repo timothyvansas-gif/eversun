@@ -51,43 +51,11 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        {/* Mobiel: duur/prijs staan in de knop zelf, onder het label.
-            Desktop: knop links, duur/prijs los ernaast, 16px gap. */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6 lg:border lg:border-line lg:bg-transparent lg:text-zinc-900 lg:hover:border-ink-primary`}
-            // Inline, want BTN_PILL_CTA zet zelf transition-transform en de
-            // volgorde waarin twee transition-utilities landen is niet de
-            // bronvolgorde. Onder lg is er geen rand om te animeren, dus daar
-            // kost de extra property niets.
-            style={{ transition: "transform 150ms ease, border-color 150ms ease" }}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full justify-center !px-6 lg:min-w-[184px] lg:w-auto lg:!px-6 lg:!border lg:!border-line lg:!bg-transparent lg:!text-ink-primary lg:hover:!border-ink-primary`}
           >
-            {/* Vanaf lg geen vulling maar een rand in --color-line (#d5be9c),
-                zoals deze knop het grootste deel van zijn leven had. Het label
-                gaat dan mee naar zinc-900, want wit op een doorzichtige knop
-                is niets.
-
-                Onder lg blijft de gevulde oranje staan, en dat is een verschil
-                in vorm, niet in smaak. Op lg is deze knop 184px en staat
-                duur/prijs er los naast: knopvormig, dus een rand leest als
-                knop. Op mobiel is hij de volle kolom breed en draagt hij de
-                prijsregel binnenin — een rand om zo'n balk met gedempte tekst
-                en een prijs erin gaat lijken op een specificatieregel. Daar
-                komt bij dat mobiel geen hover kent, dus de rand zou er nooit
-                op reageren, terwijl dit op die kaart de enige actie is.
-
-                De rand komt er alleen bij op lg en verbreedt de knop niet:
-                border-box rekent hem binnen min-w en min-h. Op hover gaat hij
-                naar ink-primary, dezelfde kleur waar de pijlloze CTA's op
-                hover naartoe vullen — één "hover wordt donker" voor de hele
-                site in plaats van twee bijna-zwarten.
-
-                Duur/prijs staan binnen CtaLabel, niet ernaast: de hover-pijl
-                ankert op de rechterrand van dit label, dus een zusje ernaast
-                zou eronder verdwijnen zodra de pijl inschuift — zichtbaar op
-                elke breedte onder lg waar een muis wél hovert. De gap-1.5
-                hoort daarom hier: tekst-whitespace tussen flex-items valt weg. */}
             <CtaLabel hold className="gap-1.5">
               Plan je moment
               <span className="lg:hidden inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white/80 font-sans tracking-[-0.01em] whitespace-nowrap">
@@ -134,7 +102,7 @@ function CardWrapper({ children }: { children: React.ReactNode }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px" }}
       transition={{ duration: 0.9, ease: EASE }}
-      className="flex-1 flex flex-col gap-6"
+      className="min-w-0 flex-1 flex flex-col gap-6"
     >
       {children}
     </m.div>
@@ -169,7 +137,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // Pointer over the card upgrades the clip from metadata to a full
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
-        className="flex flex-col gap-[10px] md:gap-[14px] xl:gap-[30px] xl:bg-surface-card xl:p-10 xl:h-full xl:rounded-[12px]"
+        className="flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[12px] lg:p-10 xl:gap-[30px] xl:h-full"
       >
         <ZonnebankMedia
           data={data}

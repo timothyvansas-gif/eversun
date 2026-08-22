@@ -174,7 +174,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
         // phone number — the footer adds none — and carries the iOS home
         // indicator, which sits on top of the panel and would otherwise crowd
         // the link on exactly the phones that have one.
-        className="absolute top-0 right-0 w-[95%] h-full bg-void px-8 pt-8 pb-[calc(env(safe-area-inset-bottom)+clamp(1.5rem,7.5vh,4rem))] flex flex-col overflow-y-auto overscroll-contain pointer-events-auto"
+        className="absolute top-0 right-0 w-[95%] h-full bg-[var(--color-status-bar)] px-8 pt-8 pb-[calc(env(safe-area-inset-bottom)+clamp(1.5rem,7.5vh,4rem))] flex flex-col overflow-y-auto overscroll-contain pointer-events-auto"
         aria-hidden={!isOpen}
         inert={!isOpen}
       >
