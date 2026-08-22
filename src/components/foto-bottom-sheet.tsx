@@ -26,6 +26,7 @@ import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
 import wastafelsImg from "@/images/wastafels.webp";
+import hockerBankBloemenImg from "@/images/hocker-bank-bloemen.webp";
 
 /**
  * A photo, what it shows, and where to hold it while cropping.
@@ -126,10 +127,7 @@ export const sheetPhotos: SheetPhoto[] = [
     // Op mobiel overleeft maar 42% van de hoogte.
     focus: "center 25%",
   },
-  // Opent een nieuwe rij op de brede tegel. De smalle plek ernaast blijft
-  // voorlopig leeg: daar komt nog een staande foto. Zolang die er niet is, is
-  // dit de laatste desktoprij en houdt de rechterkolom dus een gat — geen tegel
-  // erachter die erdoor verschuift.
+  // Opent een nieuwe rij op de brede tegel.
   { src: balieAchterImg, alt: "Achter de balie, met het scherm en de lounge op de achtergrond" },
   // Dezelfde koffiefoto als in het paar hieronder, maar dit is de desktopplek:
   // de smalle tegel naast balie-achter. Twee regels voor één foto, elk met hun
@@ -153,6 +151,20 @@ export const sheetPhotos: SheetPhoto[] = [
     only: "mobile",
   },
   { src: balieBloemenImg, alt: "Verse bloemen en parfums op de balie", only: "mobile" },
+  // Nieuwe laatste desktoprij, na het telefoonpaar hierboven — zo blijven
+  // MOBILE_PAIRS' indices ongemoeid ("een pair stays put if photos are added
+  // after it"). Kopie van de smalle koffie-tegel als opener, staand voor de
+  // vorm; niet een nieuwe foto. LG_SPANS draait deze rij om (1, 2 in plaats
+  // van 2, 1) — de cyclus alleen laten doorlopen had hier de verkeerde vorm
+  // gegeven.
+  {
+    src: koffieImg,
+    alt: "De koffiemachine van Douwe Egberts met het keuzescherm",
+    focus: "center top",
+    only: "desktop",
+  },
+  // Sluit de rij af op de brede tegel.
+  { src: hockerBankBloemenImg, alt: "De lounge-bank met bloemboeket en hocker op de voorgrond" },
 ];
 
 // Column spans on the desktop grid: a wide one beside a single, a row of three
@@ -177,11 +189,15 @@ export const sheetPhotos: SheetPhoto[] = [
 // die nog moet komen, dan is er niets dat de rij hoogte geeft en klapte hij
 // zonder deze regel dicht tot nul. Vanaf 1280 is 1.7 exact; daaronder scheelt
 // het een pixel of twee met de rijen die wel een partner hebben.
-// De cyclus is even lang als de lijst zelf: veertien tegels, achttien kolommen,
-// zes volle rijen. Zodra er een rij tussen komt schuift alles erachter een plek
-// op, en dan moet dit patroon mee — een brede tegel op de verkeerde index laat
-// een rij een kolom openhouden. Wie hier een foto toevoegt, telt de rijen na.
-const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1];
+// De cyclus is even lang als de lijst zelf: achttien tegels, vierentwintig
+// kolommen, acht volle rijen. Zodra er een rij tussen komt schuift alles
+// erachter een plek op, en dan moet dit patroon mee — een brede tegel op de
+// verkeerde index laat een rij een kolom openhouden. Wie hier een foto
+// toevoegt, telt de rijen na.
+//
+// De laatste rij (1, 2) draait de vorm om: overal elders staat de brede tegel
+// eerst. Hier begint de rij staand, met de brede/liggende tegel erna.
+const LG_SPANS: Slot[] = [2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 2];
 
 // Phones get one column of 16/9 tiles. These two are the exception: they share
 // a single slot side by side, half width each, so the scroll opens with a wide
