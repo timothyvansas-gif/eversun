@@ -22,40 +22,43 @@ const DESKTOP_FOCUS = "lg:object-[50%_120%]";
  * rood en 85% van groen (neutraal = 100%), en dat leest als een gele waas over
  * de hele kaart.
  *
- * Een `hue-rotate` zou dat ook temperen, maar die draait álle kleuren mee — en
- * de 770 heeft in zijn donkere fase juist een rode gloed die moet blijven. Een
- * feColorMatrix schaalt per kanaal en doet dus precies wat een witbalansknop in
- * een editor doet: de tint verschuift, de kleuren zelf blijven staan.
+ * Dit was een `feColorMatrix`, en dat is op papier het juiste gereedschap: het
+ * schaalt per kanaal, precies wat een witbalansknop doet. Op iOS werkt het
+ * alleen niet. Zodra de kaart wordt aangeraakt laadt hij zijn clip en legt hij
+ * die over de foto (zie `handleCardPointerEnter` in use-zonnebank-video), en
+ * WebKit geeft een spelende video een eigen systeemlaag. Een CSS-filter — op de
+ * video zelf of op een vlak eromheen — bereikt die laag niet, dus sprong het
+ * beeld op de telefoon terug naar geel op het moment dat de video verscheen.
+ * Nagemeten op een iPhone met vier varianten naast elkaar: filter op de video
+ * en filter op de ouder vielen allebei weg, een laag erbovenop bleef staan.
+ *
+ * Vandaar een echte laag in de pagina in plaats van een filter: een heel donker
+ * blauw vlak met `mix-blend-mode: color-dodge`. Dodge rekent uit als
+ * `onder / (1 - laag)`, dus het schaalt blauw met een vaste factor en laat rood
+ * en groen ongemoeid — precies wat de matrix deed. Screen (`1 - (1 - onder)(1 -
+ * laag)`) was de eerste keus maar tilt donkere delen veel harder op dan lichte,
+ * en dat zou de rode gloed van de 770 in zijn donkere fase naar paars trekken.
+ * Wat wegvalt tegenover de matrix is de 1,6% waarmee rood werd teruggenomen;
+ * een laag kan alleen optellen.
  *
  * `MEDIA_WARMTH_CORRECTION` is de knop: 0 laat de media zoals ze gerenderd zijn,
- * 1 trekt ze naar de volledige correctie hieronder. Daartussen wordt lineair
- * gemengd met de identiteit, dus halverwege is letterlijk half zo veel. Een bank
- * die anders belicht is zet zijn eigen waarde met `mediaWarmth` in de data.
+ * 1 is de volle correctie. Een bank die anders belicht is zet zijn eigen waarde
+ * met `mediaWarmth` in de data.
  *
  * Hoe ver je kunt gaan heeft een bovengrens die niet in de belichting zit: de
  * wand en de vloer zijn ook echt beige geverfd, terwijl het kunststof van de
  * bank al neutraal wit is (gemeten B/R exact 1,00). Corrigeer je het beeld ver
  * genoeg om de wand neutraal te krijgen, dan is de bank zelf allang blauw.
- *
- * De filter hangt op het vlak dat foto én video draagt, niet op de video alleen:
- * de video kruisvervaagt over de stilstaande foto, en met maar één van de twee
- * gecorrigeerd springt de kleur op het moment dat de clip in beeld komt.
  */
 const MEDIA_WARMTH_CORRECTION = 0.6;
 
-// Volledige correctie (bij factor 1). Blauw omhoog is het echte werk; rood een
-// tikje omlaag houdt het totale beeld even helder in plaats van lichter.
-const WARMTH_GAIN = { r: 0.98, g: 1, b: 1.12 };
+// Blauwwaarde van de laag bij factor 1, als fractie van 255. Ingemeten tegen de
+// oude matrix op de gerenderde pagina: bij 0,6 komt B/R uit op 0,937, hetzelfde
+// als `B x 1,072` opleverde. Dat is 22/255 bij die sterkte, dus 14,4% vol.
+const WARMTH_BLUE_AT_FULL = 0.144;
 
-const warmthMatrix = (factor: number) => {
-  const channel = (gain: number) => 1 + (gain - 1) * factor;
-  return [
-    `${channel(WARMTH_GAIN.r)} 0 0 0 0`,
-    `0 ${channel(WARMTH_GAIN.g)} 0 0 0`,
-    `0 0 ${channel(WARMTH_GAIN.b)} 0 0`,
-    "0 0 0 1 0",
-  ].join(" ");
-};
+const warmthOverlay = (factor: number) =>
+  `rgb(0 0 ${Math.round(255 * WARMTH_BLUE_AT_FULL * factor)})`;
 
 export default function ZonnebankMedia({
   data,
@@ -92,10 +95,6 @@ export default function ZonnebankMedia({
   onVideoWaiting: () => void;
   onVideoError: () => void;
 }) {
-  // Per kaart een eigen definitie, want de sterkte kan per bank verschillen.
-  // Het slug is al uniek binnen de pagina en staat in de data.
-  const warmthId = `zonnebank-media-warmth-${data.slug}`;
-
   return (
     // `w-full` staat er niet voor de sier. Deze box heeft een aspect-ratio én
     // een min-height die hoger is dan die ratio bij deze breedte toelaat. Chrome
@@ -105,16 +104,39 @@ export default function ZonnebankMedia({
     // buiten het witte vlak eronder. Een expliciete breedte laat niets te
     // herleiden over. Nagemeten in Safari met een losse testpagina: zonder
     // `w-full` 32px verschil, met `w-full` nul.
-    <div className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
-      <svg aria-hidden="true" focusable="false" className="absolute size-0 overflow-hidden">
-        <filter id={warmthId} colorInterpolationFilters="sRGB">
-          <feColorMatrix type="matrix" values={warmthMatrix(data.mediaWarmth ?? MEDIA_WARMTH_CORRECTION)} />
-        </filter>
-      </svg>
-      <div
-        className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2"
-        style={{ filter: `url(#${warmthId})` }}
-      >
+    // `WebkitTouchCallout` inline en niet in globals.css: die build gooit
+    // eigenschappen die hij niet kent er stilzwijgend uit, en dit is er zo een.
+    //
+    // Waarom hij er staat: een lange druk op de foto zet iOS Safari aan het
+    // werk voor zijn eigen callout — bewaar-menu en sleepvoorbeeld. Daarvoor
+    // hertekent WebKit de laag vanaf het bronbeeld, en de filter hierboven gaat
+    // dan verloren; de correctie viel zichtbaar weg. Zonder callout gebeurt dat
+    // niet. Wat de bezoeker kwijtraakt is "afbeelding bewaren" op een foto die
+    // sowieso als knop werkt — de kaart opent een boeking.
+    <div
+      className="group relative isolate w-full select-none aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden"
+      style={{
+        WebkitTouchCallout: "none",
+        // Zelfde oorzaak als de kleurcorrectie hierboven: WebKit geeft een video
+        // een eigen systeemlaag, en die trekt zich niets aan van de afgeronde
+        // `overflow: hidden` van deze box — zodra de clip zichtbaar werd sprongen
+        // de hoeken op de telefoon vierkant. Een masker dwingt de clip alsnog af,
+        // ook op die laag. De radial-gradient is dekkend over het hele vlak; het
+        // gaat niet om zijn vorm maar om het bestaan van het masker.
+        WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+      }}
+    >
+      {/* De filter hangt op de foto en de video zelf, niet op dit vlak. Op een
+          gedeelde ouder werkt hij ook, maar dan hangt hij boven een laag die
+          iOS bij elke aanraking opnieuw tekent — een druk op de tekst eronder
+          liet de correctie zichtbaar wegvallen. Per element is er geen ouder
+          meer om kwijt te raken.
+
+          Dat dit hetzelfde beeld geeft is geen toeval: de video vervaagt over
+          de foto met opacity, en een feColorMatrix is lineair. Eerst mengen en
+          dan corrigeren levert dezelfde pixels op als eerst corrigeren en dan
+          mengen. */}
+      <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
         <Image
           src={data.image}
           alt={data.alt}
@@ -122,6 +144,9 @@ export default function ZonnebankMedia({
           quality={data.imageQuality}
           className={`object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS}`}
           sizes="(max-width: 767px) 100vw, 50vw"
+          // Zelfde reden als de callout hierboven: een sleepvoorbeeld laat
+          // WebKit het bronbeeld apart tekenen, buiten de filter om.
+          draggable={false}
         />
         {data.desktopVideo && (
           <video
@@ -151,6 +176,13 @@ export default function ZonnebankMedia({
           </video>
         )}
       </div>
+      {/* De correctielaag. Boven foto en video, onder de toggle (die zit op
+          z-10). `pointer-events-none` zodat hij geen aanraking opvangt. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-[1] mix-blend-color-dodge"
+        style={{ backgroundColor: warmthOverlay(data.mediaWarmth ?? MEDIA_WARMTH_CORRECTION) }}
+      />
       {/* Withdrawn when the clip cannot be played — a broken source, or a fetch
           that never arrived. A control that promises a state it cannot reach is
           worse than no control; the still image carries the card on its own.
