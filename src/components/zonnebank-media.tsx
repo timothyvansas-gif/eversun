@@ -131,7 +131,11 @@ export default function ZonnebankMedia({
           <span
             aria-hidden="true"
             className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 ${
-              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white"
+              // Idle is the page's own off-white from lg up, so the mark reads
+              // as part of the frame instead of a bright dot on the photo. The
+              // phone keeps plain white: there the button sits on a much
+              // smaller image and needs the contrast to stay findable.
+              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white lg:bg-[#FEF9F5]"
             }`}
             style={{
               // Tailwind v4's scale-* utilities set the standalone CSS `scale`
