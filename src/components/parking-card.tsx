@@ -157,7 +157,7 @@ export default function ParkingCard() {
               // One size at every width. The label deliberately does not
               // scale with the canvas — its type would shrink along with the
               // map — so 15px is what it stays, phone included.
-              className="-translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-white px-3 py-2 text-[15px] font-medium text-ink-primary shadow-[0_2px_10px_rgba(0,0,0,0.08)]"
+              className="-translate-x-1/2 -translate-y-full whitespace-nowrap rounded-lg bg-white px-3 py-2 text-[15px] font-normal text-ink-primary shadow-[0_2px_10px_rgba(0,0,0,0.08)]"
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
               // Leaving is quicker than arriving. A tooltip that fades out on
