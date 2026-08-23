@@ -187,7 +187,12 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}
         />
-        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8">
+        {/* Hovering this panel — not the whole card — lifts its top edge 12px
+            further over the media (-mt-3 → -mt-5, 12px becomes 20px). The
+            padding grows by that same 8px, so the heading and everything under
+            it stay exactly where they were: the box grows, the content does
+            not move. Both properties transition, so in and out read the same. */}
+        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:hover:-mt-5 lg:hover:pt-10">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
