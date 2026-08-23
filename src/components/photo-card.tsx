@@ -143,7 +143,7 @@ const SPRING_PEEK = { ...SPRING, duration: PEEK_SEC };
 // object crossing over — the right photo appears to shove the wide one into
 // view. Give it a third of a second at this speed and the two read as separate
 // events instead.
-const STAGGER_MS = Math.round(SLIDE_SEC * 160);
+const STAGGER_MS = Math.round(SLIDE_SEC * 100);
 // The wide slot: the arriving photo covers the one already there, which sinks
 // a little to the left underneath it.
 const SLIDE_WIDE = {
