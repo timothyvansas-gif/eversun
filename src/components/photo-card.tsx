@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { m, AnimatePresence, useMotionValue, animate, useInView } from "framer-motion";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { MOBILE_QUERY } from "@/lib/breakpoints";
 import imageBig from "@/images/links-home.webp";
 import wastafelsImg from "@/images/wastafels.webp";
 import cabinesMuurWitImg from "@/images/cabines-muur-wit.webp";
@@ -97,7 +99,8 @@ const PEEK_CROP = [
 // them 0.13% apart put a 1px sliver of card between them that rounded away on
 // a 2x screen — the two edges landed on the same device pixel and the line
 // disappeared. A border always paints.
-const WIDE_SLOT = "absolute inset-y-0 left-0 right-0 md:right-[30.44%]";
+const WIDE_SLOT =
+  "absolute inset-y-0 left-0 right-0 md:right-[30.44%] overflow-hidden";
 // overflow-hidden is load-bearing, not decoration: the wastafels slide scales
 // itself up inside this slot, and without a clip that zoom spilled left over
 // the seam and made the slot look like it had grown. The window is fixed; only
@@ -112,7 +115,33 @@ const PEEK_SLOT =
 // apart — not in the animations. That keeps the indicator honest for free:
 // it marks the wide slot, and it moves when the wide slot's index does.
 const STAGGER_MS = 350;
-const FADE = { duration: 0.6 };
+
+// Desktop: the arriving photo slides in from the right edge of its own slot
+// and covers the one already there, which drifts a little to the left under
+// it. The drift is what sells the overlap — two planes at different speeds
+// rather than one sheet swapping — and it also keeps the outgoing photo
+// mounted for the whole move, since an exit that animates nothing unmounts
+// on the spot and would leave a hole under the incoming slide.
+//
+// A spring rather than a curve: `bounce` is the damping, and at 0.12 the
+// photo settles with a hint of overshoot instead of stopping dead.
+const SPRING = { type: "spring" as const, duration: 0.8, bounce: 0.12 };
+const SLIDE = {
+  initial: { x: "100%" },
+  animate: { x: 0 },
+  exit: { x: "-15%" },
+  transition: SPRING,
+};
+
+// Phones keep the crossfade they always had: only the wide slot exists there,
+// there is no second window for a slide to read against, and this is a
+// desktop change.
+const CROSSFADE = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.6 },
+};
 
 const SLIDE_DURATION = 4.5;
 const PILL_W = 56;
@@ -131,6 +160,8 @@ export default function PhotoCard() {
   const photoBoxRef = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+  const motionProps = isMobile ? CROSSFADE : SLIDE;
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -235,14 +266,7 @@ export default function PhotoCard() {
           >
             <div className={WIDE_SLOT}>
               <AnimatePresence initial={false}>
-                <m.div
-                  key={active}
-                  className="absolute inset-0"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={FADE}
-                >
+                <m.div key={active} className="absolute inset-0" {...motionProps}>
                   <Image
                     src={PHOTOS[active].src}
                     alt={PHOTOS[active].alt}
@@ -267,14 +291,7 @@ export default function PhotoCard() {
 
             <div className={PEEK_SLOT}>
               <AnimatePresence initial={false}>
-                <m.div
-                  key={peek}
-                  className="absolute inset-0"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={FADE}
-                >
+                <m.div key={peek} className="absolute inset-0" {...motionProps}>
                   <Image
                     src={PHOTOS[peek].src}
                     alt={PHOTOS[peek].alt}
