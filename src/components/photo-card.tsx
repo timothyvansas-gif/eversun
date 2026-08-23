@@ -170,12 +170,22 @@ const slide = (dir: number, exitPct: number, transition: typeof SPRING) => ({
 });
 
 const SLIDE_DURATION = 3;
+
+// How far into the pass the advies card is allowed to take over (see
+// `onHandoff`). Keep it under 1: at 1 the point falls outside the last dwell
+// and nothing would ever schedule it.
+const HANDOFF = 0.8;
 const PILL_W = 56;
 const DOT_W = 8;
 const DOT_H = 8;
 const SWIPE_THRESHOLD = 40;
 
-export default function PhotoCard() {
+/**
+ * `onHandoff` fires once the carousel is HANDOFF of the way through its single
+ * pass. The bento uses it to hold the advies card's slideshow until this one
+ * has had its turn, so the row does not have two things moving at once.
+ */
+export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}) {
   const [sheetOpen, setSheetOpen] = useState(false);
   // Two indices, always one apart: `active` drives the wide slot and the
   // indicator, `peek` runs one photo ahead in the narrow slot and hands its
@@ -184,12 +194,19 @@ export default function PhotoCard() {
   const [peek, setPeek] = useState(1);
   const progress = useMotionValue(0);
   const photoBoxRef = useRef<HTMLDivElement>(null);
-  // Advances made so far. The carousel walks the list once and parks on the
-  // photo it opened with, so this counts ticks rather than tracking a "done"
+  // Advances made so far. On desktop the carousel walks the list once and parks
+  // on the photo it opened with, so this counts ticks rather than tracking a "done"
   // flag: a ref costs no render and, more to the point, no effect dep — and
   // the effect below must NOT re-run when the pass ends, because on mobile its
   // cleanup would clear the stagger timer that still has to land the last tick.
   const ticksRef = useRef(0);
+  // Through a ref, not straight off the prop: the handoff below lives inside an
+  // effect, and a caller passing an inline arrow would change the dep on every
+  // render — restarting the dwell and, on mobile, clearing the stagger timer.
+  const onHandoffRef = useRef(onHandoff);
+  useEffect(() => {
+    onHandoffRef.current = onHandoff;
+  });
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -224,13 +241,28 @@ export default function PhotoCard() {
 
     // Full pass done: park here. `active` is back at 0 and the pill stays
     // filled instead of resetting, so the indicator reads as finished rather
-    // than as a beat about to start.
-    if (ticksRef.current >= PHOTOS.length) {
+    // than as a beat about to start. Desktop only — parking exists because the
+    // card sits in a grid next to other moving things, and on a phone the bento
+    // is a single stacked column where this card is the only thing on screen.
+    // Nothing to compete with there, so it keeps going round.
+    if (!isMobile && ticksRef.current >= PHOTOS.length) {
       progress.set(1);
       return;
     }
 
     progress.set(0);
+
+    // How far into THIS dwell the pass as a whole crosses HANDOFF. Negative
+    // means it already passed (nothing left to schedule), a full dwell or more
+    // means it lands in a later one. Only the dwell that actually contains the
+    // point schedules the call, so it fires once per pass — and it re-arms
+    // correctly if the dwell restarts after the card scrolls back into view.
+    const handoffIn = (HANDOFF * PHOTOS.length - ticksRef.current) * SLIDE_DURATION;
+    let handoff: ReturnType<typeof setTimeout> | undefined;
+    if (handoffIn >= 0 && handoffIn < SLIDE_DURATION) {
+      handoff = setTimeout(() => onHandoffRef.current?.(), handoffIn * 1000);
+    }
+
     let timer: ReturnType<typeof setTimeout>;
     const ctrl = animate(progress, 1, {
       duration: SLIDE_DURATION,
@@ -255,6 +287,7 @@ export default function PhotoCard() {
     return () => {
       ctrl.stop();
       clearTimeout(timer);
+      clearTimeout(handoff);
     };
   }, [active, progress, started, shouldReduceMotion, isMobile]);
 

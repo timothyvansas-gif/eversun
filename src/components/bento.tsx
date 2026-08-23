@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { m } from "framer-motion";
 import StickyCardWrapper from "@/components/sticky-card-wrapper";
 import PhotoCard from "@/components/photo-card";
@@ -24,6 +24,12 @@ const cardVariants = {
 
 export default function Bento() {
   const { headerWrapperRef, placeholderRef, lastCardRef, headerHeight, startVisible, isInView } = useStickyBentoHeader();
+  // The two slideshows in this grid take turns instead of running together:
+  // side by side there was too much moving at once. The photo carousel goes
+  // first and hands over near the end of its pass. Stable identity, because
+  // the carousel keeps this callback across its whole run.
+  const [carouselHandedOff, setCarouselHandedOff] = useState(false);
+  const handleCarouselHandoff = useCallback(() => setCarouselHandedOff(true), []);
 
   return (
     <m.section
@@ -60,7 +66,7 @@ export default function Bento() {
               variants={cardVariants}
               custom={0}
             >
-              <PhotoCard />
+              <PhotoCard onHandoff={handleCarouselHandoff} />
             </StickyCardWrapper>
           </div>
           <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
@@ -86,7 +92,7 @@ export default function Bento() {
               variants={cardVariants}
               custom={2}
             >
-              <AdviesCard />
+              <AdviesCard ready={carouselHandedOff} />
             </StickyCardWrapper>
           </div>
           <div className="flex flex-col md:col-span-1 xl:[flex:411] max-md:contents max-md:mb-4">
