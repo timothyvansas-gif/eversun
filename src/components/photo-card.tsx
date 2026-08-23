@@ -127,29 +127,18 @@ const PEEK_SLOT =
 // the carousel down cannot quietly break the hand-off.
 const SLIDE_SEC = 1.4;
 
-// The peek runs the same spring over a shorter clock. Both windows animate
-// their own full width, but the peek is 235 against the wide slot's 536, so on
-// one duration it would crawl at less than half the speed and the hand-off
-// would read as two unrelated moves. 30.44 / 69.43 = 0.44 of the wide slot's
-// clock puts both on the same px/ms.
-const PEEK_SEC = +(SLIDE_SEC * 0.44).toFixed(2);
-
 // A phone shows one window at roughly half the wide slot's width, so it gets
 // roughly half the clock. Same perceived speed, no 1.4s crawl across a box
 // that is only ~300px wide.
 const MOBILE_SEC = +(SLIDE_SEC * 0.55).toFixed(2);
 
 const SPRING = { type: "spring" as const, duration: SLIDE_SEC, bounce: 0.1 };
-const SPRING_PEEK = { ...SPRING, duration: PEEK_SEC };
 const SPRING_MOBILE = { ...SPRING, duration: MOBILE_SEC };
 
-// Short on purpose, and tied to the same knob. The peek's photo leaves through
-// the seam and the wide slot's photo arrives at that same seam, so if the
-// second move follows close enough on the first the eye stitches them into one
-// object crossing over — the right photo appears to shove the wide one into
-// view. Give it a third of a second at this speed and the two read as separate
-// events instead.
-const STAGGER_MS = Math.round(SLIDE_SEC * 100);
+// Desktop moves both windows at once, so there is no beat to wait out there.
+// The phone still needs one: its single window changes the moment the pill
+// fills, and without a pause the photo swaps under the indicator's reset.
+const MOBILE_STAGGER_MS = Math.round(SLIDE_SEC * 100);
 /**
  * The arriving photo enters from the side the carousel is heading toward and
  * covers the one already there, which sinks away underneath it.
@@ -200,8 +189,11 @@ export default function PhotoCard() {
   // State, not a ref: it decides what gets rendered, and it is always set in
   // the same breath as the index it belongs to, so the two land in one render.
   const [dir, setDir] = useState(1);
-  const wideMotion = slide(dir, 15, isMobile ? SPRING_MOBILE : SPRING);
-  const peekMotion = slide(dir, 100, SPRING_PEEK);
+  // Both windows now make the same move on the same clock, so the peek gets
+  // the wide slot's config: enter from its own right edge, let the outgoing
+  // photo sink away underneath. Its old full-width exit and shorter spring
+  // only existed to sell the hand-off, and there is no hand-off left to sell.
+  const motion = slide(dir, 15, isMobile ? SPRING_MOBILE : SPRING);
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -231,18 +223,24 @@ export default function PhotoCard() {
       onComplete: () => {
         setDir(1);
         setPeek((p) => (p + 1) % PHOTOS.length);
-        timer = setTimeout(() => setActive((p) => (p + 1) % PHOTOS.length), STAGGER_MS);
+        // Desktop advances in the same breath, so both windows start on the
+        // same render and therefore the same frame. A setTimeout of 0 would
+        // still cost a macrotask and could hand the peek a frame's head start.
+        if (isMobile) {
+          timer = setTimeout(() => setActive((p) => (p + 1) % PHOTOS.length), MOBILE_STAGGER_MS);
+        } else {
+          setActive((p) => (p + 1) % PHOTOS.length);
+        }
       },
     });
 
-    // The pill is left full on its old slot for the length of the stagger:
-    // this effect only restarts once `active` moves, which is the same moment
-    // the wide photo starts its crossfade.
+    // The indicator follows `active`, so on desktop it now resets in the same
+    // frame as both photos, and on mobile it still waits out the stagger.
     return () => {
       ctrl.stop();
       clearTimeout(timer);
     };
-  }, [active, progress, started, shouldReduceMotion]);
+  }, [active, progress, started, shouldReduceMotion, isMobile]);
 
   const touchStartXRef = useRef<number | null>(null);
   const swipedRef = useRef(false);
@@ -308,7 +306,7 @@ export default function PhotoCard() {
           >
             <div className={WIDE_SLOT}>
               <AnimatePresence initial={false} custom={dir}>
-                <m.div key={active} className="absolute inset-0" {...wideMotion}>
+                <m.div key={active} className="absolute inset-0" {...motion}>
                   <Image
                     src={PHOTOS[active].src}
                     alt={PHOTOS[active].alt}
@@ -333,7 +331,7 @@ export default function PhotoCard() {
 
             <div className={PEEK_SLOT}>
               <AnimatePresence initial={false} custom={dir}>
-                <m.div key={peek} className="absolute inset-0" {...peekMotion}>
+                <m.div key={peek} className="absolute inset-0" {...motion}>
                   <Image
                     src={PHOTOS[peek].src}
                     alt={PHOTOS[peek].alt}
