@@ -26,7 +26,7 @@ import kopImg from "@/images/kop.webp";
 import kop2Img from "@/images/kop2.webp";
 import zakjesImg from "@/images/zakjes.webp";
 import wastafelsImg from "@/images/wastafels.webp";
-import bankHockerBloemenImg from "@/images/bank-hocker-bloemen.webp";
+import hockerBloemenBankImg from "@/images/hocker-bloemen-bank.webp";
 
 /**
  * A photo, what it shows, and where to hold it while cropping.
@@ -164,7 +164,7 @@ export const sheetPhotos: SheetPhoto[] = [
     only: "desktop",
   },
   // Sluit de rij af op de brede tegel.
-  { src: bankHockerBloemenImg, alt: "De lounge-bank met bloemboeket en hocker op de voorgrond" },
+  { src: hockerBloemenBankImg, alt: "De lounge-bank met bloemboeket en hocker op de voorgrond" },
 ];
 
 // Column spans on the desktop grid: a wide one beside a single, a row of three
