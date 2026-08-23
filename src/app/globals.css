@@ -323,7 +323,13 @@ body {
       z-index: 3;
       top: var(--product-mask-top, 116px);
       right: 0;
-      bottom: 0;
+      /* Even ver door als de witte laag eronder (zie ::before, die staat in
+         rust een `--product-reveal-distance` lager dan het paneel). Stopte hij
+         op de paneelrand, dan viel de staart van de verborgen tekst in het
+         stuk wit daaronder — zichtbaar zodra de carrousel deze kaart uitrekt
+         naar een langere buur. Wit op wit, dus in rust verandert er niets aan
+         wat je ziet. */
+      bottom: calc(var(--product-reveal-distance) * -1);
       left: 0;
       background: #ffffff;
       content: "";
