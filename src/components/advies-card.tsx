@@ -19,13 +19,9 @@ const SLIDES = [
 
 const DURATION = 4.5;
 
-// The ring never sits empty: it opens a notch already drawn around the active
-// avatar. A countdown starting from literally nothing reads as broken rather
-// than as full-of-time, and before the card comes into view there would
-// otherwise be a bare circle sitting there with nothing to say. Every dwell
-// runs from here to closed, so the sweep stays monotone — no jump back to zero
-// when it starts.
-const IDLE_FILL = 0.1;
+// De ring begint leeg. Hij stond op een tiende gevuld, omdat een aftelling die
+// bij niets begint kapot kan lijken, maar dat kostte de eerste 10% van de sweep
+// en op deze kaart weegt dat zwaarder: hij loopt maar één keer per dwell.
 const THUMB = 44;
 const OVERLAP = 16;
 const GAP = 12;
@@ -41,7 +37,7 @@ const CONTAINER_W = SLOT_ACTIVE + THUMB;
 
 export default function AdviesCard() {
   const [active, setActive] = useState(0);
-  const progress = useMotionValue(IDLE_FILL);
+  const progress = useMotionValue(0);
   const dashOffset = useTransform(progress, [0, 1], [CIRC, 0]);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -88,7 +84,7 @@ export default function AdviesCard() {
 
     if (!started) return;
 
-    progress.set(IDLE_FILL);
+    progress.set(0);
     const ctrl = animate(progress, 1, {
       duration: DURATION,
       ease: "linear",
