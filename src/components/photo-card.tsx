@@ -134,8 +134,14 @@ const SLIDE_SEC = 1.4;
 // clock puts both on the same px/ms.
 const PEEK_SEC = +(SLIDE_SEC * 0.44).toFixed(2);
 
+// A phone shows one window at roughly half the wide slot's width, so it gets
+// roughly half the clock. Same perceived speed, no 1.4s crawl across a box
+// that is only ~300px wide.
+const MOBILE_SEC = +(SLIDE_SEC * 0.55).toFixed(2);
+
 const SPRING = { type: "spring" as const, duration: SLIDE_SEC, bounce: 0.1 };
 const SPRING_PEEK = { ...SPRING, duration: PEEK_SEC };
+const SPRING_MOBILE = { ...SPRING, duration: MOBILE_SEC };
 
 // Short on purpose, and tied to the same knob. The peek's photo leaves through
 // the seam and the wide slot's photo arrives at that same seam, so if the
@@ -144,29 +150,34 @@ const SPRING_PEEK = { ...SPRING, duration: PEEK_SEC };
 // view. Give it a third of a second at this speed and the two read as separate
 // events instead.
 const STAGGER_MS = Math.round(SLIDE_SEC * 100);
-// The wide slot: the arriving photo covers the one already there, which sinks
-// a little to the left underneath it.
-const SLIDE_WIDE = {
-  initial: { x: "100%" },
-  animate: { x: 0 },
-  exit: { x: "-15%" },
-  transition: SPRING,
-};
-
-// The peek clears out completely instead of drifting: its photo has to be seen
-// leaving through the seam, because that is the photo the wide slot is about
-// to receive. A 15% drift left it hanging there and broke the hand-off.
-const SLIDE_PEEK = { ...SLIDE_WIDE, exit: { x: "-100%" }, transition: SPRING_PEEK };
-
-// Phones keep the crossfade they always had: only the wide slot exists there,
-// there is no second window for a slide to read against, and this is a
-// desktop change.
-const CROSSFADE = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.6 },
-};
+/**
+ * The arriving photo enters from the side the carousel is heading toward and
+ * covers the one already there, which sinks away underneath it.
+ *
+ * `dir` is what makes a backwards swipe read as backwards: auto-advance always
+ * runs forward, but a swipe to the right walks the list back, and entering
+ * from the right there would fight the finger. It has to travel as a variant
+ * with `custom` rather than as a plain prop, because a leaving child keeps the
+ * props of its last render — its exit would still point the old way.
+ *
+ * `exitPct` is how far the outgoing photo travels. The wide slot only drifts,
+ * because the overlap is the effect there. The peek clears out completely: its
+ * photo has to be seen leaving through the seam, since that is the photo the
+ * wide slot is about to receive, and a drift left it hanging there and broke
+ * the hand-off.
+ */
+const slide = (dir: number, exitPct: number, transition: typeof SPRING) => ({
+  custom: dir,
+  variants: {
+    enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%" }),
+    center: { x: 0 },
+    exit: (d: number) => ({ x: `${d > 0 ? -exitPct : exitPct}%` }),
+  },
+  initial: "enter",
+  animate: "center",
+  exit: "exit",
+  transition,
+});
 
 const SLIDE_DURATION = 4.5;
 const PILL_W = 56;
@@ -186,8 +197,11 @@ export default function PhotoCard() {
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
-  const wideMotion = isMobile ? CROSSFADE : SLIDE_WIDE;
-  const peekMotion = isMobile ? CROSSFADE : SLIDE_PEEK;
+  // State, not a ref: it decides what gets rendered, and it is always set in
+  // the same breath as the index it belongs to, so the two land in one render.
+  const [dir, setDir] = useState(1);
+  const wideMotion = slide(dir, 15, isMobile ? SPRING_MOBILE : SPRING);
+  const peekMotion = slide(dir, 100, SPRING_PEEK);
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -215,6 +229,7 @@ export default function PhotoCard() {
       duration: SLIDE_DURATION,
       ease: "linear",
       onComplete: () => {
+        setDir(1);
         setPeek((p) => (p + 1) % PHOTOS.length);
         timer = setTimeout(() => setActive((p) => (p + 1) % PHOTOS.length), STAGGER_MS);
       },
@@ -247,6 +262,7 @@ export default function PhotoCard() {
     swipedRef.current = true;
     // A swipe moves both slots at once — no stagger to wait out when the
     // visitor is the one asking.
+    setDir(dx < 0 ? 1 : -1);
     const step = dx < 0 ? 1 : PHOTOS.length - 1;
     setActive((p) => (p + step) % PHOTOS.length);
     setPeek((p) => (p + step) % PHOTOS.length);
@@ -291,7 +307,7 @@ export default function PhotoCard() {
             aria-label="Alle foto's bekijken"
           >
             <div className={WIDE_SLOT}>
-              <AnimatePresence initial={false}>
+              <AnimatePresence initial={false} custom={dir}>
                 <m.div key={active} className="absolute inset-0" {...wideMotion}>
                   <Image
                     src={PHOTOS[active].src}
@@ -316,7 +332,7 @@ export default function PhotoCard() {
             </div>
 
             <div className={PEEK_SLOT}>
-              <AnimatePresence initial={false}>
+              <AnimatePresence initial={false} custom={dir}>
                 <m.div key={peek} className="absolute inset-0" {...peekMotion}>
                   <Image
                     src={PHOTOS[peek].src}
