@@ -216,7 +216,7 @@ export default function HeroReviews({ onSettled }: { onSettled?: () => void }) {
   const active = activeIndex === null ? null : tooltips[activeIndex];
 
   return (
-    <div className="hidden lg:flex items-center gap-6">
+    <div className="hidden lg:flex items-center gap-4">
       {/* Positioning context for the quote. It has to sit outside the
           -space-x-4 row below: that utility spaces by child index, so mounting
           the quote inside it re-targeted the rule and shunted every avatar 16px
