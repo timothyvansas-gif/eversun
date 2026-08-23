@@ -97,7 +97,15 @@ export default function ZonnebankMedia({
   const warmthId = `zonnebank-media-warmth-${data.slug}`;
 
   return (
-    <div className="group relative aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
+    // `w-full` staat er niet voor de sier. Deze box heeft een aspect-ratio én
+    // een min-height die hoger is dan die ratio bij deze breedte toelaat. Chrome
+    // houdt de breedte dan op de kolom en rekt alleen de hoogte op; WebKit
+    // rekent de breedte terug uit de ratio en maakt de box breder dan zijn
+    // kolom — in Safari stak de foto daardoor 32px (de padding van de kaart)
+    // buiten het witte vlak eronder. Een expliciete breedte laat niets te
+    // herleiden over. Nagemeten in Safari met een losse testpagina: zonder
+    // `w-full` 32px verschil, met `w-full` nul.
+    <div className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
       <svg aria-hidden="true" focusable="false" className="absolute size-0 overflow-hidden">
         <filter id={warmthId} colorInterpolationFilters="sRGB">
           <feColorMatrix type="matrix" values={warmthMatrix(data.mediaWarmth ?? MEDIA_WARMTH_CORRECTION)} />
