@@ -105,7 +105,7 @@ export default function ZonnebankMedia({
     // buiten het witte vlak eronder. Een expliciete breedte laat niets te
     // herleiden over. Nagemeten in Safari met een losse testpagina: zonder
     // `w-full` 32px verschil, met `w-full` nul.
-    <div className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
+    <div className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
       <svg aria-hidden="true" focusable="false" className="absolute size-0 overflow-hidden">
         <filter id={warmthId} colorInterpolationFilters="sRGB">
           <feColorMatrix type="matrix" values={warmthMatrix(data.mediaWarmth ?? MEDIA_WARMTH_CORRECTION)} />
@@ -196,7 +196,7 @@ export default function ZonnebankMedia({
               // as part of the frame instead of a bright dot on the photo. The
               // phone keeps plain white: there the button sits on a much
               // smaller image and needs the contrast to stay findable.
-              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white lg:bg-[#FEF9F5]"
+              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white lg:bg-surface-pill"
             }`}
             style={{
               // Tailwind v4's scale-* utilities set the standalone CSS `scale`

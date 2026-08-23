@@ -170,11 +170,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // `group/card` en niet het kale `group`: de mediabox eronder voert al
         // een eigen `group`, en een naamloze tweede zou die overschaduwen.
         //
-        // De hoverkleur staat op 70% dekking. De sectie eronder is wit, dus die
-        // 30% mengt wit terug in en het verschil met de rustkleur zakt van 5,5
-        // naar 3,0 dE — genoeg om te merken dat de kaart reageert, te weinig om
+        // De hoverkleur (`--color-surface-hover`) staat op 60% dekking. De sectie eronder is wit, dus die
+        // 40% mengt wit terug in en het verschil met de rustkleur zakt van 5,5
+        // naar 2,2 dE — genoeg om te merken dat de kaart reageert, te weinig om
         // de aandacht van de foto weg te trekken. Volle #F2ECE2 was te zwaar.
-        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-[#F2ECE2]/70 xl:h-full"
+        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover/60 xl:h-full"
       >
         <ZonnebankMedia
           data={data}
@@ -199,11 +199,15 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             groeit met diezelfde 8px, dus de kop en alles eronder blijven staan
             waar ze stonden: het vlak groeit, de inhoud verschuift niet. Beide
             eigenschappen animeren, dus heen en terug lezen hetzelfde. */}
-        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
+        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-b-[8px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
-              <span className="shrink-0 whitespace-nowrap text-[13px] font-normal leading-none px-2.5 py-1.5 rounded-[4px] bg-line/30 text-zinc-900">
+              // Zelfde pil als de categorielabels op de productkaarten: dezelfde
+              // achtergrond, tekstkleur, padding en radius. Alleen de tekst is
+              // hier 13px in plaats van 15 — dit label staat naast een kop en
+              // moet die niet beconcurreren.
+              <span className="shrink-0 whitespace-nowrap bg-surface-pill text-muted text-[13px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]">
                 {data.tag}
               </span>
             )}

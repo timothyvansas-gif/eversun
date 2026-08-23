@@ -31,6 +31,14 @@
      cannot take the labels with it. */
   --color-cta: var(--color-accent);
   --color-line: #d5be9c;
+  /* De lichtste van de drie zandtinten, boven `surface-page` en `surface-card`.
+     Draagt de kleine pillen — categorielabels op de productkaarten, het
+     aantal-label op de zonnebankkaarten — en de rustknop van de videotoggle.
+     Stond op drie plekken als losse hex. */
+  --color-surface-pill: #fef9f5;
+  /* Waar een kaart naartoe kleurt onder de cursor. Wordt op 60% gezet, zodat
+     de ondergrond er doorheen mengt; vol is de stap te groot. */
+  --color-surface-hover: #f2ece2;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */
   --color-hero-ink: #f5f1e8;
