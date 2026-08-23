@@ -20,10 +20,11 @@ const SLIDES = [
 const DURATION = 4.5;
 
 // The ring never sits empty: it opens a notch already drawn around the active
-// avatar. Waiting on the carousel used to leave a bare circle sitting there
-// with nothing to say, and a countdown that starts from literally nothing
-// reads as broken rather than as full-of-time. Every dwell runs from here to
-// closed, so the sweep stays monotone — no jump back to zero when it starts.
+// avatar. A countdown starting from literally nothing reads as broken rather
+// than as full-of-time, and before the card comes into view there would
+// otherwise be a bare circle sitting there with nothing to say. Every dwell
+// runs from here to closed, so the sweep stays monotone — no jump back to zero
+// when it starts.
 const IDLE_FILL = 0.1;
 const THUMB = 44;
 const OVERLAP = 16;
@@ -38,15 +39,7 @@ const SLOT_SECOND = THUMB - OVERLAP;
 const SLOT_ACTIVE = SLOT_SECOND + THUMB + GAP;
 const CONTAINER_W = SLOT_ACTIVE + THUMB;
 
-/**
- * `ready` gates the desktop start. The bento holds it false until the photo
- * carousel is most of the way through its pass: side by side, two slideshows
- * running at the same time made the row read as noise. Defaults to true so the card still
- * animates on its own wherever nothing is sequencing it, and mobile ignores it
- * entirely — there the cards are stacked, so they never share a screen. A card
- * that is 95% in view ignores it too; see `isFullyInView`.
- */
-export default function AdviesCard({ ready = true }: { ready?: boolean } = {}) {
+export default function AdviesCard() {
   const [active, setActive] = useState(0);
   const progress = useMotionValue(IDLE_FILL);
   const dashOffset = useTransform(progress, [0, 1], [CIRC, 0]);
@@ -59,10 +52,11 @@ export default function AdviesCard({ ready = true }: { ready?: boolean } = {}) {
   const isInView = useInView(containerRef, {
     // Desktop waits until 60% of the card is in the viewport. At 0.01 the
     // slideshow started the moment its top edge appeared, so the first slide
-    // had largely played out before the card was even worth looking at. It sat
-    // at 0.8 until the carousel gate above took over the job of keeping the two
-    // apart; with that in place the threshold only has to mean "worth looking
-    // at", and 0.8 was late for that on a short viewport.
+    // had largely played out before the card was even worth looking at. It ran
+    // at 0.8 for a while, back when the photo carousel next to it played by
+    // itself and the two had to take turns; now that the carousel only runs
+    // when someone presses Play, there is nothing to wait for and the number
+    // only has to mean "worth looking at".
     // Mobile keeps its own pair of numbers: the card fills far more of a
     // phone screen, so 20% plus a 300ms delay already lands it in view.
     //
@@ -74,24 +68,12 @@ export default function AdviesCard({ ready = true }: { ready?: boolean } = {}) {
     amount: isMobile ? 0.2 : 0.6,
   });
 
-  // The override. Past 95% the card is not something the visitor is scrolling
-  // toward any more, it is the thing they are looking at — and a ring sitting
-  // still in front of them reads as broken, whatever the carousel is doing. It
-  // also covers the short-viewport case where the carousel scrolled out of
-  // sight mid-pass and will never reach its handoff on its own.
-  const isFullyInView = useInView(containerRef, { once: true, amount: 0.95 });
-
   useEffect(() => {
     if (!isInView) return;
-    // Desktop only: scrolling past the card early in the carousel's pass does
-    // not start anything. Both flags are latched (once: true), so this effect
-    // runs again when the carousel hands over — or when the card crosses 95% —
-    // and starts then.
-    if (!isMobile && !ready && !isFullyInView) return;
     const delay = isMobile ? 300 : 0; // Immediate on desktop (0 delay)
     const timer = setTimeout(() => setStarted(true), delay);
     return () => clearTimeout(timer);
-  }, [isInView, isFullyInView, isMobile, ready]);
+  }, [isInView, isMobile]);
 
   useEffect(() => {
     // The slideshow advances itself every 4.5s and then starts over, which is

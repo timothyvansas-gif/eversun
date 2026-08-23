@@ -131,13 +131,12 @@ const WIDE_SLOT =
 const PEEK_SLOT =
   "hidden md:block absolute inset-y-0 right-0 w-[30.44%] overflow-hidden border-l border-white";
 
-// The two slots do not cross at the same instant: the peek changes first and
-// the wide slot follows a beat later, so the card reads as two photos taking
-// their own turn instead of one switch thrown twice. The beat is in the state
-// itself — the two slots hold their own index and the tick moves them 350ms
-// apart — not in the animations. That keeps the indicator honest for free:
-// it marks the wide slot, and it moves when the wide slot's index does.
-// Desktop: the arriving photo slides in from the right edge of its own slot
+// Both slots cross on the same frame from md — the pair walks the list
+// together, and the indicator marks the wide one. Only the phone staggers
+// them, and only because it has no peek slot to stagger against; see
+// MOBILE_STAGGER_MS.
+//
+// The arriving photo slides in from the right edge of its own slot
 // and covers the one already there, which drifts a little to the left under
 // it. The drift is what sells the overlap — two planes at different speeds
 // rather than one sheet swapping — and it also keeps the outgoing photo
@@ -150,19 +149,16 @@ const PEEK_SLOT =
 // the carousel down cannot quietly break the hand-off.
 const SLIDE_SEC = 1.4;
 
-// A phone moves one window over less distance, so a shorter clock was the
-// obvious call -- but every shortening cost the spring its settle and the swap
-// read as a snap. Same clock as desktop, then: the damping is the point, not
-// the speed. Kept as its own name so the phone can be tuned back off desktop.
-const MOBILE_SEC = SLIDE_SEC;
-
+// One clock for every width. The phone moves a narrower window over less
+// distance, so a shorter one looked obvious — but every shortening cost the
+// spring its settle and the swap read as a snap instead of as damped. The
+// damping is the point here, not the speed.
 const SPRING = { type: "spring" as const, duration: SLIDE_SEC, bounce: 0.1 };
-const SPRING_MOBILE = { ...SPRING, duration: MOBILE_SEC };
 
 // Desktop moves both windows at once, so there is no beat to wait out there.
 // The phone still needs one: its single window changes the moment the pill
 // fills, and without a pause the photo swaps under the indicator's reset.
-const MOBILE_STAGGER_MS = Math.round(SLIDE_SEC * 100);
+const MOBILE_STAGGER_MS = Math.round(SLIDE_SEC * 1000 * 0.1);
 /**
  * The arriving photo enters from the side the carousel is heading toward and
  * covers the one already there, which sinks away underneath it.
@@ -192,23 +188,16 @@ const slide = (dir: number, exitPct: number, transition: typeof SPRING) => ({
   transition,
 });
 
-const SLIDE_DURATION = 3;
+// How long a photo holds before the next one comes in — the dwell, not the
+// slide. SLIDE_SEC above is the move itself, and it runs inside this.
+const DWELL_SEC = 3;
 
-// How far into the pass the advies card is allowed to take over (see
-// `onHandoff`). Keep it under 1: at 1 the point falls outside the last dwell
-// and nothing would ever schedule it.
-const HANDOFF = 0.8;
 const PILL_W = 56;
 const DOT_W = 8;
 const DOT_H = 8;
 const SWIPE_THRESHOLD = 40;
 
-/**
- * `onHandoff` fires once the carousel is HANDOFF of the way through its single
- * pass. The bento uses it to hold the advies card's slideshow until this one
- * has had its turn, so the row does not have two things moving at once.
- */
-export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}) {
+export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
   // Two indices, always one apart: `active` drives the wide slot and the
   // indicator, `peek` runs one photo ahead in the narrow slot and hands its
@@ -217,18 +206,6 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
   const [peek, setPeek] = useState(1);
   const progress = useMotionValue(0);
   const photoBoxRef = useRef<HTMLDivElement>(null);
-  // Advances made so far, for the handoff below: it fires part-way through the
-  // first pass, which is a position in the run rather than a slide. A ref, not
-  // state — this must not re-render or, worse, become a dep of the effect
-  // below, whose cleanup would clear the stagger timer mid-tick on mobile.
-  const ticksRef = useRef(0);
-  // Through a ref, not straight off the prop: the handoff below lives inside an
-  // effect, and a caller passing an inline arrow would change the dep on every
-  // render — restarting the dwell and, on mobile, clearing the stagger timer.
-  const onHandoffRef = useRef(onHandoff);
-  useEffect(() => {
-    onHandoffRef.current = onHandoff;
-  });
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -248,7 +225,7 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
   // the wide slot's config: enter from its own right edge, let the outgoing
   // photo sink away underneath. Its old full-width exit and shorter spring
   // only existed to sell the hand-off, and there is no hand-off left to sell.
-  const motion = slide(dir, 15, isMobile ? SPRING_MOBILE : SPRING);
+  const motion = slide(dir, 15, SPRING);
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -283,26 +260,13 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
       progress.set(0);
     }
 
-    const remaining = SLIDE_DURATION * (1 - progress.get());
-
-    // Where the pass stands right now, dwells and current fill together, and
-    // how long until that crosses HANDOFF. Measuring from the live position
-    // rather than from the top of the dwell is what keeps this honest across a
-    // pause: only the stretch that actually contains the point schedules the
-    // call, so it still fires once per pass.
-    const passNow = (ticksRef.current + progress.get()) / PHOTOS.length;
-    const handoffIn = (HANDOFF - passNow) * PHOTOS.length * SLIDE_DURATION;
-    let handoff: ReturnType<typeof setTimeout> | undefined;
-    if (handoffIn >= 0 && handoffIn < remaining) {
-      handoff = setTimeout(() => onHandoffRef.current?.(), handoffIn * 1000);
-    }
+    const remaining = DWELL_SEC * (1 - progress.get());
 
     let timer: ReturnType<typeof setTimeout>;
     const ctrl = animate(progress, 1, {
       duration: remaining,
       ease: "linear",
       onComplete: () => {
-        ticksRef.current += 1;
         setDir(1);
         setPeek((p) => (p + 1) % PHOTOS.length);
         // Desktop advances in the same breath, so both windows start on the
@@ -321,7 +285,6 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
     return () => {
       ctrl.stop();
       clearTimeout(timer);
-      clearTimeout(handoff);
     };
   }, [active, progress, started, playing, shouldReduceMotion, isMobile]);
 
@@ -419,10 +382,10 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
         style={{ padding: 'clamp(24px, 4vw, 40px)' }}
       >
         {/* Two slots from md, one photo below it. Neither slot moves: each is
-            a fixed window that crossfades its own photo, the way the advies
-            card does. On a tick the wide slot fades to the photo the peek was
-            showing and the peek fades to the one after it, so the pair walks
-            the list together and every photo passes through both slots.
+            a fixed window and the photo slides across inside it. On a tick the
+            wide slot takes the photo the peek was showing and the peek takes
+            the one after it, so the pair walks the list together and every
+            photo passes through both slots.
 
             The peek doubles as the preload it replaced: the next photo is
             mounted a full slide before the wide slot ever needs it, and on
@@ -457,7 +420,7 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
           </button>
 
           {/* Carousel progress: the active slot is a pill that fills left to
-              right over SLIDE_DURATION; the other two are empty ovals. When
+              right over DWELL_SEC; the other two are empty ovals. When
               it completes, that pill shrinks to an oval and the next slot
               grows into the filling pill — the role moves, the slots don't. */}
           {/* From md the indicators and the Play control share one pill: a
