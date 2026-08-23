@@ -174,15 +174,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // 40% mengt wit terug in en het verschil met de rustkleur zakt van 5,5
         // naar 2,2 dE — genoeg om te merken dat de kaart reageert, te weinig om
         // de aandacht van de foto weg te trekken. Volle #F2ECE2 was te zwaar.
-        // `select-none` plus de callout uit: een duimdruk op de kop of een
-        // alinea zet iOS aan het werk voor tekstselectie, en bij die hertekening
-        // verliest WebKit de verwijzing naar het svg-filter op de media erboven
-        // — de correctie viel zichtbaar terug naar geel. Geen selectie, geen
-        // hertekening. De knoppen eronder blijven gewoon werken; wat de
-        // bezoeker kwijtraakt is tekst selecteren op een kaart die als knop
-        // bedoeld is.
-        style={{ WebkitTouchCallout: "none" }}
-        className="group/card select-none flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover/60 xl:h-full"
+        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover/60 xl:h-full"
       >
         <ZonnebankMedia
           data={data}

@@ -24,12 +24,6 @@ export type Zonnebank = {
    * generates no CSS.
    */
   desktopFocus?: string;
-  /**
-   * Sterkte van de witbalanscorrectie op foto en video, 0–1. Zonder waarde
-   * geldt de standaard uit ZonnebankMedia. Alleen zetten voor een bank die
-   * warmer of koeler gefilmd is dan de rest.
-   */
-  mediaWarmth?: number;
   mobileVideo: string;
   desktopVideo?: string;
   alt: string;
@@ -93,7 +87,6 @@ const BANKEN: ZonnebankInput[] = [
     slug: "ergoline-blue-vision",
     image: blueVision,
     imageQuality: 90,
-    mediaWarmth: 0.8,
     mobileVideo: "/videos/zonnebanken/blue-vision-toggle-mobile.mp4?v=10",
     desktopVideo: "/videos/zonnebanken/blue-vision-toggle-desktop.mp4?v=8",
     alt: "Ergoline Blue Vision zonnebad",
@@ -109,7 +102,6 @@ const BANKEN: ZonnebankInput[] = [
     slug: "ergoline-600-light",
     image: affinity600,
     imageQuality: 90,
-    mediaWarmth: 0.8,
     mobileVideo: "/videos/zonnebanken/ergoline-600-toggle-mobile.mp4?v=10",
     desktopVideo: "/videos/zonnebanken/ergoline-600-toggle-desktop.mp4?v=8",
     alt: "Ergoline Affinity 600 zonnebad",
