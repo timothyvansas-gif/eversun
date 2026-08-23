@@ -121,16 +121,17 @@ const PEEK_SLOT =
 // mounted for the whole move, since an exit that animates nothing unmounts
 // on the spot and would leave a hole under the incoming slide.
 //
-// A spring rather than a curve: `bounce` is the damping, and at 0.12 the
+// A spring rather than a curve: `bounce` is the damping, and at 0.1 the
 // photo settles with a hint of overshoot instead of stopping dead.
 // One knob for the whole move. Everything else is derived from it, so slowing
 // the carousel down cannot quietly break the hand-off.
 const SLIDE_SEC = 1.4;
 
-// A phone shows one window at roughly half the wide slot's width, so it gets
-// roughly half the clock. Same perceived speed, no 1.4s crawl across a box
-// that is only ~300px wide.
-const MOBILE_SEC = +(SLIDE_SEC * 0.55).toFixed(2);
+// A phone moves one window over less distance, so a shorter clock was the
+// obvious call -- but every shortening cost the spring its settle and the swap
+// read as a snap. Same clock as desktop, then: the damping is the point, not
+// the speed. Kept as its own name so the phone can be tuned back off desktop.
+const MOBILE_SEC = SLIDE_SEC;
 
 const SPRING = { type: "spring" as const, duration: SLIDE_SEC, bounce: 0.1 };
 const SPRING_MOBILE = { ...SPRING, duration: MOBILE_SEC };
@@ -168,7 +169,7 @@ const slide = (dir: number, exitPct: number, transition: typeof SPRING) => ({
   transition,
 });
 
-const SLIDE_DURATION = 4.5;
+const SLIDE_DURATION = 3;
 const PILL_W = 56;
 const DOT_W = 8;
 const DOT_H = 8;
@@ -183,6 +184,12 @@ export default function PhotoCard() {
   const [peek, setPeek] = useState(1);
   const progress = useMotionValue(0);
   const photoBoxRef = useRef<HTMLDivElement>(null);
+  // Advances made so far. The carousel walks the list once and parks on the
+  // photo it opened with, so this counts ticks rather than tracking a "done"
+  // flag: a ref costs no render and, more to the point, no effect dep — and
+  // the effect below must NOT re-run when the pass ends, because on mobile its
+  // cleanup would clear the stagger timer that still has to land the last tick.
+  const ticksRef = useRef(0);
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -215,12 +222,21 @@ export default function PhotoCard() {
 
     if (!started) return;
 
+    // Full pass done: park here. `active` is back at 0 and the pill stays
+    // filled instead of resetting, so the indicator reads as finished rather
+    // than as a beat about to start.
+    if (ticksRef.current >= PHOTOS.length) {
+      progress.set(1);
+      return;
+    }
+
     progress.set(0);
     let timer: ReturnType<typeof setTimeout>;
     const ctrl = animate(progress, 1, {
       duration: SLIDE_DURATION,
       ease: "linear",
       onComplete: () => {
+        ticksRef.current += 1;
         setDir(1);
         setPeek((p) => (p + 1) % PHOTOS.length);
         // Desktop advances in the same breath, so both windows start on the
