@@ -167,7 +167,14 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // Pointer over the card upgrades the clip from metadata to a full
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
-        className="flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 xl:h-full"
+        // `group/card` en niet het kale `group`: de mediabox eronder voert al
+        // een eigen `group`, en een naamloze tweede zou die overschaduwen.
+        //
+        // De hoverkleur staat op 70% dekking. De sectie eronder is wit, dus die
+        // 30% mengt wit terug in en het verschil met de rustkleur zakt van 5,5
+        // naar 3,0 dE — genoeg om te merken dat de kaart reageert, te weinig om
+        // de aandacht van de foto weg te trekken. Volle #F2ECE2 was te zwaar.
+        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-[#F2ECE2]/70 xl:h-full"
       >
         <ZonnebankMedia
           data={data}
@@ -187,12 +194,12 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}
         />
-        {/* Hovering this panel — not the whole card — lifts its top edge 12px
-            further over the media (-mt-3 → -mt-5, 12px becomes 20px). The
-            padding grows by that same 8px, so the heading and everything under
-            it stay exactly where they were: the box grows, the content does
-            not move. Both properties transition, so in and out read the same. */}
-        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:hover:-mt-5 lg:hover:pt-10">
+        {/* Hover op de kaart — niet alleen op dit vlak — tilt de bovenrand 12px
+            verder over de media (-mt-3 → -mt-5, 12px wordt 20px). De padding
+            groeit met diezelfde 8px, dus de kop en alles eronder blijven staan
+            waar ze stonden: het vlak groeit, de inhoud verschuift niet. Beide
+            eigenschappen animeren, dus heen en terug lezen hetzelfde. */}
+        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-[12px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
