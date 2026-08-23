@@ -58,6 +58,62 @@ const DESKTOP_CROP = [
   "sm:[object-position:50%_50%]",
 ];
 
+// Crop per slide for the peek slot only. That slot is roughly square against
+// these 2.53-wide photos, so it shows less than half their width and needs a
+// framing of its own — no variant prefix, because the slot itself does not
+// exist below md.
+const PEEK_CROP = [
+  // The far left of this photo: the poster, the lounge and the low table,
+  // with the copper vase just entering on the right. The bottles are the
+  // wide slot's business — this window shows the room they stand in. 16%
+  // holds that framing at both box heights: the slot is 235x270 from xl and
+  // 235x220 below it, so it shows 34% of the photo's width there and 42%
+  // here, and the vase has to land inside the narrower of the two.
+  "[object-position:16%_50%]",
+  // Not 55%: that put the window's left edge straight through the back bowl.
+  // The two bowls span 130-450 of 900 and the window is 576 wide, so it has
+  // to start left of 130 to hold both, which caps X at 40%.
+  //
+  // The only slide here that zooms. Vertically this photo has no slack — at
+  // 1.67 wide against a window of 0.87 it already fits its full height, so Y
+  // does nothing — and the bowls sat low with dead wall above them. Scaling
+  // from the bottom edge lifts them into the frame and trims that wall
+  // instead. It costs width too, which is why X drops to 22%: the zoom pulls
+  // both sides in by 3% and the back bowl has no margin to spare.
+  "[object-position:22%_50%] scale-[1.08] origin-bottom",
+  // The open cabin with the purple light inside, the wall lamp, and the end
+  // door with its sign holding the right edge. Anchored on that sign: it sits
+  // at 73% of the photo's width, so the window has to reach it from xl too,
+  // where it is only 34% wide.
+  "[object-position:60%_50%]",
+];
+
+// Two slots from md: wide | 1px seam | peek, in the 536 : 235 ratio this card
+// carried before it collapsed to a single tile, as percentages of the box so
+// no width has to be measured. Below md the wide slot runs the full width and
+// the peek is not rendered.
+//
+// The seam is a painted border on the peek, not a gap between the two. Leaving
+// them 0.13% apart put a 1px sliver of card between them that rounded away on
+// a 2x screen — the two edges landed on the same device pixel and the line
+// disappeared. A border always paints.
+const WIDE_SLOT = "absolute inset-y-0 left-0 right-0 md:right-[30.44%]";
+// overflow-hidden is load-bearing, not decoration: the wastafels slide scales
+// itself up inside this slot, and without a clip that zoom spilled left over
+// the seam and made the slot look like it had grown. The window is fixed; only
+// the photo inside it moves.
+const PEEK_SLOT =
+  "hidden md:block absolute inset-y-0 right-0 w-[30.44%] overflow-hidden border-l border-white";
+
+// The two slots do not cross at the same instant: the peek changes first and
+// the wide slot follows a beat later, so the card reads as two photos taking
+// their own turn instead of one switch thrown twice. The beat is in the state
+// itself — the two slots hold their own index and the tick moves them 350ms
+// apart — not in the animations. That keeps the indicator honest for free:
+// it marks the wide slot, and it moves when the wide slot's index does.
+const STAGGER_MS = 350;
+const FADE = { duration: 0.6 };
+
 const SLIDE_DURATION = 4.5;
 const PILL_W = 56;
 const DOT_W = 8;
@@ -66,12 +122,15 @@ const SWIPE_THRESHOLD = 40;
 
 export default function PhotoCard() {
   const [sheetOpen, setSheetOpen] = useState(false);
+  // Two indices, always one apart: `active` drives the wide slot and the
+  // indicator, `peek` runs one photo ahead in the narrow slot and hands its
+  // photo over on the next tick.
   const [active, setActive] = useState(0);
+  const [peek, setPeek] = useState(1);
   const progress = useMotionValue(0);
   const photoBoxRef = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
-  const nextIndex = (active + 1) % PHOTOS.length;
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -94,12 +153,23 @@ export default function PhotoCard() {
     if (!started) return;
 
     progress.set(0);
+    let timer: ReturnType<typeof setTimeout>;
     const ctrl = animate(progress, 1, {
       duration: SLIDE_DURATION,
       ease: "linear",
-      onComplete: () => setActive((p) => (p + 1) % PHOTOS.length),
+      onComplete: () => {
+        setPeek((p) => (p + 1) % PHOTOS.length);
+        timer = setTimeout(() => setActive((p) => (p + 1) % PHOTOS.length), STAGGER_MS);
+      },
     });
-    return () => ctrl.stop();
+
+    // The pill is left full on its old slot for the length of the stagger:
+    // this effect only restarts once `active` moves, which is the same moment
+    // the wide photo starts its crossfade.
+    return () => {
+      ctrl.stop();
+      clearTimeout(timer);
+    };
   }, [active, progress, started, shouldReduceMotion]);
 
   const touchStartXRef = useRef<number | null>(null);
@@ -118,7 +188,11 @@ export default function PhotoCard() {
     if (Math.abs(dx) < SWIPE_THRESHOLD) return;
 
     swipedRef.current = true;
-    setActive((p) => (dx < 0 ? (p + 1) % PHOTOS.length : (p - 1 + PHOTOS.length) % PHOTOS.length));
+    // A swipe moves both slots at once — no stagger to wait out when the
+    // visitor is the one asking.
+    const step = dx < 0 ? 1 : PHOTOS.length - 1;
+    setActive((p) => (p + step) % PHOTOS.length);
+    setPeek((p) => (p + step) % PHOTOS.length);
   };
 
   const handlePhotoClick = () => {
@@ -137,11 +211,15 @@ export default function PhotoCard() {
         className="relative w-full h-[362px] xl:h-[431px] bg-white rounded-[12px] flex flex-col justify-between"
         style={{ padding: 'clamp(24px, 4vw, 40px)' }}
       >
-        {/* One photo, at every width. It used to be a three-tile mosaic — a wide
-            one over two halves on phones, a wide beside a single from md — and
-            the grid/flex pair of layouts existed only to arrange those. With a
-            single tile there is nothing left to arrange, so the container is a
-            plain box and the button simply fills it.
+        {/* Two slots from md, one photo below it. Neither slot moves: each is
+            a fixed window that crossfades its own photo, the way the advies
+            card does. On a tick the wide slot fades to the photo the peek was
+            showing and the peek fades to the one after it, so the pair walks
+            the list together and every photo passes through both slots.
+
+            The peek doubles as the preload it replaced: the next photo is
+            mounted a full slide before the wide slot ever needs it, and on
+            mobile — where the slot is display:none — it still loads.
 
             The photo button carries focus-ring-clipped: it runs edge to edge
             inside this rounded, clipping box, so the site's outward focus ring
@@ -155,54 +233,65 @@ export default function PhotoCard() {
             onTouchEnd={handleTouchEnd}
             aria-label="Alle foto's bekijken"
           >
-            <AnimatePresence initial={false}>
-              <m.div
-                key={active}
-                className="absolute inset-0"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <Image
-                  src={PHOTOS[active].src}
-                  alt={PHOTOS[active].alt}
-                  fill
-                  // Phones see only the middle ~50% of this photo — the box is 1.27
-                  // wide against the image's 2.53 — and the centre landed on the
-                  // white shelf and the glass bowl, the coolest corner of the room.
-                  // Shifting the window left to 28% brings the lit lounge into it
-                  // and still keeps the vase and bottles at the right edge; 0% was
-                  // too far and cut the bottles in half. Both sides are written as
-                  // the same arbitrary property so the sm rule reliably wins.
-                  // Each slide gets its own crop below and above the sm
-                  // breakpoint — the two boxes have different proportions,
-                  // so a shift tuned for one axis doesn't carry to the other.
-                  className={`object-cover ${MOBILE_CROP[active]} ${DESKTOP_CROP[active]}`}
-                  sizes="(max-width: 768px) 100vw, 772px"
-                  quality={90}
-                />
-              </m.div>
-            </AnimatePresence>
+            <div className={WIDE_SLOT}>
+              <AnimatePresence initial={false}>
+                <m.div
+                  key={active}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={FADE}
+                >
+                  <Image
+                    src={PHOTOS[active].src}
+                    alt={PHOTOS[active].alt}
+                    fill
+                    // Phones see only the middle ~50% of this photo — the box is 1.27
+                    // wide against the image's 2.53 — and the centre landed on the
+                    // white shelf and the glass bowl, the coolest corner of the room.
+                    // Shifting the window left to 28% brings the lit lounge into it
+                    // and still keeps the vase and bottles at the right edge; 0% was
+                    // too far and cut the bottles in half. Both sides are written as
+                    // the same arbitrary property so the sm rule reliably wins.
+                    // Each slide gets its own crop below and above the sm
+                    // breakpoint — the two boxes have different proportions,
+                    // so a shift tuned for one axis doesn't carry to the other.
+                    className={`object-cover ${MOBILE_CROP[active]} ${DESKTOP_CROP[active]}`}
+                    sizes="(max-width: 768px) 100vw, 536px"
+                    quality={90}
+                  />
+                </m.div>
+              </AnimatePresence>
+            </div>
+
+            <div className={PEEK_SLOT}>
+              <AnimatePresence initial={false}>
+                <m.div
+                  key={peek}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={FADE}
+                >
+                  <Image
+                    src={PHOTOS[peek].src}
+                    alt={PHOTOS[peek].alt}
+                    fill
+                    className={`object-cover ${PEEK_CROP[peek]}`}
+                    // Below md this slot is display:none but still loads, and
+                    // that is the point: at 100vw it pulls the exact file the
+                    // wide slot will ask for one slide later, which is the
+                    // preload the phone would otherwise have lost.
+                    sizes="(max-width: 768px) 100vw, 235px"
+                    quality={90}
+                  />
+                </m.div>
+              </AnimatePresence>
+            </div>
           </button>
 
-          {/* Silent fetch for the slide that's coming up next: same fill +
-              sizes + quality as the real render above, so it resolves to the
-              exact same optimizer URL and is already cached by the time
-              AnimatePresence mounts it for real. loading="eager" (not
-              priority) — it should fetch now without claiming to be the
-              page's LCP image or emitting a <link rel=preload>. */}
-          <Image
-            key={`preload-${nextIndex}`}
-            src={PHOTOS[nextIndex].src}
-            alt=""
-            aria-hidden="true"
-            fill
-            loading="eager"
-            sizes="(max-width: 768px) 100vw, 772px"
-            quality={90}
-            className="hidden"
-          />
           <button
             className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full text-ink-primary bg-white px-[14px] py-1.5"
             onClick={() => setSheetOpen(true)}
