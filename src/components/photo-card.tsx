@@ -114,8 +114,6 @@ const PEEK_SLOT =
 // itself — the two slots hold their own index and the tick moves them 350ms
 // apart — not in the animations. That keeps the indicator honest for free:
 // it marks the wide slot, and it moves when the wide slot's index does.
-const STAGGER_MS = 350;
-
 // Desktop: the arriving photo slides in from the right edge of its own slot
 // and covers the one already there, which drifts a little to the left under
 // it. The drift is what sells the overlap — two planes at different speeds
@@ -125,13 +123,40 @@ const STAGGER_MS = 350;
 //
 // A spring rather than a curve: `bounce` is the damping, and at 0.12 the
 // photo settles with a hint of overshoot instead of stopping dead.
-const SPRING = { type: "spring" as const, duration: 0.8, bounce: 0.12 };
-const SLIDE = {
+// One knob for the whole move. Everything else is derived from it, so slowing
+// the carousel down cannot quietly break the hand-off.
+const SLIDE_SEC = 1.4;
+
+// The peek runs the same spring over a shorter clock. Both windows animate
+// their own full width, but the peek is 235 against the wide slot's 536, so on
+// one duration it would crawl at less than half the speed and the hand-off
+// would read as two unrelated moves. 30.44 / 69.43 = 0.44 of the wide slot's
+// clock puts both on the same px/ms.
+const PEEK_SEC = +(SLIDE_SEC * 0.44).toFixed(2);
+
+const SPRING = { type: "spring" as const, duration: SLIDE_SEC, bounce: 0.1 };
+const SPRING_PEEK = { ...SPRING, duration: PEEK_SEC };
+
+// Short on purpose, and tied to the same knob. The peek's photo leaves through
+// the seam and the wide slot's photo arrives at that same seam, so if the
+// second move follows close enough on the first the eye stitches them into one
+// object crossing over — the right photo appears to shove the wide one into
+// view. Give it a third of a second at this speed and the two read as separate
+// events instead.
+const STAGGER_MS = Math.round(SLIDE_SEC * 160);
+// The wide slot: the arriving photo covers the one already there, which sinks
+// a little to the left underneath it.
+const SLIDE_WIDE = {
   initial: { x: "100%" },
   animate: { x: 0 },
   exit: { x: "-15%" },
   transition: SPRING,
 };
+
+// The peek clears out completely instead of drifting: its photo has to be seen
+// leaving through the seam, because that is the photo the wide slot is about
+// to receive. A 15% drift left it hanging there and broke the hand-off.
+const SLIDE_PEEK = { ...SLIDE_WIDE, exit: { x: "-100%" }, transition: SPRING_PEEK };
 
 // Phones keep the crossfade they always had: only the wide slot exists there,
 // there is no second window for a slide to read against, and this is a
@@ -161,7 +186,8 @@ export default function PhotoCard() {
   const [started, setStarted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const isMobile = useMediaQuery(MOBILE_QUERY);
-  const motionProps = isMobile ? CROSSFADE : SLIDE;
+  const wideMotion = isMobile ? CROSSFADE : SLIDE_WIDE;
+  const peekMotion = isMobile ? CROSSFADE : SLIDE_PEEK;
 
   // amount: 0 — starts the moment the box is even a pixel into the
   // viewport, not after some fraction of it has scrolled in.
@@ -266,7 +292,7 @@ export default function PhotoCard() {
           >
             <div className={WIDE_SLOT}>
               <AnimatePresence initial={false}>
-                <m.div key={active} className="absolute inset-0" {...motionProps}>
+                <m.div key={active} className="absolute inset-0" {...wideMotion}>
                   <Image
                     src={PHOTOS[active].src}
                     alt={PHOTOS[active].alt}
@@ -291,7 +317,7 @@ export default function PhotoCard() {
 
             <div className={PEEK_SLOT}>
               <AnimatePresence initial={false}>
-                <m.div key={peek} className="absolute inset-0" {...motionProps}>
+                <m.div key={peek} className="absolute inset-0" {...peekMotion}>
                   <Image
                     src={PHOTOS[peek].src}
                     alt={PHOTOS[peek].alt}
