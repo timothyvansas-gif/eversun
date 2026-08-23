@@ -305,10 +305,13 @@ function ProductCardItem({ product }: { product: Product }) {
           </div>
           <div className="product-category-labels flex flex-wrap gap-[6px] mt-auto pt-3">
             {product.labels.map((label) => (
+              // Zelfde pil als het "2 banken"-label op de zonnebankkaarten:
+              // dezelfde tekstgrootte, padding, radius, tekstkleur en
+              // achtergrond uit `--color-line`. De gele prijslabels op de foto
+              // staan hier los van en houden hun eigen 15px.
               <span
                 key={label}
-                className="text-muted text-[15px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]"
-                style={{ backgroundColor: "#FEF9F5" }}
+                className="text-[13px] font-normal leading-none tracking-[-0.01em] font-sans px-2.5 py-1.5 rounded-[4px] bg-line/30 text-zinc-900"
               >
                 {label}
               </span>
