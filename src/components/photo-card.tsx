@@ -26,6 +26,29 @@ function CameraIcon({ size }: { size: number }) {
   );
 }
 
+/**
+ * Outlined, and drawn to land on exactly 1px: these sit beside the indicator
+ * ovals, which carry a 1px border, and anything thinner reads as a lighter
+ * weight rather than as the same line. The viewBox is 24 and they render at
+ * 16, so the stroke is scaled by 16/24 — 1.5 user units is the 1px on screen.
+ * Change the render size and this number has to move with it.
+ */
+function PlayIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+      <path d="M8 5.75L18.5 12L8 18.25V5.75Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PauseIcon({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+      <path d="M9.25 5.75V18.25M14.75 5.75V18.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 import { OUTLINE_BORDER_COLOR } from "@/lib/button-styles";
 
 const PHOTOS = [
@@ -194,11 +217,10 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
   const [peek, setPeek] = useState(1);
   const progress = useMotionValue(0);
   const photoBoxRef = useRef<HTMLDivElement>(null);
-  // Advances made so far. On desktop the carousel walks the list once and parks
-  // on the photo it opened with, so this counts ticks rather than tracking a "done"
-  // flag: a ref costs no render and, more to the point, no effect dep — and
-  // the effect below must NOT re-run when the pass ends, because on mobile its
-  // cleanup would clear the stagger timer that still has to land the last tick.
+  // Advances made so far, for the handoff below: it fires part-way through the
+  // first pass, which is a position in the run rather than a slide. A ref, not
+  // state — this must not re-render or, worse, become a dep of the effect
+  // below, whose cleanup would clear the stagger timer mid-tick on mobile.
   const ticksRef = useRef(0);
   // Through a ref, not straight off the prop: the handoff below lives inside an
   // effect, and a caller passing an inline arrow would change the dep on every
@@ -213,6 +235,15 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
   // State, not a ref: it decides what gets rendered, and it is always set in
   // the same breath as the index it belongs to, so the two land in one render.
   const [dir, setDir] = useState(1);
+  // Desktop drives the carousel by hand. Autoplay there put a third moving
+  // thing in a row that already has two, so it waits for Play — and then keeps
+  // going round for as long as the visitor leaves it running. Nothing parks
+  // itself any more: the visitor asked for motion, so motion is not noise.
+  const [playing, setPlaying] = useState(false);
+  // Which slide the dwell below last started from. Pause has to keep its
+  // place, so "reset the fill" can no longer mean "the effect ran again" — it
+  // means the slide actually changed.
+  const lastActiveRef = useRef(active);
   // Both windows now make the same move on the same clock, so the peek gets
   // the wide slot's config: enter from its own right edge, let the outgoing
   // photo sink away underneath. Its old full-width exit and shorter spring
@@ -237,35 +268,38 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
       return;
     }
 
-    if (!started) return;
+    // Mobile starts itself as soon as the card is in view: there the bento is
+    // one stacked column and this card is the only thing on screen. Desktop
+    // never starts on its own — Play does that. Either way it keeps going round
+    // until something stops it.
+    if (!(isMobile ? started : playing)) return;
 
-    // Full pass done: park here. `active` is back at 0 and the pill stays
-    // filled instead of resetting, so the indicator reads as finished rather
-    // than as a beat about to start. Desktop only — parking exists because the
-    // card sits in a grid next to other moving things, and on a phone the bento
-    // is a single stacked column where this card is the only thing on screen.
-    // Nothing to compete with there, so it keeps going round.
-    if (!isMobile && ticksRef.current >= PHOTOS.length) {
-      progress.set(1);
-      return;
+    // A new slide starts from empty; a resume does not. Pausing, or scrolling
+    // the card out and back, leaves `active` alone and picks the dwell up where
+    // it stopped, which is why the reset hangs off the slide instead of off
+    // this effect running.
+    if (lastActiveRef.current !== active) {
+      lastActiveRef.current = active;
+      progress.set(0);
     }
 
-    progress.set(0);
+    const remaining = SLIDE_DURATION * (1 - progress.get());
 
-    // How far into THIS dwell the pass as a whole crosses HANDOFF. Negative
-    // means it already passed (nothing left to schedule), a full dwell or more
-    // means it lands in a later one. Only the dwell that actually contains the
-    // point schedules the call, so it fires once per pass — and it re-arms
-    // correctly if the dwell restarts after the card scrolls back into view.
-    const handoffIn = (HANDOFF * PHOTOS.length - ticksRef.current) * SLIDE_DURATION;
+    // Where the pass stands right now, dwells and current fill together, and
+    // how long until that crosses HANDOFF. Measuring from the live position
+    // rather than from the top of the dwell is what keeps this honest across a
+    // pause: only the stretch that actually contains the point schedules the
+    // call, so it still fires once per pass.
+    const passNow = (ticksRef.current + progress.get()) / PHOTOS.length;
+    const handoffIn = (HANDOFF - passNow) * PHOTOS.length * SLIDE_DURATION;
     let handoff: ReturnType<typeof setTimeout> | undefined;
-    if (handoffIn >= 0 && handoffIn < SLIDE_DURATION) {
+    if (handoffIn >= 0 && handoffIn < remaining) {
       handoff = setTimeout(() => onHandoffRef.current?.(), handoffIn * 1000);
     }
 
     let timer: ReturnType<typeof setTimeout>;
     const ctrl = animate(progress, 1, {
-      duration: SLIDE_DURATION,
+      duration: remaining,
       ease: "linear",
       onComplete: () => {
         ticksRef.current += 1;
@@ -289,7 +323,7 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
       clearTimeout(timer);
       clearTimeout(handoff);
     };
-  }, [active, progress, started, shouldReduceMotion, isMobile]);
+  }, [active, progress, started, playing, shouldReduceMotion, isMobile]);
 
   const touchStartXRef = useRef<number | null>(null);
   const swipedRef = useRef(false);
@@ -325,6 +359,59 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
     setSheetOpen(true);
   };
 
+  // The two slots, lifted out because the shell around them differs by
+  // breakpoint: a button on the phone, where a tap opens the sheet and the same
+  // element carries the swipe, and a plain div on desktop, where neither
+  // applies — the sheet is reached from "Alle foto's" under the card, and the
+  // carousel is driven by Play.
+  const slots = (
+    <>
+    <div className={WIDE_SLOT}>
+      <AnimatePresence initial={false} custom={dir}>
+        <m.div key={active} className="absolute inset-0" {...motion}>
+          <Image
+            src={PHOTOS[active].src}
+            alt={PHOTOS[active].alt}
+            fill
+            // Phones see only the middle ~50% of this photo — the box is 1.27
+            // wide against the image's 2.53 — and the centre landed on the
+            // white shelf and the glass bowl, the coolest corner of the room.
+            // Shifting the window left to 28% brings the lit lounge into it
+            // and still keeps the vase and bottles at the right edge; 0% was
+            // too far and cut the bottles in half. Both sides are written as
+            // the same arbitrary property so the sm rule reliably wins.
+            // Each slide gets its own crop below and above the sm
+            // breakpoint — the two boxes have different proportions,
+            // so a shift tuned for one axis doesn't carry to the other.
+            className={`object-cover ${MOBILE_CROP[active]} ${DESKTOP_CROP[active]}`}
+            sizes="(max-width: 768px) 100vw, 536px"
+            quality={90}
+          />
+        </m.div>
+      </AnimatePresence>
+    </div>
+
+    <div className={PEEK_SLOT}>
+      <AnimatePresence initial={false} custom={dir}>
+        <m.div key={peek} className="absolute inset-0" {...motion}>
+          <Image
+            src={PHOTOS[peek].src}
+            alt={PHOTOS[peek].alt}
+            fill
+            className={`object-cover ${PEEK_CROP[peek]}`}
+            // Below md this slot is display:none but still loads, and
+            // that is the point: at 100vw it pulls the exact file the
+            // wide slot will ask for one slide later, which is the
+            // preload the phone would otherwise have lost.
+            sizes="(max-width: 768px) 100vw, 235px"
+            quality={90}
+          />
+        </m.div>
+      </AnimatePresence>
+    </div>
+    </>
+  );
+
   return (
     <>
       <div
@@ -346,57 +433,19 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
             would be cut off. See globals.css. The "Meer" pill sits 12px inside
             the clip and keeps the normal ring. */}
         <div ref={photoBoxRef} className="relative mb-4 h-[220px] xl:h-[270px] rounded-[8px] overflow-hidden">
-          <button
-            className="focus-ring-clipped relative block w-full h-full cursor-pointer touch-pan-y"
-            onClick={handlePhotoClick}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            aria-label="Alle foto's bekijken"
-          >
-            <div className={WIDE_SLOT}>
-              <AnimatePresence initial={false} custom={dir}>
-                <m.div key={active} className="absolute inset-0" {...motion}>
-                  <Image
-                    src={PHOTOS[active].src}
-                    alt={PHOTOS[active].alt}
-                    fill
-                    // Phones see only the middle ~50% of this photo — the box is 1.27
-                    // wide against the image's 2.53 — and the centre landed on the
-                    // white shelf and the glass bowl, the coolest corner of the room.
-                    // Shifting the window left to 28% brings the lit lounge into it
-                    // and still keeps the vase and bottles at the right edge; 0% was
-                    // too far and cut the bottles in half. Both sides are written as
-                    // the same arbitrary property so the sm rule reliably wins.
-                    // Each slide gets its own crop below and above the sm
-                    // breakpoint — the two boxes have different proportions,
-                    // so a shift tuned for one axis doesn't carry to the other.
-                    className={`object-cover ${MOBILE_CROP[active]} ${DESKTOP_CROP[active]}`}
-                    sizes="(max-width: 768px) 100vw, 536px"
-                    quality={90}
-                  />
-                </m.div>
-              </AnimatePresence>
-            </div>
-
-            <div className={PEEK_SLOT}>
-              <AnimatePresence initial={false} custom={dir}>
-                <m.div key={peek} className="absolute inset-0" {...motion}>
-                  <Image
-                    src={PHOTOS[peek].src}
-                    alt={PHOTOS[peek].alt}
-                    fill
-                    className={`object-cover ${PEEK_CROP[peek]}`}
-                    // Below md this slot is display:none but still loads, and
-                    // that is the point: at 100vw it pulls the exact file the
-                    // wide slot will ask for one slide later, which is the
-                    // preload the phone would otherwise have lost.
-                    sizes="(max-width: 768px) 100vw, 235px"
-                    quality={90}
-                  />
-                </m.div>
-              </AnimatePresence>
-            </div>
-          </button>
+          {isMobile ? (
+            <button
+              className="focus-ring-clipped relative block w-full h-full cursor-pointer touch-pan-y"
+              onClick={handlePhotoClick}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              aria-label="Alle foto's bekijken"
+            >
+              {slots}
+            </button>
+          ) : (
+            <div className="relative block w-full h-full">{slots}</div>
+          )}
 
           <button
             className="md:hidden absolute bottom-3 right-3 z-10 flex items-center gap-2 text-sm font-medium cursor-pointer rounded-full text-ink-primary bg-white px-[14px] py-1.5"
@@ -411,17 +460,22 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
               right over SLIDE_DURATION; the other two are empty ovals. When
               it completes, that pill shrinks to an oval and the next slot
               grows into the filling pill — the role moves, the slots don't. */}
-          <div
-            className="absolute bottom-3 left-3 md:left-6 z-10 h-8 flex items-center gap-1.5 pointer-events-none"
-            aria-hidden="true"
-          >
+          {/* From md the indicators and the Play control share one pill: a
+              single dark scrim at 8% holds both, so the row reads as one
+              control instead of two things that happen to sit next to each
+              other. The phone has no Play button, so it keeps the bare dots. */}
+          <div className="absolute bottom-3 left-3 md:bottom-6 md:left-6 z-10 h-8 flex items-center gap-3 pointer-events-none md:rounded-full md:bg-ink-primary/16 md:pl-3 md:pr-2.5">
+            <div className="flex items-center gap-1.5" aria-hidden="true">
             {PHOTOS.map((_, i) => {
               const isActive = i === active;
               return (
                 <m.div
                   key={i}
                   className="relative overflow-hidden rounded-full"
-                  style={{ height: DOT_H, border: "1px solid white" }}
+                  // Only the slot that is filling keeps a full-strength edge;
+                  // the ones still queued sit back at half alpha, so the row
+                  // reads as one thing happening now and two waiting.
+                  style={{ height: DOT_H, border: `1px solid ${isActive ? "white" : "rgba(255,255,255,0.65)"}` }}
                   animate={{ width: isActive ? PILL_W : DOT_W }}
                   transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 >
@@ -432,6 +486,22 @@ export default function PhotoCard({ onHandoff }: { onHandoff?: () => void } = {}
                 </m.div>
               );
             })}
+            </div>
+
+            {/* Desktop only: the round runs when it is asked to, and keeps
+                running until it is asked to stop. Pause holds its place in the
+                dwell. Icon plus word: the pair says the state twice over, and
+                the word is what a screen reader reads, so no aria-label. */}
+            <button
+              type="button"
+              onClick={() => setPlaying((p) => !p)}
+              // hidden md:inline-flex is what keeps this desktop-only: the
+              // phone runs the carousel itself and has nothing to control.
+              className="hidden md:inline-flex items-center gap-1 pointer-events-auto cursor-pointer rounded-full px-0.5 text-sm font-medium text-white/85 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-150"
+            >
+              {playing ? <PauseIcon size={16} /> : <PlayIcon size={16} />}
+              {playing ? "Pauze" : "Play"}
+            </button>
           </div>
         </div>
         <div className="flex items-end justify-between">
