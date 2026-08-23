@@ -212,10 +212,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
               // Zelfde pil als de categorielabels op de productkaarten: dezelfde
-              // achtergrond, tekstkleur, padding en radius. Alleen de tekst is
-              // hier 13px in plaats van 15 — dit label staat naast een kop en
-              // moet die niet beconcurreren.
-              <span className="shrink-0 whitespace-nowrap bg-surface-pill text-muted text-[13px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]">
+              // tekstgrootte, achtergrond, tekstkleur, padding en radius.
+              <span className="shrink-0 whitespace-nowrap bg-surface-pill text-muted text-[15px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]">
                 {data.tag}
               </span>
             )}
