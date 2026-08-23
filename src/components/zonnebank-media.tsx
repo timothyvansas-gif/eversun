@@ -16,6 +16,47 @@ import sunsetIcon from "@/images/zonsondergang.svg";
  */
 const DESKTOP_FOCUS = "lg:object-[50%_120%]";
 
+/**
+ * Witbalans van de bankmedia. De clips en de stills zijn onder hetzelfde warme
+ * kunstlicht opgenomen: gemeten over de lichte frames zit blauw rond 75% van
+ * rood en 85% van groen (neutraal = 100%), en dat leest als een gele waas over
+ * de hele kaart.
+ *
+ * Een `hue-rotate` zou dat ook temperen, maar die draait álle kleuren mee — en
+ * de 770 heeft in zijn donkere fase juist een rode gloed die moet blijven. Een
+ * feColorMatrix schaalt per kanaal en doet dus precies wat een witbalansknop in
+ * een editor doet: de tint verschuift, de kleuren zelf blijven staan.
+ *
+ * `MEDIA_WARMTH_CORRECTION` is de knop: 0 laat de media zoals ze gerenderd zijn,
+ * 1 trekt ze naar de volledige correctie hieronder. Daartussen wordt lineair
+ * gemengd met de identiteit, dus halverwege is letterlijk half zo veel. Een bank
+ * die anders belicht is zet zijn eigen waarde met `mediaWarmth` in de data.
+ *
+ * Hoe ver je kunt gaan heeft een bovengrens die niet in de belichting zit: de
+ * wand en de vloer zijn ook echt beige geverfd, terwijl het kunststof van de
+ * bank al neutraal wit is (gemeten B/R exact 1,00). Corrigeer je het beeld ver
+ * genoeg om de wand neutraal te krijgen, dan is de bank zelf allang blauw.
+ *
+ * De filter hangt op het vlak dat foto én video draagt, niet op de video alleen:
+ * de video kruisvervaagt over de stilstaande foto, en met maar één van de twee
+ * gecorrigeerd springt de kleur op het moment dat de clip in beeld komt.
+ */
+const MEDIA_WARMTH_CORRECTION = 0.6;
+
+// Volledige correctie (bij factor 1). Blauw omhoog is het echte werk; rood een
+// tikje omlaag houdt het totale beeld even helder in plaats van lichter.
+const WARMTH_GAIN = { r: 0.98, g: 1, b: 1.12 };
+
+const warmthMatrix = (factor: number) => {
+  const channel = (gain: number) => 1 + (gain - 1) * factor;
+  return [
+    `${channel(WARMTH_GAIN.r)} 0 0 0 0`,
+    `0 ${channel(WARMTH_GAIN.g)} 0 0 0`,
+    `0 0 ${channel(WARMTH_GAIN.b)} 0 0`,
+    "0 0 0 1 0",
+  ].join(" ");
+};
+
 export default function ZonnebankMedia({
   data,
   videoRef,
@@ -51,9 +92,21 @@ export default function ZonnebankMedia({
   onVideoWaiting: () => void;
   onVideoError: () => void;
 }) {
+  // Per kaart een eigen definitie, want de sterkte kan per bank verschillen.
+  // Het slug is al uniek binnen de pagina en staat in de data.
+  const warmthId = `zonnebank-media-warmth-${data.slug}`;
+
   return (
     <div className="group relative aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden">
-      <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
+      <svg aria-hidden="true" focusable="false" className="absolute size-0 overflow-hidden">
+        <filter id={warmthId} colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={warmthMatrix(data.mediaWarmth ?? MEDIA_WARMTH_CORRECTION)} />
+        </filter>
+      </svg>
+      <div
+        className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2"
+        style={{ filter: `url(#${warmthId})` }}
+      >
         <Image
           src={data.image}
           alt={data.alt}
