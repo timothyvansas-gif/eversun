@@ -70,7 +70,7 @@ function AppointmentButton({ onPlanJeMoment }: { onPlanJeMoment?: () => void }) 
 function AddressInfo() {
   return (
     <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-[6px]">
-      {ADDRESS.street}, {ADDRESS.city} · <a href={`tel:${PHONE_E164}`} className="text-zinc-600 underline decoration-dotted underline-offset-6 md:no-underline">{PHONE_DISPLAY}</a>
+      {ADDRESS.street}, {ADDRESS.city} · <a href={`tel:${PHONE_E164}`} className="text-zinc-600 underline decoration-zinc-300 decoration-1 underline-offset-6 hover:decoration-ink-strong transition-colors duration-150 md:no-underline">{PHONE_DISPLAY}</a>
     </p>
   );
 }

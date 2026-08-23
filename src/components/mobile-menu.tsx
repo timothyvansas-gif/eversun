@@ -281,7 +281,7 @@ export default function MobileMenu({ isOpen, onClose, returnFocusRef }: MobileMe
           </p>
           <a
             href="tel:0625306491"
-            className="text-nav-ink/65 text-sm font-medium active:text-nav-ink underline decoration-dotted underline-offset-6"
+            className="text-nav-ink/65 text-sm font-medium active:text-nav-ink underline decoration-nav-ink/30 decoration-1 underline-offset-6"
           >
             06 25306491
           </a>

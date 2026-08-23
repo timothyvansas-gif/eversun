@@ -472,7 +472,7 @@ export default function FotoBottomSheet({
                     </span>
                   </div>
                   <p className="font-sans text-[15px] text-zinc-600 leading-[24px] mt-1">
-                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-dotted underline-offset-6">06 25306491</a>
+                    Kloekhorststraat 4a, Assen · <a href="tel:+31625306491" className="text-zinc-600 underline decoration-zinc-300 decoration-1 underline-offset-6 hover:decoration-ink-strong transition-colors duration-150">06 25306491</a>
                   </p>
                 </div>
                 <div className="hidden md:flex shrink-0">
