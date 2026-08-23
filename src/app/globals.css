@@ -363,7 +363,7 @@ body {
     .product-card[data-pointer-expanded="true"] .product-info-panel::before,
     .product-card[data-pointer-expanded="true"] .product-moving-copy,
     .product-card[data-pointer-expanded="true"] .product-price-labels {
-      transition-delay: 200ms;
+      transition-delay: 120ms;
     }
 
     .product-card[data-keyboard-action="true"] .product-info-panel::before,

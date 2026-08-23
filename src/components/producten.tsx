@@ -149,6 +149,24 @@ function ProductCardItem({ product }: { product: Product }) {
       aria-expanded={isExpanded}
       aria-controls={descriptionId}
       aria-label={`${isExpanded ? "Verberg" : "Toon"} meer informatie over ${product.name}`}
+      // Hover op de hele kaart, niet alleen op het witte tekstvlak. Het paneel
+      // alleen liet de foto — het grootste deel van de kaart — dood aanvoelen,
+      // en het uitgeschoven witte vlak hoorde qua hit-testing bij de foto, dus
+      // de cursor volgen naar de zojuist onthulde tekst sloot de kaart weer.
+      // De kaart zelf verschuift niet bij het openen (alleen de ::before en de
+      // inhoud erbinnen bewegen), dus de hitbox staat stil en er ontstaat geen
+      // open/dicht-lus. Touch valt af op pointerType; daar opent de tap.
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(true);
+        setIsPointerDismissed(false);
+        setIsKeyboardAction(false);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse") return;
+        setIsPointerInside(false);
+        setIsPointerDismissed(false);
+      }}
       onClick={(event) => {
         if (!window.matchMedia(MOBILE_QUERY).matches) return;
         setIsKeyboardAction(event.detail === 0);
@@ -205,16 +223,6 @@ function ProductCardItem({ product }: { product: Product }) {
         </div>
 
         {/* Text */}
-        {/* De hover zit op dit vlak en niet op de hele kaart: de foto erboven
-            is geen aanleiding om tekst te openen, en met de kaarten naast
-            elkaar in een carrousel raakt de cursor die foto's vaak in het
-            voorbijgaan.
-
-            Dit vlak zelf verschuift niet bij het openen — alleen de ::before
-            erboven en de inhoud erbinnen bewegen — dus de cursor blijft staan
-            waar hij stond en er ontstaat geen open/dicht-lus. Het uitgeschoven
-            deel hoort qua hit-testing bij de foto, niet bij dit paneel: wie de
-            cursor daarheen beweegt, sluit de kaart. */}
         <div
           // De labelstrook onderin is een ::after van 71px (79 op desktop) die
           // over de inhoud heen wordt getekend. Die reserve stond nergens in de
@@ -232,17 +240,6 @@ function ProductCardItem({ product }: { product: Product }) {
           // kaart, en omdat de carrousel zijn kaarten uitrekt komen alle panelen
           // daarna alsnog op één hoogte uit.
           className={`product-info-panel -mt-3 flex flex-col gap-[6px] px-6 pt-4 md:pt-6 ${product.hoverDescription ? "rounded-none pb-[71px] md:pb-[79px] min-h-[209px] min-[360px]:min-h-[187px] md:min-h-[181px] flex-auto shrink-0" : "rounded-[12px] pb-6 md:pb-8 flex-1"}`}
-          onPointerEnter={(event) => {
-            if (event.pointerType !== "mouse") return;
-            setIsPointerInside(true);
-            setIsPointerDismissed(false);
-            setIsKeyboardAction(false);
-          }}
-          onPointerLeave={(event) => {
-            if (event.pointerType !== "mouse") return;
-            setIsPointerInside(false);
-            setIsPointerDismissed(false);
-          }}
         >
           <div className="product-moving-copy flex flex-col gap-[6px]">
             <div ref={primaryCopyRef} className="product-primary-copy flex flex-col gap-[10px]">
