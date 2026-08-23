@@ -42,8 +42,13 @@ export default function AdviesCard() {
   const shouldReduceMotion = useReducedMotion();
 
   const isInView = useInView(containerRef, {
+    // Desktop waits until 80% of the card is in the viewport. At 0.01 the
+    // slideshow started the moment its top edge appeared, so the first slide
+    // had largely played out before the card was even worth looking at.
+    // Mobile keeps its own pair of numbers: the card fills far more of a
+    // phone screen, so 20% plus a 300ms delay already lands it in view.
     once: false,
-    amount: isMobile ? 0.2 : 0.01, // Immediate on desktop (0.01 threshold)
+    amount: isMobile ? 0.2 : 0.8,
   });
 
   useEffect(() => {
