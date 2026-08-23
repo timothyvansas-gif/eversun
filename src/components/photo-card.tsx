@@ -192,7 +192,7 @@ const slide = (dir: number, exitPct: number, transition: typeof SPRING) => ({
 // slide. SLIDE_SEC above is the move itself, and it runs inside this.
 const DWELL_SEC = 3;
 
-const PILL_W = 56;
+const PILL_W = 44;
 const DOT_W = 8;
 const DOT_H = 8;
 const SWIPE_THRESHOLD = 40;
