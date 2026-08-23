@@ -17,6 +17,13 @@ export type Zonnebank = {
   slug: ZonnebankSlug;
   image: StaticImageData;
   imageQuality?: number;
+  /**
+   * Overrides DESKTOP_FOCUS in ZonnebankMedia for a bank whose shot sits
+   * differently in its frame. Must be written out as a full literal class —
+   * Tailwind's scanner reads source text, so a value built at runtime
+   * generates no CSS.
+   */
+  desktopFocus?: string;
   mobileVideo: string;
   desktopVideo?: string;
   alt: string;

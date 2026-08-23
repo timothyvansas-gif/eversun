@@ -7,6 +7,15 @@ import type { Zonnebank } from "@/data/zonnebanken-data";
 import sunIcon from "@/images/zon.svg";
 import sunsetIcon from "@/images/zonsondergang.svg";
 
+/**
+ * Framing from lg up, where the media box is widest and these photos have the
+ * most height to spare. `object-bottom` (50% 100%) pins the floor to the bottom
+ * edge; a Y over 100% lifts the whole shot further, so the emblem on the back
+ * wall clears the top of the bed instead of sitting behind it. Roughly 6px per
+ * 10% at the lg box. A bank that needs its own framing sets `desktopFocus`.
+ */
+const DESKTOP_FOCUS = "lg:object-[50%_125%]";
+
 export default function ZonnebankMedia({
   data,
   videoRef,
@@ -50,7 +59,7 @@ export default function ZonnebankMedia({
           alt={data.alt}
           fill
           quality={data.imageQuality}
-          className="object-cover object-bottom"
+          className={`object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS}`}
           sizes="(max-width: 767px) 100vw, 50vw"
         />
         {data.desktopVideo && (
@@ -68,7 +77,7 @@ export default function ZonnebankMedia({
             onPlaying={onVideoPlaying}
             onWaiting={onVideoWaiting}
             onError={onVideoError}
-            className={`absolute inset-0 h-full w-full object-cover object-bottom transition-opacity duration-300 ${
+            className={`absolute inset-0 h-full w-full object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS} transition-opacity duration-300 ${
               isVideoReady ? "opacity-100" : "opacity-0"
             }`}
           >
