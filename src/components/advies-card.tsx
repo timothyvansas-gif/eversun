@@ -47,22 +47,20 @@ export default function AdviesCard() {
     // had largely played out before the card was even worth looking at.
     // Mobile keeps its own pair of numbers: the card fills far more of a
     // phone screen, so 20% plus a 300ms delay already lands it in view.
-    once: false,
+    //
+    // once, because the same threshold decides both directions. At 0.8 the
+    // ring froze as soon as the card dipped under 80% visible — still plainly
+    // on screen — and rewound to zero on the way back up. A latch keeps the
+    // waiting to the first arrival, which is all it was ever for.
+    once: true,
     amount: isMobile ? 0.2 : 0.8,
   });
 
   useEffect(() => {
-    if (isInView) {
-      const delay = isMobile ? 300 : 0; // Immediate on desktop (0 delay)
-      const timer = setTimeout(() => {
-        setStarted(true);
-      }, delay);
-      return () => clearTimeout(timer);
-    } else {
-      // Reset animation when scrolled out of view — syncing to external scroll state is intended here.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setStarted(false);
-    }
+    if (!isInView) return;
+    const delay = isMobile ? 300 : 0; // Immediate on desktop (0 delay)
+    const timer = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(timer);
   }, [isInView, isMobile]);
 
   useEffect(() => {
