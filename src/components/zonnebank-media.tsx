@@ -14,7 +14,7 @@ import sunsetIcon from "@/images/zonsondergang.svg";
  * wall clears the top of the bed instead of sitting behind it. Roughly 6px per
  * 10% at the lg box. A bank that needs its own framing sets `desktopFocus`.
  */
-const DESKTOP_FOCUS = "lg:object-[50%_125%]";
+const DESKTOP_FOCUS = "lg:object-[50%_120%]";
 
 export default function ZonnebankMedia({
   data,
