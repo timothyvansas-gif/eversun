@@ -33,8 +33,6 @@
   --color-line: #d5be9c;
   /* Shared by product labels and the zonnebank count label. */
   --color-surface-pill: #f7f4ee;
-  /* Zonnebank card hover. */
-  --color-surface-hover: #f5eddf;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */
   --color-hero-ink: #f5f1e8;
