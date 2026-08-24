@@ -121,10 +121,6 @@ function AfspraakButton({
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Grid: photo on top, text below, cards side by side                  */
-/* ------------------------------------------------------------------ */
-
 function CardWrapper({ children }: { children: React.ReactNode }) {
   return (
     <m.div
@@ -167,13 +163,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // Pointer over the card upgrades the clip from metadata to a full
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
-        // `group/card` en niet het kale `group`: de mediabox eronder voert al
-        // een eigen `group`, en een naamloze tweede zou die overschaduwen.
-        //
-        // Rust en hover zijn allebei vaste, volle kleuren: #F7F4EE en #F5EDDF,
-        // 5,0 dE uit elkaar (CIE76). Geen 60%-mix meer — die was nodig toen de
-        // rustkleur nog #FDF9F5 was en de volle hoverkleur (#F2ECE2) er 5,5 dE
-        // vanaf lag; met de huidige twee waarden is geen verdunning nodig.
+        // Named group keeps the card hover independent from the media group.
         className="group/card flex flex-col gap-[10px] sm:rounded-[12px] sm:bg-surface-card sm:p-8 md:h-full md:gap-0 md:p-4 lg:p-6 lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover xl:p-8"
       >
         <ZonnebankMedia
@@ -194,17 +184,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
           onVideoWaiting={handleVideoWaiting}
           onVideoError={handleVideoError}
         />
-        {/* Hover op de kaart — niet alleen op dit vlak — tilt de bovenrand 12px
-            verder over de media (-mt-3 → -mt-5, 12px wordt 20px). De padding
-            groeit met diezelfde 8px, dus de kop en alles eronder blijven staan
-            waar ze stonden: het vlak groeit, de inhoud verschuift niet. Beide
-            eigenschappen animeren, dus heen en terug lezen hetzelfde. */}
+        {/* Matching margin and padding shifts grow the panel without moving its copy. */}
         <div className="mt-3 md:relative md:z-10 md:-mt-3 md:flex md:flex-1 md:flex-col md:rounded-b-[8px] md:bg-white md:p-6 lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
-              // Zelfde pil als de categorielabels op de productkaarten: dezelfde
-              // tekstgrootte, achtergrond, tekstkleur, padding en radius.
               <span className="shrink-0 whitespace-nowrap bg-surface-pill text-muted text-[15px] leading-none tracking-[-0.01em] font-sans px-[10px] py-[8px] rounded-[4px]">
                 {data.tag}
               </span>

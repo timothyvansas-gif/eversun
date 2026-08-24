@@ -31,21 +31,9 @@
      cannot take the labels with it. */
   --color-cta: var(--color-accent);
   --color-line: #d5be9c;
-  /* Was de uitgerekende hoverkleur van de zonnebankkaart (#F7F4EE): 60%
-     `surface-hover` gemengd met het witte vlak eronder. Die kaart heeft nu
-     zelf #F7F4EE als rustkleur (zie `surface-card`), dus deze token en die
-     rustkleur zijn sindsdien gelijk — inclusief op de 640-1023 band, waar het
-     "2 banken"-label zonder wit vlak op de kaart zelf staat en dus onzichtbaar
-     wordt. Bekend, niet opgelost: de vraag was de kaartkleuren te verzetten,
-     niet de pil.
-     Draagt de kleine pillen: categorielabels op de productkaarten en het
-     aantal-label op de zonnebankkaarten. De videotoggle stond hier ook op,
-     maar is geel geworden (zie `brand`) toen hij op de naad met het witte
-     vlak kwam. */
+  /* Shared by product labels and the zonnebank count label. */
   --color-surface-pill: #f7f4ee;
-  /* Waar de zonnebankkaart naartoe kleurt onder de cursor. Voller dan het
-     eerdere #F2ECE2 op 60% dekking (effectief #F7F4EE): die 60% is nu weg,
-     dit is de volle, letterlijke hoverkleur. */
+  /* Zonnebank card hover. */
   --color-surface-hover: #f5eddf;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */

@@ -7,13 +7,7 @@ import type { Zonnebank } from "@/data/zonnebanken-data";
 import sunIcon from "@/images/zon.svg";
 import sunsetIcon from "@/images/zonsondergang.svg";
 
-/**
- * Framing from lg up, where the media box is widest and these photos have the
- * most height to spare. `object-bottom` (50% 100%) pins the floor to the bottom
- * edge; a Y over 100% lifts the whole shot further, so the emblem on the back
- * wall clears the top of the bed instead of sitting behind it. Roughly 6px per
- * 10% at the lg box. A bank that needs its own framing sets `desktopFocus`.
- */
+// Banks with a different crop override this through `desktopFocus`.
 const DESKTOP_FOCUS = "lg:object-[50%_120%]";
 
 export default function ZonnebankMedia({
@@ -52,41 +46,14 @@ export default function ZonnebankMedia({
   onVideoError: () => void;
 }) {
   return (
-    // De toggle hangt hier en niet in de mediabox eronder: hij moet op desktop
-    // half over de onderrand van die box steken, en die box klipt — `overflow
-    // hidden` plus het masker dat iOS nodig heeft voor ronde hoeken op een
-    // spelende video. Alles wat buiten zijn rand valt wordt daar afgesneden.
-    // Dit vlak heeft dezelfde maat maar klipt niet, dus de knop kan eroverheen.
+    // The unclipped wrapper lets the toggle overlap the clipped media box.
     <div className="relative w-full">
-      {/* `w-full` staat er niet voor de sier. Deze box heeft een aspect-ratio én
-          een min-height die hoger is dan die ratio bij deze breedte toelaat. Chrome
-          houdt de breedte dan op de kolom en rekt alleen de hoogte op; WebKit
-          rekent de breedte terug uit de ratio en maakt de box breder dan zijn
-          kolom — in Safari stak de foto daardoor 32px (de padding van de kaart)
-          buiten het witte vlak eronder. Een expliciete breedte laat niets te
-          herleiden over. Nagemeten in Safari met een losse testpagina: zonder
-          `w-full` 32px verschil, met `w-full` nul. */}
+      {/* Explicit width prevents WebKit deriving an oversized width from aspect-ratio + min-height. */}
       <div
         className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden"
-        // WebKit geeft een video een eigen systeemlaag, en die trekt zich niets
-        // aan van de afgeronde `overflow: hidden` van deze box — zodra de clip
-        // zichtbaar werd sprongen de hoeken op de telefoon vierkant. Een masker
-        // dwingt de clip alsnog af, ook op die laag. De radial-gradient is dekkend
-        // over het hele vlak; het gaat niet om zijn vorm maar om het bestaan van
-        // het masker. Inline, want globals.css gooit eigenschappen die het niet
-        // kent er stilzwijgend uit.
+        // Force rounded clipping on WebKit's separate video layer.
         style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
       >
-        {/* De filter hangt op de foto en de video zelf, niet op dit vlak. Op een
-            gedeelde ouder werkt hij ook, maar dan hangt hij boven een laag die
-            iOS bij elke aanraking opnieuw tekent — een druk op de tekst eronder
-            liet de correctie zichtbaar wegvallen. Per element is er geen ouder
-            meer om kwijt te raken.
-
-            Dat dit hetzelfde beeld geeft is geen toeval: de video vervaagt over
-            de foto met opacity, en een feColorMatrix is lineair. Eerst mengen en
-            dan corrigeren levert dezelfde pixels op als eerst corrigeren en dan
-            mengen. */}
         <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
           <Image
             src={data.image}
@@ -126,14 +93,9 @@ export default function ZonnebankMedia({
           )}
         </div>
       </div>
-      {/* Withdrawn when the clip cannot be played — a broken source, or a fetch
-          that never arrived. A control that promises a state it cannot reach is
-          worse than no control; the still image carries the card on its own.
-          The hook puts it back if the data turns up after all. */}
+      {/* Hide the control when its video cannot be played. */}
       {data.desktopVideo && !isVideoUnavailable && (
-        // duration-[1283ms] matches the toggle clip's one-way length (2.566667s / 2,
-        // confirmed with ffprobe across all four renders) so the button fades in step
-        // with the video instead of finishing early or lagging behind it.
+        // 1283ms matches half of the ping-pong clip, keeping UI and video in sync.
         <button
           type="button"
           onClick={onVideoToggle}
@@ -146,59 +108,19 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          // Op desktop hangt de knop op de naad tussen foto en het witte vlak,
-          // 24px uit de rechterrand. Die naad ligt niet op de onderrand van de
-          // media maar 12px erboven: het witte vlak schuift er met `lg:-mt-3`
-          // overheen. `bottom` rekent vanaf de onderrand omhoog, dus met een knop
-          // van 48 hoog geldt bottom = overlap - 24: `-12px` zet zijn hart precies
-          // op die naad. Op hover schuift de knop via een GPU-vriendelijke
-          // transform 16px omhoog. Omdat het witte vlak zelf 8px omhoogkomt,
-          // eindigt de knop duidelijk boven de witte rand. De hover gebruikt een
-          // strakke ease-out; bij het verlaten geeft de basiseasing een korte,
-          // gedempte overshoot terug naar de rustpositie.
-          //
-          // `lg:z-20` en niet de kale `z-10`: het witte vlak draagt zelf z-10 en
-          // staat later in de DOM, dus bij gelijke z wint dat vlak en verdwijnt
-          // de onderste helft van de knop eronder.
-          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-auto lg:-bottom-3 lg:right-6 lg:z-20 lg:transition-transform lg:duration-500 lg:ease-[cubic-bezier(0.34,1.56,0.64,1)] lg:group-hover/card:-translate-y-4 lg:group-hover/card:duration-300 lg:group-hover/card:ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          // Keep the toggle above the overlapping panel; both directions use a damped overshoot.
+          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-auto lg:-bottom-3 lg:right-6 lg:z-20 lg:transition-transform lg:duration-500 lg:ease-[cubic-bezier(0.34,1.56,0.64,1)] lg:group-hover/card:-translate-y-4 lg:group-hover/card:duration-300 lg:group-hover/card:ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
-          {/* Circle only — the icons below sit outside it, as siblings, so
-              they never inherit its hover scale. The scale grow gets its own
-              fast timing on this span; background keeps the 1283ms
-              tied to the video crossfade below.
-
-              `inset-1` rather than `inset-0`: the drawn circle is 40px inside a
-              button that stays 48, so the mark is smaller without touching the
-              tap area — which has to clear 44 (see TAP_TARGET).
-
-              Desktop only (`lg:`): idle takes the size mobile/tablet only reached
-              on hover (110%, 44px), and hover grows further to 130% — 52px, past the
-              button's own 48px box by 2px a side. Deliberate: hover is a distinct
-              emphasis state, not bound to the tap-target ceiling idle respects.
-              Nothing clips it — the button has no `overflow-hidden`. Mobile and
-              tablet keep 100% idle / 110% hover, unchanged; touch has no hover to
-              grow into anyway.
-
-              The icons went 22 → 20 with it. Their stroke is authored at 1.25
-              in the SVG and rides along with the box, so it now draws at about
-              1.14px. Left alone on purpose: raising the number in the file to
-              hold the old weight would change what the marks are drawn with
-              everywhere they are used. */}
+          {/* Scale only the painted circle, preserving the 48px hit area and icon size. */}
           <span
             aria-hidden="true"
             className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 lg:scale-110 lg:group-hover/toggle:scale-[1.3] ${
-              // `brand` — hetzelfde geel als de gele prijslabels — idle en op
-              // :hover, want er is geen apart hover-klasse: zonder een tweede
-              // achtergrond op deze span blijft de rustkleur ook onder de cursor
-              // staan. De actieve (donkere) stand blijft `bg-void`, ongemoeid.
               isVideoActive && !isVideoLoading ? "bg-void" : "bg-brand"
             }`}
             style={{
-              // Tailwind v4's scale-* utilities set the standalone CSS `scale`
-              // property, not `transform` — listing `transform` here left the
-              // hover grow untransitioned (it jumped straight to 110%).
+              // Tailwind's scale utilities animate the standalone `scale` property.
               transitionProperty: "background-color, scale",
               transitionDuration: "1283ms, 300ms",
               transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1), ease-out",
