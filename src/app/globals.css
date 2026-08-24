@@ -31,14 +31,18 @@
      cannot take the labels with it. */
   --color-cta: var(--color-accent);
   --color-line: #d5be9c;
-  /* Zelfde waarde als `surface-card`, zodat de pillen en het kaartvlak één
-     tint delen; ligt daarmee nog steeds boven `surface-page`.
+  /* De kleur die de zonnebankkaart onder de cursor aanneemt, hier als vaste
+     waarde. `surface-hover` staat op 60% en de sectie eronder is wit, dus wat
+     je op hover ziet is 0,6 x #F2ECE2 + 0,4 x wit = #F7F4EE.
+     Uitgerekend en niet `bg-surface-hover/60` op de pillen zelf: die 60% mengt
+     met wat eronder ligt, en de twee pillen liggen op verschillende vlakken —
+     wit bij de zonnebankkaart, `surface-page` bij de productkaarten. Dat gaf
+     #F7F4EE naast #F5EFE6. Een vaste waarde houdt ze gelijk.
      Draagt de kleine pillen: categorielabels op de productkaarten en het
      aantal-label op de zonnebankkaarten. De videotoggle stond hier ook op,
      maar is wit geworden toen hij op de naad met het witte vlak kwam.
-     Blijft een eigen token en geen alias: de pil moet los van de kaart
-     kunnen bewegen. De gele prijslabels staan hier los van (`brand`). */
-  --color-surface-pill: #fdfbf7;
+     De gele prijslabels staan hier los van (`brand`). */
+  --color-surface-pill: #f7f4ee;
   /* Waar een kaart naartoe kleurt onder de cursor. Wordt op 60% gezet, zodat
      de ondergrond er doorheen mengt; vol is de stap te groot. */
   --color-surface-hover: #f2ece2;
