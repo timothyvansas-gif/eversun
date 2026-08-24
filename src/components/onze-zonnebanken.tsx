@@ -59,10 +59,10 @@ function AfspraakButton({
   return (
     <>
       <div className={className}>
-        <div className="flex w-full flex-col gap-4 lg:flex-row lg:gap-2">
+        <div className="flex w-full flex-col gap-4 lg:gap-2 xl:flex-row">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !px-6 lg:w-auto lg:min-w-[180px] xl:min-w-[190px]`}
+            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !px-6 xl:w-auto xl:min-w-[190px]`}
           >
             <span className="inline-flex items-center gap-1.5 lg:hidden">
               Plan je moment
@@ -87,7 +87,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={() => setHuidtestOpen(true)}
-            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! text-zinc-600! hover:border-line! hover:text-ink-primary! max-lg:hidden! lg:w-auto lg:!px-5 xl:min-w-[190px]`}
+            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! text-zinc-600! hover:border-line! hover:text-ink-primary! max-lg:hidden! xl:w-auto xl:min-w-[190px] xl:!px-5`}
           >
             <CtaLabel hold>Doe de huidtest</CtaLabel>
           </button>
@@ -174,7 +174,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // 5,0 dE uit elkaar (CIE76). Geen 60%-mix meer — die was nodig toen de
         // rustkleur nog #FDF9F5 was en de volle hoverkleur (#F2ECE2) er 5,5 dE
         // vanaf lag; met de huidige twee waarden is geen verdunning nodig.
-        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover xl:h-full"
+        className="group/card flex flex-col gap-[10px] sm:rounded-[12px] sm:bg-surface-card sm:p-8 md:h-full md:gap-0 md:p-4 lg:p-6 lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover xl:p-8"
       >
         <ZonnebankMedia
           data={data}
@@ -199,7 +199,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             groeit met diezelfde 8px, dus de kop en alles eronder blijven staan
             waar ze stonden: het vlak groeit, de inhoud verschuift niet. Beide
             eigenschappen animeren, dus heen en terug lezen hetzelfde. */}
-        <div className="mt-3 md:mt-0 lg:relative lg:z-10 lg:-mt-3 lg:flex lg:flex-1 lg:flex-col lg:rounded-b-[8px] lg:bg-white lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
+        <div className="mt-3 md:relative md:z-10 md:-mt-3 md:flex md:flex-1 md:flex-col md:rounded-b-[8px] md:bg-white md:p-6 lg:p-8 lg:transition-[margin-top,padding-top] lg:duration-300 lg:ease-out lg:group-hover/card:-mt-5 lg:group-hover/card:pt-10">
           <div className="flex items-center gap-3">
             <h3 className="card-title text-zinc-900">{data.title}</h3>
             {data.tag && (
@@ -237,7 +237,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
             slug={data.slug}
             minuten={data.minuten}
             prijs={data.prijs}
-            className="mt-[22px] md:mt-[14px] lg:mt-[30px]"
+            className="mt-[22px] md:mt-auto md:pt-[14px] lg:pt-[30px]"
           />
         </div>
       </div>
@@ -251,14 +251,14 @@ function MobileDivider() {
 
 function ProductionGrid() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row gap-6">
+    <div className="flex flex-col gap-6 md:gap-4 lg:gap-6">
+      <div className="flex flex-col gap-6 md:flex-row md:gap-4 lg:gap-6">
         <ZonnebankCard data={ZONNEBANKEN[0]} />
         <MobileDivider />
         <ZonnebankCard data={ZONNEBANKEN[1]} />
       </div>
       <MobileDivider />
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col gap-6 md:flex-row md:gap-4 lg:gap-6">
         <ZonnebankCard data={ZONNEBANKEN[2]} />
         <MobileDivider />
         <ZonnebankCard data={ZONNEBANKEN[3]} />
