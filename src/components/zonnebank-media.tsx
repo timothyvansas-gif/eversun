@@ -171,6 +171,14 @@ export default function ZonnebankMedia({
               button that stays 48, so the mark is smaller without touching the
               tap area — which has to clear 44 (see TAP_TARGET).
 
+              Desktop only (`lg:`): idle takes the size mobile/tablet only reached
+              on hover (110%, 44px), and hover grows further to 130% — 52px, past the
+              button's own 48px box by 2px a side. Deliberate: hover is a distinct
+              emphasis state, not bound to the tap-target ceiling idle respects.
+              Nothing clips it — the button has no `overflow-hidden`. Mobile and
+              tablet keep 100% idle / 110% hover, unchanged; touch has no hover to
+              grow into anyway.
+
               The icons went 22 → 20 with it. Their stroke is authored at 1.25
               in the SVG and rides along with the box, so it now draws at about
               1.14px. Left alone on purpose: raising the number in the file to
@@ -178,7 +186,7 @@ export default function ZonnebankMedia({
               everywhere they are used. */}
           <span
             aria-hidden="true"
-            className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 ${
+            className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 lg:scale-110 lg:group-hover/toggle:scale-[1.3] ${
               // `brand` — hetzelfde geel als de gele prijslabels — idle en op
               // :hover, want er is geen apart hover-klasse: zonder een tweede
               // achtergrond op deze span blijft de rustkleur ook onder de cursor
