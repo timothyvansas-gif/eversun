@@ -151,14 +151,16 @@ export default function ZonnebankMedia({
           // media maar 12px erboven: het witte vlak schuift er met `lg:-mt-3`
           // overheen. `bottom` rekent vanaf de onderrand omhoog, dus met een knop
           // van 48 hoog geldt bottom = overlap - 24: `-12px` zet zijn hart precies
-          // op die naad. Op hover wordt de overlap 20px (`lg:group-hover/card:-mt-5`)
-          // en schuift de naad 8px omhoog; `bottom: -4px` volgt dat, met dezelfde
-          // 300ms ease-out zodat knop en vlak samen bewegen.
+          // op die naad. Op hover schuift de knop via een GPU-vriendelijke
+          // transform 16px omhoog. Omdat het witte vlak zelf 8px omhoogkomt,
+          // eindigt de knop duidelijk boven de witte rand. De hover gebruikt een
+          // strakke ease-out; bij het verlaten geeft de basiseasing een korte,
+          // gedempte overshoot terug naar de rustpositie.
           //
           // `lg:z-20` en niet de kale `z-10`: het witte vlak draagt zelf z-10 en
           // staat later in de DOM, dus bij gelijke z wint dat vlak en verdwijnt
           // de onderste helft van de knop eronder.
-          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-auto lg:-bottom-3 lg:right-6 lg:z-20 lg:transition-[bottom] lg:duration-300 lg:ease-out lg:group-hover/card:-bottom-1 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-auto lg:-bottom-3 lg:right-6 lg:z-20 lg:transition-transform lg:duration-500 lg:ease-[cubic-bezier(0.34,1.56,0.64,1)] lg:group-hover/card:-translate-y-4 lg:group-hover/card:duration-300 lg:group-hover/card:ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
