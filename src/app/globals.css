@@ -7,7 +7,7 @@
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
-  --color-surface-card: #fdf9f5;
+  --color-surface-card: #fdfbf7;
   /* Primary near-black. Semantic aliases keep text, controls and dark
      surfaces independently addressable without duplicating the hex value. */
   --color-ink-primary: #0b0b0b;
@@ -31,11 +31,13 @@
      cannot take the labels with it. */
   --color-cta: var(--color-accent);
   --color-line: #d5be9c;
-  /* De lichtste van de drie zandtinten, boven `surface-page` en `surface-card`.
+  /* Zelfde waarde als `surface-card`, zodat de pillen en het kaartvlak één
+     tint delen; ligt daarmee nog steeds boven `surface-page`.
      Draagt de kleine pillen — categorielabels op de productkaarten, het
      aantal-label op de zonnebankkaarten — en de rustknop van de videotoggle.
-     Stond op drie plekken als losse hex. */
-  --color-surface-pill: #fef9f5;
+     Blijft een eigen token en geen alias: de pil moet los van de kaart
+     kunnen bewegen. De gele prijslabels staan hier los van (`brand`). */
+  --color-surface-pill: #fdfbf7;
   /* Waar een kaart naartoe kleurt onder de cursor. Wordt op 60% gezet, zodat
      de ondergrond er doorheen mengt; vol is de stap te groot. */
   --color-surface-hover: #f2ece2;

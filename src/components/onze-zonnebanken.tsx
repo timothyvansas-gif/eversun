@@ -171,8 +171,8 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // een eigen `group`, en een naamloze tweede zou die overschaduwen.
         //
         // De hoverkleur (`--color-surface-hover`) staat op 60% dekking. De sectie eronder is wit, dus die
-        // 40% mengt wit terug in en het verschil met de rustkleur zakt van 5,5
-        // naar 2,2 dE — genoeg om te merken dat de kaart reageert, te weinig om
+        // 40% mengt wit terug in en het verschil met de rustkleur zakt van 6,1
+        // naar 2,8 dE — genoeg om te merken dat de kaart reageert, te weinig om
         // de aandacht van de foto weg te trekken. Volle #F2ECE2 was te zwaar.
         className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover/60 xl:h-full"
       >
