@@ -52,72 +52,79 @@ export default function ZonnebankMedia({
   onVideoError: () => void;
 }) {
   return (
-    // `w-full` staat er niet voor de sier. Deze box heeft een aspect-ratio én
-    // een min-height die hoger is dan die ratio bij deze breedte toelaat. Chrome
-    // houdt de breedte dan op de kolom en rekt alleen de hoogte op; WebKit
-    // rekent de breedte terug uit de ratio en maakt de box breder dan zijn
-    // kolom — in Safari stak de foto daardoor 32px (de padding van de kaart)
-    // buiten het witte vlak eronder. Een expliciete breedte laat niets te
-    // herleiden over. Nagemeten in Safari met een losse testpagina: zonder
-    // `w-full` 32px verschil, met `w-full` nul.
-    <div
-      className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden"
-      // WebKit geeft een video een eigen systeemlaag, en die trekt zich niets
-      // aan van de afgeronde `overflow: hidden` van deze box — zodra de clip
-      // zichtbaar werd sprongen de hoeken op de telefoon vierkant. Een masker
-      // dwingt de clip alsnog af, ook op die laag. De radial-gradient is dekkend
-      // over het hele vlak; het gaat niet om zijn vorm maar om het bestaan van
-      // het masker. Inline, want globals.css gooit eigenschappen die het niet
-      // kent er stilzwijgend uit.
-      style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
-    >
-      {/* De filter hangt op de foto en de video zelf, niet op dit vlak. Op een
-          gedeelde ouder werkt hij ook, maar dan hangt hij boven een laag die
-          iOS bij elke aanraking opnieuw tekent — een druk op de tekst eronder
-          liet de correctie zichtbaar wegvallen. Per element is er geen ouder
-          meer om kwijt te raken.
+    // De toggle hangt hier en niet in de mediabox eronder: hij moet op desktop
+    // half over de onderrand van die box steken, en die box klipt — `overflow
+    // hidden` plus het masker dat iOS nodig heeft voor ronde hoeken op een
+    // spelende video. Alles wat buiten zijn rand valt wordt daar afgesneden.
+    // Dit vlak heeft dezelfde maat maar klipt niet, dus de knop kan eroverheen.
+    <div className="relative w-full">
+      {/* `w-full` staat er niet voor de sier. Deze box heeft een aspect-ratio én
+          een min-height die hoger is dan die ratio bij deze breedte toelaat. Chrome
+          houdt de breedte dan op de kolom en rekt alleen de hoogte op; WebKit
+          rekent de breedte terug uit de ratio en maakt de box breder dan zijn
+          kolom — in Safari stak de foto daardoor 32px (de padding van de kaart)
+          buiten het witte vlak eronder. Een expliciete breedte laat niets te
+          herleiden over. Nagemeten in Safari met een losse testpagina: zonder
+          `w-full` 32px verschil, met `w-full` nul. */}
+      <div
+        className="group relative w-full aspect-[1.52/1] md:aspect-video md:min-h-[280px] lg:min-h-[248px] xl:min-h-[328px] rounded-[12px] lg:rounded-[8px] lg:rounded-bl-none lg:rounded-br-none overflow-hidden"
+        // WebKit geeft een video een eigen systeemlaag, en die trekt zich niets
+        // aan van de afgeronde `overflow: hidden` van deze box — zodra de clip
+        // zichtbaar werd sprongen de hoeken op de telefoon vierkant. Een masker
+        // dwingt de clip alsnog af, ook op die laag. De radial-gradient is dekkend
+        // over het hele vlak; het gaat niet om zijn vorm maar om het bestaan van
+        // het masker. Inline, want globals.css gooit eigenschappen die het niet
+        // kent er stilzwijgend uit.
+        style={{ WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}
+      >
+        {/* De filter hangt op de foto en de video zelf, niet op dit vlak. Op een
+            gedeelde ouder werkt hij ook, maar dan hangt hij boven een laag die
+            iOS bij elke aanraking opnieuw tekent — een druk op de tekst eronder
+            liet de correctie zichtbaar wegvallen. Per element is er geen ouder
+            meer om kwijt te raken.
 
-          Dat dit hetzelfde beeld geeft is geen toeval: de video vervaagt over
-          de foto met opacity, en een feColorMatrix is lineair. Eerst mengen en
-          dan corrigeren levert dezelfde pixels op als eerst corrigeren en dan
-          mengen. */}
-      <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
-        <Image
-          src={data.image}
-          alt={data.alt}
-          fill
-          quality={data.imageQuality}
-          className={`object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS}`}
-          sizes="(max-width: 767px) 100vw, 50vw"
-          draggable={false}
-        />
-        {data.desktopVideo && (
-          <video
-            ref={videoRef}
-            muted
-            playsInline
-            preload={videoPreload}
-            disablePictureInPicture
-            aria-hidden="true"
-            onLoadedData={onVideoLoadedData}
-            onCanPlay={onVideoCanPlay}
-            onEnded={onVideoEnded}
-            onTimeUpdate={onVideoTimeUpdate}
-            onPlaying={onVideoPlaying}
-            onWaiting={onVideoWaiting}
-            onError={onVideoError}
-            className={`absolute inset-0 h-full w-full object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS} transition-opacity duration-300 ${
-              isVideoReady ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <source
-              src={data.mobileVideo}
-              media={MOBILE_QUERY}
-              type="video/mp4"
-            />
-            <source src={data.desktopVideo} type="video/mp4" />
-          </video>
-        )}
+            Dat dit hetzelfde beeld geeft is geen toeval: de video vervaagt over
+            de foto met opacity, en een feColorMatrix is lineair. Eerst mengen en
+            dan corrigeren levert dezelfde pixels op als eerst corrigeren en dan
+            mengen. */}
+        <div className="absolute inset-x-0 top-0 bottom-0 lg:-top-6 lg:-bottom-2">
+          <Image
+            src={data.image}
+            alt={data.alt}
+            fill
+            quality={data.imageQuality}
+            className={`object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS}`}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            draggable={false}
+          />
+          {data.desktopVideo && (
+            <video
+              ref={videoRef}
+              muted
+              playsInline
+              preload={videoPreload}
+              disablePictureInPicture
+              aria-hidden="true"
+              onLoadedData={onVideoLoadedData}
+              onCanPlay={onVideoCanPlay}
+              onEnded={onVideoEnded}
+              onTimeUpdate={onVideoTimeUpdate}
+              onPlaying={onVideoPlaying}
+              onWaiting={onVideoWaiting}
+              onError={onVideoError}
+              className={`absolute inset-0 h-full w-full object-cover object-bottom ${data.desktopFocus ?? DESKTOP_FOCUS} transition-opacity duration-300 ${
+                isVideoReady ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <source
+                src={data.mobileVideo}
+                media={MOBILE_QUERY}
+                type="video/mp4"
+              />
+              <source src={data.desktopVideo} type="video/mp4" />
+            </video>
+          )}
+        </div>
       </div>
       {/* Withdrawn when the clip cannot be played — a broken source, or a fetch
           that never arrived. A control that promises a state it cannot reach is
@@ -139,7 +146,19 @@ export default function ZonnebankMedia({
               : "Toon zonnebank in het donker"
           }
           aria-pressed={isVideoActive}
-          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-3 lg:right-3 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
+          // Op desktop hangt de knop op de naad tussen foto en het witte vlak,
+          // 24px uit de rechterrand. Die naad ligt niet op de onderrand van de
+          // media maar 12px erboven: het witte vlak schuift er met `lg:-mt-3`
+          // overheen. `bottom` rekent vanaf de onderrand omhoog, dus met een knop
+          // van 48 hoog geldt bottom = overlap - 24: `-12px` zet zijn hart precies
+          // op die naad. Op hover wordt de overlap 20px (`lg:group-hover/card:-mt-5`)
+          // en schuift de naad 8px omhoog; `bottom: -4px` volgt dat, met dezelfde
+          // 300ms ease-out zodat knop en vlak samen bewegen.
+          //
+          // `lg:z-20` en niet de kale `z-10`: het witte vlak draagt zelf z-10 en
+          // staat later in de DOM, dus bij gelijke z wint dat vlak en verdwijnt
+          // de onderste helft van de knop eronder.
+          className={`group/toggle absolute top-3 right-3 md:top-5 md:right-5 lg:top-auto lg:-bottom-3 lg:right-6 lg:z-20 lg:transition-[bottom] lg:duration-300 lg:ease-out lg:group-hover/card:-bottom-1 z-10 flex size-12 touch-manipulation items-center justify-center rounded-full active:scale-95 ${
             isVideoAnimating ? "cursor-default" : "cursor-pointer"
           }`}
         >
@@ -160,11 +179,13 @@ export default function ZonnebankMedia({
           <span
             aria-hidden="true"
             className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 ${
-              // Idle is the page's own off-white from lg up, so the mark reads
-              // as part of the frame instead of a bright dot on the photo. The
-              // phone keeps plain white: there the button sits on a much
-              // smaller image and needs the contrast to stay findable.
-              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white lg:bg-surface-pill"
+              // Wit op elke breedte, idle en hover. Vanaf lg stond hier de
+              // off-white van de pagina, zodat de mark bij het kader hoorde in
+              // plaats van als lichte stip op de foto te liggen. Dat kan niet
+              // meer: de knop hangt nu op de naad en bedekt met zijn onderste
+              // helft het witte vlak, waar een off-white als vlek zichtbaar zou
+              // worden. Wit leest over foto en vlak als dezelfde mark.
+              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white"
             }`}
             style={{
               // Tailwind v4's scale-* utilities set the standalone CSS `scale`
