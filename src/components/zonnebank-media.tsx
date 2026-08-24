@@ -179,13 +179,11 @@ export default function ZonnebankMedia({
           <span
             aria-hidden="true"
             className={`absolute inset-1 rounded-full scale-100 group-hover/toggle:scale-110 ${
-              // Wit op elke breedte, idle en hover. Vanaf lg stond hier de
-              // off-white van de pagina, zodat de mark bij het kader hoorde in
-              // plaats van als lichte stip op de foto te liggen. Dat kan niet
-              // meer: de knop hangt nu op de naad en bedekt met zijn onderste
-              // helft het witte vlak, waar een off-white als vlek zichtbaar zou
-              // worden. Wit leest over foto en vlak als dezelfde mark.
-              isVideoActive && !isVideoLoading ? "bg-void" : "bg-white"
+              // `brand` — hetzelfde geel als de gele prijslabels — idle en op
+              // :hover, want er is geen apart hover-klasse: zonder een tweede
+              // achtergrond op deze span blijft de rustkleur ook onder de cursor
+              // staan. De actieve (donkere) stand blijft `bg-void`, ongemoeid.
+              isVideoActive && !isVideoLoading ? "bg-void" : "bg-brand"
             }`}
             style={{
               // Tailwind v4's scale-* utilities set the standalone CSS `scale`

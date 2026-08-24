@@ -7,7 +7,7 @@
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
-  --color-surface-card: #fdfbf7;
+  --color-surface-card: #f7f4ee;
   /* Primary near-black. Semantic aliases keep text, controls and dark
      surfaces independently addressable without duplicating the hex value. */
   --color-ink-primary: #0b0b0b;
@@ -31,21 +31,22 @@
      cannot take the labels with it. */
   --color-cta: var(--color-accent);
   --color-line: #d5be9c;
-  /* De kleur die de zonnebankkaart onder de cursor aanneemt, hier als vaste
-     waarde. `surface-hover` staat op 60% en de sectie eronder is wit, dus wat
-     je op hover ziet is 0,6 x #F2ECE2 + 0,4 x wit = #F7F4EE.
-     Uitgerekend en niet `bg-surface-hover/60` op de pillen zelf: die 60% mengt
-     met wat eronder ligt, en de twee pillen liggen op verschillende vlakken —
-     wit bij de zonnebankkaart, `surface-page` bij de productkaarten. Dat gaf
-     #F7F4EE naast #F5EFE6. Een vaste waarde houdt ze gelijk.
+  /* Was de uitgerekende hoverkleur van de zonnebankkaart (#F7F4EE): 60%
+     `surface-hover` gemengd met het witte vlak eronder. Die kaart heeft nu
+     zelf #F7F4EE als rustkleur (zie `surface-card`), dus deze token en die
+     rustkleur zijn sindsdien gelijk — inclusief op de 640-1023 band, waar het
+     "2 banken"-label zonder wit vlak op de kaart zelf staat en dus onzichtbaar
+     wordt. Bekend, niet opgelost: de vraag was de kaartkleuren te verzetten,
+     niet de pil.
      Draagt de kleine pillen: categorielabels op de productkaarten en het
      aantal-label op de zonnebankkaarten. De videotoggle stond hier ook op,
-     maar is wit geworden toen hij op de naad met het witte vlak kwam.
-     De gele prijslabels staan hier los van (`brand`). */
+     maar is geel geworden (zie `brand`) toen hij op de naad met het witte
+     vlak kwam. */
   --color-surface-pill: #f7f4ee;
-  /* Waar een kaart naartoe kleurt onder de cursor. Wordt op 60% gezet, zodat
-     de ondergrond er doorheen mengt; vol is de stap te groot. */
-  --color-surface-hover: #f2ece2;
+  /* Waar de zonnebankkaart naartoe kleurt onder de cursor. Voller dan het
+     eerdere #F2ECE2 op 60% dekking (effectief #F7F4EE): die 60% is nu weg,
+     dit is de volle, letterlijke hoverkleur. */
+  --color-surface-hover: #f5eddf;
   /* Off-white for text/logo/icons sitting directly on the hero photo — warm,
      to match the page's cream/gold palette. */
   --color-hero-ink: #f5f1e8;

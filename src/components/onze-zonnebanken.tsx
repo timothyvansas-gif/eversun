@@ -170,11 +170,11 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // `group/card` en niet het kale `group`: de mediabox eronder voert al
         // een eigen `group`, en een naamloze tweede zou die overschaduwen.
         //
-        // De hoverkleur (`--color-surface-hover`) staat op 60% dekking. De sectie eronder is wit, dus die
-        // 40% mengt wit terug in en het verschil met de rustkleur zakt van 6,1
-        // naar 2,8 dE — genoeg om te merken dat de kaart reageert, te weinig om
-        // de aandacht van de foto weg te trekken. Volle #F2ECE2 was te zwaar.
-        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover/60 xl:h-full"
+        // Rust en hover zijn allebei vaste, volle kleuren: #F7F4EE en #F5EDDF,
+        // 5,0 dE uit elkaar (CIE76). Geen 60%-mix meer — die was nodig toen de
+        // rustkleur nog #FDF9F5 was en de volle hoverkleur (#F2ECE2) er 5,5 dE
+        // vanaf lag; met de huidige twee waarden is geen verdunning nodig.
+        className="group/card flex flex-col gap-[10px] md:gap-[14px] sm:bg-surface-card sm:p-8 sm:rounded-[24px] lg:gap-0 lg:p-8 lg:rounded-[12px] lg:transition-colors lg:duration-300 lg:ease-out lg:hover:bg-surface-hover xl:h-full"
       >
         <ZonnebankMedia
           data={data}
