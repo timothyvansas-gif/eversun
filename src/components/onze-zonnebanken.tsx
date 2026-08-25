@@ -22,15 +22,12 @@ const HuidtestOverlay = dynamic(() => import("@/components/huidtest/huidtest-ove
 
 function SessionDetails({ minuten, prijs }: { minuten: string; prijs: string }) {
   return (
-    <div className="flex items-center gap-3 text-zinc-600 font-sans">
-      <div className="flex items-center gap-2">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
-          <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
-          <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{minuten}</span>
-      </div>
-      <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{prijs}</span>
+    <div className="flex items-center gap-2 text-zinc-600 font-sans">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0" aria-hidden="true">
+        <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.25" />
+        <path d="M7 4V7L9 9" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <span className="whitespace-nowrap text-[15px] tracking-[-0.01em]">{minuten} · {prijs}</span>
     </div>
   );
 }
