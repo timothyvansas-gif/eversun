@@ -6,7 +6,6 @@ import type { StaticImageData } from "next/image";
 import { m } from "framer-motion";
 import {
   BTN_CTA_HEIGHT,
-  BTN_PILL_CTA,
   BTN_PILL_LIGHT_OUTLINE,
 } from "@/lib/button-styles";
 import AfspraakOverlay from "@/components/hero/afspraak-overlay";
@@ -62,11 +61,11 @@ function AfspraakButton({
         <div className="flex w-full flex-col gap-4 lg:gap-2 xl:flex-row">
           <button
             onClick={appointment.open}
-            className={`group/cta ${BTN_PILL_CTA} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !px-6 xl:w-auto xl:min-w-[190px]`}
+            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !border-[#d39864] !px-6 xl:w-auto xl:min-w-[190px]`}
           >
             <span className="inline-flex items-center gap-1.5 lg:hidden">
               Plan je moment
-              <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-white font-sans tracking-[-0.01em] whitespace-nowrap">
+              <span className="inline-flex items-center gap-1.5 text-[15px] font-normal leading-none text-zinc-900 font-sans tracking-[-0.01em] whitespace-nowrap">
                 <span aria-hidden="true">–</span>
                 <span>{minuten} · {prijs}</span>
               </span>
@@ -87,7 +86,7 @@ function AfspraakButton({
           <button
             type="button"
             onClick={() => setHuidtestOpen(true)}
-            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center border-line/30! text-zinc-600! hover:border-line! hover:text-ink-primary! max-lg:hidden! xl:w-auto xl:min-w-[190px] xl:!px-5`}
+            className={`group/cta ${BTN_PILL_LIGHT_OUTLINE} ${BTN_CTA_HEIGHT} w-full overflow-hidden justify-center !border-[#f6ecde] text-zinc-600! hover:!border-[#f6ecde] hover:text-ink-primary! max-lg:hidden! xl:w-auto xl:min-w-[190px] xl:!px-5`}
           >
             <CtaLabel hold>Doe de huidtest</CtaLabel>
           </button>
