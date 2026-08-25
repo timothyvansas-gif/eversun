@@ -164,7 +164,7 @@ function ZonnebankCard({ data }: { data: Zonnebank }) {
         // fetch, so the toggle is ready by the time the cursor reaches it.
         onPointerEnter={handleCardPointerEnter}
         // Named group keeps the card hover independent from the media group.
-        className="group/card flex flex-col gap-[10px] sm:rounded-[12px] sm:bg-surface-card sm:p-8 md:h-full md:gap-0 md:p-4 lg:p-6 xl:p-8"
+        className="group/card flex flex-col gap-[10px] sm:rounded-[12px] sm:bg-surface-page sm:p-8 md:h-full md:gap-0 md:p-4 lg:p-6 xl:p-8"
       >
         <ZonnebankMedia
           data={data}

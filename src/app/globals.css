@@ -7,7 +7,6 @@
 @theme {
   --color-brand: #fdc43f;
   --color-surface-page: #faf4ec;
-  --color-surface-card: #f7f4ee;
   /* Primary near-black. Semantic aliases keep text, controls and dark
      surfaces independently addressable without duplicating the hex value. */
   --color-ink-primary: #0b0b0b;
